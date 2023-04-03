@@ -1,0 +1,24 @@
+:root{
+    --lsa-blue: #001c57;
+    --lsa-light-blue: #0353a4;
+    --lsa-orange: #b86125;
+    --lsa-light-orange: #ff7300;
+    --lsa-green: #0E7C4A;
+    --lsa-light-green: #00b74f;
+    --lsa-light-gray: rgb(223, 223, 233);
+  }
+
+.lsa-light-gray{
+    background-color: var(--lsa-light-gray) !important;
+  }
+.lsa-blue{
+    background-color: var(--lsa-blue) !important;
+  }
+  
+  .lsa-orange{
+    background-color: var(--lsa-orange) !important;
+  }
+  .lsa-orange-text{
+    color: var(--lsa-orange) !important;
+  }
+  
