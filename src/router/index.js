@@ -2,6 +2,7 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import HomeView from '../views/HomeView.vue'
 import LoginView from '../views/Login.vue'
+import MUS001 from '../views/MUS001.vue'
 
 Vue.use(VueRouter)
 
@@ -16,6 +17,13 @@ const routes = [
     component: LoginView
   }
   ,
+  {
+    path: '/Form',
+    name: 'formulario',
+    component: MUS001
+
+  },
+
   {
     path: '/about',
     name: 'about',

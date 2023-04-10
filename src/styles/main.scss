@@ -21,4 +21,71 @@
   .lsa-orange-text{
     color: var(--lsa-orange) !important;
   }
+  .my-custom-nav {
+    background-color: #0da6ac; /* Establecer el color de fondo a un tono de azul */
+    color: white; /* Establecer el color del texto en blanco */
+  }
+  .my-logo {
+    margin-left: 10px;
+    max-width: 100px;
+  }
+  .my-nav-item {
+    margin-right: 20px;
+  }
+  .segunda {
+    margin-left: 10px;
+    max-width: 100px;
+    position: absolute;
+    right: 10px; /* Ajusta el valor para obtener el margen deseado */
+    top: 50%;
+    transform: translateY(-50%);
+  }
+ 
+  .my-form-group {
+    display: flex; // propiedades para que los dos grupos estén en la misma línea
+    margin-right: 20px; // margen entre los dos grupos
+    margin-top: 20px;
+    align-items: center; // centrar los elementos verticalmente
+  }
+  
+  .my-form-group {
+    display: flex;
+    margin-bottom: 20px;
+    align-items: center;
+  }
+  
+  .my-form-group label {
+    width: 200px;
+    margin-right: 10px;
+  }
+  
+  .my-form-group input {
+    flex: 1;
+  }
+  button[type="submit"] {
+    margin-top: 20px;
+  }
+  .my-form-group-wide {
+    display: flex;
+    flex-wrap: wrap;
+    margin-top: 20px;
+    margin-left: 10px;
+    margin-right: 10px;
+  }
+
+  .my-form-group-wide > label {
+    width: 100%;
+    margin-bottom: 10px;
+    align-items: center;
+    margin-left: 10px;
+    margin-right: 10px;
+  }
+
+  .my-form-group-wide > div {
+    width: 100%;
+    align-items: center;
+    margin-left: 10px;
+    margin-right: 10px;
+  }
+  
   
