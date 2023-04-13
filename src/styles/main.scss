@@ -14,7 +14,9 @@
 .lsa-blue{
     background-color: var(--lsa-blue) !important;
   }
-  
+  .lsa-light-blue{
+    background-color: var(--lsa-light-blue) !important;
+  }
   .lsa-orange{
     background-color: var(--lsa-orange) !important;
   }
@@ -86,6 +88,19 @@
     align-items: center;
     margin-left: 10px;
     margin-right: 10px;
+  }
+  .reactive-button{
+    transition: all .3s cubic-bezier(0.25, 1, 0.33, 1);
+  }
+
+  .reactive-button:active {
+transform:scale(0.95);
+box-shadow: 0 10px 25px rgba(0,0,0,0.14), 0 5px 15px rgba(0,0,0,0.14);
+  }
+
+
+  .hand-on-cursor{
+    cursor: pointer;
   }
   
   

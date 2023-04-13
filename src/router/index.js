@@ -3,6 +3,7 @@ import VueRouter from 'vue-router'
 import HomeView from '../views/HomeView.vue'
 import LoginView from '../views/Login.vue'
 import MUS001 from '../views/MUS001.vue'
+import USU004_admPersonal from '../views/USU004_admPersonal'
 
 Vue.use(VueRouter)
 
@@ -21,6 +22,11 @@ const routes = [
     path: '/Form',
     name: 'formulario',
     component: MUS001
+
+  },{
+    path: '/admPersonal',
+    name: 'admPersonal',
+    component: USU004_admPersonal
 
   },
 
