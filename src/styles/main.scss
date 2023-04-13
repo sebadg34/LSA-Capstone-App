@@ -5,7 +5,7 @@
     --lsa-light-orange: #ff7300;
     --lsa-green: #0E7C4A;
     --lsa-light-green: #00b74f;
-    --lsa-light-gray: rgb(223, 223, 233);
+    --lsa-light-gray: #ebebeb;
   }
 
 .lsa-light-gray{
@@ -14,7 +14,9 @@
 .lsa-blue{
     background-color: var(--lsa-blue) !important;
   }
-  
+  .lsa-light-blue{
+    background-color: var(--lsa-light-blue) !important;
+  }
   .lsa-orange{
     background-color: var(--lsa-orange) !important;
   }
@@ -86,6 +88,25 @@
     align-items: center;
     margin-left: 10px;
     margin-right: 10px;
+  }
+  .reactive-button{
+    transition: all .3s cubic-bezier(0.25, 1, 0.33, 1);
+  }
+
+  .reactive-button:active {
+transform:scale(0.95);
+box-shadow: 0 10px 25px rgba(0,0,0,0.14), 0 5px 15px rgba(0,0,0,0.14);
+  }
+
+
+  .hand-on-cursor{
+    cursor: pointer;
+  }
+
+  .modal-header{
+    background-color: var(--lsa-blue);
+    color: white;
+    font-weight: bold;
   }
   
   

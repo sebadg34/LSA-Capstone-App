@@ -2,39 +2,14 @@
    
    <div>
     <!-- Comienzo del NavBAR-->
-    <b-navbar toggleable="lg" type="dark" class="my-custom-nav">
-    <b-navbar-brand href="#" class="ml-3">
-        <img src="../assets/LSA.png" alt="Logo" class="my-logo img-fluid">
-    </b-navbar-brand>
-
-    <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
-
-    <b-collapse id="nav-collapse" is-nav>
-      <b-navbar-nav class="mx-auto text-center">
-        <b-nav-item href="#" class="my-nav-item">Home </b-nav-item>
-        <b-nav-item href="#" class="my-nav-item">Ayuda </b-nav-item>
-        <b-nav-item href="https://www.ucn.cl" class="my-nav-item">UCN </b-nav-item>
-        
-      </b-navbar-nav>
-
-      
-
-      <!-- items del nav alineados -->
-      <b-navbar-nav class="ml-auto">
-        <b-nav-item>
-          <img src="../assets/ucn.png" alt="Second Image" class="segunda img-fluid">
-        </b-nav-item>
-      </b-navbar-nav>
-     
-    </b-collapse>
-    </b-navbar>
+    
 
         <!-- FIN del NavBAR-->
 
         <!--Empieza el Formulario de recepción y posterior analisis-->
         <div class="formulario">
         <b-form>
-          <div class="row">
+          <div  class="row">
             
             <!-- Grupo de elementos del recepcionista -->
             <div class="col-md-4">
