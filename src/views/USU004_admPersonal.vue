@@ -10,22 +10,23 @@
 
             </b-row>
 
-            <b-icon icon="x-circle" scale="2" @click="close()"  class="hand-on-cursor align-self-end"></b-icon>
-
+<button type="button" class="close" aria-label="Close" @click="close()">
+  <span aria-hidden="true" style="color:white">&times;</span>
+</button>
         </template>
 
         <b-row class="pb-2">
             <b-col class="col-6">
                 <label for="input-live">Rut:</label>
-                <b-form-input id="input-live" v-model="name" :state="nameState" aria-describedby="input-live-help input-live-feedback" placeholder="" trim></b-form-input>
+                <b-form-input class="mb-1" id="input-live" v-model="name" :state="nameState" aria-describedby="input-live-help input-live-feedback" placeholder="" trim></b-form-input>
                 <label for="input-live">Apellidos:</label>
-                <b-form-input id="input-live" v-model="name" :state="nameState" aria-describedby="input-live-help input-live-feedback" placeholder="" trim></b-form-input>
+                <b-form-input class="mb-1" id="input-live" v-model="name" :state="nameState" aria-describedby="input-live-help input-live-feedback" placeholder="" trim></b-form-input>
             </b-col>
             <b-col class="col-6">
                 <label for="input-live">Nombres:</label>
-                <b-form-input id="input-live" v-model="name" :state="nameState" aria-describedby="input-live-help input-live-feedback" placeholder="" trim></b-form-input>
+                <b-form-input class="mb-1" id="input-live" v-model="name" :state="nameState" aria-describedby="input-live-help input-live-feedback" placeholder="" trim></b-form-input>
                 <label for="input-live">Correo:</label>
-                <b-form-input id="input-live" v-model="name" :state="nameState" aria-describedby="input-live-help input-live-feedback" placeholder="" trim></b-form-input>
+                <b-form-input class="mb-1" id="input-live" v-model="name" :state="nameState" aria-describedby="input-live-help input-live-feedback" placeholder="" trim></b-form-input>
             </b-col>
         </b-row>
         <hr>
@@ -33,7 +34,7 @@
         <b-row class="pt-2">
             <b-col class="col-6">
                 <label for="input-live">Telefono Movil:</label>
-                <b-input-group>
+                <b-input-group class="mb-1">
 
                     <b-input-group-prepend is-text>
                         +56 9
@@ -42,7 +43,7 @@
 
                 </b-input-group>
                 <label for="input-live">Contacto Emergencia:</label>
-                <b-input-group>
+                <b-input-group class="mb-1">
 
                     <b-input-group-prepend is-text>
                         +56 9
@@ -53,15 +54,15 @@
             </b-col>
             <b-col class="col-6">
                 <label for="input-live">Cargo:</label>
-                <b-form-select v-model="selected" :options="cargos"></b-form-select>
+                <b-form-select class="mb-1" v-model="selected" :options="cargos"></b-form-select>
                 <label for="input-live">Tipo Trabajador:</label>
-                <b-form-input id="input-live" v-model="name" :state="nameState" aria-describedby="input-live-help input-live-feedback" placeholder="" trim></b-form-input>
-            </b-col>
+               <b-form-select class="mb-1" v-model="selected" :options="tipos"></b-form-select>
+               </b-col>
         </b-row>
 
         <template #modal-footer>
 
-            <b-button variant="primary" size="xl" class="float-right" @click="show=false">
+            <b-button variant="primary" size="xl" class="float-right reactive-button" style="font-weight:bold" @click="show=false">
                 Crear y Guardar
             </b-button>
 
@@ -74,7 +75,11 @@
 
             <b-col class="col-3">
                 <b-row>
-                    <b-button v-b-modal.modal-personal style="border-radius: 20px; font-weight: bold; font-size: 20px; " class="lsa-light-blue reactive-button">Agregar Personal</b-button>
+                    <b-button v-b-modal.modal-personal style="border-radius: 15px; font-weight: bold; font-size: 18px; " class="lsa-light-blue reactive-button">
+                    
+                    Agregar Personal
+                    <b-icon  icon="person-plus-fill"></b-icon>
+                    </b-button>
                 </b-row>
             </b-col>
             <b-row class="pt-5">
@@ -103,7 +108,23 @@ export default {
             Emergencia: "",
             Cargo: "",
             Tipo: "",
-
+tipos: [{
+                    value: 'practicante',
+                    text: 'Practicante'
+                },
+                {
+                    value: 'plazofijo',
+                    text: 'Contrato Plazo Fijo'
+                },
+                {
+                    value: 'plazoindefinido',
+                    text: 'Contrato Plazo Indefinido'
+                },
+                {
+                    value: 'honorario',
+                    text: 'Contrato Honorario'
+                },
+            ],
             cargos: [{
                     value: 'gerente',
                     text: 'Gerente'
