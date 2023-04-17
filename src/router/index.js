@@ -3,6 +3,7 @@ import VueRouter from 'vue-router'
 import HomeView from '../views/HomeView.vue'
 import LoginView from '../views/Login.vue'
 import MUS001 from '../views/MUS001.vue'
+import MUS004 from '../views/MUS004-vistaSuperv-Jefe.vue'
 
 Vue.use(VueRouter)
 
@@ -23,6 +24,12 @@ const routes = [
     component: MUS001
 
   },
+  {
+    path: '/AdministrarMuestra',
+    name: 'AdminMuestra',
+    component: MUS004
+  }
+  ,
 
   {
     path: '/about',

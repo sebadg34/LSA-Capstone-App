@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import App from './App.vue'
+import VuejsModal from 'vue-js-modal'
 
 import { BootstrapVue, IconsPlugin } from 'bootstrap-vue'
 
@@ -16,6 +17,8 @@ import router from './router'
 Vue.use(BootstrapVue)
 // Optionally install the BootstrapVue icon components plugin
 Vue.use(IconsPlugin)
+
+Vue.use(VuejsModal)
 
 new Vue({
   router,
