@@ -17,8 +17,27 @@
 
  </div>
  
-</b-navbar>
 
+</b-navbar>
+<b-navbar style="height:50px;background-color: var(--lsa-blue)">
+
+
+
+<b-button class="lsa-light-gray btn-margin reactive-button">
+ <b-icon class="lsa-orange-text" icon="thermometer-snow"></b-icon>
+  <span class="lsa-gray-text"> 
+    Muestras
+  </span>
+  
+</b-button>
+<b-button class="lsa-light-gray btn-margin reactive-button">
+  <b-icon class="lsa-orange-text"  icon="people-fill"></b-icon>
+ 
+ <span class="lsa-gray-text">   Personal </span>
+  
+</b-button>
+ 
+</b-navbar>
 <!--
     <b-navbar toggleable="lg" style="background-color: pink" class="my-custom-nav">
     <b-navbar-brand href="#" class="ml-3">
@@ -51,6 +70,11 @@
 -->
 
     <router-view/>
+
+    <b-navbar style="height:45px;background-color: #ebebeb; bottom: 0px; position: fixed; width: 100%">
+
+
+</b-navbar>
   </div>
 </template>
 
@@ -62,7 +86,10 @@
   text-align: center;
   color: #2c3e50;
 }
-
+.btn-margin{
+  margin-left:2px;
+  margin-right:2px;
+}
 nav {
   padding: 30px;
 }

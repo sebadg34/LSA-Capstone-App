@@ -9,6 +9,7 @@ Vue.config.productionTip = false
 import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
 import '@/styles/main.scss';
+import modal_agregarPersonal from '@/components/admPersonal/modal_agregarPersonal.vue'
 
 import router from './router'
 
@@ -16,7 +17,7 @@ import router from './router'
 Vue.use(BootstrapVue)
 // Optionally install the BootstrapVue icon components plugin
 Vue.use(IconsPlugin)
-
+Vue.component("modal_agregarPersonal", modal_agregarPersonal);
 new Vue({
   router,
   render: h => h(App)

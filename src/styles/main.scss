@@ -6,8 +6,15 @@
     --lsa-green: #0E7C4A;
     --lsa-light-green: #00b74f;
     --lsa-light-gray: #ebebeb;
+    --lsa-gray: #414141;
   }
 
+  .lsa-gray{
+    background-color: var(--lsa-gray) !important;
+  }
+  .lsa-gray-text{
+    color: var(--lsa-gray) !important;
+  }
 .lsa-light-gray{
     background-color: var(--lsa-light-gray) !important;
   }
@@ -98,7 +105,10 @@ transform:scale(0.95);
 box-shadow: 0 10px 25px rgba(0,0,0,0.14), 0 5px 15px rgba(0,0,0,0.14);
   }
 
-
+.btn-round{
+  border-radius: 50%;
+  aspect-ratio: 1 / 1 !important;
+}
   .hand-on-cursor{
     cursor: pointer;
   }
