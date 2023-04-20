@@ -1,5 +1,5 @@
 <template>
-    <div class="login">
+    <div class="login" style="margin-top:100px">
     <b-container>
         <b-skeleton-wrapper :loading="loading">
             <template #loading>
@@ -18,7 +18,7 @@
             <b-row style="text-align:center;" class="text-center" align-h="center">
                 <br>
                 <b-col sm="12" xs="12" lg="6">
-                    <b-card header-class="lsa-blue" header-tag="header" header="Primary" text-variant="white">
+                    <b-card header-class="lsa-blue" header-tag="header" header="Ingreso sistema muestras LSA" text-variant="white">
                       
 
                        
