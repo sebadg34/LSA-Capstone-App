@@ -2,7 +2,10 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import HomeView from '../views/HomeView.vue'
 import LoginView from '../views/Login.vue'
-import MUS001 from '../views/MUS001.vue'
+import MUS001 from '../views/MUS001.vue
+import MUS004 from '../views/MUS004-vistaSuperv-Jefe.vue'
+import USU004_admPersonal from '../views/USU004_admPersonal'
+
 
 Vue.use(VueRouter)
 
@@ -22,7 +25,18 @@ const routes = [
     name: 'formulario',
     component: MUS001
 
+  },{
+    path: '/admPersonal',
+    name: 'admPersonal',
+    component: USU004_admPersonal
+
   },
+  {
+    path: '/AdministrarMuestra',
+    name: 'AdminMuestra',
+    component: MUS004
+  }
+  ,
 
   {
     path: '/about',
