@@ -18,6 +18,9 @@
   
   <b-button variant="primary" class="buttones" @click="filtrarTabla">Filtrar</b-button>
   <b-button variant="danger" class="buttones" @click="borrarFiltro">Borrar Filtro(s)</b-button>
+
+ 
+
      </div> 
   <!-- Fin Filtrador-->    
 
@@ -36,15 +39,23 @@
     <b-dropdown variant="primary" size="sm" menu-class="custom-dropdown-menu" :text="'Ver opciones'">
       <b-dropdown-item v-for="opcion in generarOpcionesEstado(row.item.Estado)" :key="opcion.value">
         <b-dropdown-item v-if="opcion.text === 'Detalle muestra'" :key="opcion.value">
-          <b-button variant="link" @click="detalleMuestra(row.item)">
-            Ver detalles
-          </b-button>
+          
+           <!--- modal de prueba -->
+            <b-button @click="showDetalle = true">Detalle de Muestra</b-button>
+            <DetalleMuestra v-if="showDetalle" :datos="datosMuestra" :RUM="RUM" @modal-cerrado="onModalCerrado"></DetalleMuestra>
+                         
+              
+           <!---FIN modal de prueba -->
+
+
+          
+
         </b-dropdown-item>
 
         <b-dropdown-item v-if="opcion.text === 'Observaciones'" :key="opcion.value">
-          <b-button variant="link" @click="Observaciones(row.item)">
-            Observaciones
-          </b-button>
+          <b-button @click="MostrarObservaciones(row.item.RUM)">Observaciones de la muestra</b-button>
+          
+          <ModalObservaciones v-if="showObservaciones" :datos="datosMuestra" :rum="RUM" @modal-cerrado="onModalCerrado"></ModalObservaciones>
         </b-dropdown-item>
 
         <b-dropdown-item v-if="opcion.text === 'Analista Designado'" :key="opcion.value">
@@ -103,9 +114,15 @@
 </template>
 
 <script>
+import DetalleMuestra from './DetalleMuestra.vue'
+import ModalObservaciones from './ModalObservaciones.vue'
+
 export default {
   data() {
     return {
+      
+      showDetalle: false,
+      showObservaciones: false,
       items: [
         { id: 1, RUM: '123', Prioridad: 'Alta', Estado: 'En Análisis',  },
         { id: 2, RUM: '456', Prioridad: 'Normal', Estado: 'Finalizado' },
@@ -147,6 +164,13 @@ export default {
       estados: ['Recepcionado', 'En Análisis', 'Finalizado']
      }
   },
+
+  components: {
+    DetalleMuestra,
+    ModalObservaciones,
+    
+  },
+
   methods: {
 
     generarOpcionesEstado(estado) {
@@ -180,33 +204,42 @@ export default {
       ];
   }
 },
-detalleMuestra() {
-    // Aquí pones la lógica para mostrar los detalles de la muestra seleccionada
-    window.location.href = "https://www.youtube.com";
-  },
+showModal(modalDetalleMuestra) {
+      this.$refs[modalDetalleMuestra].show(); // mostrar el modal
+    },
+    onModalCerrado() {
+      this.showDetalle = false;
+      this.showObservaciones = false;
+    },
+  
+   
 
-Observaciones() {
-    // Aquí pones la lógica para mostrar los detalles de la muestra seleccionada
-    window.location.href = "https://www.youtube.com";
-  },
+MostrarObservaciones(RUM) {
+    this.showObservaciones = true;
+    this.datosMuestra = { RUM: RUM };
+},
+DetalleMuestra(RUM) {
+    this.showDetalle = true;
+    this.datosMuestra = { RUM: RUM };
+},
 
 Analista() {
     // Aquí pones la lógica para mostrar los detalles de la muestra seleccionada
     window.location.href = "https://www.youtube.com";
-  },
+},
 
 Descargar() {
     // Aquí pones la lógica para mostrar los detalles de la muestra seleccionada
     window.location.href = "https://www.youtube.com";
-  },
+},
 
 Ingresar() {
     // Aquí pones la lógica para mostrar los detalles de la muestra seleccionada
     window.location.href = "https://www.youtube.com";
-  },
+},
 AdministrarCartas(){
   window.location.href = "https://www.youtube.com";
-  },
+},
 RehacerAnalisis(){
   window.location.href = "https://www.youtube.com";
 },
@@ -216,13 +249,14 @@ IngresarMuestraLab(){
 MarcarAnalisis(){
   window.location.href = "https://www.youtube.com";
 },
+beforeDestroy() {
+    this.showDetalle = false;
+},
 
-
-
-    viewSample(item, index, opcion) {
+viewSample(item, index, opcion) {
       if (opcion.value === 'detalle') {
        console.log('Ver detalle de:', item);}
-      },
+},
 
 
     filtrarTabla() {
