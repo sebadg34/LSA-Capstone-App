@@ -82,7 +82,59 @@
 
 <script>
 export default {
-    
+    data() {
+        return {
+             Nombre: "",
+            Rut: "",
+            Correo: "",
+            Apellidos: "",
+            Movil: "",
+            Emergencia: "",
+            Cargo: "",
+            Tipo: "",tipos: [{
+                value: 'practicante',
+                text: 'Practicante'
+            },
+            {
+                value: 'plazofijo',
+                text: 'Contrato Plazo Fijo'
+            },
+            {
+                value: 'plazoindefinido',
+                text: 'Contrato Plazo Indefinido'
+            },
+            {
+                value: 'honorario',
+                text: 'Contrato Honorario'
+            },
+            ],
+            cargos: [{
+                value: 'gerente',
+                text: 'Gerente'
+            },
+            {
+                value: 'jefe',
+                text: 'Jefe(a) de laboratorio'
+            },
+            {
+                value: 'supervisor',
+                text: 'Supervisor(a)'
+            },
+            {
+                value: 'finanzas',
+                text: 'Administrador de finanzas'
+            },
+            {
+                value: 'analista',
+                text: 'Analista Químico'
+            },
+            {
+                value: 'quimico',
+                text: 'Químico'
+            },
+            ], 
+        }
+    },
 }
 </script>
 <style lang="">
