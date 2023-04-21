@@ -3,21 +3,21 @@
   <!-- Filtrador-->
     <div class="form">
   <b-form-group label="Prioridad" label-for="filtroPrioridad" class="my-form mr-2">
-    <b-form-select v-model="filtroPrioridad" :options="prioridades" class="mb-3"></b-form-select>
+    <b-form-select v-model="filtroPrioridad" :options="prioridades" ></b-form-select>
   </b-form-group>
 
   <b-form-group class="my-form mr-2" label="Estado" label-for="filtroEstado">
     
-    <b-form-select v-model="filtroEstado" :options="estados" class="mb-3"></b-form-select>
+    <b-form-select v-model="filtroEstado" :options="estados" ></b-form-select>
   </b-form-group>
 
   <b-form-group class="my-form mr-2" label="RUM" label-for="filtro-rum">
-    <b-form-input id="filtro-rum"  v-model="filtroRUM"></b-form-input>
+    <b-form-input id="filtro-rum" v-model="filtroRUM"></b-form-input>
     
   </b-form-group>
   
-  <b-button variant="primary" class="buttones" @click="filtrarTabla">Filtrar</b-button>
-  <b-button variant="danger" class="buttones" @click="borrarFiltro">Borrar Filtro(s)</b-button>
+  <b-button variant="primary" class="buttons" @click="filtrarTabla">Filtrar</b-button>
+  <b-button variant="danger" class="buttons" @click="borrarFiltro">Borrar Filtro(s)</b-button>
 
  
 

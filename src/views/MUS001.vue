@@ -1,12 +1,7 @@
 <template>
    
    <div>
-    <!-- Comienzo del NavBAR-->
-    
-
-        <!-- FIN del NavBAR-->
-
-        <!--Empieza el Formulario de recepción y posterior analisis-->
+      <!--Empieza el Formulario de recepción-->
         <div class="formulario">
         <b-form>
           <div  class="row">

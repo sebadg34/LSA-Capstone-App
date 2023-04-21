@@ -5,6 +5,7 @@ import LoginView from '../views/Login.vue'
 import MUS001 from '../views/MUS001.vue'
 import MUS004 from '../views/MUS004-vistaSuperv-Jefe.vue'
 import USU004_admPersonal from '../views/USU004_admPersonal'
+import MUS002 from '../views/MUS002-IngMuesLab.vue'
 
 
 Vue.use(VueRouter)
@@ -37,6 +38,13 @@ const routes = [
     component: MUS004
   }
   ,
+  {
+    path: '/IngMuesLab',
+    name: 'IngresoLab',
+    component: MUS002
+
+
+  },
 
   {
     path: '/about',
