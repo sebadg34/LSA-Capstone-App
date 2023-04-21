@@ -27,12 +27,12 @@
               </b-form-group>
 
               <b-form-group id="TipoPago-group" class="my-form-group" label="Medio de pago: " label-for="TipoPago-input">
-  <div class="d-flex flex-column">
-    <div v-for="(opcion, index) in opciones" :key="index" class="mb-2">
-      <b-form-radio v-model="pago" :value="opcion.valor">{{ opcion.texto }}</b-form-radio>
-    </div>
-  </div>
-</b-form-group>
+                <div class="d-flex flex-column">
+                <div v-for="(opcion, index) in opciones" :key="index" class="mb-2">
+                <b-form-radio v-model="pago" :value="opcion.valor">{{ opcion.texto }}</b-form-radio>
+                </div>
+                </div>
+                </b-form-group>
 
             </div>
 
