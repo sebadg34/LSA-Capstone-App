@@ -7,6 +7,7 @@ import MUS004 from '../views/MUS004-vistaSuperv-Jefe.vue'
 import USU004_admPersonal from '../views/USU004_admPersonal'
 import MUS002 from '../views/MUS002-IngMuesLab.vue'
 import MUS003 from '../views/MUS003-vistaQm-AQm.vue'
+import MUS006 from '../views/MUS006-vistaGerente.vue'
 
 
 
@@ -52,6 +53,12 @@ const routes = [
     name: 'AdminQm',
     component: MUS003
 
+  },
+  {
+
+    path: '/Gerente',
+    name:'vistaGerente',
+    component: MUS006
   },
 
   {

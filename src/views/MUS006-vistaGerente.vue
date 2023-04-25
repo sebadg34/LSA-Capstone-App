@@ -1,6 +1,6 @@
 <template>
+    <div>
 
-<div>
     <!-- Filtrador-->
     <div class="form">
   <b-form-group label="Prioridad" label-for="filtroPrioridad" class="my-form mr-2">
@@ -47,29 +47,30 @@
           <ModalObservaciones v-if="showObservaciones" :datos="datosMuestra" :rum="RUM" @modal-cerrado="onModalCerrado"></ModalObservaciones>
         </b-dropdown-item>        
 
-        <b-dropdown-item v-if="opcion.text === 'Marcar Analisis como completado'" :key="opcion.value">
-          <b-button variant="link" @click="MarcarAnalisis(row.item)">
-            Marcar analisis como completado
+        <b-dropdown-item v-if="opcion.text === 'Descargar Informe'" :key="opcion.value">
+          <b-button variant="link" @click="Descargar(row.item)">
+            Descargar Informe
           </b-button>
         </b-dropdown-item>       
       </b-dropdown-item>
     </b-dropdown>
   </template>
 </b-table>
-</div>
+    </div>
 </template>
 
 <script>
 import DetalleMuestra from './DetalleMuestra.vue'
 import ModalObservaciones from './ModalObservaciones.vue'
 
-export default{
+
+export default {
     data(){
         return{
 
-
       showDetalle: false,
       showObservaciones: false,
+
       items: [
         { id: 1, RUM: '123', Prioridad: 'Alta', Estado: 'En Análisis',  },
         { id: 2, RUM: '456', Prioridad: 'Normal', Estado: 'Finalizado' },
@@ -86,15 +87,14 @@ export default{
         { text: 'Recepcionado', value: 'Recepcionado' },
         { text: 'En Análisis', value: 'En Análisis' },
         { text: 'Finalizado', value: 'Finalizado' },      
-        ],
+      ],
       fields: [
         { key: 'RUM', label: 'RUM' },
-        { key: 'Matriz', label: 'Matriz' },        
-        { key: 'Parámetro(s)', label: 'Parametros(s)' },
-        { key: 'Metodología', label: 'Metodología' },
-        { key: 'Fecha Ingreso', label: 'Fecha ingreso' },
-        { key: 'Fecha Entrega', label: 'Fecha Entrega' },
-        { key: 'Hora Ingreso', label: 'Hora Ingreso' },
+        { key: 'NombreSolicitante', label: 'Nombre del Solicitante' },        
+        { key: 'Empresa', label: 'Empresa' },
+        { key: 'Matriz', label: 'Matriz' },
+        { key: 'ValorNeto', label: 'Valor Neto' },
+        { key: 'Fecha Entrega', label: 'Fecha Entrega' },        
         { key: 'Prioridad', label: 'Prioridad' },
         { key: 'Estado', label: 'Estado' },
         { key: 'Acción', label: 'Acción' },
@@ -110,15 +110,17 @@ export default{
         prioridades: ['Normal', 'Alta', 'Urgente'],
         estados: ['Recepcionado', 'En Análisis', 'Finalizado']
         }
+
+
     },
 
-    components: {
+components: {
     DetalleMuestra,
     ModalObservaciones,
-    
-    },
+},
 
-    methods: {
+methods: {
+
 
 generarOpcionesEstado(estado) {
   switch (estado) {
@@ -126,21 +128,21 @@ generarOpcionesEstado(estado) {
       return [               
         { text: 'Detalle muestra', value: 'Detalle Muestra' },
         { text: 'Observaciones', value: 'Observaciones' },        
-        { text: 'Marcar Analisis como completado', value: 'marcar_completado' },        
+        { text: 'Descargar Informe', value: 'Descargar Informe' },        
         
       ];
     case 'En Análisis':
       return [
         { text: 'Detalle muestra', value: 'Detalle Muestra' },
         { text: 'Observaciones', value: 'Observaciones' },        
-        { text: 'Marcar Analisis como completado', value: 'marcar_completado' },
+        { text: 'Descargar Informe', value: 'Descargar Informe' },
         
       ];
     case 'Finalizado':
       return [        
         { text: 'Detalle muestra', value: 'Detalle Muestra' },
         { text: 'Observaciones', value: 'Observaciones' },        
-        { text: 'Marcar Analisis como completado', value: 'marcar_completado' },        
+        { text: 'Descargar Informe', value: 'Descargar Informe' },        
       ];
     default:
       return [
@@ -148,7 +150,6 @@ generarOpcionesEstado(estado) {
       ];
   }
 },
-
 showModal(modalDetalleMuestra) {
       this.$refs[modalDetalleMuestra].show(); // mostrar el modal
     },
@@ -218,11 +219,10 @@ mostrarError(mensaje) {
     this.error = true
     this.$modal.show('error-modal')
 },
-    },
+},
 
 watch: {
 
-    
 filtroPrioridad() {
       this.filtrarTabla();
 },
@@ -230,9 +230,11 @@ filtroEstado(){
       this.filtrarTabla();
 }
 },
-mounted() { //Muestra la tabla desde que carga la página, si lo borramos hay que presionar el boton filtrar para mostrar todas las muestras que tiene a cargo. 
+
+mounted() {
     this.filtrarTabla();
   }
 
 }
 </script>
+    
