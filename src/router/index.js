@@ -6,6 +6,8 @@ import MUS001 from '../views/MUS001.vue'
 import MUS004 from '../views/MUS004-vistaSuperv-Jefe.vue'
 import USU004_admPersonal from '../views/USU004_admPersonal'
 import MUS002 from '../views/MUS002-IngMuesLab.vue'
+import MUS003 from '../views/MUS003-vistaQm-AQm.vue'
+
 
 
 Vue.use(VueRouter)
@@ -43,6 +45,12 @@ const routes = [
     name: 'IngresoLab',
     component: MUS002
 
+
+  },
+  {
+    path: '/AdmMuesQm',
+    name: 'AdminQm',
+    component: MUS003
 
   },
 
