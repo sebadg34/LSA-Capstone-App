@@ -42,19 +42,13 @@
           
            <!--- modal de prueba -->
             <b-button @click="showDetalle = true">Detalle de Muestra</b-button>
-            <DetalleMuestra v-if="showDetalle" :datos="datosMuestra" :RUM="RUM" @modal-cerrado="onModalCerrado"></DetalleMuestra>
-                         
-              
-           <!---FIN modal de prueba -->
-
-
-          
+            <DetalleMuestra v-if="showDetalle" :datos="datosMuestra" :RUM="RUM" @modal-cerrado="onModalCerrado"></DetalleMuestra>              
+           <!---FIN modal de prueba -->        
 
         </b-dropdown-item>
 
         <b-dropdown-item v-if="opcion.text === 'Observaciones'" :key="opcion.value">
-          <b-button @click="MostrarObservaciones(row.item.RUM)">Observaciones de la muestra</b-button>
-          
+          <b-button @click="MostrarObservaciones(row.item.RUM)">Observaciones de la muestra</b-button>          
           <ModalObservaciones v-if="showObservaciones" :datos="datosMuestra" :rum="RUM" @modal-cerrado="onModalCerrado"></ModalObservaciones>
         </b-dropdown-item>
 

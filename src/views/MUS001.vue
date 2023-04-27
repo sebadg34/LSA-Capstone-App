@@ -3,16 +3,16 @@
    <div>
       <!--Empieza el Formulario de recepción-->
         <div class="formulario">
-        <b-form>
+          <b-form action="/api/Form" @submit.prevent="submitForm">
           <div  class="row">
             
             <!-- Grupo de elementos del recepcionista -->
             <div class="col-md-4">
             
               <h1>RECEPCIONISTA</h1>
-              <b-form-group id="recepcionista-group" class="my-form-group" label="Nombre Recepcionista: " label-for="recepcionista-input">
+              <!-- <b-form-group id="recepcionista-group" class="my-form-group" label="Nombre Recepcionista: " label-for="recepcionista-input">
                 <b-form-input id="recepcionista-input"  v-model="recepcionista" required></b-form-input>
-              </b-form-group>
+              </b-form-group> -->
 
               <b-form-group id="solicitante-group" class="my-form-group" label="Nombre Solicitante: " label-for="solicitante-input">
                 <b-form-input id="solicitante-input" v-model="solicitante" required></b-form-input>
@@ -36,13 +36,13 @@
 
               
               <b-form-group id="n-muestras-group" class="my-form-group" label="N° Muestras: " label-for="n-muestras-input">
-                <b-form-input id="n-muestras-input" v-model="nMuestras" type="number" min="1" required></b-form-input>
+                <b-form-input id="n-muestras-input" v-model="nMuestras" min="1"></b-form-input>
               </b-form-group>
 
               <b-button @click="agregarMuestras">Agregar Muestra</b-button>
               <b-button @click="verMuestras" v-if="muestras.length > 0">Ver Muestras</b-button>
 
-              <b-modal v-model="modalVerMuestras">
+               <!--<b-modal v-model="modalVerMuestras">
                 <template v-slot:modal-title>
                   <h4>Muestras</h4>
                 </template>
@@ -54,7 +54,7 @@
                 <template v-slot:modal-footer>
                   <b-button variant="primary" @click="modalVerMuestras = false">Cerrar</b-button>
                 </template>
-              </b-modal>
+              </b-modal> -->
 
               <b-form-group id="fecha-group" class="my-form-group" label="Fecha (Recepción): " label-for="fecha-input">
                 <b-form-input id="fecha-input" v-model="fecha" readonly></b-form-input>
@@ -64,7 +64,7 @@
                 <b-form-input id="hora-input" v-model="hora" readonly></b-form-input>
               </b-form-group>
               
-              <b-button @click="generarFechaHoraActual()">Generar Fecha & Hora Actual</b-button>
+              <b-button @click="generarFechaHoraActual()">Generar Fecha & Hora</b-button>
 
               <b-form-group id="muestreado-group" class="my-form-group" label="Muestreado por: " label-for="muestreado-input">
                 <b-form-checkbox-group id="muestreado-input" v-model="muestreado" :options="opcionesMuestreado" inline></b-form-checkbox-group>
@@ -88,16 +88,9 @@
                   </template>
                 </b-form-select>
               </b-form-group>
-
               
-            </div>
-
-              <!-- tabla que muestra las muestras definidas anteriormente en el campo nMuestras-->
-
-
-             <!-- <b-table v-if="tablaVisible" :items="muestras" :fields="camposTabla"></b-table> -->
-            
-      
+            </div>             
+                  
               <!-- Grupo de elementos del transportista -->
               <div class="col-md-4">
 
@@ -120,11 +113,11 @@
               </b-form-group>
         
               <b-form-group id="Temp-group" class="my-form-group" label="T° de muestra(s): " label-for="Temp-input">
-                <b-form-input id="Temp-input" v-model="Temperatura" required pattern="-?\d+(\.\d+)?" title="Por favor ingrese un número válido" type="number"></b-form-input>
+                <b-form-input id="Temp-input" v-model="Temperatura" title="Por favor ingrese un número válido"></b-form-input>
               </b-form-group>
     
               <b-form-group id="fechaE-group" label="Fecha de entrega:" class="my-form-group" label-for="fechaE-input">
-                <b-form-datepicker id="fechaE-input" v-model="fechaEntrega"></b-form-datepicker>
+                <b-form-datepicker id="fechaE-input" v-model="fechaEntrega" date-format="DD-MM-YY"></b-form-datepicker>
               </b-form-group>
             
               </div>
@@ -133,7 +126,7 @@
                 <b-form-textarea id="observaciones-input" v-model="observaciones"></b-form-textarea>
               </b-form-group>
 
-        <b-button type="submit" variant="primary" title="Enviar formulario" @click="showConfirmation">Enviar</b-button>
+              <b-button type="submit" variant="primary" title="Enviar formulario">Enviar</b-button>
       </b-form>
     </div>
     </div>
@@ -143,7 +136,11 @@
 </template>
 
 <script>
-export default {
+
+import axios from 'axios';
+
+export default{
+
   data() {
     return {
       recepcionista: '',
@@ -152,18 +149,18 @@ export default {
       direccion: '',
       muestreado:'',
       opcionesMuestreado: [
-      { value: 'opción 1', text: 'UCN' },
-      { value: 'opción 2', text: 'LSA' }],
+      { value: 'UCN', text: 'UCN' },
+      { value: 'LSA', text: 'LSA' }],
       prioridad: null,
       opcionesPrioridad: [
-      { value: 'normal', text: 'Normal', color: 'green' },
-      { value: 'alta', text: 'Alta', color: 'yellow' }, 
-      { value: 'urgente', text: 'Urgente', color: 'red' }],
+      { value: '1', text: 'Normal', color: 'green' },
+      { value: '2', text: 'Alta', color: 'yellow' }, 
+      { value: '3', text: 'Urgente', color: 'red' }],
       TipoMatriz: null,
       opcionesMatriz: [
-      { value: 'AGUA', text: 'AGUA RESIDUAL'},
-      { value: 'TIERRA', text: 'Tierra del infierno'}, 
-      { value: 'MINERAL', text: 'Nether mineral'}],
+      { value: 'Agua', text: 'Agua'},
+      { value: 'Tierra', text: 'Tierra'}, 
+      { value: 'Mineral', text: 'Mineral'}],
       transportista:'',
       Temperatura:'',
       transportistaRut:'',
@@ -177,7 +174,8 @@ export default {
       showModal: false,
       ultimoCodigo: 100000,
       fecha: "",
-      hora: ""
+      hora: "",
+      patente: ""
     };
   },
   
@@ -189,11 +187,7 @@ export default {
       alert("El formulario se ha enviado con éxito");
     }
   },
-    submit() {
-
-      // A la espera de continuar con el proyecto
     
-  },
   agregarMuestras() {
       for (let i = 0; i < this.nMuestras; i++) {
         const codigo = ++this.ultimoCodigo;
@@ -204,10 +198,77 @@ export default {
       this.modalVerMuestras = true
     },
     generarFechaHoraActual() {
-      const now = new Date();
-      this.fecha = now.toLocaleDateString();
-      this.hora = now.toLocaleTimeString();
+  const now = new Date();
+  const dia = now.getDate().toString().padStart(2, '0');
+  const mes = (now.getMonth() + 1).toString().padStart(2, '0');
+  const anio = now.getFullYear().toString().substring(2);
+  this.fecha = `${dia}-${mes}-${anio}`;
+  this.hora = now.toLocaleTimeString();
+},
+
+
+
+    submitForm() {
+      // Obtener datos del formulario
+      const datos = {
+
+        //recepcionista: this.recepcionista,
+        nombre_empresa: this.solicitante,
+        direccion_empresa: this.direccion,
+        nombre_solicitante: this.solicitante,
+        muestreado_por: this.muestreado,
+        matriz: this.TipoMatriz,
+        cantidad_muestras: this.nMuestras,
+        prioridad: this.prioridad,
+        fecha_muestreo: this.fecha,
+        hora_muestreo: this.hora,
+        temperatura_transporte: this.Temperatura,
+        fecha_entrega: this.fechaEntrega,
+        nombre_transportista: this.transportista,
+        patente_vehiculo: this.patente,
+        rut_transportista: this.transportistaRut,
+        //rut: this.rut,       
+        //fono: this.fono,       
+        //observaciones: this.observaciones,
+        
+        
+        
+        
+        
+
+
+
+
+      } 
+
+      const jsonData = JSON.stringify(datos);
+
+      axios.post('/api/Form', jsonData, {
+    headers: {
+      'Content-Type': 'application/json'
+       }
+         })
+        .then(response => {
+          console.log(response);
+          alert('Formulario enviado con éxito');
+          
+          // Aquí puedes hacer algo con la respuesta
+        })
+        .catch(error => {
+          console.log(error);
+          alert('Error al enviar el formulario');
+          
+          // Aquí puedes manejar el error
+        });
+    
+
+
+      
+      
+        
     }
+
+
   }
 }
 </script>

@@ -59,13 +59,6 @@
 </div>
 </template>
 
-
-
-
-
-
-
-
 <script>
 
 import DetalleMuestra from './DetalleMuestra.vue'
