@@ -226,7 +226,7 @@ this.$refs.form.validate().then(success => {
             console.log(response)
             if (response != null) {
                 if (response.status == 200) {
-                    this.$bvToast.toast(`Creación de personal exitosa`, {
+                    this.$bvToast.toast(`Edición de personal exitosa`, {
                         title: 'Exito',
                         toaster: 'b-toaster-top-center',
                         solid: true,
@@ -237,7 +237,7 @@ this.$refs.form.validate().then(success => {
                 }
                 this.$bvModal.hide('modal-editar-personal')
             } else {
-                this.$bvToast.toast(`Error al crear personal`, {
+                this.$bvToast.toast(`Error al editar personal`, {
                     title: 'Error',
                     toaster: 'b-toaster-top-center',
                     solid: true,

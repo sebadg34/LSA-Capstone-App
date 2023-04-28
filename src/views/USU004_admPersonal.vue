@@ -102,8 +102,8 @@ export default {
                 nombre: 'sebastian',
                 apellido: 'delgado guerra',
                 correo: 'prueba@prueba.com',
-                cargo: 'gerente',
-                tipo: 'plazofijo',
+                cargo: 'Gerente',
+                tipo: 'Contrato Plazo Fijo',
                 estado: 'ACTIVO',
                 accion: 'pruebaAccion'
             },{
@@ -111,8 +111,26 @@ export default {
                 nombre: 'sebastian',
                 apellido: 'delgado guerra',
                 correo: 'prueba@prueba.com',
-                cargo: 'supervisor',
-                tipo: 'plazofijo',
+                cargo: 'Gerente',
+                tipo: 'Contrato Plazo Fijo',
+                estado: 'ACTIVO',
+                accion: 'pruebaAccion'
+            },{
+                rut: '19.950.670-6',
+                nombre: 'sebastian',
+                apellido: 'delgado guerra',
+                correo: 'prueba@prueba.com',
+                cargo: 'Gerente',
+                tipo: 'Contrato Plazo Fijo',
+                estado: 'ACTIVO',
+                accion: 'pruebaAccion'
+            },{
+                rut: '19.950.670-6',
+                nombre: 'sebastian',
+                apellido: 'delgado guerra',
+                correo: 'prueba@prueba.com',
+                cargo: 'Gerente',
+                tipo: 'Contrato Plazo Fijo',
                 estado: 'INACTIVO',
                 accion: 'pruebaAccion'
             },{
@@ -120,8 +138,8 @@ export default {
                 nombre: 'sebastian',
                 apellido: 'delgado guerra',
                 correo: 'prueba@prueba.com',
-                cargo: 'gerente',
-                tipo: 'plazofijo',
+                cargo: 'Gerente',
+                tipo: 'Contrato Plazo Fijo',
                 estado: 'ACTIVO',
                 accion: 'pruebaAccion'
             },{
@@ -129,8 +147,8 @@ export default {
                 nombre: 'sebastian',
                 apellido: 'delgado guerra',
                 correo: 'prueba@prueba.com',
-                cargo: 'gerente',
-                tipo: 'plazofijo',
+                cargo: 'Gerente',
+                tipo: 'Contrato Plazo Fijo',
                 estado: 'INACTIVO',
                 accion: 'pruebaAccion'
             }
