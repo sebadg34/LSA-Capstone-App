@@ -2,8 +2,8 @@
     <div style="margin-bottom:50px">
 
         <modal_agregarPersonal />
-        <modal_detallesPersonal />
-        <modal_editarPersonal />
+        <modal_detallesPersonal :user-data="this.modalDetallesData"/>
+        <modal_editarPersonal  :user-data="this.modalEditarData" />
         <modal_estadoPersonal />
         <b-container class="bv-example-row" style="padding-top:50px; padding-left:0px;padding-right: 0px;">
             <b-col class="col-12">
@@ -28,6 +28,7 @@
         <b-row class="justify-content-center">
             <b-col class="col-10">
                 <b-table :fields="campos_tabla" :items="items" style="">
+                    
                     <template #cell(estado)="row">
 
                         <span v-if="row.item.estado == 'ACTIVO'"
@@ -36,7 +37,7 @@
                         <span v-else style="text-transform:uppercase; color:red; font-weight: bold;">{{
                             (row.item.estado) }}</span>
                     </template>
-                    <template #cell(accion)>
+                    <template #cell(accion)="row">
 
 
                         <b-dropdown right size="sm" variant="link" toggle-class="text-decoration-none" no-caret>
@@ -48,12 +49,12 @@
 
 
                             </template>
-                            <b-dropdown-item v-b-modal.modal-detalles-personal>
+                            <b-dropdown-item @click="abrirDetallesPersonal(row.item)" v-b-modal.modal-detalles-personal>
                                 <b-icon icon="file-earmark-medical"
                                     aria-hidden="true" class="mr-2"></b-icon>Ver detalles
                                     
                                </b-dropdown-item>
-                            <b-dropdown-item v-b-modal.modal-editar-personal> <b-icon icon="pencil"
+                            <b-dropdown-item  @click="abrirEditarPersonal(row.item)"> <b-icon icon="pencil"
                                     aria-hidden="true" class="mr-2"></b-icon>Editar</b-dropdown-item>
                             <b-dropdown-item v-b-modal.modal-estado-personal> <b-icon icon="person-check"
                                     aria-hidden="true" class="mr-2"></b-icon>Cambiar estado</b-dropdown-item>
@@ -61,6 +62,7 @@
 
                     </template>
                 </b-table>
+                <b-pagination v-model="currentPage" :total-rows="rows" align="right"></b-pagination>
             </b-col>
         </b-row>
 
@@ -83,6 +85,11 @@ export default {
     },
     data() {
         return {
+            editarID: 0,
+            rows: 100,
+        currentPage: 3,
+            modalEditarData : {},
+            modalDetallesData: {},
             campos_tabla: [{ key: 'rut', label: 'Rut' }
                 , { key: 'nombre', label: 'Nombre' }
                 , { key: 'apellido', label: 'Apellido' }
@@ -91,68 +98,56 @@ export default {
                 , { key: 'estado', label: 'Estado' }
                 , { key: 'accion', label: 'Acción' }],
             items: [{
-                rut: '99.999.999-k',
-                nombre: 'pruebaNombre',
-                apellido: 'pruebaApellido',
+                rut: '19.950.670-6',
+                nombre: 'sebastian',
+                apellido: 'delgado guerra',
                 correo: 'prueba@prueba.com',
-                cargo: 'pruebaCargo',
+                cargo: 'gerente',
+                tipo: 'plazofijo',
                 estado: 'ACTIVO',
                 accion: 'pruebaAccion'
-            },
-            {
-                rut: '99.999.999-k',
-                nombre: 'pruebaNombre',
-                apellido: 'pruebaApellido',
+            },{
+                rut: '19.950.670-6',
+                nombre: 'sebastian',
+                apellido: 'delgado guerra',
                 correo: 'prueba@prueba.com',
-                cargo: 'pruebaCargo',
-                estado: 'ACTIVO',
-                accion: 'pruebaAccion'
-            }, {
-                rut: '99.999.999-k',
-                nombre: 'pruebaNombre',
-                apellido: 'pruebaApellido',
-                correo: 'prueba@prueba.com',
-                cargo: 'pruebaCargo',
+                cargo: 'supervisor',
+                tipo: 'plazofijo',
                 estado: 'INACTIVO',
                 accion: 'pruebaAccion'
-            }, {
-                rut: '99.999.999-k',
-                nombre: 'pruebaNombre',
-                apellido: 'pruebaApellido',
+            },{
+                rut: '19.950.670-6',
+                nombre: 'sebastian',
+                apellido: 'delgado guerra',
                 correo: 'prueba@prueba.com',
-                cargo: 'pruebaCargo',
-                estado: 'INACTIVO',
-                accion: 'pruebaAccion'
-            }, {
-                rut: '99.999.999-k',
-                nombre: 'pruebaNombre',
-                apellido: 'pruebaApellido',
-                correo: 'prueba@prueba.com',
-                cargo: 'pruebaCargo',
+                cargo: 'gerente',
+                tipo: 'plazofijo',
                 estado: 'ACTIVO',
                 accion: 'pruebaAccion'
-            }, {
-                rut: '99.999.999-k',
-                nombre: 'pruebaNombre',
-                apellido: 'pruebaApellido',
+            },{
+                rut: '19.950.670-6',
+                nombre: 'sebastian',
+                apellido: 'delgado guerra',
                 correo: 'prueba@prueba.com',
-                cargo: 'pruebaCargo',
-                estado: 'ACTIVO',
-                accion: 'pruebaAccion'
-            }, {
-                rut: '99.999.999-k',
-                nombre: 'pruebaNombre',
-                apellido: 'pruebaApellido',
-                correo: 'prueba@prueba.com',
-                cargo: 'pruebaCargo',
+                cargo: 'gerente',
+                tipo: 'plazofijo',
                 estado: 'INACTIVO',
                 accion: 'pruebaAccion'
-            },
+            }
             ]
         }
     },
     methods: {
-
+        abrirEditarPersonal(data){
+            console.log(data)
+            this.modalEditarData = data;
+            this.$bvModal.show('modal-editar-personal')
+        },
+        abrirDetallesPersonal(data){
+            console.log(data)
+            this.modalDetallesData = data;
+            this.$bvModal.show('modal-detalles-personal')
+        }
       
     }
 }

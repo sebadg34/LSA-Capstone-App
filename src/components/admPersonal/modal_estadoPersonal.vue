@@ -32,6 +32,9 @@
 
 <script>
 export default {
+    props: {
+        estado: Boolean
+    },
     data() {
         return {
              Nombre: "",

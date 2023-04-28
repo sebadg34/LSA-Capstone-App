@@ -1,12 +1,12 @@
-or<template>
-<validation-observer v-slot="{ invalid }">
+<template>
+<validation-observer ref="form">
     <b-modal id="modal-personal" ref="modal" title="Agregar Personal" size="lg">
 
         <template #modal-header="{ close }">
             <!-- Emulate built in modal header close button action -->
 
             <b-row class="d-flex justify-content-around">
-                <div class="pl-3">Agregar Personal</div>
+                <div class="pl-3">Editar Personal</div>
 
             </b-row>
 
@@ -104,12 +104,15 @@ or<template>
 
         <template #modal-footer>
 
-            <b-button @click="enviarFormulario()" :disabled="invalid" variant="primary" size="xl" class="float-right reactive-button" style="font-weight:bold">
+            <b-button @click="enviarFormulario()" variant="primary" size="xl" class="float-right reactive-button" style="font-weight:bold">
                 Crear y Guardar
             </b-button>
 
         </template>
-
+        <hr>
+        <b-form-group label="Archivos: " label-cols-sm="2" label-size="lg">
+            <b-form-file id="file-large" size="lg"></b-form-file>
+        </b-form-group>
     </b-modal>
 </validation-observer>
 </template>
@@ -128,44 +131,44 @@ export default {
             Cargo: "",
             Tipo: "",
             tipos: [{
-                    value: 'practicante',
+                    value: 'Practicante',
                     text: 'Practicante'
                 },
                 {
-                    value: 'plazofijo',
+                    value: 'Contrato Plazo Fijo',
                     text: 'Contrato Plazo Fijo'
                 },
                 {
-                    value: 'plazoindefinido',
+                    value: 'Contrato Plazo Indefinido',
                     text: 'Contrato Plazo Indefinido'
                 },
                 {
-                    value: 'honorario',
+                    value: 'Contrato Honorario',
                     text: 'Contrato Honorario'
                 },
             ],
             cargos: [{
-                    value: 'gerente',
+                    value: 'Gerente',
                     text: 'Gerente'
                 },
                 {
-                    value: 'jefe',
+                    value: 'Jefe(a) de Laboratorio',
                     text: 'Jefe(a) de laboratorio'
                 },
                 {
-                    value: 'supervisor',
+                    value: 'Supervisor(a)',
                     text: 'Supervisor(a)'
                 },
                 {
-                    value: 'finanzas',
-                    text: 'Administrador de finanzas'
+                    value: 'Administrador(a) de Finanzas',
+                    text: 'Administrador(a) de Finanzas'
                 },
                 {
-                    value: 'analista',
+                    value: 'Analista Químico',
                     text: 'Analista Químico'
                 },
                 {
-                    value: 'quimico',
+                    value: 'Químico',
                     text: 'Químico'
                 },
             ],
@@ -180,34 +183,61 @@ export default {
             return dirty || validated ? valid : null;
         },
         enviarFormulario() {
-            var data = {
-                "rut_empleado": this.Rut,
-                "nombre": this.Nombre,
-                "apellido": this.Apellidos,
-                "correo": this.Correo,
-                "contraseña": "",
-                "rol": this.Cargo,
-                "estado": "activo",
-                "fecha_inicio_vacaciones": "",
-                "fecha_termino_vacaciones": "",
-                "dias_administrativos": ""
-            }
-            personalService.ingresarPersonal(data).then((response) => {
-                console.log(response)
-            })
-            this.$bvToast.toast(`Creación de personal exitosa`, {
-                title: 'Exito',
-                toaster: 'b-toaster-top-center',
-                solid: true,
-                variant: "success",
-                appendToast: true
-            })
+
+            this.$refs.form.validate().then(success => {
+                if (!success) {
+                    return;
+                } else {
+
+                    var data = {
+                        "rut_empleado": this.Rut,
+                        "nombre": this.Nombre,
+                        "apellido": this.Apellidos,
+                        "correo": this.Correo,
+                        "contraseña": "",
+                        "rol": this.Cargo,
+                        "estado": true,
+                        "fecha_inicio_vacaciones": "",
+                        "fecha_termino_vacaciones": "",
+                        "dias_administrativos": ""
+                    }
+                    personalService.ingresarPersonal(data).then((response) => {
+                        console.log(response)
+                        if (response != null) {
+                            if (response.status == 200) {
+                                this.$bvToast.toast(`Creación de personal exitosa`, {
+                                    title: 'Exito',
+                                    toaster: 'b-toaster-top-center',
+                                    solid: true,
+                                    variant: "success",
+                                    appendToast: true
+                                })
+
+                            }
+                            this.$bvModal.hide('modal-personal')
+                        } else {
+                            this.$bvToast.toast(`Error al crear personal`, {
+                                title: 'Error',
+                                toaster: 'b-toaster-top-center',
+                                solid: true,
+                                variant: "warning",
+                                appendToast: true
+                            })
+                        }
+
+                    })
+
+                }
+
+            });
 
         }
     }
 }
 </script>
 
-<style lang="">
-
+<style lang="scss">
+.custom-file-input:lang(en)~.custom-file-label::after {
+    content: 'Buscar';
+}
 </style>
