@@ -1,6 +1,6 @@
 <template>
 <validation-observer ref="form">
-    <b-modal id="modal-personal" ref="modal" title="Agregar Personal" size="lg">
+    <b-modal id="modal-editar-personal" title="Editar Personal" size="lg">
 
         <template #modal-header="{ close }">
             <!-- Emulate built in modal header close button action -->
@@ -23,14 +23,14 @@
                     <b-form-input id="rut-input" class="mb-1" v-model="Rut" :state="getValidationState(validationContext)" aria-describedby="rut-live-feedback"></b-form-input>
 
                     <b-form-invalid-feedback id="rut-live-feedback">{{
-                        validationContext.errors[0] }}
+                            validationContext.errors[0] }}
                     </b-form-invalid-feedback>
                 </ValidationProvider>
                 <ValidationProvider name="de apellidos" rules="required" v-slot="validationContext">
                     <label for="input-live">Apellidos:</label>
                     <b-form-input class="mb-1" id="apellido-input" v-model="Apellidos" :state="getValidationState(validationContext)" aria-describedby="input-live-help apellido-live-feedback" placeholder="" trim></b-form-input>
                     <b-form-invalid-feedback id="apellido-live-feedback">{{
-                        validationContext.errors[0] }}
+                            validationContext.errors[0] }}
                     </b-form-invalid-feedback>
                 </ValidationProvider>
 
@@ -40,14 +40,14 @@
                     <label for="input-live">Nombres:</label>
                     <b-form-input class="mb-1" id="input-live" :state="getValidationState(validationContext)" v-model="Nombre" aria-describedby="input-live-help nombre-live-feedback" placeholder="" trim></b-form-input>
                     <b-form-invalid-feedback id="nombre-live-feedback">{{
-                        validationContext.errors[0] }}
+                            validationContext.errors[0] }}
                     </b-form-invalid-feedback>
                 </ValidationProvider>
                 <ValidationProvider name="correo" rules="required" v-slot="validationContext">
                     <label for="input-live">Correo:</label>
                     <b-form-input class="mb-1" id="input-live" :state="getValidationState(validationContext)" v-model="Correo" aria-describedby="input-live-help correo-live-feedback" placeholder="" trim></b-form-input>
                     <b-form-invalid-feedback id="correo-live-feedback">{{
-                        validationContext.errors[0] }}
+                            validationContext.errors[0] }}
                     </b-form-invalid-feedback>
                 </ValidationProvider>
             </b-col>
@@ -65,7 +65,7 @@
                         </b-input-group-prepend>
                         <b-form-input id="input-live" v-model="Movil" aria-describedby="input-live-help movil-live-feedback" :state="getValidationState(validationContext)" placeholder=""></b-form-input>
                         <b-form-invalid-feedback id="movil-live-feedback">{{
-                        validationContext.errors[0] }}
+                            validationContext.errors[0] }}
                         </b-form-invalid-feedback>
                     </b-input-group>
 
@@ -79,7 +79,7 @@
                         </b-input-group-prepend>
                         <b-form-input id="input-live" v-model="Emergencia" aria-describedby="input-live-help emergencia-live-feedback" :state="getValidationState(validationContext)" placeholder=""></b-form-input>
                         <b-form-invalid-feedback id="emergencia-live-feedback">{{
-                        validationContext.errors[0] }}
+                            validationContext.errors[0] }}
                         </b-form-invalid-feedback>
                     </b-input-group>
                 </ValidationProvider>
@@ -89,14 +89,14 @@
                     <label for="input-live">Cargo:</label>
                     <b-form-select aria-describedby="cargo-live-feedback" :state="getValidationState(validationContext)" class="mb-1" v-model="Cargo" :options="cargos"></b-form-select>
                     <b-form-invalid-feedback id="cargo-live-feedback">{{
-                        validationContext.errors[0] }}
+                            validationContext.errors[0] }}
                     </b-form-invalid-feedback>
                 </ValidationProvider>
                 <ValidationProvider name="tipo" rules="required" v-slot="validationContext">
                     <label for="input-live">Tipo Trabajador:</label>
                     <b-form-select aria-describedby="tipo-live-feedback" :state="getValidationState(validationContext)" class="mb-1" v-model="Tipo" :options="tipos"></b-form-select>
                     <b-form-invalid-feedback id="tipo-live-feedback">{{
-                        validationContext.errors[0] }}
+                            validationContext.errors[0] }}
                     </b-form-invalid-feedback>
                 </ValidationProvider>
             </b-col>
@@ -105,14 +105,11 @@
         <template #modal-footer>
 
             <b-button @click="enviarFormulario()" variant="primary" size="xl" class="float-right reactive-button" style="font-weight:bold">
-                Crear y Guardar
+                Guardar cambios
             </b-button>
 
         </template>
-        <hr>
-        <b-form-group label="Archivos: " label-cols-sm="2" label-size="lg">
-            <b-form-file id="file-large" size="lg"></b-form-file>
-        </b-form-group>
+
     </b-modal>
 </validation-observer>
 </template>
@@ -120,17 +117,38 @@
 <script>
 import personalService from "@/helpers/api-services/Personal.service"
 export default {
-   
+    watch: {
+        userData: {
+            handler() {
+                console.log("PROP CHANGED, UPDATE MODAL")
+                this.Nombre = this.userData.nombre
+                this.Rut = this.userData.rut_empleado
+                this.Correo = this.userData.correo
+                this.Apellidos = this.userData.apellido
+                this.Movil = "9999999"
+                this.Emergencia = "9999999"
+                this.Cargo = this.userData.rol
+                this.Tipo = this.userData.tipo_trabajador
+            }
+        }
+    },
+    props: {
+        userData: Object
+    },
+    mounted() {
+        console.log("editando")
+
+    },
+
     data() {
-        
         return {
-            Nombre: "",
-            Rut: "",
-            Correo: "",
-            Apellidos: "",
-            Movil: "",
-            Emergencia: "",
-            Cargo: "",
+            Nombre: this.userData.nombre,
+            Rut: this.userData.rut_empleado,
+            Correo: this.userData.correo,
+            Apellidos: this.userData.apellido,
+            Movil: "9999999",
+            Emergencia: "999999",
+            Cargo: this.userData.cargo,
             Tipo: "",
             tipos: [{
                     value: 'Practicante',
@@ -206,11 +224,11 @@ export default {
                         "dias_administrativos": "1"
                     }
                     console.log("data a enviar", data)
-                    personalService.ingresarPersonal(data).then((response) => {
+                    personalService.editarPersonal(data).then((response) => {
                         console.log(response)
                         if (response != null) {
                             if (response.status == 200) {
-                                this.$bvToast.toast(`Creación de personal exitosa`, {
+                                this.$bvToast.toast(`Edición de personal exitosa`, {
                                     title: 'Exito',
                                     toaster: 'b-toaster-top-center',
                                     solid: true,
@@ -219,9 +237,9 @@ export default {
                                 })
                                 this.$emit('refrescar');
                             }
-                            this.$bvModal.hide('modal-personal')
+                            this.$bvModal.hide('modal-editar-personal')
                         } else {
-                            this.$bvToast.toast(`Error al crear personal`, {
+                            this.$bvToast.toast(`Error al editar personal`, {
                                 title: 'Error',
                                 toaster: 'b-toaster-top-center',
                                 solid: true,
@@ -241,8 +259,6 @@ export default {
 }
 </script>
 
-<style lang="scss">
-.custom-file-input:lang(en)~.custom-file-label::after {
-    content: 'Buscar';
-}
-</style>
+<style lang="">
+
+    </style>
