@@ -136,6 +136,7 @@
 <script>
 
 import MuestraService from '@/helpers/api-services/Muestra.Service';
+import SubmuestraService from "@/helpers/api-services/subMuestra.Service.js";
 
 export default{
 
@@ -225,23 +226,40 @@ export default{
       
       
       console.log("data a enviar", data)
-      MuestraService.ingresarMuestra(data).then((response) => {
-      console.log(response);
-      if (response.status === 200) {
-      
+      MuestraService.ingresarMuestra(data)
+  .then((response) => {
+    console.log(response);
+    if (response.status === 200) {
       alert('Muestra enviada con éxito!');
       document.formulario.reset();
       this.$router.push('/Form?s=1');
+
+      // Obtener el RUM de la muestra creada
+      const rum = response.data.RUM;
+
+      // Crear la submuestra asociada a la muestra
+      const submuestraData = {
+        RUM: rum,
+        
+        // Agregar aquí los demás datos de la submuestra
+      };
+
+      return SubmuestraService.ingresarSubMuestra(submuestraData);
     } else {
       alert('Error al agregar muestra!');
+      throw new Error('No se pudo agregar la muestra');
+    }
+  })
+  .then((response) => {
+    console.log(response);
+    if (response && response.status === 200) {
+      alert('Submuestra creada con éxito!');
     }
   })
   .catch((error) => {
     console.log(error);
     alert('Ocurrió un error al enviar la muestra.');
   });
-
-
 
       
     }
