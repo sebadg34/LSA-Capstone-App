@@ -44,7 +44,7 @@ const cambiarEstadoPersonal = async (data) => {
 
 const editarPersonal = async (data) => {
     try {
-        const response = await axios.post(apiUrl + "/empleados/editarPersonal", data);
+        const response = await axios.post(apiUrl + "/empleados/editarEmpleado", data);
             console.log(response);
         return response;
         
