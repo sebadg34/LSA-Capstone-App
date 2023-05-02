@@ -120,7 +120,9 @@
 <script>
 import personalService from "@/helpers/api-services/Personal.service"
 export default {
+   
     data() {
+        
         return {
             Nombre: "",
             Rut: "",
@@ -183,7 +185,7 @@ export default {
             return dirty || validated ? valid : null;
         },
         enviarFormulario() {
-
+            
             this.$refs.form.validate().then(success => {
                 if (!success) {
                     return;
@@ -194,13 +196,16 @@ export default {
                         "nombre": this.Nombre,
                         "apellido": this.Apellidos,
                         "correo": this.Correo,
-                        "contraseña": "",
                         "rol": this.Cargo,
+                        "tipo_trabajador": this.Tipo,
+                        "telefono_movil" : this.Movil,
+                        "telefono_emergencia": this.Emergencia,
                         "estado": true,
-                        "fecha_inicio_vacaciones": "",
-                        "fecha_termino_vacaciones": "",
-                        "dias_administrativos": ""
+                        "fecha_inicio_vacaciones": "01-01-2000",
+                        "fecha_termino_vacaciones": "01-01-2099",
+                        "dias_administrativos": "1"
                     }
+                    console.log("data a enviar", data)
                     personalService.ingresarPersonal(data).then((response) => {
                         console.log(response)
                         if (response != null) {
@@ -212,7 +217,7 @@ export default {
                                     variant: "success",
                                     appendToast: true
                                 })
-
+                                this.$emit('refrescar');
                             }
                             this.$bvModal.hide('modal-personal')
                         } else {

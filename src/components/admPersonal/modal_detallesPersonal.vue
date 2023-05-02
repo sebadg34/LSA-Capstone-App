@@ -71,8 +71,8 @@ export default {
                 this.Apellidos = this.userData.apellido
                 this.Movil = "9999999"
                 this.Emergencia = "9999999"
-                this.Cargo = this.userData.cargo
-                this.Tipo = this.userData.tipo
+                this.Cargo = this.userData.rol
+                this.Tipo = this.userData.tipo_trabajador
             }
         }
     },
@@ -87,8 +87,8 @@ export default {
             Apellidos: this.userData.apellido,
             Movil: "9999999",
             Emergencia: "999999",
-            Cargo: this.userData.cargo,
-            Tipo: this.userData.tipo,
+            Cargo: this.userData.rol,
+            Tipo: this.userData.tipo_trabajador,
             tipos: [{
                     value: 'Practicante',
                     text: 'Practicante'

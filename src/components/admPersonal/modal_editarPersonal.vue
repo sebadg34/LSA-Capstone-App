@@ -1,6 +1,6 @@
 <template>
 <validation-observer ref="form">
-    <b-modal  id="modal-editar-personal" title="Editar Personal" size="lg">
+    <b-modal id="modal-editar-personal" title="Editar Personal" size="lg">
 
         <template #modal-header="{ close }">
             <!-- Emulate built in modal header close button action -->
@@ -114,7 +114,6 @@
 </validation-observer>
 </template>
 
-    
 <script>
 import personalService from "@/helpers/api-services/Personal.service"
 export default {
@@ -122,14 +121,14 @@ export default {
         userData: {
             handler() {
                 console.log("PROP CHANGED, UPDATE MODAL")
-                    this.Nombre = this.userData.nombre
-                    this.Rut = this.userData.rut
-                    this.Correo = this.userData.correo
-                    this.Apellidos = this.userData.apellido
-                    this.Movil = "9999999"
-                    this.Emergencia = "9999999"
-                    this.Cargo = this.userData.cargo
-                    this.Tipo = this.userData.tipo
+                this.Nombre = this.userData.nombre
+                this.Rut = this.userData.rut_empleado
+                this.Correo = this.userData.correo
+                this.Apellidos = this.userData.apellido
+                this.Movil = "9999999"
+                this.Emergencia = "9999999"
+                this.Cargo = this.userData.rol
+                this.Tipo = this.userData.tipo_trabajador
             }
         }
     },
@@ -144,7 +143,7 @@ export default {
     data() {
         return {
             Nombre: this.userData.nombre,
-            Rut: this.userData.rut,
+            Rut: this.userData.rut_empleado,
             Correo: this.userData.correo,
             Apellidos: this.userData.apellido,
             Movil: "9999999",
@@ -204,60 +203,62 @@ export default {
             return dirty || validated ? valid : null;
         },
         enviarFormulario() {
+            
+            this.$refs.form.validate().then(success => {
+                if (!success) {
+                    return;
+                } else {
 
-this.$refs.form.validate().then(success => {
-    if (!success) {
-        return;
-    } else {
+                    var data = {
+                        "rut_empleado": this.Rut,
+                        "nombre": this.Nombre,
+                        "apellido": this.Apellidos,
+                        "correo": this.Correo,
+                        "rol": this.Cargo,
+                        "tipo_trabajador": this.Tipo,
+                        "telefono_movil" : this.Movil,
+                        "telefono_emergencia": this.Emergencia,
+                        "estado": true,
+                        "fecha_inicio_vacaciones": "01-01-2000",
+                        "fecha_termino_vacaciones": "01-01-2099",
+                        "dias_administrativos": "1"
+                    }
+                    console.log("data a enviar", data)
+                    personalService.editarPersonal(data).then((response) => {
+                        console.log(response)
+                        if (response != null) {
+                            if (response.status == 200) {
+                                this.$bvToast.toast(`Edición de personal exitosa`, {
+                                    title: 'Exito',
+                                    toaster: 'b-toaster-top-center',
+                                    solid: true,
+                                    variant: "success",
+                                    appendToast: true
+                                })
+                                this.$emit('refrescar');
+                            }
+                            this.$bvModal.hide('modal-editar-personal')
+                        } else {
+                            this.$bvToast.toast(`Error al editar personal`, {
+                                title: 'Error',
+                                toaster: 'b-toaster-top-center',
+                                solid: true,
+                                variant: "warning",
+                                appendToast: true
+                            })
+                        }
 
-        var data = {
-            "rut_empleado": this.Rut,
-            "nombre": this.Nombre,
-            "apellido": this.Apellidos,
-            "correo": this.Correo,
-            "contraseña": "",
-            "rol": this.Cargo,
-            "estado": true,
-            "fecha_inicio_vacaciones": "",
-            "fecha_termino_vacaciones": "",
-            "dias_administrativos": ""
-        }
-        personalService.ingresarPersonal(data).then((response) => {
-            console.log(response)
-            if (response != null) {
-                if (response.status == 200) {
-                    this.$bvToast.toast(`Edición de personal exitosa`, {
-                        title: 'Exito',
-                        toaster: 'b-toaster-top-center',
-                        solid: true,
-                        variant: "success",
-                        appendToast: true
                     })
 
                 }
-                this.$bvModal.hide('modal-editar-personal')
-            } else {
-                this.$bvToast.toast(`Error al editar personal`, {
-                    title: 'Error',
-                    toaster: 'b-toaster-top-center',
-                    solid: true,
-                    variant: "warning",
-                    appendToast: true
-                })
-            }
 
-        })
+            });
 
-    }
-
-});
-
-}
+        }
     }
 }
 </script>
 
-    
 <style lang="">
 
     </style>
