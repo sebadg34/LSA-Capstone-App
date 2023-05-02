@@ -3,8 +3,8 @@
    <div>
       <!--Empieza el Formulario de recepción-->
         <div class="formulario">
-          <b-form action="/api/Form" @submit.prevent="submitForm">
-          <div  class="row">
+          <b-form name="formulario" @submit.prevent="submitForm">
+          <div class="row">
             
             <!-- Grupo de elementos del recepcionista -->
             <div class="col-md-4">
@@ -17,7 +17,6 @@
               <b-form-group id="solicitante-group" class="my-form-group" label="Nombre Solicitante: " label-for="solicitante-input">
                 <b-form-input id="solicitante-input" v-model="solicitante" required></b-form-input>
               </b-form-group>
-
         
               <b-form-group id="solicitante-RUT" class="my-form-group" label="RUT Solicitante/Empresa: " label-for="RUT-input">
                 <b-form-input id="RUT-input" v-model="rut" required></b-form-input>
@@ -34,7 +33,6 @@
 
               <h1> MUESTRA </h1>
 
-              
               <b-form-group id="n-muestras-group" class="my-form-group" label="N° Muestras: " label-for="n-muestras-input">
                 <b-form-input id="n-muestras-input" v-model="nMuestras" min="1"></b-form-input>
               </b-form-group>
@@ -42,7 +40,7 @@
               <b-button @click="agregarMuestras">Agregar Muestra</b-button>
               <b-button @click="verMuestras" v-if="muestras.length > 0">Ver Muestras</b-button>
 
-               <!--<b-modal v-model="modalVerMuestras">
+               <b-modal v-model="modalVerMuestras">
                 <template v-slot:modal-title>
                   <h4>Muestras</h4>
                 </template>
@@ -54,10 +52,10 @@
                 <template v-slot:modal-footer>
                   <b-button variant="primary" @click="modalVerMuestras = false">Cerrar</b-button>
                 </template>
-              </b-modal> -->
+              </b-modal> 
 
               <b-form-group id="fecha-group" class="my-form-group" label="Fecha (Recepción): " label-for="fecha-input">
-                <b-form-input id="fecha-input" v-model="fecha" readonly></b-form-input>
+                <b-form-input id="fecha-input" v-model="fecha" readonly date-format="DD-MM-YY"></b-form-input>
               </b-form-group>
 
               <b-form-group id="hora-group" class="my-form-group" label="Hora (Recepción): " label-for="hora-input">
@@ -66,9 +64,9 @@
               
               <b-button @click="generarFechaHoraActual()">Generar Fecha & Hora</b-button>
 
-              <b-form-group id="muestreado-group" class="my-form-group" label="Muestreado por: " label-for="muestreado-input">
+              <!-- <b-form-group id="muestreado-group" class="my-form-group" label="Muestreado por: " label-for="muestreado-input">
                 <b-form-checkbox-group id="muestreado-input" v-model="muestreado" :options="opcionesMuestreado" inline></b-form-checkbox-group>
-              </b-form-group>
+              </b-form-group> -->
         
               <b-form-group id="prioridad-group" class="my-form-group" label="Prioridad: " label-for="prioridad-input">
                 <b-form-select v-model="prioridad" :options="opcionesPrioridad">
@@ -126,7 +124,7 @@
                 <b-form-textarea id="observaciones-input" v-model="observaciones"></b-form-textarea>
               </b-form-group>
 
-              <b-button type="submit" variant="primary" title="Enviar formulario">Enviar</b-button>
+              <button @click="submitForm()">Enviar</button>
       </b-form>
     </div>
     </div>
@@ -137,7 +135,7 @@
 
 <script>
 
-import axios from 'axios';
+import MuestraService from '@/helpers/api-services/Muestra.Service';
 
 export default{
 
@@ -181,13 +179,7 @@ export default{
   
   
   methods: {
-    showConfirmation() {
-    if (confirm("¿Está seguro de enviar el formulario?")) {
-      this.submit();
-      alert("El formulario se ha enviado con éxito");
-    }
-  },
-    
+        
   agregarMuestras() {
       for (let i = 0; i < this.nMuestras; i++) {
         const codigo = ++this.ultimoCodigo;
@@ -202,73 +194,57 @@ export default{
   const dia = now.getDate().toString().padStart(2, '0');
   const mes = (now.getMonth() + 1).toString().padStart(2, '0');
   const anio = now.getFullYear().toString().substring(2);
-  this.fecha = `${dia}-${mes}-${anio}`;
+  this.fecha = `${dia}/${mes}/${anio}`;
   this.hora = now.toLocaleTimeString();
 },
 
+  submitForm(event) {
 
-
-    submitForm() {
+    event.preventDefault();
       // Obtener datos del formulario
-      const datos = {
-
+      var data = {
         //recepcionista: this.recepcionista,
         nombre_empresa: this.solicitante,
         direccion_empresa: this.direccion,
         nombre_solicitante: this.solicitante,
-        muestreado_por: this.muestreado,
+        muestreado_por: 'UCN',
         matriz: this.TipoMatriz,
         cantidad_muestras: this.nMuestras,
         prioridad: this.prioridad,
-        fecha_muestreo: this.fecha,
+        fecha_muestreo: '20/08/2020',
         hora_muestreo: this.hora,
         temperatura_transporte: this.Temperatura,
-        fecha_entrega: this.fechaEntrega,
+        fecha_entrega: '20/03/2023',
         nombre_transportista: this.transportista,
         patente_vehiculo: this.patente,
         rut_transportista: this.transportistaRut,
         //rut: this.rut,       
         //fono: this.fono,       
-        //observaciones: this.observaciones,
-        
-        
-        
-        
-        
-
-
-
-
-      } 
-
-      const jsonData = JSON.stringify(datos);
-
-      axios.post('/api/Form', jsonData, {
-    headers: {
-      'Content-Type': 'application/json'
-       }
-         })
-        .then(response => {
-          console.log(response);
-          alert('Formulario enviado con éxito');
-          
-          // Aquí puedes hacer algo con la respuesta
-        })
-        .catch(error => {
-          console.log(error);
-          alert('Error al enviar el formulario');
-          
-          // Aquí puedes manejar el error
-        });
-    
-
-
+        //observaciones: this.observaciones,  
+      }
       
       
-        
+      console.log("data a enviar", data)
+      MuestraService.ingresarMuestra(data).then((response) => {
+      console.log(response);
+      if (response.status === 200) {
+      
+      alert('Muestra enviada con éxito!');
+      document.formulario.reset();
+      this.$router.push('/Form?s=1');
+    } else {
+      alert('Error al agregar muestra!');
     }
+  })
+  .catch((error) => {
+    console.log(error);
+    alert('Ocurrió un error al enviar la muestra.');
+  });
 
 
+
+      
+    }
   }
 }
 </script>
