@@ -199,7 +199,7 @@ export default{
   this.hora = now.toLocaleTimeString();
 },
 
-  submitForm(event) {
+   submitForm(event) {
 
     event.preventDefault();
       // Obtener datos del formulario
@@ -227,9 +227,9 @@ export default{
       
       console.log("data a enviar", data)
       MuestraService.ingresarMuestra(data)
-  .then((response) => {
-    console.log(response);
-    if (response.status === 200) {
+      .then((response) => {
+      console.log(response);
+      if (response && response.status === 200) {
       alert('Muestra enviada con éxito!');
       document.formulario.reset();
       this.$router.push('/Form?s=1');
@@ -240,11 +240,12 @@ export default{
       // Crear la submuestra asociada a la muestra
       const submuestraData = {
         RUM: rum,
+        nMuestras: this.nMuestras,
         
         // Agregar aquí los demás datos de la submuestra
       };
-
-      return SubmuestraService.ingresarSubMuestra(submuestraData);
+      
+      return SubmuestraService.ingresarSubMuestra(submuestraData, rum);
     } else {
       alert('Error al agregar muestra!');
       throw new Error('No se pudo agregar la muestra');
@@ -262,7 +263,68 @@ export default{
   });
 
       
+    }, 
+
+
+   /* async submitForm(event) {
+  event.preventDefault();
+  
+  var data = {
+    // Datos del formulario
+
+     //recepcionista: this.recepcionista,
+     nombre_empresa: this.solicitante,
+        direccion_empresa: this.direccion,
+        nombre_solicitante: this.solicitante,
+        muestreado_por: 'UCN',
+        matriz: this.TipoMatriz,
+        cantidad_muestras: this.nMuestras,
+        prioridad: this.prioridad,
+        fecha_muestreo: '20/08/2020',
+        hora_muestreo: this.hora,
+        temperatura_transporte: this.Temperatura,
+        fecha_entrega: '20/03/2023',
+        nombre_transportista: this.transportista,
+        patente_vehiculo: this.patente,
+        rut_transportista: this.transportistaRut,
+        //rut: this.rut,       
+        //fono: this.fono,       
+        //observaciones: this.observaciones,
+  };
+  
+  try {
+  const muestraResponse = await MuestraService.ingresarMuestra(data);
+
+  if (muestraResponse && muestraResponse.data && muestraResponse.data.RUM) {
+    const rum = muestraResponse.data.RUM;
+    
+    const submuestraData = {
+      RUM: rum,
+      // Agregar aquí los demás datos de la submuestra
+    };
+    
+    const submuestraResponse = await SubmuestraService.ingresarSubMuestra(submuestraData);
+    
+    if (submuestraResponse && submuestraResponse.status === 200) {
+      alert('Muestra y submuestra creadas con éxito!');
+      document.formulario.reset();
+      this.$router.push('/Form?s=1');
+    } else {
+      alert('Error al crear submuestra');
     }
+  } else {
+    alert('Error al crear muestra');
+  }
+} catch (error) {
+  console.log(error);
+  alert('Ocurrió un error al enviar la muestra.');
+  }
+}*/
+
+
+
+
+
   }
 }
 </script>
