@@ -66,7 +66,7 @@ export default {
             handler() {
                 console.log("PROP CHANGED, UPDATE MODAL")
                 this.Nombre = this.userData.nombre
-                this.Rut = this.userData.rut
+                this.Rut = this.userData.rut_empleado
                 this.Correo = this.userData.correo
                 this.Apellidos = this.userData.apellido
                 this.Movil = "9999999"
@@ -82,7 +82,7 @@ export default {
     data() {
         return {
             Nombre: this.userData.nombre,
-            Rut: this.userData.rut,
+            Rut: this.userData.rut_empleado,
             Correo: this.userData.correo,
             Apellidos: this.userData.apellido,
             Movil: "9999999",

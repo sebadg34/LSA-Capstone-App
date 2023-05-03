@@ -5,7 +5,7 @@ const apiUrl = config.BASE_URL_SIS_API;
 
 const ingresarPersonal = async (data) => {
     try {  
-        const response = await axios.post(apiUrl + "/empleados", data,
+        const response = await axios.post(apiUrl + "/empleados/agregarEmpleado", data,
             );
         console.log(response);
         return response;

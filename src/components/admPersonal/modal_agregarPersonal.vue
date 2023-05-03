@@ -201,9 +201,9 @@ export default {
                         "telefono_movil" : this.Movil,
                         "telefono_emergencia": this.Emergencia,
                         "estado": true,
-                        "fecha_inicio_vacaciones": "01-01-2000",
-                        "fecha_termino_vacaciones": "01-01-2099",
-                        "dias_administrativos": "1"
+                        //"fecha_inicio_vacaciones": "01-01-2000",
+                       // "fecha_termino_vacaciones": "01-01-2099",
+                        //"//dias_administrativos": "1"
                     }
                     console.log("data a enviar", data)
                     personalService.ingresarPersonal(data).then((response) => {
