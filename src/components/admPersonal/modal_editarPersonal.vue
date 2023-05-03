@@ -20,7 +20,7 @@
                 <label for="input-live">Rut:</label>
                 <ValidationProvider name="rut" rules="required|rut" v-slot="validationContext">
 
-                    <b-form-input id="rut-input" class="mb-1" v-model="Rut" :state="getValidationState(validationContext)" aria-describedby="rut-live-feedback"></b-form-input>
+                    <b-form-input disabled id="rut-input" class="mb-1" v-model="Rut" :state="getValidationState(validationContext)" aria-describedby="rut-live-feedback"></b-form-input>
 
                     <b-form-invalid-feedback id="rut-live-feedback">{{
                             validationContext.errors[0] }}
@@ -43,7 +43,7 @@
                             validationContext.errors[0] }}
                     </b-form-invalid-feedback>
                 </ValidationProvider>
-                <ValidationProvider name="correo" rules="required" v-slot="validationContext">
+                <ValidationProvider name="correo" rules="required|email" v-slot="validationContext">
                     <label for="input-live">Correo:</label>
                     <b-form-input class="mb-1" id="input-live" :state="getValidationState(validationContext)" v-model="Correo" aria-describedby="input-live-help correo-live-feedback" placeholder="" trim></b-form-input>
                     <b-form-invalid-feedback id="correo-live-feedback">{{
@@ -125,8 +125,8 @@ export default {
                 this.Rut = this.userData.rut_empleado
                 this.Correo = this.userData.correo
                 this.Apellidos = this.userData.apellido
-                this.Movil = "9999999"
-                this.Emergencia = "9999999"
+                this.Movil = this.userData.telefono_movil
+                this.mergencia = this.userData.telefono_emergencia
                 this.Cargo = this.userData.rol
                 this.Tipo = this.userData.tipo_trabajador
             }
@@ -146,8 +146,8 @@ export default {
             Rut: this.userData.rut_empleado,
             Correo: this.userData.correo,
             Apellidos: this.userData.apellido,
-            Movil: "9999999",
-            Emergencia: "999999",
+            Movil: this.userData.telefono_movil,
+            Emergencia: this.userData.telefono_emergencia,
             Cargo: this.userData.cargo,
             Tipo: "",
             tipos: [{

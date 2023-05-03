@@ -32,10 +32,10 @@
     <b-row>
         <b-col class="col-6">
             <div>
-                Teléfono Movil: <span>test</span>
+                Teléfono Movil: <span>{{this.Movil}}</span>
             </div>
             <div>
-                Teléfono Emergencia: <span>test</span>
+                Teléfono Emergencia: <span>{{this.Emergencia}}</span>
             </div>
         </b-col>
         <b-col class="col-6">
@@ -69,8 +69,8 @@ export default {
                 this.Rut = this.userData.rut_empleado
                 this.Correo = this.userData.correo
                 this.Apellidos = this.userData.apellido
-                this.Movil = "9999999"
-                this.Emergencia = "9999999"
+                this.Movil = this.userData.telefono_movil
+                this.Emergencia = this.userData.telefono_emergencia
                 this.Cargo = this.userData.rol
                 this.Tipo = this.userData.tipo_trabajador
             }
@@ -85,8 +85,8 @@ export default {
             Rut: this.userData.rut_empleado,
             Correo: this.userData.correo,
             Apellidos: this.userData.apellido,
-            Movil: "9999999",
-            Emergencia: "999999",
+            Movil: this.userData.telefono_movil,
+            Emergencia: this.userData.telefono_emergencia,
             Cargo: this.userData.rol,
             Tipo: this.userData.tipo_trabajador,
             tipos: [{
