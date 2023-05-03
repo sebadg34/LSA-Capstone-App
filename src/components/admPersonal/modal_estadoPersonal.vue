@@ -71,7 +71,7 @@ this.Confirming = false;
         },
         enviarFormulario() {
             var data = {
-                "rut": this.Rut,
+                "rut_empleado": this.Rut,
                 "estado" : !this.Estado
             }
             console.log(data)

@@ -43,7 +43,7 @@
                         validationContext.errors[0] }}
                     </b-form-invalid-feedback>
                 </ValidationProvider>
-                <ValidationProvider name="correo" rules="required" v-slot="validationContext">
+                <ValidationProvider name="correo" rules="required|email" v-slot="validationContext">
                     <label for="input-live">Correo:</label>
                     <b-form-input class="mb-1" id="input-live" :state="getValidationState(validationContext)" v-model="Correo" aria-describedby="input-live-help correo-live-feedback" placeholder="" trim></b-form-input>
                     <b-form-invalid-feedback id="correo-live-feedback">{{
