@@ -33,7 +33,7 @@
 
               <h1> MUESTRA </h1>
 
-              <b-form-group id="n-muestras-group" class="my-form-group" label="N° Muestras: " label-for="n-muestras-input">
+              <b-form-group id="n-muestras-group" class="my-form-group" label="N° SubMuestras: " label-for="n-muestras-input">
                 <b-form-input id="n-muestras-input" v-model="nMuestras" min="1"></b-form-input>
               </b-form-group>
 
@@ -55,18 +55,23 @@
               </b-modal> 
 
               <b-form-group id="fecha-group" class="my-form-group" label="Fecha (Recepción): " label-for="fecha-input">
-                <b-form-input id="fecha-input" v-model="fecha" readonly date-format="DD-MM-YY"></b-form-input>
+                <b-form-input id="fecha-input" v-model="fecha" readonly ></b-form-input>
               </b-form-group>
 
               <b-form-group id="hora-group" class="my-form-group" label="Hora (Recepción): " label-for="hora-input">
                 <b-form-input id="hora-input" v-model="hora" readonly></b-form-input>
               </b-form-group>
               
-              <b-button @click="generarFechaHoraActual()">Generar Fecha & Hora</b-button>
+              <b-button @click="generarFechaHoraActual()">Generar Fecha & Hora de Recepción</b-button>
 
-              <!-- <b-form-group id="muestreado-group" class="my-form-group" label="Muestreado por: " label-for="muestreado-input">
-                <b-form-checkbox-group id="muestreado-input" v-model="muestreado" :options="opcionesMuestreado" inline></b-form-checkbox-group>
-              </b-form-group> -->
+              <b-form-group id="muestreado-group" class="my-form-group" label="Muestreado por: " label-for="muestreado-input">
+               <b-form-select v-model="muestreado" :options="opcionesMuestreado">
+                 <template #first>
+                  <option :value="null" disabled>Seleccione una opción</option>
+                 </template>
+               </b-form-select>
+              </b-form-group>
+
         
               <b-form-group id="prioridad-group" class="my-form-group" label="Prioridad: " label-for="prioridad-input">
                 <b-form-select v-model="prioridad" :options="opcionesPrioridad">
@@ -115,7 +120,7 @@
               </b-form-group>
     
               <b-form-group id="fechaE-group" label="Fecha de entrega:" class="my-form-group" label-for="fechaE-input">
-                <b-form-datepicker id="fechaE-input" v-model="fechaEntrega" date-format="DD-MM-YY"></b-form-datepicker>
+                <b-form-datepicker id="fechaE-input" v-model="fechaEntrega"></b-form-datepicker>
               </b-form-group>
             
               </div>
@@ -136,9 +141,14 @@
 <script>
 
 import MuestraService from '@/helpers/api-services/Muestra.Service';
-import SubmuestraService from "@/helpers/api-services/subMuestra.Service.js";
+// import SubmuestraService from "@/helpers/api-services/subMuestra.Service.js";
 
-export default{
+import { BFormDatepicker } from 'bootstrap-vue'
+
+export default{ 
+  components: {
+  BFormDatepicker
+},
 
   data() {
     return {
@@ -164,7 +174,7 @@ export default{
       Temperatura:'',
       transportistaRut:'',
       fono:'',
-      fechaEntrega: null,
+      fechaEntrega: '',
       observaciones:'',
       nMuestras: null,
       muestras: [],
@@ -174,7 +184,9 @@ export default{
       ultimoCodigo: 100000,
       fecha: "",
       hora: "",
-      patente: ""
+      patente: "",
+      estado: null
+
     };
   },
   
@@ -187,14 +199,17 @@ export default{
         this.muestras.push({ nMuestra: `Muestra ${this.muestras.length + 1}`, codigoMuestra: codigo })
       }
     },
+
     verMuestras() {
       this.modalVerMuestras = true
     },
+
+
     generarFechaHoraActual() {
   const now = new Date();
   const dia = now.getDate().toString().padStart(2, '0');
   const mes = (now.getMonth() + 1).toString().padStart(2, '0');
-  const anio = now.getFullYear().toString().substring(2);
+  const anio = now.getFullYear().toString();
   this.fecha = `${dia}/${mes}/${anio}`;
   this.hora = now.toLocaleTimeString();
 },
@@ -203,25 +218,30 @@ export default{
 
     event.preventDefault();
       // Obtener datos del formulario
+      this.generarFechaHoraActual();
       var data = {
         //recepcionista: this.recepcionista,
         nombre_empresa: this.solicitante,
         direccion_empresa: this.direccion,
         nombre_solicitante: this.solicitante,
-        muestreado_por: 'UCN',
+        muestreado_por: this.muestreado,
         matriz: this.TipoMatriz,
         cantidad_muestras: this.nMuestras,
         prioridad: this.prioridad,
-        fecha_muestreo: '20/08/2020',
-        hora_muestreo: this.hora,
+        fecha_muestreo: '',
+        hora_muestreo: '',
         temperatura_transporte: this.Temperatura,
-        fecha_entrega: '20/03/2023',
+        fecha_entrega: this.fechaEntrega,
         nombre_transportista: this.transportista,
         patente_vehiculo: this.patente,
         rut_transportista: this.transportistaRut,
         //rut: this.rut,       
-        //fono: this.fono,       
-        //observaciones: this.observaciones,  
+        telefono_transportista: this.fono,       
+        estado: 'Recepcionado',
+        observaciones: this.observaciones,
+        fecha_ingreso: this.fecha,
+        hora_ingreso: this.hora
+
       }
       
       
@@ -234,18 +254,18 @@ export default{
       document.formulario.reset();
       this.$router.push('/Form?s=1');
 
-      // Obtener el RUM de la muestra creada
+      /* Obtener el RUM de la muestra creada
       const rum = response.data.RUM;
 
       // Crear la submuestra asociada a la muestra
       const submuestraData = {
         RUM: rum,
-        nMuestras: this.nMuestras,
+        
         
         // Agregar aquí los demás datos de la submuestra
       };
       
-      return SubmuestraService.ingresarSubMuestra(submuestraData, rum);
+      return SubmuestraService.ingresarSubMuestra(submuestraData, rum);*/
     } else {
       alert('Error al agregar muestra!');
       throw new Error('No se pudo agregar la muestra');
@@ -261,69 +281,8 @@ export default{
     console.log(error);
     alert('Ocurrió un error al enviar la muestra.');
   });
-
       
-    }, 
-
-
-   /* async submitForm(event) {
-  event.preventDefault();
-  
-  var data = {
-    // Datos del formulario
-
-     //recepcionista: this.recepcionista,
-     nombre_empresa: this.solicitante,
-        direccion_empresa: this.direccion,
-        nombre_solicitante: this.solicitante,
-        muestreado_por: 'UCN',
-        matriz: this.TipoMatriz,
-        cantidad_muestras: this.nMuestras,
-        prioridad: this.prioridad,
-        fecha_muestreo: '20/08/2020',
-        hora_muestreo: this.hora,
-        temperatura_transporte: this.Temperatura,
-        fecha_entrega: '20/03/2023',
-        nombre_transportista: this.transportista,
-        patente_vehiculo: this.patente,
-        rut_transportista: this.transportistaRut,
-        //rut: this.rut,       
-        //fono: this.fono,       
-        //observaciones: this.observaciones,
-  };
-  
-  try {
-  const muestraResponse = await MuestraService.ingresarMuestra(data);
-
-  if (muestraResponse && muestraResponse.data && muestraResponse.data.RUM) {
-    const rum = muestraResponse.data.RUM;
-    
-    const submuestraData = {
-      RUM: rum,
-      // Agregar aquí los demás datos de la submuestra
-    };
-    
-    const submuestraResponse = await SubmuestraService.ingresarSubMuestra(submuestraData);
-    
-    if (submuestraResponse && submuestraResponse.status === 200) {
-      alert('Muestra y submuestra creadas con éxito!');
-      document.formulario.reset();
-      this.$router.push('/Form?s=1');
-    } else {
-      alert('Error al crear submuestra');
-    }
-  } else {
-    alert('Error al crear muestra');
-  }
-} catch (error) {
-  console.log(error);
-  alert('Ocurrió un error al enviar la muestra.');
-  }
-}*/
-
-
-
-
+    },   
 
   }
 }
