@@ -24,7 +24,7 @@
 
 
 <b-button class="lsa-light-gray btn-margin reactive-button">
- <b-icon class="lsa-orange-text" icon="thermometer-snow"></b-icon>
+ <b-icon class="lsa-orange-text" icon="eyedropper"></b-icon>
   <span class="lsa-gray-text"> 
     Muestras
   </span>
@@ -36,7 +36,12 @@
  <span class="lsa-gray-text">   Personal </span>
   
 </b-button>
+<b-button class="lsa-light-gray btn-margin reactive-button">
+  <b-icon class="lsa-orange-text"  icon="building"></b-icon>
  
+ <span class="lsa-gray-text">   Empresa </span>
+  
+</b-button>
 </b-navbar>
 <!--
     <b-navbar toggleable="lg" style="background-color: pink" class="my-custom-nav">

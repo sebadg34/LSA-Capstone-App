@@ -5,6 +5,7 @@ import LoginView from '../views/Login.vue'
 import MUS001 from '../views/MUS001.vue'
 import MUS004 from '../views/MUS004-vistaSuperv-Jefe.vue'
 import USU004_admPersonal from '../views/USU004_admPersonal'
+import USU002_admEmpresa from '../views/USU002_admEmpresa'
 
 
 Vue.use(VueRouter)
@@ -29,6 +30,12 @@ const routes = [
     path: '/admPersonal',
     name: 'admPersonal',
     component: USU004_admPersonal
+
+  },
+  {
+    path: '/admEmpresa',
+    name: 'admEmpresa',
+    component: USU002_admEmpresa
 
   },
   {
