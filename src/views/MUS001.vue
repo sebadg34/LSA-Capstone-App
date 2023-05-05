@@ -37,7 +37,7 @@
                 <b-form-input id="n-muestras-input" v-model="nMuestras" min="1"></b-form-input>
               </b-form-group>
 
-              <b-button @click="agregarMuestras">Agregar Muestra</b-button>
+               <!--<b-button @click="agregarMuestras">Agregar Muestra</b-button>
               <b-button @click="verMuestras" v-if="muestras.length > 0">Ver Muestras</b-button>
 
                <b-modal v-model="modalVerMuestras">
@@ -52,7 +52,7 @@
                 <template v-slot:modal-footer>
                   <b-button variant="primary" @click="modalVerMuestras = false">Cerrar</b-button>
                 </template>
-              </b-modal> 
+              </b-modal> -->
 
               <b-form-group id="fecha-group" class="my-form-group" label="Fecha (Recepción): " label-for="fecha-input">
                 <b-form-input id="fecha-input" v-model="fecha" readonly ></b-form-input>
@@ -193,7 +193,7 @@ export default{
   
   methods: {
         
-  agregarMuestras() {
+  /* agregarMuestras() {
       for (let i = 0; i < this.nMuestras; i++) {
         const codigo = ++this.ultimoCodigo;
         this.muestras.push({ nMuestra: `Muestra ${this.muestras.length + 1}`, codigoMuestra: codigo })
@@ -202,7 +202,7 @@ export default{
 
     verMuestras() {
       this.modalVerMuestras = true
-    },
+    }, */
 
 
     generarFechaHoraActual() {

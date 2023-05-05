@@ -41,10 +41,20 @@
                 <h1>Datos Muestra</h1>
 
                 <b-form-group id="Fecha-group" class="my-form-group" label="Fecha Muestreo: " label-for="Fecha-input">
-                    <b-form-input id="Fecha-input" v-model="fecha" disabled></b-form-input>
+                    <b-form-input id="Fecha-input" v-model="fecha"></b-form-input>
                 </b-form-group>
 
                 <b-form-group id="Hrs-group" class="my-form-group" label="Hora Muestreo: " label-for="Hrs-input">
+                <b-form-input id="Hrs-input" v-model="Hrs"></b-form-input>
+              </b-form-group>
+
+              <b-button @click="generarFechaHoraActual()">Generar Fecha & Hora de Muestreo</b-button>
+              
+              <b-form-group id="Fecha-group" class="my-form-group" label="Fecha Recepción: " label-for="Fecha-input">
+                    <b-form-input id="Fecha-input" v-model="fecha" disabled></b-form-input>
+                </b-form-group>
+
+                <b-form-group id="Hrs-group" class="my-form-group" label="Hora Recepción: " label-for="Hrs-input">
                 <b-form-input id="Hrs-input" v-model="Hrs" disabled></b-form-input>
               </b-form-group>
 
@@ -53,12 +63,29 @@
               </b-form-group>
 
               <b-form-group id="muestreado-group" class="my-form-group" label="Muestreado por: " label-for="muestreado-input">
-                <b-form-checkbox-group id="muestreado-input" v-model="muestreado" :options="opcionesMuestreado" inline></b-form-checkbox-group>
+               <b-form-select v-model="muestreado" :options="opcionesMuestreado">
+                 <template #first>
+                  <option :value="null" disabled>Seleccione una opción</option>
+                 </template>
+               </b-form-select>
               </b-form-group>
 
               <b-form-group id="Matriz-group" class="my-form-group" label="Matriz: " label-for="Matriz-input">
                 <b-form-input id="Matriz-input" v-model="matriz"></b-form-input>
               </b-form-group>
+
+              <b-form-group id="Parametro-group" class="my-form-group" label="Parametro(s): " label-for="Parametro-input">
+                <b-form-input id="Parametro-input" v-model="Parametro" ></b-form-input>
+              </b-form-group>
+
+              <b-form-group id="Norma-group" class="my-form-group" label="Norma: " label-for="Norma-input">
+                <b-form-input id="Norma-input" v-model="Norma" ></b-form-input>
+              </b-form-group>
+
+              <b-form-group id="Tabla-group" class="my-form-group" label="Tabla: " label-for="Tabla-input">
+                <b-form-input id="Tabla-input" v-model="Norma" ></b-form-input>
+              </b-form-group>
+
 
               <b-form-group id="NMuestras-group" class="my-form-group" label="N°Muestras: " label-for="NMuestras-input">
                 <b-form-input id="NMuestras-input" v-model="NMuestras" disabled></b-form-input>
@@ -146,7 +173,21 @@ export default {
         { valor: 'cheque', texto: 'Cheque' },
         { valor: 'otro', texto: 'Otro' },
       ],
+      Parametro: '',
+      Norma: '',
+      Tabla: ''
     }
+  },
+
+  methods: {
+    generarFechaHoraActual() {
+  const now = new Date();
+  const dia = now.getDate().toString().padStart(2, '0');
+  const mes = (now.getMonth() + 1).toString().padStart(2, '0');
+  const anio = now.getFullYear().toString();
+  this.fecha = `${dia}/${mes}/${anio}`;
+  this.hora = now.toLocaleTimeString();
+},
   }
 }
 </script>

@@ -3,12 +3,12 @@
   <!-- Filtrador-->
     <div class="form">
   <b-form-group label="Prioridad" label-for="filtroPrioridad" class="my-form mr-2">
-    <b-form-select v-model="filtroPrioridad" :options="prioridades" ></b-form-select>
+    <b-form-select v-model="filtroPrioridad" :options="prioridades" :key="'prioridad'"></b-form-select>
   </b-form-group>
 
   <b-form-group class="my-form mr-2" label="Estado" label-for="filtroEstado">
     
-    <b-form-select v-model="filtroEstado" :options="estados" ></b-form-select>
+    <b-form-select v-model="filtroEstado" :options="estados" :key="'estado'" ></b-form-select>
   </b-form-group>
 
   <b-form-group class="my-form mr-2" label="RUM" label-for="filtro-rum">
@@ -17,9 +17,7 @@
   </b-form-group>
   
   <b-button variant="primary" class="buttons" @click="filtrarTabla">Filtrar</b-button>
-  <b-button variant="danger" class="buttons" @click="borrarFiltro">Borrar Filtro(s)</b-button>
-
- 
+  <b-button variant="danger" class="buttons" @click="borrarFiltro">Borrar Filtro(s)</b-button> 
 
      </div> 
   <!-- Fin Filtrador-->    
@@ -36,20 +34,20 @@
 
   <b-table :items="itemsFiltrados" :fields="fields">
   <template #cell(Acción)="row">
-    <b-dropdown variant="primary" size="sm" menu-class="custom-dropdown-menu" :text="'Ver opciones'">
-      <b-dropdown-item v-for="opcion in generarOpcionesEstado(row.item.Estado)" :key="opcion.value">
+    <b-dropdown variant="primary" size="sm" menu-class="custom-dropdown-menu" right :text="'Ver opciones'">
+      <b-dropdown-item v-for="opcion in generarOpcionesEstado(row.item.estado)" :key="opcion.value">
         <b-dropdown-item v-if="opcion.text === 'Detalle muestra'" :key="opcion.value">
           
-           <!--- modal de prueba -->
+           <!--- modal de prueba 
             <b-button @click="showDetalle = true">Detalle de Muestra</b-button>
             <DetalleMuestra v-if="showDetalle" :datos="datosMuestra" :RUM="RUM" @modal-cerrado="onModalCerrado"></DetalleMuestra>              
-           <!---FIN modal de prueba -->        
+           FIN modal de prueba -->        
 
         </b-dropdown-item>
 
         <b-dropdown-item v-if="opcion.text === 'Observaciones'" :key="opcion.value">
-          <b-button @click="MostrarObservaciones(row.item.RUM)">Observaciones de la muestra</b-button>          
-          <ModalObservaciones v-if="showObservaciones" :datos="datosMuestra" :rum="RUM" @modal-cerrado="onModalCerrado"></ModalObservaciones>
+          <b-button @click="MostrarObservaciones(row)">Observaciones de la muestra</b-button>          
+          <ModalObservaciones v-if="showObservaciones" :RUM="RUM" :observaciones="observaciones" @modal-cerrado="onModalCerrado"></ModalObservaciones>
         </b-dropdown-item>
 
         <b-dropdown-item v-if="opcion.text === 'Analista Designado'" :key="opcion.value">
@@ -108,25 +106,35 @@
 </template>
 
 <script>
-import DetalleMuestra from './DetalleMuestra.vue'
+//import DetalleMuestra from './DetalleMuestra.vue'
 import ModalObservaciones from './ModalObservaciones.vue'
+import MuestraService from '@/helpers/api-services/Muestra.Service';
+
+import { getPrioridad } from '@/helpers/api-services/Muestra.Service';
+
 
 export default {
   data() {
     return {
       
+      RUM: null,
+      oldRUM: null,
+      obtenerObservaciones: this.obtenerObservaciones,
+      
+      
+      observaciones: '',
       showDetalle: false,
       showObservaciones: false,
       items: [
-        { id: 1, RUM: '123', Prioridad: 'Alta', Estado: 'En Análisis',  },
+        /*{ id: 1, RUM: '123', Prioridad: 'Alta', Estado: 'En Análisis',  },
         { id: 2, RUM: '456', Prioridad: 'Normal', Estado: 'Finalizado' },
-        { id: 3, RUM: '789', Prioridad: 'Urgente', Estado: 'Recepcionado' }
+        { id: 3, RUM: '789', Prioridad: 'Urgente', Estado: 'Recepcionado' }*/
       ],
       opcionesPrioridad: [
         { text: 'Seleccionar prioridad', value: '' }, // Opción en blanco
-        { text: 'Alta', value: 'Alta' },
-        { text: 'Urgente', value: 'Urgente' },
-        { text: 'Normal', value: 'Normal' }
+        { text: 'Alta', value: '2' },
+        { text: 'Urgente', value: '3' },
+        { text: 'Normal', value: '1' }
       ],
       opcionesEstado: [
       
@@ -136,15 +144,15 @@ export default {
       ],
       fields: [
         { key: 'RUM', label: 'RUM' },
-        { key: 'Matriz', label: 'Matriz' },
-        { key: 'Norma', label: 'Norma' },
+        { key: 'matriz', label: 'Matriz' },
+        { key: 'nombre_norma', label: 'Norma' },
         { key: 'Parámetro(s)', label: 'Parametros(s)' },
         { key: 'Metodología', label: 'Metodología' },
-        { key: 'Fecha Ingreso', label: 'Fecha ingreso' },
-        { key: 'Fecha Entrega', label: 'Fecha Entrega' },
-        { key: 'Hora Ingreso', label: 'Hora Ingreso' },
-        { key: 'Prioridad', label: 'Prioridad' },
-        { key: 'Estado', label: 'Estado' },
+        { key: 'fecha_ingreso', label: 'Fecha ingreso' },
+        { key: 'fecha_entrega', label: 'Fecha Entrega' },
+        { key: 'hora_ingreso', label: 'Hora Ingreso' },
+        { key: 'prioridad', label: 'Prioridad', formatter: (value) => {return getPrioridad(value); }},
+        { key: 'estado', label: 'Estado' },
         { key: 'Acción', label: 'Acción' },
 
       ],
@@ -155,17 +163,48 @@ export default {
       error: false,
       mensajeError: '',
       prioridades: ['Normal', 'Alta', 'Urgente'],
-      estados: ['Recepcionado', 'En Análisis', 'Finalizado']
+      estados: ['Recepcionado', 'En Análisis', 'Finalizado'],
+      showModal: false
+      
      }
   },
 
   components: {
-    DetalleMuestra,
+    //DetalleMuestra,
     ModalObservaciones,
     
   },
 
+  created() {
+    this.obtenerMuestras()
+  },
+
   methods: {
+
+    async obtenerMuestras() {
+      try {
+        const response = await MuestraService.obtenerMuestras()
+        if (response && response.status === 200) {
+          this.items = response.data
+        }
+      } catch (error) {
+        console.log(error)
+      }
+    },
+  
+
+    getPrioridad(prioridad) {
+    switch (prioridad) {
+      case 1:
+        return 'Normal';
+      case 2:
+        return 'Alta';
+      case 3:
+        return 'Urgente';
+      default:
+        return '';
+    }
+  },
 
     generarOpcionesEstado(estado) {
   switch (estado) {
@@ -198,20 +237,40 @@ export default {
       ];
   }
 },
-showModal(modalDetalleMuestra) {
+/*showModal(modalDetalleMuestra) {
       this.$refs[modalDetalleMuestra].show(); // mostrar el modal
-    },
+    },*/
     onModalCerrado() {
-      this.showDetalle = false;
-      this.showObservaciones = false;
+      this.showModal = false     
+
     },
   
    
 
-MostrarObservaciones(RUM) {
-    this.showObservaciones = true;
-    this.datosMuestra = { RUM: RUM };
+
+async MostrarObservaciones(row) {
+  try {
+  this.RUM = row.item.RUM;  
+  await new Promise(resolve => setTimeout(resolve, 1000)); // Esperar 1 segundo
+  const response = await MuestraService.obtenerObservaciones(this.RUM);
+  console.log(response); 
+  console.log(response.data);
+  this.observaciones = response.data;
+  console.log("El rum es:", this.RUM);
+  this.showObservaciones = true; 
+  this.$bvModal.show('ModalObservaciones');
+  
+  
+  
+} catch (error) {
+    console.error(error);
+    throw error;
+  }
 },
+
+
+
+
 DetalleMuestra(RUM) {
     this.showDetalle = true;
     this.datosMuestra = { RUM: RUM };
@@ -260,13 +319,13 @@ viewSample(item, index, opcion) {
   let rumFiltrado = this.filtroRUM.toLowerCase();
 
   if (prioridadFiltrada !== '' && estadoFiltrado !== '') {
-    this.itemsFiltrados = this.items.filter(item => item['Prioridad'].toLowerCase().includes(prioridadFiltrada) && item['Estado'].toLowerCase().includes(estadoFiltrado));
+    this.itemsFiltrados = this.items.filter(item => item['prioridad'].toLowerCase().includes(prioridadFiltrada) && item['estado'].toLowerCase().includes(estadoFiltrado));
     columnaFiltrada = 'combinado';
   } else if (prioridadFiltrada !== '') {
-    columnaFiltrada = 'Prioridad';
+    columnaFiltrada = 'prioridad';
     this.itemsFiltrados = this.items.filter(item => item[columnaFiltrada].toLowerCase().includes(prioridadFiltrada));
   } else if (estadoFiltrado !== '') {
-    columnaFiltrada = 'Estado';
+    columnaFiltrada = 'estado';
     this.itemsFiltrados = this.items.filter(item => item[columnaFiltrada].toLowerCase().includes(estadoFiltrado));
   } else if (rumFiltrado !== '') {
     columnaFiltrada = 'RUM';
@@ -293,6 +352,7 @@ viewSample(item, index, opcion) {
   }
 },
 
+
 borrarFiltro() {
     this.filtroPrioridad = '';
     this.filtroEstado = '';
@@ -311,8 +371,11 @@ borrarFiltro() {
     },
     filtroEstado(){
       this.filtrarTabla();
-    }
+    },
+    
   },
+
+  
   mounted() {
     this.filtrarTabla();
   }
