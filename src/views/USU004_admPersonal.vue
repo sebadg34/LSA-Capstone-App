@@ -91,7 +91,7 @@ export default {
     },
     computed: {
       rows() {
-        return this.items.length
+        return this.personal.length
       }
     },
     data() {
@@ -126,61 +126,6 @@ export default {
                 label: 'Acción'
             }],
             personal: [{}],
-            items: [{
-                rut: '19.950.670-6',
-                nombre: 'sebastian',
-                apellido: 'delgado guerra',
-                correo: 'prueba@prueba.com',
-                cargo: 'Gerente',
-                tipo: 'Contrato Plazo Fijo',
-                estado: 'ACTIVO',
-                accion: 'pruebaAccion'
-            }, {
-                rut: '19.950.670-6',
-                nombre: 'sebastian',
-                apellido: 'delgado guerra',
-                correo: 'prueba@prueba.com',
-                cargo: 'Gerente',
-                tipo: 'Contrato Plazo Fijo',
-                estado: 'ACTIVO',
-                accion: 'pruebaAccion'
-            }, {
-                rut: '19.950.670-6',
-                nombre: 'sebastian',
-                apellido: 'delgado guerra',
-                correo: 'prueba@prueba.com',
-                cargo: 'Gerente',
-                tipo: 'Contrato Plazo Fijo',
-                estado: 'ACTIVO',
-                accion: 'pruebaAccion'
-            }, {
-                rut: '19.950.670-6',
-                nombre: 'sebastian',
-                apellido: 'delgado guerra',
-                correo: 'prueba@prueba.com',
-                cargo: 'Gerente',
-                tipo: 'Contrato Plazo Fijo',
-                estado: 'INACTIVO',
-                accion: 'pruebaAccion'
-            }, {
-                rut: '19.950.670-6',
-                nombre: 'sebastian',
-                apellido: 'delgado guerra',
-                correo: 'prueba@prueba.com',
-                cargo: 'Gerente',
-                tipo: 'Contrato Plazo Fijo',
-                estado: 'ACTIVO',
-                accion: 'pruebaAccion'
-            }, {
-                rut: '19.950.670-6',
-                nombre: 'sebastian',
-                apellido: 'delgado guerra',
-                correo: 'prueba@prueba.com',
-                cargo: 'Gerente',
-                tipo: 'Contrato Plazo Fijo',
-                estado: 'INACTIVO',
-                accion: 'pruebaAccion'
-            }]
         }
     },
     methods: {
