@@ -1,7 +1,9 @@
 <template>
     <div style="margin-bottom:50px">
 
-        <modal_agregarEmpresa />
+        <modal_agregarEmpresa @refrescar="obtenerEmpresa" />
+<modal_editarEmpresa  :empresa-data="this.modalEditarData" @refrescar="obtenerEmpresa" /> 
+<modal_detallesEmpresa  :empresa-data="this.modalDetallesData"  /> 
         <b-container class="bv-example-row" style="padding-top:50px; padding-left:0px;padding-right: 0px;">
             <b-col class="col-12">
     
@@ -25,11 +27,11 @@
                 <b-table :fields="campos_tabla" :items="empresa" style="" :busy="loading" :per-page="perPage" :current-page="currentPage">
     
                     <template #table-busy>
-            <div class="text-center lsa-orange-text my-2">
-              <b-spinner class="align-middle"></b-spinner>
-              <strong> Cargando...</strong>
-            </div>
-          </template>
+        <div class="text-center lsa-orange-text my-2">
+          <b-spinner class="align-middle"></b-spinner>
+          <strong> Cargando...</strong>
+        </div>
+      </template>
     <!--
 
  
@@ -47,16 +49,14 @@
                                 <b-icon style="height: 80%; width: 80%; align-items: center;" icon="three-dots" variant="dark" aria-hidden="true"></b-icon>
     
                             </template>
-                            <b-dropdown-item @click="abrirDetallesPersonal(row.item)">
+                            <b-dropdown-item @click="abrirDetallesEmpresa(row.item)">
                                 <b-icon icon="file-earmark-medical" aria-hidden="true" class="mr-2"></b-icon>Ver detalles
     
                             </b-dropdown-item>
-                            <b-dropdown-item @click="abrirEditarPersonal(row.item)">
+                            <b-dropdown-item @click="abrirEditarEmpresa(row.item)">
                                 <b-icon icon="pencil" aria-hidden="true" class="mr-2"></b-icon>Editar
                             </b-dropdown-item>
-                            <b-dropdown-item @click="abrirEstadoPersonal(row.item)">
-                                <b-icon icon="person-check" aria-hidden="true" class="mr-2"></b-icon>Cambiar estado
-                            </b-dropdown-item>
+                            
                         </b-dropdown>
     
                     </template>
@@ -71,13 +71,17 @@
     <script>
     // @ is an alias to /src
     import modal_agregarEmpresa from '@/components/admEmpresa/modal_agregarEmpresa.vue'
+    import modal_editarEmpresa from '@/components/admEmpresa/modal_editarEmpresa.vue'
+    import modal_detallesEmpresa from '@/components/admEmpresa/modal_detallesEmpresa.vue'
     
-   // import empresaService from "@/helpers/api-services/Empresa.service"
+   import empresaService from "@/helpers/api-services/Empresa.service"
     
     export default {
         name: 'admEmpresa',
         components: {
-            modal_agregarEmpresa
+            modal_agregarEmpresa,
+            modal_editarEmpresa,
+            modal_detallesEmpresa
         },
         mounted() {
             this.obtenerEmpresa();
@@ -100,9 +104,6 @@
                     key: 'rut_empresa',
                     label: 'Rut'
                 }, {
-                    key: 'nombre_empresa',
-                    label: 'Nombre'
-                }, {
                     key: 'nombre_abreviado',
                     label: 'Nombre Abreviado'
                 }, {
@@ -119,12 +120,31 @@
             }
         },
         methods: {
+            abrirEditarEmpresa(data) {
+            console.log(data)
+            this.modalEditarData = data;
+            this.$bvModal.show('modal-editar-empresa')
+        },
+        abrirDetallesEmpresa(data) {
+            console.log(data)
+            this.modalDetallesData = data;
+            this.$bvModal.show('modal-detalles-empresa')
+        },
             testEvent(){
                 console.log('evento leido')
             },
             obtenerEmpresa() {
-                console.log('obteniendoEmpresa')
-               // this.loading = true;
+                this.loading = true;
+            empresaService.obtenerTodasEmpresa().then((response) => {
+                if (response != null) {
+                    console.log(response)
+                    this.empresa = response.data
+                    console.log(this.empresa)
+                    
+                    this.loading = false;
+                }
+
+            })
                
             },
             /** 

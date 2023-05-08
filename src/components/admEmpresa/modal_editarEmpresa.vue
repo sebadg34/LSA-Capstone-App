@@ -1,6 +1,6 @@
 <template lang="">
 <validation-observer ref="form">
-    <b-modal id="modal-empresa" ref="modal" title="Agregar Empresa" size="lg">
+    <b-modal id="modal-editar-empresa" ref="modal" title="Agregar Empresa" size="lg">
 
         <template #modal-header="{ close }">
             <!-- Emulate built in modal header close button action -->
@@ -128,6 +128,25 @@
 import empresaService from "@/helpers/api-services/Empresa.service"
 export default {
 
+    watch: {
+        empresaData: {
+            handler() {
+                console.log("PROP CHANGED, UPDATE MODAL")
+                this.Rut = this.empresaData.rut_empresa;
+                this.Correo = this.empresaData.correo;
+                this.Giro = this.empresaData.giro;
+                this.Nombre = this.empresaData.nombre_empresa;
+                this.Nombre_abreviado = this.empresaData.nombre_abreviado;
+                this.Razon_social = this.empresaData.razon_social;
+                this.direcciones = [{}];
+                this.obtenerDetalles();
+
+            }
+        }
+    },
+    props: {
+        empresaData: Object
+    },
     data() {
 
         return {
@@ -146,6 +165,42 @@ export default {
         }
     },
     methods: {
+        obtenerDetalles(){
+            empresaService.obtenerDetallesEmpresa(this.Rut).then((response) => {
+                        console.log(response)
+                        if (response != null) {
+                            if (response.status == 200) {
+                               
+                               
+                                response.data.ciudades.forEach((ciudad) => {
+                                    console.log(ciudad)
+                                  this.direcciones.push({
+                ciudad: ciudad.nombre_ciudad,
+                direccion: ciudad.direccion
+            })
+                                })
+                                // elimina primer valor vacio
+                                this.direcciones.shift();
+
+                            }
+
+
+
+
+
+
+
+                        } else {
+                            this.$bvToast.toast(`Error al obtener detalles empresa`, {
+                                title: 'Error',
+                                toaster: 'b-toaster-top-center',
+                                solid: true,
+                                variant: "warning",
+                                appendToast: true
+                            })
+                        }
+                    })
+        },
         add() {
             this.direcciones.push({
                 ciudad: '',
@@ -189,11 +244,11 @@ export default {
                     }
                     
                     console.log("data a enviar", data)
-                    empresaService.ingresarEmpresa(data).then((response) => {
+                    empresaService.actualizarEmpresa(data).then((response) => {
                         console.log(response)
                         if (response != null) {
                             if (response.status == 200) {
-                                this.$bvToast.toast(`Creación de empresa exitosa`, {
+                                this.$bvToast.toast(`Edición de empresa exitosa`, {
                                     title: 'Exito',
                                     toaster: 'b-toaster-top-center',
                                     solid: true,
@@ -202,9 +257,9 @@ export default {
                                 })
                                 this.$emit('refrescar');
                             }
-                            this.$bvModal.hide('modal-empresa')
+                            this.$bvModal.hide('modal-editar-empresa')
                         } else {
-                            this.$bvToast.toast(`Error al crear empresa`, {
+                            this.$bvToast.toast(`Error al editar empresa`, {
                                 title: 'Error',
                                 toaster: 'b-toaster-top-center',
                                 solid: true,
