@@ -46,6 +46,40 @@ const obtenerObservaciones = async (RUM) => {
      }
  };
 
+ const obtenerDatosMuestra = async (RUM) => {
+    try {
+         const response = await axios.get(apiUrl + "/muestras/" + RUM);
+         console.log(response);
+         if(response.status == 200){
+             return response;
+         } else {
+             return;
+         }
+         
+     } catch (error) {
+         console.log(error);
+         return;
+     }
+ };
+
+ const obtenerFonos = async (RUM) => {
+    try {
+         const response = await axios.get(apiUrl + "/muestras/" + RUM);
+         console.log(response);
+         if(response.status == 200){
+             return response;
+         } else {
+             return;
+         }
+         
+     } catch (error) {
+         console.log(error);
+         return;
+     }
+ };
+
+
+
 export function getPrioridad(prioridad) {
     if (prioridad === 1) {
       return "Normal";
@@ -63,6 +97,8 @@ export function getPrioridad(prioridad) {
 export default {
     ingresarMuestra,
     obtenerMuestras,
-    obtenerObservaciones
+    obtenerObservaciones,
+    obtenerDatosMuestra,
+    obtenerFonos
 
 };

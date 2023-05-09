@@ -1,53 +1,53 @@
 <template>
-  <b-modal id="ModalObservaciones" v-model="showObservaciones" :title="`Observaciones de la muestra ${RUM}`" @hidden="onHidden">
+  <b-modal id="modal-observaciones" :title="`Observaciones de la muestra ${RUM}`" @hidden="onHidden">
     <div class="p-3">
-      <p v-if="!loading && !observaciones.length">No hay observaciones para esta muestra.</p>
-      <ul v-if="!loading && observaciones.length">
-        <li v-for="observacion in observaciones" :key="observacion.id">
-          {{ observacion.texto }}
-        </li>
+      <p v-if="this.observaciones == null">No hay observaciones para esta muestra.</p>
+      <ul v-else>
+        
       </ul>
-      <div v-if="loading" class="text-center">
-        <b-spinner></b-spinner>
+      <div class="text-center">
+        {{ this.observaciones }}
       </div>
     </div>
   </b-modal>
 </template>
 
 <script>
-import MuestraService from '@/helpers/api-services/Muestra.Service';
+//import MuestraService from '@/helpers/api-services/Muestra.Service';
 
 export default {
   props: {
-    RUM: {
-      type: Number,
-      required: true
-    },
-    observaciones: {
-      type: Array, // Cambiado a un array
-      required: true
-    }
+    muestraData: Object
   },
   data() {
     return {
       
+      RUM: '',
+      observaciones: '',
       loading: false,
       showObservaciones: false,
       
     }
-  },
-  created() {
-    this.observacionesData = this.observaciones;
-  },
+  },  
   methods: {
-    async MostrarObservaciones(row){
+    /*async MostrarObservaciones(row){
       MuestraService.obtenerObservaciones(row);
       console.log(this.observacionesData)
-    },
+    },*/
     onHidden() {
       this.showObservaciones = false;
       this.$emit('modal-cerrado');
     }
   },
+  watch: {
+    muestraData: {
+            handler() {
+                console.log("muestraData actualizada")
+                console.log(this.muestraData.observaciones)
+                this.RUM = this.muestraData.RUM;
+                this.observaciones = this.muestraData.observaciones;
+            }
+        }
+  }
 }
 </script>

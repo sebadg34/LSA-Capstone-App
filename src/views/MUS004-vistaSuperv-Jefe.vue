@@ -31,7 +31,7 @@
   <!-- Fin Mensaje de error -->
 
   <!-- Inicio tabla -->
-
+  <ModalObservaciones :muestra-data="this.modalData" @modal-cerrado="onModalCerrado"></ModalObservaciones>
   <b-table :items="itemsFiltrados" :fields="fields">
   <template #cell(Acción)="row">
     <b-dropdown variant="primary" size="sm" menu-class="custom-dropdown-menu" right :text="'Ver opciones'">
@@ -46,49 +46,48 @@
         </b-dropdown-item>
 
         <b-dropdown-item v-if="opcion.text === 'Observaciones'" :key="opcion.value">
-          <b-button @click="MostrarObservaciones(row)">Observaciones de la muestra</b-button>          
-          <ModalObservaciones v-if="showObservaciones" :RUM="RUM" :observaciones="observaciones" @modal-cerrado="onModalCerrado"></ModalObservaciones>
+          <b-button @click="MostrarObservaciones(row)">Observaciones de la muestra</b-button>         
+        </b-dropdown-item>
+
+        <b-dropdown-item v-if="opcion.text === 'Ingresar muestra a lab.'" :key="opcion.value">
+          <b-button @click="IngresarMuestraLab(row)">Ingresar muestra al Laboratorio</b-button>
         </b-dropdown-item>
 
         <b-dropdown-item v-if="opcion.text === 'Analista Designado'" :key="opcion.value">
-          <b-button variant="link" @click="Analista(row.item)">
+          <b-button variant="link" @click="Analista(row)">
             Analista Designado
           </b-button>
         </b-dropdown-item>
 
         <b-dropdown-item v-if="opcion.text === 'Descargar Informe'" :key="opcion.value">
-          <b-button variant="link" @click="Descargar(row.item)">
+          <b-button variant="link" @click="Descargar(row)">
             Descargar Informe
           </b-button>
         </b-dropdown-item>
        
 
         <b-dropdown-item v-if="opcion.text === 'Ingresar resultados de análisis'" :key="opcion.value">
-          <b-button variant="link" @click="Ingresar(row.item)">
+          <b-button variant="link" @click="Ingresar(row)">
             Ingresar resultados de análisis
           </b-button>
         </b-dropdown-item>
 
         <b-dropdown-item v-if="opcion.text === 'Administrar cartas de control'" :key="opcion.value">
-          <b-button variant="link" @click="AdministrarCartas(row.item)">
+          <b-button variant="link" @click="AdministrarCartas(row)">
             Administrar Cartas de control
           </b-button>
         </b-dropdown-item>
 
         <b-dropdown-item v-if="opcion.text === 'Rehacer Análisis'" :key="opcion.value">
-          <b-button variant="link" @click="RehacerAnalisis(row.item)">
+          <b-button variant="link" @click="RehacerAnalisis(row)">
             Rehacer Análisis
           </b-button>
         </b-dropdown-item>
 
-        <b-dropdown-item v-if="opcion.text === 'Ingresar muestra a lab.'" :key="opcion.value">
-          <b-button variant="link" @click="IngresarMuestraLab(row.item)">
-            Ingresar muestra a lab.
-          </b-button>
-        </b-dropdown-item>
+        
 
         <b-dropdown-item v-if="opcion.text === 'Marcar Analisis como completado'" :key="opcion.value">
-          <b-button variant="link" @click="MarcarAnalisis(row.item)">
+          <b-button variant="link" @click="MarcarAnalisis(row)">
             Marcar analisis como completado
           </b-button>
         </b-dropdown-item>
@@ -106,7 +105,7 @@
 </template>
 
 <script>
-//import DetalleMuestra from './DetalleMuestra.vue'
+
 import ModalObservaciones from './ModalObservaciones.vue'
 import MuestraService from '@/helpers/api-services/Muestra.Service';
 
@@ -120,11 +119,11 @@ export default {
       RUM: null,
       oldRUM: null,
       obtenerObservaciones: this.obtenerObservaciones,
-      
+      modalData: {},   
       
       observaciones: '',
-      showDetalle: false,
-      showObservaciones: false,
+      
+     
       items: [
         /*{ id: 1, RUM: '123', Prioridad: 'Alta', Estado: 'En Análisis',  },
         { id: 2, RUM: '456', Prioridad: 'Normal', Estado: 'Finalizado' },
@@ -164,13 +163,13 @@ export default {
       mensajeError: '',
       prioridades: ['Normal', 'Alta', 'Urgente'],
       estados: ['Recepcionado', 'En Análisis', 'Finalizado'],
-      showModal: false
+   
       
      }
   },
 
   components: {
-    //DetalleMuestra,
+    
     ModalObservaciones,
     
   },
@@ -191,7 +190,6 @@ export default {
         console.log(error)
       }
     },
-  
 
     getPrioridad(prioridad) {
     switch (prioridad) {
@@ -237,35 +235,38 @@ export default {
       ];
   }
 },
-/*showModal(modalDetalleMuestra) {
-      this.$refs[modalDetalleMuestra].show(); // mostrar el modal
-    },*/
-    onModalCerrado() {
+
+  onModalCerrado() {
       this.showModal = false     
 
     },
-  
-   
+
+  MostrarObservaciones(row) {  
+  this.RUM = row.item.RUM;     
+  MuestraService.obtenerObservaciones(this.RUM).then((response)=>{    
+    console.log(response); 
+    if (response.data != null){
+      console.log(response.data);         
+      this.modalData = response.data[0]        
+      this.$bvModal.show('modal-observaciones');
+    }
+  }); 
+},
+
+MostrarFonos(row){
+  this.RUM = row.item.RUM;
+  MuestraService.obtenerFonos(this.RUM).then((response)=>{
+    console.log(response)
+  })
 
 
-async MostrarObservaciones(row) {
-  try {
-  this.RUM = row.item.RUM;  
-  await new Promise(resolve => setTimeout(resolve, 1000)); // Esperar 1 segundo
-  const response = await MuestraService.obtenerObservaciones(this.RUM);
-  console.log(response); 
-  console.log(response.data);
-  this.observaciones = response.data;
-  console.log("El rum es:", this.RUM);
-  this.showObservaciones = true; 
-  this.$bvModal.show('ModalObservaciones');
+},
+
+IngresarMuestraLab(row){
+  this.RUM = row.item.RUM;
+  console.log('el rum es: '+ this.RUM)
+  this.$router.push(`/IngMuesLab?RUM=${this.RUM}`);
   
-  
-  
-} catch (error) {
-    console.error(error);
-    throw error;
-  }
 },
 
 
@@ -296,9 +297,7 @@ AdministrarCartas(){
 RehacerAnalisis(){
   window.location.href = "https://www.youtube.com";
 },
-IngresarMuestraLab(){
-  window.location.href = "https://www.youtube.com";
-},
+
 MarcarAnalisis(){
   window.location.href = "https://www.youtube.com";
 },
@@ -363,8 +362,8 @@ borrarFiltro() {
       this.error = true
       this.$modal.show('error-modal')
     },
-
   },
+
   watch: {
     filtroPrioridad() {
       this.filtrarTabla();
@@ -373,9 +372,7 @@ borrarFiltro() {
       this.filtrarTabla();
     },
     
-  },
-
-  
+  }, 
   mounted() {
     this.filtrarTabla();
   }
