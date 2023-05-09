@@ -1,28 +1,22 @@
 <template>
    
    <div>
-    <!-- Comienzo del NavBAR-->
-    
-
-        <!-- FIN del NavBAR-->
-
-        <!--Empieza el Formulario de recepción y posterior analisis-->
+      <!--Empieza el Formulario de recepción-->
         <div class="formulario">
-        <b-form>
-          <div  class="row">
+          <b-form name="formulario" @submit.prevent="submitForm">
+          <div class="row">
             
             <!-- Grupo de elementos del recepcionista -->
             <div class="col-md-4">
             
               <h1>RECEPCIONISTA</h1>
-              <b-form-group id="recepcionista-group" class="my-form-group" label="Nombre Recepcionista: " label-for="recepcionista-input">
+              <!-- <b-form-group id="recepcionista-group" class="my-form-group" label="Nombre Recepcionista: " label-for="recepcionista-input">
                 <b-form-input id="recepcionista-input"  v-model="recepcionista" required></b-form-input>
-              </b-form-group>
+              </b-form-group> -->
 
               <b-form-group id="solicitante-group" class="my-form-group" label="Nombre Solicitante: " label-for="solicitante-input">
                 <b-form-input id="solicitante-input" v-model="solicitante" required></b-form-input>
               </b-form-group>
-
         
               <b-form-group id="solicitante-RUT" class="my-form-group" label="RUT Solicitante/Empresa: " label-for="RUT-input">
                 <b-form-input id="RUT-input" v-model="rut" required></b-form-input>
@@ -39,15 +33,14 @@
 
               <h1> MUESTRA </h1>
 
-              
-              <b-form-group id="n-muestras-group" class="my-form-group" label="N° Muestras: " label-for="n-muestras-input">
-                <b-form-input id="n-muestras-input" v-model="nMuestras" type="number" min="1" required></b-form-input>
+              <b-form-group id="n-muestras-group" class="my-form-group" label="N° SubMuestras: " label-for="n-muestras-input">
+                <b-form-input id="n-muestras-input" v-model="nMuestras" min="1"></b-form-input>
               </b-form-group>
 
               <b-button @click="agregarMuestras">Agregar Muestra</b-button>
               <b-button @click="verMuestras" v-if="muestras.length > 0">Ver Muestras</b-button>
 
-              <b-modal v-model="modalVerMuestras">
+               <b-modal v-model="modalVerMuestras">
                 <template v-slot:modal-title>
                   <h4>Muestras</h4>
                 </template>
@@ -59,21 +52,26 @@
                 <template v-slot:modal-footer>
                   <b-button variant="primary" @click="modalVerMuestras = false">Cerrar</b-button>
                 </template>
-              </b-modal>
+              </b-modal> 
 
               <b-form-group id="fecha-group" class="my-form-group" label="Fecha (Recepción): " label-for="fecha-input">
-                <b-form-input id="fecha-input" v-model="fecha" readonly></b-form-input>
+                <b-form-input id="fecha-input" v-model="fecha" readonly ></b-form-input>
               </b-form-group>
 
               <b-form-group id="hora-group" class="my-form-group" label="Hora (Recepción): " label-for="hora-input">
                 <b-form-input id="hora-input" v-model="hora" readonly></b-form-input>
               </b-form-group>
               
-              <b-button @click="generarFechaHoraActual()">Generar Fecha & Hora Actual</b-button>
+              <b-button @click="generarFechaHoraActual()">Generar Fecha & Hora de Recepción</b-button>
 
               <b-form-group id="muestreado-group" class="my-form-group" label="Muestreado por: " label-for="muestreado-input">
-                <b-form-checkbox-group id="muestreado-input" v-model="muestreado" :options="opcionesMuestreado" inline></b-form-checkbox-group>
+               <b-form-select v-model="muestreado" :options="opcionesMuestreado">
+                 <template #first>
+                  <option :value="null" disabled>Seleccione una opción</option>
+                 </template>
+               </b-form-select>
               </b-form-group>
+
         
               <b-form-group id="prioridad-group" class="my-form-group" label="Prioridad: " label-for="prioridad-input">
                 <b-form-select v-model="prioridad" :options="opcionesPrioridad">
@@ -93,16 +91,9 @@
                   </template>
                 </b-form-select>
               </b-form-group>
-
               
-            </div>
-
-              <!-- tabla que muestra las muestras definidas anteriormente en el campo nMuestras-->
-
-
-             <!-- <b-table v-if="tablaVisible" :items="muestras" :fields="camposTabla"></b-table> -->
-            
-      
+            </div>             
+                  
               <!-- Grupo de elementos del transportista -->
               <div class="col-md-4">
 
@@ -125,7 +116,7 @@
               </b-form-group>
         
               <b-form-group id="Temp-group" class="my-form-group" label="T° de muestra(s): " label-for="Temp-input">
-                <b-form-input id="Temp-input" v-model="Temperatura" required pattern="-?\d+(\.\d+)?" title="Por favor ingrese un número válido" type="number"></b-form-input>
+                <b-form-input id="Temp-input" v-model="Temperatura" title="Por favor ingrese un número válido"></b-form-input>
               </b-form-group>
     
               <b-form-group id="fechaE-group" label="Fecha de entrega:" class="my-form-group" label-for="fechaE-input">
@@ -138,7 +129,7 @@
                 <b-form-textarea id="observaciones-input" v-model="observaciones"></b-form-textarea>
               </b-form-group>
 
-        <b-button type="submit" variant="primary" title="Enviar formulario" @click="showConfirmation">Enviar</b-button>
+              <button @click="submitForm()">Enviar</button>
       </b-form>
     </div>
     </div>
@@ -148,7 +139,17 @@
 </template>
 
 <script>
-export default {
+
+import MuestraService from '@/helpers/api-services/Muestra.Service';
+// import SubmuestraService from "@/helpers/api-services/subMuestra.Service.js";
+
+import { BFormDatepicker } from 'bootstrap-vue'
+
+export default{ 
+  components: {
+  BFormDatepicker
+},
+
   data() {
     return {
       recepcionista: '',
@@ -157,23 +158,23 @@ export default {
       direccion: '',
       muestreado:'',
       opcionesMuestreado: [
-      { value: 'opción 1', text: 'UCN' },
-      { value: 'opción 2', text: 'LSA' }],
+      { value: 'UCN', text: 'UCN' },
+      { value: 'LSA', text: 'LSA' }],
       prioridad: null,
       opcionesPrioridad: [
-      { value: 'normal', text: 'Normal', color: 'green' },
-      { value: 'alta', text: 'Alta', color: 'yellow' }, 
-      { value: 'urgente', text: 'Urgente', color: 'red' }],
+      { value: '1', text: 'Normal', color: 'green' },
+      { value: '2', text: 'Alta', color: 'yellow' }, 
+      { value: '3', text: 'Urgente', color: 'red' }],
       TipoMatriz: null,
       opcionesMatriz: [
-      { value: 'AGUA', text: 'AGUA RESIDUAL'},
-      { value: 'TIERRA', text: 'Tierra del infierno'}, 
-      { value: 'MINERAL', text: 'Nether mineral'}],
+      { value: 'Agua', text: 'Agua'},
+      { value: 'Tierra', text: 'Tierra'}, 
+      { value: 'Mineral', text: 'Mineral'}],
       transportista:'',
       Temperatura:'',
       transportistaRut:'',
       fono:'',
-      fechaEntrega: null,
+      fechaEntrega: '',
       observaciones:'',
       nMuestras: null,
       muestras: [],
@@ -182,37 +183,107 @@ export default {
       showModal: false,
       ultimoCodigo: 100000,
       fecha: "",
-      hora: ""
+      hora: "",
+      patente: "",
+      estado: null
+
     };
   },
   
   
   methods: {
-    showConfirmation() {
-    if (confirm("¿Está seguro de enviar el formulario?")) {
-      this.submit();
-      alert("El formulario se ha enviado con éxito");
-    }
-  },
-    submit() {
-
-      // A la espera de continuar con el proyecto
-    
-  },
+        
   agregarMuestras() {
       for (let i = 0; i < this.nMuestras; i++) {
         const codigo = ++this.ultimoCodigo;
         this.muestras.push({ nMuestra: `Muestra ${this.muestras.length + 1}`, codigoMuestra: codigo })
       }
     },
+
     verMuestras() {
       this.modalVerMuestras = true
     },
+
+
     generarFechaHoraActual() {
-      const now = new Date();
-      this.fecha = now.toLocaleDateString();
-      this.hora = now.toLocaleTimeString();
+  const now = new Date();
+  const dia = now.getDate().toString().padStart(2, '0');
+  const mes = (now.getMonth() + 1).toString().padStart(2, '0');
+  const anio = now.getFullYear().toString();
+  this.fecha = `${dia}/${mes}/${anio}`;
+  this.hora = now.toLocaleTimeString();
+},
+
+   submitForm(event) {
+
+    event.preventDefault();
+      // Obtener datos del formulario
+      this.generarFechaHoraActual();
+      var data = {
+        //recepcionista: this.recepcionista,
+        nombre_empresa: this.solicitante,
+        direccion_empresa: this.direccion,
+        nombre_solicitante: this.solicitante,
+        muestreado_por: this.muestreado,
+        matriz: this.TipoMatriz,
+        cantidad_muestras: this.nMuestras,
+        prioridad: this.prioridad,
+        fecha_muestreo: '',
+        hora_muestreo: '',
+        temperatura_transporte: this.Temperatura,
+        fecha_entrega: this.fechaEntrega,
+        nombre_transportista: this.transportista,
+        patente_vehiculo: this.patente,
+        rut_transportista: this.transportistaRut,
+        //rut: this.rut,       
+        telefono_transportista: this.fono,       
+        estado: 'Recepcionado',
+        observaciones: this.observaciones,
+        fecha_ingreso: this.fecha,
+        hora_ingreso: this.hora
+
+      }
+      
+      
+      console.log("data a enviar", data)
+      MuestraService.ingresarMuestra(data)
+      .then((response) => {
+      console.log(response);
+      if (response && response.status === 200) {
+      alert('Muestra enviada con éxito!');
+      document.formulario.reset();
+      this.$router.push('/Form?s=1');
+
+      /* Obtener el RUM de la muestra creada
+      const rum = response.data.RUM;
+
+      // Crear la submuestra asociada a la muestra
+      const submuestraData = {
+        RUM: rum,
+        
+        
+        // Agregar aquí los demás datos de la submuestra
+      };
+      
+      return SubmuestraService.ingresarSubMuestra(submuestraData, rum);*/
+    } else {
+      alert('Error al agregar muestra!');
+      throw new Error('No se pudo agregar la muestra');
     }
+  })
+  .then((response) => {
+    console.log(response);
+    if (response && response.status === 200) {
+      alert('Submuestra creada con éxito!');
+    }
+  })
+  .catch((error) => {
+    console.log(error);
+    alert('Ocurrió un error al enviar la muestra.');
+  });
+      
+    },   
+
   }
 }
 </script>

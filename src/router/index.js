@@ -2,10 +2,16 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import HomeView from '../views/HomeView.vue'
 import LoginView from '../views/Login.vue'
+import USU004_admPersonal from '../views/USU004_admPersonal'
 import MUS001 from '../views/MUS001.vue'
+import MUS002 from '../views/MUS002-IngMuesLab.vue'
+import MUS003 from '../views/MUS003-vistaQm-AQm.vue'
 import MUS004 from '../views/MUS004-vistaSuperv-Jefe.vue'
+import MUS006 from '../views/MUS006-vistaGerente.vue'
+import MUS007 from '../views/MUS007-vistaAdmFinanza.vue'
 import USU004_admPersonal from '../views/USU004_admPersonal'
 import USU002_admEmpresa from '../views/USU002_admEmpresa'
+
 
 
 Vue.use(VueRouter)
@@ -44,6 +50,33 @@ const routes = [
     component: MUS004
   }
   ,
+  {
+    path: '/IngMuesLab',
+    name: 'IngresoLab',
+    component: MUS002
+
+
+  },
+  {
+    path: '/AdmMuesQm',
+    name: 'AdminQm',
+    component: MUS003
+
+  },
+  {
+
+    path: '/Gerente',
+    name:'vistaGerente',
+    component: MUS006
+  },
+
+  {
+
+    path: '/AdmFin',
+    name: 'AdmFinanzas',
+    component: MUS007
+
+  },
 
   {
     path: '/about',
