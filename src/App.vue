@@ -42,6 +42,12 @@
  <span class="lsa-gray-text">   Empresa </span>
   
 </b-button>
+<b-button class="lsa-light-gray btn-margin reactive-button">
+  <b-icon class="lsa-orange-text"  icon="briefcase-fill"></b-icon>
+ 
+ <span class="lsa-gray-text">   Solicitante </span>
+  
+</b-button>
 </b-navbar>
 <!--
     <b-navbar toggleable="lg" style="background-color: pink" class="my-custom-nav">
