@@ -16,12 +16,8 @@
 
               <b-form-group id="recepcionista-group" class="my-form-group" label="Recepcionista: " label-for="recepcionista-input">
                 <b-form-input id="recepcionista-input" v-model="recepcionista"></b-form-input>
-              </b-form-group>
-              
-              <b-form-group id="direccion-group" class="my-form-group" label="Dirección: " label-for="direccion-input">
-                <b-form-input id="direccion-input" v-model="direccion"></b-form-input>
-              </b-form-group>
-
+              </b-form-group>             
+             
               <b-form-group id="solicitante-group" class="my-form-group" label="Solicitante: " label-for="solicitante-input">
                 <b-form-input id="solicitante-input" v-model="solicitante"></b-form-input>
               </b-form-group>
@@ -41,11 +37,21 @@
                 <h1>Datos Muestra</h1>
 
                 <b-form-group id="Fecha-group" class="my-form-group" label="Fecha Muestreo: " label-for="Fecha-input">
-                    <b-form-input id="Fecha-input" v-model="fecha" disabled></b-form-input>
+                    <b-form-input id="Fecha-input" v-model="fecha"></b-form-input>
                 </b-form-group>
 
                 <b-form-group id="Hrs-group" class="my-form-group" label="Hora Muestreo: " label-for="Hrs-input">
-                <b-form-input id="Hrs-input" v-model="Hrs" disabled></b-form-input>
+                <b-form-input id="Hrs-input" v-model="Hrs"></b-form-input>
+              </b-form-group>
+
+              <b-button @click="generarFechaHoraActual()">Generar Fecha & Hora de Muestreo</b-button>
+              
+              <b-form-group id="FechaR-group" class="my-form-group" label="Fecha Recepción: " label-for="Fecha-input">
+                    <b-form-input id="Fecha-input" v-model="fechaRecepcion" readonly></b-form-input>
+                </b-form-group>
+
+                <b-form-group id="HrsR-group" class="my-form-group" label="Hora Recepción: " label-for="Hrs-input">
+                <b-form-input id="Hrs-input" v-model="HrsRecepcion" readonly></b-form-input>
               </b-form-group>
 
               <b-form-group id="cotizacion-group" class="my-form-group" label="Cotización: " label-for="cotización-input">
@@ -53,13 +59,20 @@
               </b-form-group>
 
               <b-form-group id="muestreado-group" class="my-form-group" label="Muestreado por: " label-for="muestreado-input">
-                <b-form-checkbox-group id="muestreado-input" v-model="muestreado" :options="opcionesMuestreado" inline></b-form-checkbox-group>
+               <b-form-select v-model="muestreado" readonly :options="opcionesMuestreado">
+                 <template #first>
+                  <option :value="null" disabled>Seleccione una opción</option>
+                 </template>
+               </b-form-select>
               </b-form-group>
 
               <b-form-group id="Matriz-group" class="my-form-group" label="Matriz: " label-for="Matriz-input">
                 <b-form-input id="Matriz-input" v-model="matriz"></b-form-input>
               </b-form-group>
 
+              <b-button variant="primary" @click="showModal = true">Abrir Modal</b-button>
+
+             
               <b-form-group id="NMuestras-group" class="my-form-group" label="N°Muestras: " label-for="NMuestras-input">
                 <b-form-input id="NMuestras-input" v-model="NMuestras" disabled></b-form-input>
               </b-form-group>
@@ -71,7 +84,6 @@
               <b-form-group id="fechaE-group" label="Fecha de entrega:" class="my-form-group" label-for="fechaE-input">
                 <b-form-datepicker id="fechaE-input" v-model="fechaEntrega" disabled></b-form-datepicker>
               </b-form-group>
-
             </div>
 
             <!-- Datos transportista/Empresa -->
@@ -85,7 +97,11 @@
 
               <b-form-group id="empresa-group" class="my-form-group" label="Empresa: " label-for="empresa-input">
                 <b-form-input id="empresa-input" v-model="empresa"></b-form-input>
-              </b-form-group>      
+              </b-form-group>    
+              
+              <b-form-group id="direccion-group" class="my-form-group" label="Dirección Empresa: " label-for="direccion-input">
+                <b-form-input id="direccion-input" v-model="direccion"></b-form-input>
+              </b-form-group>
               
               <b-form-group id="Temp-group" class="my-form-group" label="T° de muestra(s): " label-for="Temp-input">
                 <b-form-input id="Temp-input" v-model="Temperatura" pattern="-?\d+(\.\d+)?" disabled title="Por favor ingrese un número válido" type="number"></b-form-input>
@@ -116,25 +132,32 @@
   </template>
 
 <script>
+
+import MuestraService from '@/helpers/api-services/Muestra.Service';
+
+
 export default {
   data() {
     return {
       RUM: '',
       recepcionista: '',
       empresa: '',
-      dirección: '',
+      direccion: '',
       solicitante: '',
       fecha: '',
-      hrs:'',
+      Hrs:'',
       cotizacion:'',
       muestreado:'',
+      opcionesMuestreado: [
+      { value: 'UCN', text: 'UCN' },
+      { value: 'LSA', text: 'LSA' }],
       NMuestras:'',
       matriz:'',
       prioridad:'',
       fechaEntrega:'',
       transportistaRut:'',      
       pago:'',
-      temperatura:'',
+      Temperatura:'',
       transportista:'',
       fono: '',
       patente: '',
@@ -146,7 +169,60 @@ export default {
         { valor: 'cheque', texto: 'Cheque' },
         { valor: 'otro', texto: 'Otro' },
       ],
+      Parametro: '',
+      Norma: '',
+      Tabla: '',
+      datos: {},
+      fechaRecepcion: '',
+      HrsRecepcion: '',
+      showModal: false,
     }
+  },
+
+  methods: {
+    generarFechaHoraActual() {
+  const now = new Date();
+  const dia = now.getDate().toString().padStart(2, '0');
+  const mes = (now.getMonth() + 1).toString().padStart(2, '0');
+  const anio = now.getFullYear().toString();
+  this.fecha = `${dia}/${mes}/${anio}`;
+  this.Hrs = now.toLocaleTimeString();
+},
+
+  RellenarForm(response) {
+
+    this.direccion = response.direccion_empresa
+    this.transportistaRut = response.rut_transportista
+    this.solicitante = response.nombre_solicitante
+    this.empresa = response.nombre_solicitante
+    this.fechaEntrega = response.fecha_entrega
+    this.fechaRecepcion = response.fecha_ingreso
+    this.HrsRecepcion = response.hora_ingreso
+    this.matriz = response.matriz
+    this.muestreado = response.muestreado_por
+    this.Temperatura = response.temperatura_transporte
+    this.patente = response.patente_vehiculo
+    this.fono = response.telefono_transportista
+    this.transportista = response.nombre_transportista
+
+
+  }
+  },
+  created(){
+    this.RUM = this.$route.query.RUM;
+    MuestraService.obtenerDatosMuestra(this.RUM).then((response)=>{
+      console.log(response)
+      this.datos = response.data;
+      this.RellenarForm(response.data);
+
+
+
+    }).catch(error => {
+        console.error(error);
+      });
+    
+    
+
   }
 }
 </script>
