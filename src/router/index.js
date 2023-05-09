@@ -9,6 +9,8 @@ import MUS003 from '../views/MUS003-vistaQm-AQm.vue'
 import MUS004 from '../views/MUS004-vistaSuperv-Jefe.vue'
 import MUS006 from '../views/MUS006-vistaGerente.vue'
 import MUS007 from '../views/MUS007-vistaAdmFinanza.vue'
+import USU004_admPersonal from '../views/USU004_admPersonal'
+import USU002_admEmpresa from '../views/USU002_admEmpresa'
 
 
 
@@ -34,6 +36,12 @@ const routes = [
     path: '/admPersonal',
     name: 'admPersonal',
     component: USU004_admPersonal
+
+  },
+  {
+    path: '/admEmpresa',
+    name: 'admEmpresa',
+    component: USU002_admEmpresa
 
   },
   {
