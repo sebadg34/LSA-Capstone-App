@@ -129,7 +129,8 @@
                 <b-form-textarea id="observaciones-input" v-model="observaciones"></b-form-textarea>
               </b-form-group>
 
-              <button @click="submitForm()">Enviar</button>
+              <b-button variant="primary" @click="submitForm()">Enviar</b-button>
+              
       </b-form>
     </div>
     </div>
