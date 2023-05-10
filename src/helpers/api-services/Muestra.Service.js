@@ -77,23 +77,7 @@ const obtenerObservaciones = async (RUM) => {
          return;
      }
  };
-
-
-
-export function getPrioridad(prioridad) {
-    if (prioridad === 1) {
-      return "Normal";
-    } else if (prioridad === 2) {
-      return "Alta";
-    } else if (prioridad === 3) {
-      return "Urgente";
-    } else {
-      return "";
-    }
-  }
-
-
-
+ 
 export default {
     ingresarMuestra,
     obtenerMuestras,
