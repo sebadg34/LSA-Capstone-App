@@ -9,7 +9,6 @@ import MUS003 from '../views/MUS003-vistaQm-AQm.vue'
 import MUS004 from '../views/MUS004-vistaSuperv-Jefe.vue'
 import MUS006 from '../views/MUS006-vistaGerente.vue'
 import MUS007 from '../views/MUS007-vistaAdmFinanza.vue'
-import USU004_admPersonal from '../views/USU004_admPersonal'
 import USU002_admEmpresa from '../views/USU002_admEmpresa'
 import USU003_admSolicitante from '../views/USU003_admSolicitante'
 
