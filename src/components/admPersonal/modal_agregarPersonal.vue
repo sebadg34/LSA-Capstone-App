@@ -110,9 +110,13 @@
 
         </template>
         <hr>
-        <b-form-group label="Archivos: " label-cols-sm="2" label-size="lg">
-            <b-form-file id="file-large" size="lg"></b-form-file>
-        </b-form-group>
+        <div>
+            <b-form-file v-on:change="onChange" :multiple="true" v-model="Archivos" ref="file-input" class="mb-2"></b-form-file>
+
+            <b-button @click="Archivos = null">Limpiar</b-button>
+
+            <p class="mt-2">Selected files: <b v-for="archivo in Archivos" :key="archivo.index">{{ archivo ? archivo.name : '' }}</b></p>
+        </div>
     </b-modal>
 </validation-observer>
 </template>
@@ -124,6 +128,10 @@ export default {
     data() {
         
         return {
+            Archivos: null,
+            Archivos_enviar: "",
+            file: "",
+            files: "",
             Nombre: "",
             Rut: "",
             Correo: "",
@@ -177,6 +185,28 @@ export default {
         }
     },
     methods: {
+        onChange(e) {
+            this.Archivos_enviar = [];
+            this.files = e.target.files;
+            //this.Archivos_enviar = this.files[0];
+            for(var i = 0; i < this.files.length; i++){
+                this.Archivos_enviar[i] = this.files[i];
+            }
+          //  this.files = e.target.files;
+          //  console.log(this.files)
+          //  for (var i = 0; i < this.files.length; i++) {
+          //      let blob = this.files[i];
+          //      this.imagenToBase64(blob).then((textoConvertido) => {
+          //          this.Archivos_enviar.push({
+          //              nombreArchivo: (blob.name).split(".")[0],
+          //              archivoBase64: textoConvertido
+//
+          //          })
+//
+          //      })
+          //  }
+            console.log(this.Archivos_enviar)
+        },
         getValidationState({
             dirty,
             validated,
@@ -190,8 +220,8 @@ export default {
                 if (!success) {
                     return;
                 } else {
-
-                    var data = {
+                    let formData = new FormData();
+                    formData = {
                         "rut_empleado": this.Rut,
                         "nombre": this.Nombre,
                         "apellido": this.Apellidos,
@@ -200,13 +230,16 @@ export default {
                         "tipo_trabajador": this.Tipo,
                         "telefono_movil" : this.Movil,
                         "telefono_emergencia": this.Emergencia,
-                        "estado": true,
+                        "estado": 1,
                         //"fecha_inicio_vacaciones": "01-01-2000",
                        // "fecha_termino_vacaciones": "01-01-2099",
                         //"//dias_administrativos": "1"
                     }
-                    console.log("data a enviar", data)
-                    personalService.ingresarPersonal(data).then((response) => {
+                    if(this.Archivos_enviar.length != 0){
+                        formData.documentos = this.Archivos_enviar;
+                    }
+                    console.log("data a enviar", formData)
+                    personalService.ingresarPersonal(formData).then((response) => {
                         console.log(response)
                         if (response != null) {
                             if (response.status == 200) {

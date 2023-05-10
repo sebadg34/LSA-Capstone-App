@@ -137,8 +137,12 @@ export default {
                     key: 'nombre',
                     label: 'Nombre'
                 }, {
-                    key: 'apellido',
-                    label: 'Apellidos'
+                    key: 'primer_apellido',
+                    label: 'Primer apellido'
+                },
+                {
+                    key: 'segundo_apellido',
+                    label: 'Segundo apellido'
                 }, {
                     key: 'correo',
                     label: 'Correo electrónico'
