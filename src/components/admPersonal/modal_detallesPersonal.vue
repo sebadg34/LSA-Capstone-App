@@ -48,6 +48,44 @@
         </b-col>
     </b-row>
 
+<hr/>
+
+<div>
+        <b-row v-if="Documentos.length" class="mx-auto col-xl-8 col-lg-9 col-md-10 col-12">
+            <div class="col-12 d-flex align-items-center" style="background-color: white;height:50px; border-top:2px solid var(--ucn-light-gray); font-weight: bold;">
+                <div>Archivos Adjuntos</div>
+
+            </div>
+            <div class="col-12" style="background-color: white; ">
+
+                <b-list-group v-for="file in Documentos" :key="file.id">
+                    <b-list-group-item class="d-flex justify-content-between">
+                        <div>
+                            {{ file.nombre_documento }}
+                        </div>
+
+                        <b-button variant="info" @click="descargarArchivo(file)" style=" heigth: 25px; width: 26px; border-style: none; padding: 0px; background-color: white;">
+                            <b-icon-download variant="info"></b-icon-download>
+                        </b-button>
+                    </b-list-group-item>
+                </b-list-group>
+
+                <br>
+            </div>
+        </b-row>
+    </div>
+
+
+
+
+
+
+
+
+
+
+
+    
     <template #modal-footer>
 
         <b-button variant="primary" size="xl" class="float-right reactive-button" style="font-weight:bold">
@@ -60,6 +98,9 @@
 </template>
 
 <script>
+import personalService from "@/helpers/api-services/Personal.service"
+import FileSaver from 'file-saver';
+
 export default {
     watch: {
         userData: {
@@ -73,11 +114,30 @@ export default {
                 this.Emergencia = this.userData.telefono_emergencia
                 this.Cargo = this.userData.rol
                 this.Tipo = this.userData.tipo_trabajador
+
+                this.obtenerDetalles(this.Rut);
             }
         }
     },
     props: {
         userData: Object
+    },
+    methods: {
+        descargarArchivo(file) {
+            console.log(file)
+            //let blob = file.data;
+            FileSaver.saveAs(file, file.nombre_documento);
+
+        },
+        obtenerDetalles(rut){
+            personalService.obtenerDetallesPersonal(rut).then((response) => {
+                if(response.data != null){
+                    this.Documentos = response.data.documentos;
+                }
+               
+            
+            })  
+        }
     },
     data() {
         return {
@@ -89,6 +149,7 @@ export default {
             Emergencia: this.userData.telefono_emergencia,
             Cargo: this.userData.rol,
             Tipo: this.userData.tipo_trabajador,
+            Documentos: "",
             tipos: [{
                     value: 'Practicante',
                     text: 'Practicante'

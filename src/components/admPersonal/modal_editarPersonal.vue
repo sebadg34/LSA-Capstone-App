@@ -101,6 +101,14 @@
                 </ValidationProvider>
             </b-col>
         </b-row>
+        <hr />
+        <div>
+            <b-form-file v-on:change="onChange" :multiple="true" v-model="Archivos" ref="file-input" class="mb-2"></b-form-file>
+
+            <b-button @click="Archivos = null">Limpiar</b-button>
+
+            <p class="mt-2">Selected files: <b v-for="archivo in Archivos" :key="archivo.index">{{ archivo ? archivo.name : '' }}</b></p>
+        </div>
 
         <template #modal-footer>
 
@@ -126,9 +134,10 @@ export default {
                 this.Correo = this.userData.correo
                 this.Apellidos = this.userData.apellido
                 this.Movil = this.userData.telefono_movil
-                this.mergencia = this.userData.telefono_emergencia
+                this.Emergencia = this.userData.telefono_emergencia
                 this.Cargo = this.userData.rol
                 this.Tipo = this.userData.tipo_trabajador
+                this.Estado = this.userData.estado
             }
         }
     },
@@ -150,6 +159,11 @@ export default {
             Emergencia: this.userData.telefono_emergencia,
             Cargo: this.userData.cargo,
             Tipo: "",
+            Estado: "",
+            Archivos: null,
+            Archivos_enviar: "",
+            file: "",
+            files: "",
             tipos: [{
                     value: 'Practicante',
                     text: 'Practicante'
@@ -195,6 +209,44 @@ export default {
         }
     },
     methods: {
+        imagenToBase64(newfile) {
+            return new Promise((resolve, reject) => {
+                // obtener la data de la imagen
+                var reader = new FileReader();
+                reader.readAsDataURL(newfile);
+
+                reader.onload = () => {
+                    resolve(reader.result);
+                };
+
+                reader.onerror = function (error) {
+                    console.log("Error: ", error);
+                    reject("");
+                };
+            });
+        },
+        onChange(e) {
+            this.Archivos_enviar = [];
+            this.files = e.target.files;
+            //this.Archivos_enviar = this.files[0];
+            for(var i = 0; i < this.files.length; i++){
+                this.Archivos_enviar[i] = this.files[i];
+            }
+          //  this.files = e.target.files;
+          //  console.log(this.files)
+          //  for (var i = 0; i < this.files.length; i++) {
+          //      let blob = this.files[i];
+          //      this.imagenToBase64(blob).then((textoConvertido) => {
+          //          this.Archivos_enviar.push({
+          //              nombreArchivo: (blob.name).split(".")[0],
+          //              archivoBase64: textoConvertido
+//
+          //          })
+//
+          //      })
+          //  }
+            console.log(this.Archivos_enviar)
+        },
         getValidationState({
             dirty,
             validated,
@@ -202,32 +254,42 @@ export default {
         }) {
             return dirty || validated ? valid : null;
         },
+        enviarDocumentos() {
+            console.log(this.Archivos);
+        }
+       ,
         enviarFormulario() {
-            
+
             this.$refs.form.validate().then(success => {
                 if (!success) {
+
                     return;
                 } else {
-
-                    var data = {
+                   
+                    let formData = new FormData();
+                    formData = {
                         "rut_empleado": this.Rut,
                         "nombre": this.Nombre,
                         "apellido": this.Apellidos,
                         "correo": this.Correo,
                         "rol": this.Cargo,
                         "tipo_trabajador": this.Tipo,
-                        "telefono_movil" : this.Movil,
+                        "telefono_movil": this.Movil,
                         "telefono_emergencia": this.Emergencia,
-                        "estado": true,
+                        "estado": this.Estado,
                         //"fecha_inicio_vacaciones": "01-01-2000",
                         //"fecha_termino_vacaciones": "01-01-2099",
-                        //"dias_administrativos": "1"
+                        //"dias_administrativos" : "1"
                     }
-                    console.log("data a enviar", data)
-                    personalService.editarPersonal(data).then((response) => {
+                    if(this.Archivos_enviar.length != 0){
+                        formData.documentos = this.Archivos_enviar;
+                    }
+                    console.log("data a enviar", formData)
+                    personalService.editarPersonal(formData).then((response) => {
                         console.log(response)
                         if (response != null) {
                             if (response.status == 200) {
+
                                 this.$bvToast.toast(`Edición de personal exitosa`, {
                                     title: 'Exito',
                                     toaster: 'b-toaster-top-center',

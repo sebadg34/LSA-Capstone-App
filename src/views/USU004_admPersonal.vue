@@ -1,39 +1,56 @@
 <template>
 <div style="margin-bottom:50px">
 
-    <modal_agregarPersonal @refrescar="obtenerPersonal"/>
+    <modal_agregarPersonal @refrescar="obtenerPersonal" />
     <modal_detallesPersonal :user-data="this.modalDetallesData" />
     <modal_editarPersonal @refrescar="obtenerPersonal" :user-data="this.modalEditarData" />
-    <modal_estadoPersonal @refrescar="obtenerPersonal" :user-data="this.modalEstadoData"/>
-    <b-container class="bv-example-row" style="padding-top:50px; padding-left:0px;padding-right: 0px;">
-        <b-col class="col-12">
+    <modal_estadoPersonal @refrescar="obtenerPersonal" :user-data="this.modalEstadoData" />
+  
 
-            <b-col class="col-3">
-                <b-row>
-                    <b-button v-b-modal.modal-personal style="border-radius: 15px; font-weight: bold; font-size: 18px; " class="lsa-light-blue reactive-button">
+  
 
-                        Agregar Personal
-                        <b-icon icon="person-plus-fill"></b-icon>
-                    </b-button>
-                </b-row>
-            </b-col>
-            <b-row class="pt-5">
-
-            </b-row>
-
-        </b-col>
-
-    </b-container>
     <b-row class="justify-content-center">
+
+<b-col class="col-10">
+    <b-row style="padding-top:50px; padding-bottom:10px">
+            <b-col class="col-6">
+
+                <b-col class="col-6">
+                    <b-row>
+                        <b-button v-b-modal.modal-personal style="border-radius: 15px; font-weight: bold; font-size: 18px; " class="lsa-light-blue reactive-button">
+
+                            Agregar Personal
+                            <b-icon icon="person-plus-fill"></b-icon>
+                        </b-button>
+                    </b-row>
+                </b-col>
+
+            </b-col>
+
+            <b-col lg="6" class="my-1">
+                <b-form-group label-cols-sm="3" label-align-sm="right" label-size="md" class="mb-0">
+                    <b-input-group size="md">
+                        <b-form-input id="filter-input" v-model="filter" type="search" placeholder="Escriba rut, nombre, etc. para filtrar"></b-form-input>
+
+                        <b-input-group-append>
+                            <b-button style="font-weight:bold" class="lsa-blue" :disabled="!filter" @click="filter = ''">Limpiar filtro</b-button>
+                        </b-input-group-append>
+                    </b-input-group>
+                </b-form-group>
+            </b-col>
+        </b-row>
+</b-col>
+     
+
         <b-col class="col-10">
-            <b-table :fields="campos_tabla" :items="personal" style="" :busy="loading" :per-page="perPage" :current-page="currentPage">
+            <b-table :filter="filter" @filtered="onFiltered" :fields="campos_tabla" :items="personal" style="" :busy="loading" :per-page="perPage" :current-page="currentPage">
 
                 <template #table-busy>
-        <div class="text-center lsa-orange-text my-2">
-          <b-spinner class="align-middle"></b-spinner>
-          <strong> Cargando...</strong>
-        </div>
-      </template>
+                    <div class="text-center lsa-orange-text my-2">
+                        <b-spinner class="align-middle"></b-spinner>
+                        <strong> Cargando...</strong>
+                    </div>
+                </template>
 
                 <template #cell(estado)="row">
 
@@ -90,14 +107,16 @@ export default {
         this.obtenerPersonal();
     },
     computed: {
-      rows() {
-        return this.personal.length
-      }
+        rows() {
+            return this.personal.length
+        }
     },
     data() {
         return {
+            filter: null,
+            filterOn: [],
             editarID: 0,
-            currentPage: 3,
+            currentPage: 1,
             perPage: 10,
             loading: true,
             modalEditarData: {},
@@ -129,7 +148,12 @@ export default {
         }
     },
     methods: {
-        testEvent(){
+        onFiltered(filteredItems) {
+            // Trigger pagination to update the number of buttons/pages due to filtering
+            this.totalRows = filteredItems.length
+            this.currentPage = 1
+        },
+        testEvent() {
             console.log('evento leido')
         },
         obtenerPersonal() {
@@ -139,7 +163,7 @@ export default {
                     console.log(response)
                     this.personal = response.data
                     console.log(this.personal)
-                    
+
                     this.loading = false;
                 }
 
@@ -155,9 +179,9 @@ export default {
             this.modalDetallesData = data;
             this.$bvModal.show('modal-detalles-personal')
         },
-        abrirEstadoPersonal(data){
+        abrirEstadoPersonal(data) {
             console.log(data)
-            this.modalEstadoData =data;
+            this.modalEstadoData = data;
             this.$bvModal.show('modal-estado-personal')
         }
 
