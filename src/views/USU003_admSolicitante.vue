@@ -4,27 +4,46 @@
     <modal_agregarSolicitante @refrescar="obtenerSolicitante" />
     <modal_detallesSolicitante :user-data="this.modalDetallesData" />
     <modal_editarSolicitante @refrescar="obtenerSolicitante" :solicitante-data="this.modalEditarData" />
-    <b-container class="bv-example-row" style="padding-top:50px; padding-left:0px;padding-right: 0px;">
-        <b-col class="col-12">
+   
+    <b-row class="justify-content-center">
 
-            <b-col class="col-3">
-                <b-row>
+
+
+
+
+        <b-col class="col-10">
+    <b-row style="padding-top:50px; padding-bottom:10px">
+            <b-col class="col-6">
+
+                <b-col class="col-6">
+
+                    <b-row>
                     <b-button v-b-modal.modal-solicitante style="border-radius: 15px; font-weight: bold; font-size: 18px; " class="lsa-light-blue reactive-button">
                         Agregar Solicitante
                         <b-icon icon="person-plus-fill"></b-icon>
                     </b-button>
                 </b-row>
+
+                </b-col>
+
             </b-col>
-            <b-row class="pt-5">
 
-            </b-row>
+            <b-col lg="6" class="my-1">
+                <b-form-group label-cols-sm="3" label-align-sm="right" label-size="md" class="mb-0">
+                    <b-input-group size="md">
+                        <b-form-input id="filter-input" v-model="filter" type="search" placeholder="Escriba rut, nombre, etc. para filtrar"></b-form-input>
 
-        </b-col>
+                        <b-input-group-append>
+                            <b-button style="font-weight:bold" class="lsa-blue" :disabled="!filter" @click="filter = ''">Limpiar filtro</b-button>
+                        </b-input-group-append>
+                    </b-input-group>
+                </b-form-group>
+            </b-col>
+        </b-row>
+</b-col>
 
-    </b-container>
-    <b-row class="justify-content-center">
         <b-col class="col-10">
-            <b-table :fields="campos_tabla" :items="solicitante" style="" :busy="loading" :per-page="perPage" :current-page="currentPage">
+            <b-table :filter="filter" @filtered="onFiltered" :fields="campos_tabla" :items="solicitante" style="" :busy="loading" :per-page="perPage" :current-page="currentPage">
 
                 <template #table-busy>
                     <div class="text-center lsa-orange-text my-2">
@@ -102,6 +121,8 @@ export default {
     },
     data() {
         return {
+            filter: null,
+            filterOn: [],
             editarID: 0,
             currentPage: 3,
             perPage: 10,
