@@ -30,6 +30,23 @@ const obtenerTodosPersonal = async () => {
     }
 };
 
+const obtenerDetallesPersonal = async (data) => {
+    try {
+        const response = await axios.get(apiUrl + "/empleados/detallesEmpleado/" + data);
+            console.log(response);
+        if(response.status == 200){
+            return response;
+        }else{
+            return;
+        }
+        
+    } catch (error) {
+        console.log(error);
+        return;
+    }
+};
+
+
 const cambiarEstadoPersonal = async (data) => {
     try {
         const response = await axios.post(apiUrl + "/empleados/cambiarEstado", data);
@@ -44,7 +61,12 @@ const cambiarEstadoPersonal = async (data) => {
 
 const editarPersonal = async (data) => {
     try {
-        const response = await axios.post(apiUrl + "/empleados/editarEmpleado", data);
+        const response = await axios.post(apiUrl + "/empleados/editarEmpleado", data, {
+            headers: {
+                'Content-Type': 'multipart/form-data'
+            }
+
+        });
             console.log(response);
         return response;
         
@@ -57,6 +79,7 @@ export default {
     ingresarPersonal,
     obtenerTodosPersonal,
     cambiarEstadoPersonal,
-    editarPersonal
+    editarPersonal,
+    obtenerDetallesPersonal
 
 };

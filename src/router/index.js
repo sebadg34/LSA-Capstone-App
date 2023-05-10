@@ -11,7 +11,7 @@ import MUS006 from '../views/MUS006-vistaGerente.vue'
 import MUS007 from '../views/MUS007-vistaAdmFinanza.vue'
 import USU004_admPersonal from '../views/USU004_admPersonal'
 import USU002_admEmpresa from '../views/USU002_admEmpresa'
-
+import USU003_admSolicitante from '../views/USU003_admSolicitante'
 
 
 Vue.use(VueRouter)
@@ -42,6 +42,12 @@ const routes = [
     path: '/admEmpresa',
     name: 'admEmpresa',
     component: USU002_admEmpresa
+
+  },
+  {
+    path: '/admSolicitante',
+    name: 'admSolicitante',
+    component: USU003_admSolicitante
 
   },
   {

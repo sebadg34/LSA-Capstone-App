@@ -1,11 +1,15 @@
 <template>
 <div style="margin-bottom:50px">
 
-    <modal_agregarEmpresa @refrescar="obtenerEmpresa" />
-    <modal_editarEmpresa :empresa-data="this.modalEditarData" @refrescar="obtenerEmpresa" />
-    <modal_detallesEmpresa :empresa-data="this.modalDetallesData" />
-    
+    <modal_agregarSolicitante @refrescar="obtenerSolicitante" />
+    <modal_detallesSolicitante :user-data="this.modalDetallesData" />
+    <modal_editarSolicitante @refrescar="obtenerSolicitante" :solicitante-data="this.modalEditarData" />
+   
     <b-row class="justify-content-center">
+
+
+
+
 
         <b-col class="col-10">
     <b-row style="padding-top:50px; padding-bottom:10px">
@@ -14,8 +18,8 @@
                 <b-col class="col-6">
 
                     <b-row>
-                    <b-button v-b-modal.modal-empresa style="border-radius: 15px; font-weight: bold; font-size: 18px; " class="lsa-light-blue reactive-button">
-                        Agregar Empresa
+                    <b-button v-b-modal.modal-solicitante style="border-radius: 15px; font-weight: bold; font-size: 18px; " class="lsa-light-blue reactive-button">
+                        Agregar Solicitante
                         <b-icon icon="person-plus-fill"></b-icon>
                     </b-button>
                 </b-row>
@@ -39,7 +43,7 @@
 </b-col>
 
         <b-col class="col-10">
-            <b-table :filter="filter" @filtered="onFiltered" :fields="campos_tabla" :items="empresa" style="" :busy="loading" :per-page="perPage" :current-page="currentPage">
+            <b-table :filter="filter" @filtered="onFiltered" :fields="campos_tabla" :items="solicitante" style="" :busy="loading" :per-page="perPage" :current-page="currentPage">
 
                 <template #table-busy>
                     <div class="text-center lsa-orange-text my-2">
@@ -64,13 +68,22 @@
 
                         </template>
                         <b-dropdown-item @click="abrirDetallesEmpresa(row.item)">
-                            <b-icon icon="file-earmark-medical" aria-hidden="true" class="mr-2"></b-icon>Ver detalles
+                            <b-icon icon="file-richtext" aria-hidden="true" class="mr-2"></b-icon>Ver detalles
 
                         </b-dropdown-item>
-                        <b-dropdown-item @click="abrirEditarEmpresa(row.item)">
+                        <b-dropdown-item @click="abrirEditarSolicitante(row.item)">
                             <b-icon icon="pencil" aria-hidden="true" class="mr-2"></b-icon>Editar
                         </b-dropdown-item>
-
+                        <b-dropdown-item >
+                            <b-icon icon="person-check" aria-hidden="true" class="mr-2"></b-icon>Cambiar estado
+                        </b-dropdown-item>
+                        <b-dropdown-item >
+                            <b-icon icon="card-heading" aria-hidden="true" class="mr-2"></b-icon>Ver cotizaciones
+                        </b-dropdown-item>
+                        <b-dropdown-item >
+                            <b-icon icon="file-earmark-plus" aria-hidden="true" class="mr-2"></b-icon>Agregar cotización
+                        </b-dropdown-item>
+                        
                     </b-dropdown>
 
                 </template>
@@ -85,25 +98,25 @@
     
 <script>
 // @ is an alias to /src
-import modal_agregarEmpresa from '@/components/admEmpresa/modal_agregarEmpresa.vue'
-import modal_editarEmpresa from '@/components/admEmpresa/modal_editarEmpresa.vue'
-import modal_detallesEmpresa from '@/components/admEmpresa/modal_detallesEmpresa.vue'
+import modal_agregarSolicitante from '@/components/admSolicitante/modal_agregarSolicitante.vue'
+import modal_editarSolicitante from '@/components/admSolicitante/modal_editarSolicitante.vue'
+import modal_detallesSolicitante from '@/components/admSolicitante/modal_detallesSolicitante.vue'
 
-import empresaService from "@/helpers/api-services/Empresa.service"
+import solicitanteService from "@/helpers/api-services/Solicitante.service"
 
 export default {
     name: 'admEmpresa',
     components: {
-        modal_agregarEmpresa,
-        modal_editarEmpresa,
-        modal_detallesEmpresa
+        modal_agregarSolicitante,
+        modal_editarSolicitante,
+        modal_detallesSolicitante
     },
     mounted() {
-        this.obtenerEmpresa();
+        this.obtenerSolicitante();
     },
     computed: {
         rows() {
-            return this.empresa.length
+            return this.solicitante.length
         }
     },
     data() {
@@ -117,23 +130,34 @@ export default {
             modalEditarData: {},
             modalDetallesData: {},
             modalEstadoData: {},
-            campos_tabla: [{
-                key: 'rut_empresa',
-                label: 'Rut'
-            }, {
-                key: 'nombre_abreviado',
-                label: 'Nombre Abreviado'
-            }, {
-                key: 'correo',
-                label: 'Correo'
-            }, {
-                key: 'giro',
-                label: 'Giro'
-            }, {
-                key: 'accion',
-                label: 'Acción'
-            }],
-            empresa: [{}],
+            campos_tabla: [ {
+                    key: 'rut_solicitante',
+                    label: 'Rut'
+                }, {
+                    key: 'nombre',
+                    label: 'Nombre'
+                }, {
+                    key: 'apellido',
+                    label: 'Apellidos'
+                }, {
+                    key: 'correo',
+                    label: 'Correo electrónico'
+                },
+                {
+                    key: 'telefono',
+                    label: 'Teléfono Movil'
+                }, 
+               
+                 {
+                    key: 'tipo_cliente',
+                    label: 'Tipo cliente'
+                }, 
+                {
+                    key: 'accion',
+                    label: 'Acción'
+                }
+            ],
+            solicitante: [{}],
         }
     },
     methods: {
@@ -142,10 +166,10 @@ export default {
             this.totalRows = filteredItems.length
             this.currentPage = 1
         },
-        abrirEditarEmpresa(data) {
+        abrirEditarSolicitante(data) {
             console.log(data)
             this.modalEditarData = data;
-            this.$bvModal.show('modal-editar-empresa')
+            this.$bvModal.show('modal-editar-solicitante')
         },
         abrirDetallesEmpresa(data) {
             console.log(data)
@@ -155,12 +179,12 @@ export default {
         testEvent() {
             console.log('evento leido')
         },
-        obtenerEmpresa() {
+        obtenerSolicitante() {
             this.loading = true;
-            empresaService.obtenerTodasEmpresa().then((response) => {
+            solicitanteService.obtenerTodosSolicitantes().then((response) => {
                 if (response != null) {
                     console.log(response)
-                    this.empresa = response.data
+                    this.solicitante = response.data
                     console.log(this.empresa)
 
                     this.loading = false;

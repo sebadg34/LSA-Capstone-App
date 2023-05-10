@@ -1,12 +1,12 @@
 <template>
 <validation-observer ref="form">
-    <b-modal id="modal-editar-personal" title="Editar Personal" size="lg">
+    <b-modal id="modal-detalles-solicitante" ref="modal" title="Agregar Solicitante" size="lg">
 
         <template #modal-header="{ close }">
             <!-- Emulate built in modal header close button action -->
 
             <b-row class="d-flex justify-content-around">
-                <div class="pl-3">Editar Personal</div>
+                <div class="pl-3">Agregar Solicitante</div>
 
             </b-row>
 
@@ -20,17 +20,17 @@
                 <label for="input-live">Rut:</label>
                 <ValidationProvider name="rut" rules="required|rut" v-slot="validationContext">
 
-                    <b-form-input disabled id="rut-input" class="mb-1" v-model="Rut" :state="getValidationState(validationContext)" aria-describedby="rut-live-feedback"></b-form-input>
+                    <b-form-input id="rut-input" class="mb-1" v-model="Rut" :state="getValidationState(validationContext)" aria-describedby="rut-live-feedback"></b-form-input>
 
                     <b-form-invalid-feedback id="rut-live-feedback">{{
-                            validationContext.errors[0] }}
+                        validationContext.errors[0] }}
                     </b-form-invalid-feedback>
                 </ValidationProvider>
                 <ValidationProvider name="de apellidos" rules="required" v-slot="validationContext">
                     <label for="input-live">Apellidos:</label>
                     <b-form-input class="mb-1" id="apellido-input" v-model="Apellidos" :state="getValidationState(validationContext)" aria-describedby="input-live-help apellido-live-feedback" placeholder="" trim></b-form-input>
                     <b-form-invalid-feedback id="apellido-live-feedback">{{
-                            validationContext.errors[0] }}
+                        validationContext.errors[0] }}
                     </b-form-invalid-feedback>
                 </ValidationProvider>
 
@@ -40,14 +40,14 @@
                     <label for="input-live">Nombres:</label>
                     <b-form-input class="mb-1" id="input-live" :state="getValidationState(validationContext)" v-model="Nombre" aria-describedby="input-live-help nombre-live-feedback" placeholder="" trim></b-form-input>
                     <b-form-invalid-feedback id="nombre-live-feedback">{{
-                            validationContext.errors[0] }}
+                        validationContext.errors[0] }}
                     </b-form-invalid-feedback>
                 </ValidationProvider>
                 <ValidationProvider name="correo" rules="required|email" v-slot="validationContext">
                     <label for="input-live">Correo:</label>
                     <b-form-input class="mb-1" id="input-live" :state="getValidationState(validationContext)" v-model="Correo" aria-describedby="input-live-help correo-live-feedback" placeholder="" trim></b-form-input>
                     <b-form-invalid-feedback id="correo-live-feedback">{{
-                            validationContext.errors[0] }}
+                        validationContext.errors[0] }}
                     </b-form-invalid-feedback>
                 </ValidationProvider>
             </b-col>
@@ -65,7 +65,7 @@
                         </b-input-group-prepend>
                         <b-form-input id="input-live" v-model="Movil" aria-describedby="input-live-help movil-live-feedback" :state="getValidationState(validationContext)" placeholder=""></b-form-input>
                         <b-form-invalid-feedback id="movil-live-feedback">{{
-                            validationContext.errors[0] }}
+                        validationContext.errors[0] }}
                         </b-form-invalid-feedback>
                     </b-input-group>
 
@@ -79,7 +79,7 @@
                         </b-input-group-prepend>
                         <b-form-input id="input-live" v-model="Emergencia" aria-describedby="input-live-help emergencia-live-feedback" :state="getValidationState(validationContext)" placeholder=""></b-form-input>
                         <b-form-invalid-feedback id="emergencia-live-feedback">{{
-                            validationContext.errors[0] }}
+                        validationContext.errors[0] }}
                         </b-form-invalid-feedback>
                     </b-input-group>
                 </ValidationProvider>
@@ -89,81 +89,49 @@
                     <label for="input-live">Cargo:</label>
                     <b-form-select aria-describedby="cargo-live-feedback" :state="getValidationState(validationContext)" class="mb-1" v-model="Cargo" :options="cargos"></b-form-select>
                     <b-form-invalid-feedback id="cargo-live-feedback">{{
-                            validationContext.errors[0] }}
+                        validationContext.errors[0] }}
                     </b-form-invalid-feedback>
                 </ValidationProvider>
                 <ValidationProvider name="tipo" rules="required" v-slot="validationContext">
                     <label for="input-live">Tipo Trabajador:</label>
                     <b-form-select aria-describedby="tipo-live-feedback" :state="getValidationState(validationContext)" class="mb-1" v-model="Tipo" :options="tipos"></b-form-select>
                     <b-form-invalid-feedback id="tipo-live-feedback">{{
-                            validationContext.errors[0] }}
+                        validationContext.errors[0] }}
                     </b-form-invalid-feedback>
                 </ValidationProvider>
             </b-col>
         </b-row>
-        <hr />
-        <div>
-            <b-form-file v-on:change="onChange" :multiple="true" v-model="Archivos" ref="file-input" class="mb-2"></b-form-file>
-
-            <b-button @click="Archivos = null">Limpiar</b-button>
-
-            <p class="mt-2">Selected files: <b v-for="archivo in Archivos" :key="archivo.index">{{ archivo ? archivo.name : '' }}</b></p>
-        </div>
 
         <template #modal-footer>
 
             <b-button @click="enviarFormulario()" variant="primary" size="xl" class="float-right reactive-button" style="font-weight:bold">
-                Guardar cambios
+                Crear y Guardar
             </b-button>
 
         </template>
-
+        <hr>
+        <b-form-group label="Archivos: " label-cols-sm="2" label-size="lg">
+            <b-form-file id="file-large" size="lg"></b-form-file>
+        </b-form-group>
     </b-modal>
 </validation-observer>
 </template>
 
 <script>
-import personalService from "@/helpers/api-services/Personal.service"
+import solicitanteService from "@/helpers/api-services/Solicitante.service"
 export default {
-    watch: {
-        userData: {
-            handler() {
-                console.log("PROP CHANGED, UPDATE MODAL")
-                this.Nombre = this.userData.nombre
-                this.Rut = this.userData.rut_empleado
-                this.Correo = this.userData.correo
-                this.Apellidos = this.userData.apellido
-                this.Movil = this.userData.telefono_movil
-                this.Emergencia = this.userData.telefono_emergencia
-                this.Cargo = this.userData.rol
-                this.Tipo = this.userData.tipo_trabajador
-                this.Estado = this.userData.estado
-            }
-        }
-    },
-    props: {
-        userData: Object
-    },
-    mounted() {
-        console.log("editando")
-
-    },
-
+   
     data() {
+        
         return {
-            Nombre: this.userData.nombre,
-            Rut: this.userData.rut_empleado,
-            Correo: this.userData.correo,
-            Apellidos: this.userData.apellido,
-            Movil: this.userData.telefono_movil,
-            Emergencia: this.userData.telefono_emergencia,
-            Cargo: this.userData.cargo,
+            Nombre: "",
+            Rut: "",
+            Correo: "",
+            Apellidos: "",
+            Movil: "",
+            Emergencia: "",
+            Cargo: "",
             Tipo: "",
-            Estado: "",
-            Archivos: null,
-            Archivos_enviar: "",
-            file: "",
-            files: "",
             tipos: [{
                     value: 'Practicante',
                     text: 'Practicante'
@@ -209,44 +177,6 @@ export default {
         }
     },
     methods: {
-        imagenToBase64(newfile) {
-            return new Promise((resolve, reject) => {
-                // obtener la data de la imagen
-                var reader = new FileReader();
-                reader.readAsDataURL(newfile);
-
-                reader.onload = () => {
-                    resolve(reader.result);
-                };
-
-                reader.onerror = function (error) {
-                    console.log("Error: ", error);
-                    reject("");
-                };
-            });
-        },
-        onChange(e) {
-            this.Archivos_enviar = [];
-            this.files = e.target.files;
-            //this.Archivos_enviar = this.files[0];
-            for(var i = 0; i < this.files.length; i++){
-                this.Archivos_enviar[i] = this.files[i];
-            }
-          //  this.files = e.target.files;
-          //  console.log(this.files)
-          //  for (var i = 0; i < this.files.length; i++) {
-          //      let blob = this.files[i];
-          //      this.imagenToBase64(blob).then((textoConvertido) => {
-          //          this.Archivos_enviar.push({
-          //              nombreArchivo: (blob.name).split(".")[0],
-          //              archivoBase64: textoConvertido
-//
-          //          })
-//
-          //      })
-          //  }
-            console.log(this.Archivos_enviar)
-        },
         getValidationState({
             dirty,
             validated,
@@ -254,43 +184,33 @@ export default {
         }) {
             return dirty || validated ? valid : null;
         },
-        enviarDocumentos() {
-            console.log(this.Archivos);
-        }
-       ,
         enviarFormulario() {
-
+            
             this.$refs.form.validate().then(success => {
                 if (!success) {
-
                     return;
                 } else {
-                   
-                    let formData = new FormData();
-                    formData = {
+
+                    var data = {
                         "rut_empleado": this.Rut,
                         "nombre": this.Nombre,
                         "apellido": this.Apellidos,
                         "correo": this.Correo,
                         "rol": this.Cargo,
                         "tipo_trabajador": this.Tipo,
-                        "telefono_movil": this.Movil,
+                        "telefono_movil" : this.Movil,
                         "telefono_emergencia": this.Emergencia,
-                        "estado": this.Estado,
+                        "estado": true,
                         //"fecha_inicio_vacaciones": "01-01-2000",
-                        //"fecha_termino_vacaciones": "01-01-2099",
-                        //"dias_administrativos" : "1"
+                       // "fecha_termino_vacaciones": "01-01-2099",
+                        //"//dias_administrativos": "1"
                     }
-                    if(this.Archivos_enviar.length != 0){
-                        formData.documentos = this.Archivos_enviar;
-                    }
-                    console.log("data a enviar", formData)
-                    personalService.editarPersonal(formData).then((response) => {
+                    console.log("data a enviar", data)
+                    solicitanteService.ingresarSolicitante(data).then((response) => {
                         console.log(response)
                         if (response != null) {
                             if (response.status == 200) {
-
-                                this.$bvToast.toast(`Edición de personal exitosa`, {
+                                this.$bvToast.toast(`Creación de personal exitosa`, {
                                     title: 'Exito',
                                     toaster: 'b-toaster-top-center',
                                     solid: true,
@@ -299,9 +219,9 @@ export default {
                                 })
                                 this.$emit('refrescar');
                             }
-                            this.$bvModal.hide('modal-editar-personal')
+                            this.$bvModal.hide('modal-personal')
                         } else {
-                            this.$bvToast.toast(`Error al editar personal`, {
+                            this.$bvToast.toast(`Error al crear personal`, {
                                 title: 'Error',
                                 toaster: 'b-toaster-top-center',
                                 solid: true,
@@ -321,6 +241,8 @@ export default {
 }
 </script>
 
-<style lang="">
-
-    </style>
+<style lang="scss">
+.custom-file-input:lang(en)~.custom-file-label::after {
+    content: 'Buscar';
+}
+</style>
