@@ -16,9 +16,41 @@ const ingresarSolicitante = async (data) => {
         return;
     }
 };
-const actualizarEmpresa = async (data) => {
+const editarSolicitante = async (data) => {
+    try {
+        const response = await axios.put(apiUrl + "/solicitantes/actualizarSolicitante/" +data.rut_solicitante, data, );
+            console.log(response);
+        return response;
+        
+    } catch (error) {
+        console.log(error);
+        return;
+    }
+};
+const obtenerDetallesSolicitante = async (data) => {
+    try {
+        const response = await axios.get(apiUrl + "/solicitantes/" + data);
+            console.log(response);
+        if(response.status == 200){
+            return response;
+        }else{
+            return;
+        }
+        
+    } catch (error) {
+        console.log(error);
+        return;
+    }
+};
+const agregarCotizacion = async (data) => {
     try {  
-        const response = await axios.put(apiUrl + "/empresas/actualizarEmpresa/"+data.rut_empresa, data,
+        const response = await axios.post(apiUrl + "/solicitantes/agregarCotizacion", data,
+        {
+            headers: {
+                'Content-Type': 'multipart/form-data'
+            }
+
+        }
             );
         console.log(response);
         return response;
@@ -27,21 +59,30 @@ const actualizarEmpresa = async (data) => {
         return;
     }
 };
-
-const obtenerDetallesEmpresa = async (data) => {
-    try {
-        const response = await axios.get(apiUrl + "/empresas/"+data);
+const descargarCotizacion = async (data) => {
+    try {  
+        const response = await axios.post(apiUrl + "/solicitantes/descargarCotizacion", data,{
+            responseType: 'blob',
+        }
+            );
         console.log(response);
-    if(response.status == 200){
         return response;
-    }else{
-        return;
-    }
-    } catch (error){
+    } catch (error) {
         console.log(error);
         return;
     }
-}
+};
+const eliminarCotizacion = async (data) => {
+    try {  
+        const response = await axios.post(apiUrl + "/solicitantes/eliminarCotizacion/" + data.rut_solicitante, data
+            );
+        console.log(response);
+        return response;
+    } catch (error) {
+        console.log(error);
+        return;
+    }
+};
 const obtenerTodosSolicitantes = async () => {
     try {
         const response = await axios.get(apiUrl + "/solicitantes");
@@ -60,7 +101,10 @@ const obtenerTodosSolicitantes = async () => {
 export default {
     ingresarSolicitante,
     obtenerTodosSolicitantes,
-    obtenerDetallesEmpresa,
-    actualizarEmpresa
+    agregarCotizacion,
+    obtenerDetallesSolicitante,
+    editarSolicitante,
+    descargarCotizacion,
+    eliminarCotizacion
 
 };

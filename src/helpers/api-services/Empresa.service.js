@@ -14,6 +14,7 @@ const ingresarEmpresa = async (data) => {
         return;
     }
 };
+
 const actualizarEmpresa = async (data) => {
     try {  
         const response = await axios.put(apiUrl + "/empresas/actualizarEmpresa/"+data.rut_empresa, data,
@@ -55,10 +56,28 @@ const obtenerTodasEmpresa = async () => {
         return;
     }
 };
+
+const obtenerTodasCiudad = async () => {
+    try {
+        const response = await axios.get(apiUrl + "/ciudades");
+            console.log(response);
+        if(response.status == 200){
+            return response;
+        }else{
+            return;
+        }
+        
+    } catch (error) {
+        console.log(error);
+        return;
+    }
+};
+
 export default {
     ingresarEmpresa,
     obtenerTodasEmpresa,
     obtenerDetallesEmpresa,
-    actualizarEmpresa
+    actualizarEmpresa,
+    obtenerTodasCiudad
 
 };
