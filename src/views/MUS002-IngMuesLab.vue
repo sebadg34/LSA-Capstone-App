@@ -218,6 +218,9 @@ export default {
     this.patente = response.patente_vehiculo
     this.fono = response.telefono_transportista
     this.transportista = response.nombre_transportista
+    this.prioridad = response.prioridad
+    this.NMuestras = response.cantidad_muestras
+
 
 
   }

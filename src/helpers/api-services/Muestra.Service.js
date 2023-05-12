@@ -77,12 +77,44 @@ const obtenerObservaciones = async (RUM) => {
          return;
      }
  };
+
+ const completarMuestra = async (RUM) => {
+    try {
+        const response = await axios.put(apiUrl + "/muestras/" + RUM + "/completar");
+        console.log(response);
+        if (response.status == 200) {
+            return response;
+        } else {
+            return;
+        }
+    } catch (error) {
+        console.log(error);
+        return;
+    }
+};
+
+const rehacerMuestra = async (RUM) => {
+    try {
+        const response = await axios.put(apiUrl + "/muestras/" + RUM + "/rehacer");
+        console.log(response);
+        if (response.status == 200) {
+            return response;
+        } else {
+            return;
+        }
+    } catch (error) {
+        console.log(error);
+        return;
+    }
+};
  
 export default {
     ingresarMuestra,
     obtenerMuestras,
     obtenerObservaciones,
     obtenerDatosMuestra,
-    obtenerFonos
+    obtenerFonos,
+    completarMuestra,
+    rehacerMuestra
 
 };

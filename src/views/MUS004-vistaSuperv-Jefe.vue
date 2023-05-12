@@ -30,6 +30,8 @@
     </div>
   <!-- Fin Mensaje de error -->
 
+  <h1>Muestras asignadas al: SUpervisor/Jefe laboratorio</h1>
+
   <!-- Inicio tabla -->
   <ModalObservaciones :muestra-data="this.modalData" @modal-cerrado="onModalCerrado"></ModalObservaciones>
   <b-table :items="itemsFiltrados" :fields="fields">
@@ -38,9 +40,9 @@
       <b-dropdown-item v-for="opcion in generarOpcionesEstado(row.item.estado)" :key="opcion.value">
         
         <b-dropdown-item v-if="opcion.text === 'Detalle muestra'" :key="opcion.value">          
-           <!--- modal de prueba 
+            
             <b-button @click="showDetalle = true">Detalle de Muestra</b-button>
-            <DetalleMuestra v-if="showDetalle" :datos="datosMuestra" :RUM="RUM" @modal-cerrado="onModalCerrado"></DetalleMuestra>              
+            <!---<DetalleMuestra v-if="showDetalle" :datos="datosMuestra" :RUM="RUM" @modal-cerrado="onModalCerrado"></DetalleMuestra>              
            FIN modal de prueba -->
         </b-dropdown-item>
 
@@ -77,23 +79,20 @@
         </b-dropdown-item>
 
         <b-dropdown-item v-if="opcion.text === 'Rehacer Análisis'" :key="opcion.value">
-          <b-button variant="link" @click="RehacerAnalisis(row)">
+          <b-button @click="RehacerAnalisis(row)">
             Rehacer Análisis
           </b-button>
         </b-dropdown-item>        
 
         <b-dropdown-item v-if="opcion.text === 'Marcar Analisis como completado'" :key="opcion.value">
-          <b-button variant="link" @click="MarcarAnalisis(row)">
+          <b-button @click="MarcarAnalisis(row)">
             Marcar analisis como completado
           </b-button>
         </b-dropdown-item>       
       </b-dropdown-item>
     </b-dropdown>
   </template>
-</b-table>
-
-
-    
+</b-table>    
   </div>
 </template>
 
@@ -109,7 +108,7 @@ export default {
   data() {
     return {
       
-      RUM: null,
+      RUM: '',
       oldRUM: null,
       obtenerObservaciones: this.obtenerObservaciones,
       modalData: {},     
@@ -143,6 +142,7 @@ export default {
       mensajeError: '',
       prioridades: ['Normal', 'Alta', 'Urgente'],
       estados: ['Recepcionado', 'En Análisis', 'Finalizado'],
+      prioridad: ''
    
       
      }
@@ -190,7 +190,7 @@ export default {
       ];
     case 'Finalizado':
       return [        
-        { text: 'Detalle muestra', value: 'detalle' },
+        { text: 'Detalle muestra', value: 'Detalle Muestra' },
         { text: 'Observaciones', value: 'observaciones' },
         { text: 'Analista Designado', value: 'Analista Designado' },
         { text: 'Descargar Informe', value: 'Descargar Informe' },
@@ -236,6 +236,19 @@ IngresarMuestraLab(row){
   
 },
 
+MarcarAnalisis(row){
+  this.RUM = row.item.RUM;
+  console.log('El Rum es: ' + this.RUM)
+  MuestraService.completarMuestra(this.RUM)
+
+},
+
+RehacerAnalisis(row){
+  this.RUM = row.item.RUM;
+  console.log('El Rum es: ' + this.RUM)
+  MuestraService.rehacerMuestra(this.RUM)
+},
+
 
 
 
@@ -261,13 +274,9 @@ Ingresar() {
 AdministrarCartas(){
   window.location.href = "https://www.youtube.com";
 },
-RehacerAnalisis(){
-  window.location.href = "https://www.youtube.com";
-},
 
-MarcarAnalisis(){
-  window.location.href = "https://www.youtube.com";
-},
+
+
 beforeDestroy() {
     this.showDetalle = false;
 },
