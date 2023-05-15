@@ -71,7 +71,6 @@
                  </template>
                </b-form-select>
               </b-form-group>
-
         
               <b-form-group id="prioridad-group" class="my-form-group" label="Prioridad: " label-for="prioridad-input">
                 <b-form-select v-model="prioridad" :options="opcionesPrioridad">
@@ -129,7 +128,7 @@
                 <b-form-textarea id="observaciones-input" v-model="observaciones"></b-form-textarea>
               </b-form-group>
 
-              <b-button variant="primary" @click="submitForm()">Enviar</b-button>
+              <button @click="submitForm()">Enviar</button>
               
       </b-form>
     </div>
@@ -163,9 +162,9 @@ export default{
       { value: 'LSA', text: 'LSA' }],
       prioridad: null,
       opcionesPrioridad: [
-      { value: '1', text: 'Normal', color: 'green' },
-      { value: '2', text: 'Alta', color: 'yellow' }, 
-      { value: '3', text: 'Urgente', color: 'red' }],
+      { value: 'Normal', text: 'Normal'},
+      { value: 'Alta', text: 'Alta'}, 
+      { value: 'Urgente', text: 'Urgente'}],
       TipoMatriz: null,
       opcionesMatriz: [
       { value: 'Agua', text: 'Agua'},
@@ -178,11 +177,9 @@ export default{
       fechaEntrega: '',
       observaciones:'',
       nMuestras: null,
-      muestras: [],
-      modalVerMuestras: false,
+      muestras: [],      
       fields: ['nMuestra', 'codigoMuestra'],
-      showModal: false,
-      ultimoCodigo: 100000,
+      showModal: false,     
       fecha: "",
       hora: "",
       patente: "",
@@ -243,9 +240,7 @@ export default{
         fecha_ingreso: this.fecha,
         hora_ingreso: this.hora
 
-      }
-      
-      
+      }         
       console.log("data a enviar", data)
       MuestraService.ingresarMuestra(data)
       .then((response) => {
@@ -253,20 +248,7 @@ export default{
       if (response && response.status === 200) {
       alert('Muestra enviada con éxito!');
       document.formulario.reset();
-      this.$router.push('/Form?s=1');
-
-      /* Obtener el RUM de la muestra creada
-      const rum = response.data.RUM;
-
-      // Crear la submuestra asociada a la muestra
-      const submuestraData = {
-        RUM: rum,
-        
-        
-        // Agregar aquí los demás datos de la submuestra
-      };
-      
-      return SubmuestraService.ingresarSubMuestra(submuestraData, rum);*/
+      this.$router.push('/Form?s=1');      
     } else {
       alert('Error al agregar muestra!');
       throw new Error('No se pudo agregar la muestra');

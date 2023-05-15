@@ -70,6 +70,20 @@
                 <b-form-input id="Matriz-input" v-model="matriz"></b-form-input>
               </b-form-group>
 
+              <b-modal v-model="showModal" title="Mi Modal">
+                 <b-form>
+               <b-form-group id="Parametro-group" class="my-form-group" label="Parametro(s): " label-for="Parametro-input">
+               <b-form-input id="Parametro-input" v-model="Parametro" ></b-form-input>
+                </b-form-group>
+               <b-form-group id="Norma-group" class="my-form-group" label="Norma: " label-for="Norma-input">
+                 <b-form-input id="Norma-input" v-model="Norma" ></b-form-input>
+               </b-form-group>
+               <b-form-group id="Tabla-group" class="my-form-group" label="Tabla: " label-for="Tabla-input">
+              <b-form-input id="Tabla-input" v-model="Tabla" ></b-form-input>
+              </b-form-group>
+               </b-form>
+                </b-modal>
+
               <b-button variant="primary" @click="showModal = true">Abrir Modal</b-button>
 
              
@@ -204,6 +218,9 @@ export default {
     this.patente = response.patente_vehiculo
     this.fono = response.telefono_transportista
     this.transportista = response.nombre_transportista
+    this.prioridad = response.prioridad
+    this.NMuestras = response.cantidad_muestras
+
 
 
   }

@@ -30,19 +30,20 @@
     </div>
   <!-- Fin Mensaje de error -->
 
+  <h1>Muestras asignadas al: SUpervisor/Jefe laboratorio</h1>
+
   <!-- Inicio tabla -->
   <ModalObservaciones :muestra-data="this.modalData" @modal-cerrado="onModalCerrado"></ModalObservaciones>
   <b-table :items="itemsFiltrados" :fields="fields">
   <template #cell(Acción)="row">
     <b-dropdown variant="primary" size="sm" menu-class="custom-dropdown-menu" right :text="'Ver opciones'">
       <b-dropdown-item v-for="opcion in generarOpcionesEstado(row.item.estado)" :key="opcion.value">
-        <b-dropdown-item v-if="opcion.text === 'Detalle muestra'" :key="opcion.value">
-          
-           <!--- modal de prueba 
+        
+        <b-dropdown-item v-if="opcion.text === 'Detalle muestra'" :key="opcion.value">          
+            
             <b-button @click="showDetalle = true">Detalle de Muestra</b-button>
-            <DetalleMuestra v-if="showDetalle" :datos="datosMuestra" :RUM="RUM" @modal-cerrado="onModalCerrado"></DetalleMuestra>              
-           FIN modal de prueba -->        
-
+            <!---<DetalleMuestra v-if="showDetalle" :datos="datosMuestra" :RUM="RUM" @modal-cerrado="onModalCerrado"></DetalleMuestra>              
+           FIN modal de prueba -->
         </b-dropdown-item>
 
         <b-dropdown-item v-if="opcion.text === 'Observaciones'" :key="opcion.value">
@@ -63,8 +64,7 @@
           <b-button variant="link" @click="Descargar(row)">
             Descargar Informe
           </b-button>
-        </b-dropdown-item>
-       
+        </b-dropdown-item>       
 
         <b-dropdown-item v-if="opcion.text === 'Ingresar resultados de análisis'" :key="opcion.value">
           <b-button variant="link" @click="Ingresar(row)">
@@ -79,28 +79,20 @@
         </b-dropdown-item>
 
         <b-dropdown-item v-if="opcion.text === 'Rehacer Análisis'" :key="opcion.value">
-          <b-button variant="link" @click="RehacerAnalisis(row)">
+          <b-button @click="RehacerAnalisis(row)">
             Rehacer Análisis
           </b-button>
-        </b-dropdown-item>
-
-        
+        </b-dropdown-item>        
 
         <b-dropdown-item v-if="opcion.text === 'Marcar Analisis como completado'" :key="opcion.value">
-          <b-button variant="link" @click="MarcarAnalisis(row)">
+          <b-button @click="MarcarAnalisis(row)">
             Marcar analisis como completado
           </b-button>
-        </b-dropdown-item>
-        
-
-        
+        </b-dropdown-item>       
       </b-dropdown-item>
     </b-dropdown>
   </template>
-</b-table>
-
-
-    
+</b-table>    
   </div>
 </template>
 
@@ -109,32 +101,19 @@
 import ModalObservaciones from './ModalObservaciones.vue'
 import MuestraService from '@/helpers/api-services/Muestra.Service';
 
-import { getPrioridad } from '@/helpers/api-services/Muestra.Service';
+
 
 
 export default {
   data() {
     return {
       
-      RUM: null,
+      RUM: '',
       oldRUM: null,
       obtenerObservaciones: this.obtenerObservaciones,
-      modalData: {},   
-      
-      observaciones: '',
-      
-     
-      items: [
-        /*{ id: 1, RUM: '123', Prioridad: 'Alta', Estado: 'En Análisis',  },
-        { id: 2, RUM: '456', Prioridad: 'Normal', Estado: 'Finalizado' },
-        { id: 3, RUM: '789', Prioridad: 'Urgente', Estado: 'Recepcionado' }*/
-      ],
-      opcionesPrioridad: [
-        { text: 'Seleccionar prioridad', value: '' }, // Opción en blanco
-        { text: 'Alta', value: '2' },
-        { text: 'Urgente', value: '3' },
-        { text: 'Normal', value: '1' }
-      ],
+      modalData: {},     
+      observaciones: '',     
+      items: [],      
       opcionesEstado: [
       
         { text: 'Recepcionado', value: 'Recepcionado' },
@@ -150,7 +129,7 @@ export default {
         { key: 'fecha_ingreso', label: 'Fecha ingreso' },
         { key: 'fecha_entrega', label: 'Fecha Entrega' },
         { key: 'hora_ingreso', label: 'Hora Ingreso' },
-        { key: 'prioridad', label: 'Prioridad', formatter: (value) => {return getPrioridad(value); }},
+        { key: 'prioridad', label: 'Prioridad'},
         { key: 'estado', label: 'Estado' },
         { key: 'Acción', label: 'Acción' },
 
@@ -163,6 +142,7 @@ export default {
       mensajeError: '',
       prioridades: ['Normal', 'Alta', 'Urgente'],
       estados: ['Recepcionado', 'En Análisis', 'Finalizado'],
+      prioridad: ''
    
       
      }
@@ -189,20 +169,7 @@ export default {
       } catch (error) {
         console.log(error)
       }
-    },
-
-    getPrioridad(prioridad) {
-    switch (prioridad) {
-      case 1:
-        return 'Normal';
-      case 2:
-        return 'Alta';
-      case 3:
-        return 'Urgente';
-      default:
-        return '';
-    }
-  },
+    },   
 
     generarOpcionesEstado(estado) {
   switch (estado) {
@@ -223,7 +190,7 @@ export default {
       ];
     case 'Finalizado':
       return [        
-        { text: 'Detalle muestra', value: 'detalle' },
+        { text: 'Detalle muestra', value: 'Detalle Muestra' },
         { text: 'Observaciones', value: 'observaciones' },
         { text: 'Analista Designado', value: 'Analista Designado' },
         { text: 'Descargar Informe', value: 'Descargar Informe' },
@@ -269,6 +236,19 @@ IngresarMuestraLab(row){
   
 },
 
+MarcarAnalisis(row){
+  this.RUM = row.item.RUM;
+  console.log('El Rum es: ' + this.RUM)
+  MuestraService.completarMuestra(this.RUM)
+
+},
+
+RehacerAnalisis(row){
+  this.RUM = row.item.RUM;
+  console.log('El Rum es: ' + this.RUM)
+  MuestraService.rehacerMuestra(this.RUM)
+},
+
 
 
 
@@ -294,13 +274,9 @@ Ingresar() {
 AdministrarCartas(){
   window.location.href = "https://www.youtube.com";
 },
-RehacerAnalisis(){
-  window.location.href = "https://www.youtube.com";
-},
 
-MarcarAnalisis(){
-  window.location.href = "https://www.youtube.com";
-},
+
+
 beforeDestroy() {
     this.showDetalle = false;
 },
