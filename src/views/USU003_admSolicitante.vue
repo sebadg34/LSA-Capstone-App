@@ -4,43 +4,49 @@
     <modal_agregarSolicitante @refrescar="obtenerSolicitante" />
     <modal_detallesSolicitante :user-data="this.modalDetallesData" />
     <modal_editarSolicitante @refrescar="obtenerSolicitante" :solicitante-data="this.modalEditarData" />
-   
+    <modal_agregarCotizacion @refrescar="obtenerSolicitante" :user-data="this.modalCotizacionData" />
+    <modal_listadoCotizaciones :user-data="this.modalCotizacionData" />
+
+    <b-row align-h="start" style="padding-top:30px;">
+        <b-col class="col-6">
+            <div style="font-size:2rem; font-weight: bold; color: var(--lsa-blue)">
+                Sistema administración de solicitantes
+            </div>
+        </b-col>
+    </b-row>
+
     <b-row class="justify-content-center">
 
-
-
-
-
         <b-col class="col-10">
-    <b-row style="padding-top:50px; padding-bottom:10px">
-            <b-col class="col-6">
-
+            <b-row style="padding-top:50px; padding-bottom:10px">
                 <b-col class="col-6">
 
-                    <b-row>
-                    <b-button v-b-modal.modal-solicitante style="border-radius: 15px; font-weight: bold; font-size: 18px; " class="lsa-light-blue reactive-button">
-                        Agregar Solicitante
-                        <b-icon icon="person-plus-fill"></b-icon>
-                    </b-button>
-                </b-row>
+                    <b-col class="col-6">
+
+                        <b-row>
+                            <b-button v-b-modal.modal-solicitante style="border-radius: 15px; font-weight: bold; font-size: 18px; " class="lsa-light-blue reactive-button">
+                                Agregar Solicitante
+                                <b-icon icon="person-plus-fill"></b-icon>
+                            </b-button>
+                        </b-row>
+
+                    </b-col>
 
                 </b-col>
 
-            </b-col>
+                <b-col lg="6" class="my-1">
+                    <b-form-group label-cols-sm="3" label-align-sm="right" label-size="md" class="mb-0">
+                        <b-input-group size="md">
+                            <b-form-input id="filter-input" v-model="filter" type="search" placeholder="Escriba rut, nombre, etc. para filtrar"></b-form-input>
 
-            <b-col lg="6" class="my-1">
-                <b-form-group label-cols-sm="3" label-align-sm="right" label-size="md" class="mb-0">
-                    <b-input-group size="md">
-                        <b-form-input id="filter-input" v-model="filter" type="search" placeholder="Escriba rut, nombre, etc. para filtrar"></b-form-input>
-
-                        <b-input-group-append>
-                            <b-button style="font-weight:bold" class="lsa-blue" :disabled="!filter" @click="filter = ''">Limpiar filtro</b-button>
-                        </b-input-group-append>
-                    </b-input-group>
-                </b-form-group>
-            </b-col>
-        </b-row>
-</b-col>
+                            <b-input-group-append>
+                                <b-button style="font-weight:bold" class="lsa-blue" :disabled="!filter" @click="filter = ''">Limpiar filtro</b-button>
+                            </b-input-group-append>
+                        </b-input-group>
+                    </b-form-group>
+                </b-col>
+            </b-row>
+        </b-col>
 
         <b-col class="col-10">
             <b-table :filter="filter" @filtered="onFiltered" :fields="campos_tabla" :items="solicitante" style="" :busy="loading" :per-page="perPage" :current-page="currentPage">
@@ -67,23 +73,23 @@
                             <b-icon style="height: 80%; width: 80%; align-items: center;" icon="three-dots" variant="dark" aria-hidden="true"></b-icon>
 
                         </template>
-                        <b-dropdown-item @click="abrirDetallesEmpresa(row.item)">
+                        <b-dropdown-item @click="abrirDetallesSolicitante(row.item)">
                             <b-icon icon="file-richtext" aria-hidden="true" class="mr-2"></b-icon>Ver detalles
 
                         </b-dropdown-item>
                         <b-dropdown-item @click="abrirEditarSolicitante(row.item)">
                             <b-icon icon="pencil" aria-hidden="true" class="mr-2"></b-icon>Editar
                         </b-dropdown-item>
-                        <b-dropdown-item >
+                        <b-dropdown-item>
                             <b-icon icon="person-check" aria-hidden="true" class="mr-2"></b-icon>Cambiar estado
                         </b-dropdown-item>
-                        <b-dropdown-item >
-                            <b-icon icon="card-heading" aria-hidden="true" class="mr-2"></b-icon>Ver cotizaciones
-                        </b-dropdown-item>
-                        <b-dropdown-item >
+                        <b-dropdown-item @click="abrirAgregarCotizacion(row.item)">
                             <b-icon icon="file-earmark-plus" aria-hidden="true" class="mr-2"></b-icon>Agregar cotización
                         </b-dropdown-item>
-                        
+                        <b-dropdown-item @click="abrirListadoCotizaciones(row.item)">
+                            <b-icon icon="card-heading" aria-hidden="true" class="mr-2"></b-icon>Ver cotizaciones
+                        </b-dropdown-item>
+
                     </b-dropdown>
 
                 </template>
@@ -95,21 +101,23 @@
 </div>
 </template>
 
-    
 <script>
 // @ is an alias to /src
 import modal_agregarSolicitante from '@/components/admSolicitante/modal_agregarSolicitante.vue'
 import modal_editarSolicitante from '@/components/admSolicitante/modal_editarSolicitante.vue'
 import modal_detallesSolicitante from '@/components/admSolicitante/modal_detallesSolicitante.vue'
-
+import modal_agregarCotizacion from '@/components/admSolicitante/modal_agregarCotizacion.vue'
+import modal_listadoCotizaciones from '@/components/admSolicitante/modal_listadoCotizaciones.vue'
 import solicitanteService from "@/helpers/api-services/Solicitante.service"
-
+import empresaService from "@/helpers/api-services/Empresa.service"
 export default {
     name: 'admEmpresa',
     components: {
         modal_agregarSolicitante,
         modal_editarSolicitante,
-        modal_detallesSolicitante
+        modal_detallesSolicitante,
+        modal_agregarCotizacion,
+        modal_listadoCotizaciones
     },
     mounted() {
         this.obtenerSolicitante();
@@ -121,6 +129,8 @@ export default {
     },
     data() {
         return {
+            Empresas: [],
+            Ciudades: [],
             filter: null,
             filterOn: [],
             editarID: 0,
@@ -130,7 +140,14 @@ export default {
             modalEditarData: {},
             modalDetallesData: {},
             modalEstadoData: {},
-            campos_tabla: [ {
+            modalCotizacionData: {},
+            campos_tabla: [{
+                    key: 'nombre_empresa',
+                    label: 'Empresa'
+                },{
+                    key: 'nombre_ciudad',
+                    label: 'Ciudad Empresa'
+                }, {
                     key: 'rut_solicitante',
                     label: 'Rut'
                 }, {
@@ -150,12 +167,12 @@ export default {
                 {
                     key: 'telefono',
                     label: 'Teléfono Movil'
-                }, 
-               
-                 {
+                },
+
+                {
                     key: 'tipo_cliente',
                     label: 'Tipo cliente'
-                }, 
+                },
                 {
                     key: 'accion',
                     label: 'Acción'
@@ -175,10 +192,20 @@ export default {
             this.modalEditarData = data;
             this.$bvModal.show('modal-editar-solicitante')
         },
-        abrirDetallesEmpresa(data) {
+        abrirDetallesSolicitante(data) {
             console.log(data)
             this.modalDetallesData = data;
-            this.$bvModal.show('modal-detalles-empresa')
+            this.$bvModal.show('modal-detalles-solicitante')
+        },
+        abrirAgregarCotizacion(data) {
+            console.log(data)
+            this.modalCotizacionData = data;
+            this.$bvModal.show('modal-cotizacion-solicitante')
+        },
+        abrirListadoCotizaciones(data) {
+            console.log(data)
+            this.modalCotizacionData = data;
+            this.$bvModal.show('modal-cotizaciones-solicitante')
         },
         testEvent() {
             console.log('evento leido')
@@ -188,32 +215,51 @@ export default {
             solicitanteService.obtenerTodosSolicitantes().then((response) => {
                 if (response != null) {
                     console.log(response)
-                    this.solicitante = response.data
-                    console.log(this.empresa)
 
-                    this.loading = false;
+                    this.solicitante = response.data
+
+                    this.obtenerEmpresa();
+
                 }
 
             })
 
         },
-        /** 
-            abrirEditarPersonal(data) {
-                console.log(data)
-                this.modalEditarData = data;
-                this.$bvModal.show('modal-editar-personal')
-            },
-            abrirDetallesPersonal(data) {
-                console.log(data)
-                this.modalDetallesData = data;
-                this.$bvModal.show('modal-detalles-personal')
-            },
-            abrirEstadoPersonal(data){
-                console.log(data)
-                this.modalEstadoData =data;
-                this.$bvModal.show('modal-estado-personal')
-            }
-    */
+        obtenerCiudad(){
+            empresaService.obtenerTodasCiudad().then((resp) => {
+                        if (resp.data != null) {
+                            console.log(resp.data)
+                            this.Ciudades = resp.data;
+
+                            for (var i = 0; i < this.solicitante.length; i++) {
+                        //  this.Ciudad_empresa = response.data.ciudades.find(obj => obj.id_ciudad == this.Id_ciudad).nombre_ciudad
+
+                        var Empresa = this.Empresas.find(obj => obj.rut_empresa == this.solicitante[i].rut_empresa);
+                        var Ciudad = this.Ciudades.find(obj => obj.id_ciudad == this.solicitante[i].id_ciudad);
+                        this.solicitante[i].nombre_empresa = Empresa.nombre_empresa;
+                        this.solicitante[i].nombre_ciudad = Ciudad.nombre_ciudad;
+                    }
+
+                    console.log('solicitantes con datos empresa', this.solicitante)
+                    this.loading = false;
+                        }
+                    })
+        },
+        obtenerEmpresa() {
+            empresaService.obtenerTodasEmpresa().then((response => {
+                if (response.data != null) {
+                    console.log(response.data)
+
+                    this.Empresas = response.data;
+                   
+                    this.obtenerCiudad();
+                    console.log(this.Empresas)
+                   
+                }
+            }))
+
+        }
+        
     }
 }
 </script>

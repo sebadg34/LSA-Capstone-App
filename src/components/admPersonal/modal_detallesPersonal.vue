@@ -86,9 +86,9 @@
 
 
     
-    <template #modal-footer>
+    <template #modal-footer="{ close }">
 
-        <b-button variant="primary" size="xl" class="float-right reactive-button" style="font-weight:bold">
+        <b-button @click="close()" variant="primary" size="xl" class="float-right reactive-button" style="font-weight:bold">
             Cerrar
         </b-button>
 

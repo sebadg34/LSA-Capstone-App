@@ -5,8 +5,17 @@
     <modal_editarEmpresa :empresa-data="this.modalEditarData" @refrescar="obtenerEmpresa" />
     <modal_detallesEmpresa :empresa-data="this.modalDetallesData" />
     
+    <b-row align-h="start" style="padding-top:30px;">
+    <b-col class="col-6">
+        <div style="font-size:2rem; font-weight: bold; color: var(--lsa-blue)">
+            Sistema administración de clientes
+        </div>
+    </b-col>
+</b-row>
+
     <b-row class="justify-content-center">
 
+      
         <b-col class="col-10">
     <b-row style="padding-top:50px; padding-bottom:10px">
             <b-col class="col-6">
@@ -15,7 +24,7 @@
 
                     <b-row>
                     <b-button v-b-modal.modal-empresa style="border-radius: 15px; font-weight: bold; font-size: 18px; " class="lsa-light-blue reactive-button">
-                        Agregar Empresa
+                        Agregar Cliente
                         <b-icon icon="person-plus-fill"></b-icon>
                     </b-button>
                 </b-row>

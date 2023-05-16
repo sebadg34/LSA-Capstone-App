@@ -1,12 +1,12 @@
 <template>
 <validation-observer ref="form">
-    <b-modal id="modal-detalles-solicitante" ref="modal" title="Agregar Solicitante" size="lg">
+    <b-modal id="modal-detalles-solicitante" ref="modal" title="Detalles Solicitante" size="lg">
 
         <template #modal-header="{ close }">
             <!-- Emulate built in modal header close button action -->
 
             <b-row class="d-flex justify-content-around">
-                <div class="pl-3">Agregar Solicitante</div>
+                <div class="pl-3">Detalles Solicitante</div>
 
             </b-row>
 
@@ -14,124 +14,101 @@
                 <span aria-hidden="true" style="color:white">&times;</span>
             </button>
         </template>
-
         <b-row class="pb-2">
-            <b-col class="col-6">
-                <label for="input-live">Rut:</label>
-                <ValidationProvider name="rut" rules="required|rut" v-slot="validationContext">
+            <b-col class="col-12">
+                <b-row class="d-flex justify-content-center">
+                    <b-col style="font-weight:bold" class="col-4">
+                        <div v-if="this.Nombre_empresa"> Empresa:</div>
+                        <div v-if="this.Ciudad_empresa"> Ciudad Empresa:</div>
+                        <div> Rut:</div>
+                        <div> Nombre:</div>
+                        <div> Primer apellido:</div>
+                        <div> Segundo apellido:</div>
+                        <div> Teléfono móvil:</div>
+                        <div> Correo electrónico:</div>
+                        <div> Fono pago proveedores:</div>
+                        <div> Contacto pago proveedores :</div>
+                        <div> Dirección de envío factura:</div>
+                        <div> Tipo cliente:</div>
+                    </b-col>
+                    <b-col class="col-4">
+                        <div>{{ this.Nombre_empresa }}</div>
+                        <div>{{ this.Ciudad_empresa }}</div>
+                        <div>{{ this.Rut }}</div>
+                        <div>{{ this.Nombre }}</div>
+                        <div>{{ this.Primer_apellido }}</div>
+                        <div>{{ this.Segundo_apellido }}</div>
+                        <div>{{ this.Movil }}</div>
+                        <div>{{ this.Correo }}</div>
+                        <div>{{ this.Fono_proveedores }}</div>
+                        <div>{{ this.Contacto_factura }}</div>
+                        <div>{{ this.Direccion_factura }}</div>
+                        <div>{{ this.Tipo }}</div>
+                    </b-col>
+                </b-row>
 
-                    <b-form-input id="rut-input" class="mb-1" v-model="Rut" :state="getValidationState(validationContext)" aria-describedby="rut-live-feedback"></b-form-input>
-
-                    <b-form-invalid-feedback id="rut-live-feedback">{{
-                        validationContext.errors[0] }}
-                    </b-form-invalid-feedback>
-                </ValidationProvider>
-                <ValidationProvider name="de apellidos" rules="required" v-slot="validationContext">
-                    <label for="input-live">Apellidos:</label>
-                    <b-form-input class="mb-1" id="apellido-input" v-model="Apellidos" :state="getValidationState(validationContext)" aria-describedby="input-live-help apellido-live-feedback" placeholder="" trim></b-form-input>
-                    <b-form-invalid-feedback id="apellido-live-feedback">{{
-                        validationContext.errors[0] }}
-                    </b-form-invalid-feedback>
-                </ValidationProvider>
-
-            </b-col>
-            <b-col class="col-6">
-                <ValidationProvider name="nombre" rules="required" v-slot="validationContext">
-                    <label for="input-live">Nombres:</label>
-                    <b-form-input class="mb-1" id="input-live" :state="getValidationState(validationContext)" v-model="Nombre" aria-describedby="input-live-help nombre-live-feedback" placeholder="" trim></b-form-input>
-                    <b-form-invalid-feedback id="nombre-live-feedback">{{
-                        validationContext.errors[0] }}
-                    </b-form-invalid-feedback>
-                </ValidationProvider>
-                <ValidationProvider name="correo" rules="required|email" v-slot="validationContext">
-                    <label for="input-live">Correo:</label>
-                    <b-form-input class="mb-1" id="input-live" :state="getValidationState(validationContext)" v-model="Correo" aria-describedby="input-live-help correo-live-feedback" placeholder="" trim></b-form-input>
-                    <b-form-invalid-feedback id="correo-live-feedback">{{
-                        validationContext.errors[0] }}
-                    </b-form-invalid-feedback>
-                </ValidationProvider>
-            </b-col>
-        </b-row>
-        <hr>
-
-        <b-row class="pt-2">
-            <b-col class="col-6">
-                <label for="input-live">Telefono Movil:</label>
-                <ValidationProvider name="Nro. movil" rules="required|numeric" v-slot="validationContext">
-                    <b-input-group class="mb-1">
-
-                        <b-input-group-prepend is-text>
-                            +56 9
-                        </b-input-group-prepend>
-                        <b-form-input id="input-live" v-model="Movil" aria-describedby="input-live-help movil-live-feedback" :state="getValidationState(validationContext)" placeholder=""></b-form-input>
-                        <b-form-invalid-feedback id="movil-live-feedback">{{
-                        validationContext.errors[0] }}
-                        </b-form-invalid-feedback>
-                    </b-input-group>
-
-                </ValidationProvider>
-                <label for="input-live">Contacto Emergencia:</label>
-                <ValidationProvider name="Nro. emergencia" rules="required|numeric" v-slot="validationContext">
-                    <b-input-group class="mb-1">
-
-                        <b-input-group-prepend is-text>
-                            +56 9
-                        </b-input-group-prepend>
-                        <b-form-input id="input-live" v-model="Emergencia" aria-describedby="input-live-help emergencia-live-feedback" :state="getValidationState(validationContext)" placeholder=""></b-form-input>
-                        <b-form-invalid-feedback id="emergencia-live-feedback">{{
-                        validationContext.errors[0] }}
-                        </b-form-invalid-feedback>
-                    </b-input-group>
-                </ValidationProvider>
-            </b-col>
-            <b-col class="col-6">
-                <ValidationProvider name="cargo" rules="required" v-slot="validationContext">
-                    <label for="input-live">Cargo:</label>
-                    <b-form-select aria-describedby="cargo-live-feedback" :state="getValidationState(validationContext)" class="mb-1" v-model="Cargo" :options="cargos"></b-form-select>
-                    <b-form-invalid-feedback id="cargo-live-feedback">{{
-                        validationContext.errors[0] }}
-                    </b-form-invalid-feedback>
-                </ValidationProvider>
-                <ValidationProvider name="tipo" rules="required" v-slot="validationContext">
-                    <label for="input-live">Tipo Trabajador:</label>
-                    <b-form-select aria-describedby="tipo-live-feedback" :state="getValidationState(validationContext)" class="mb-1" v-model="Tipo" :options="tipos"></b-form-select>
-                    <b-form-invalid-feedback id="tipo-live-feedback">{{
-                        validationContext.errors[0] }}
-                    </b-form-invalid-feedback>
-                </ValidationProvider>
             </b-col>
         </b-row>
 
-        <template #modal-footer>
+        <template #modal-footer="{ close }">
 
-            <b-button @click="enviarFormulario()" variant="primary" size="xl" class="float-right reactive-button" style="font-weight:bold">
-                Crear y Guardar
+            <b-button  @click="close()" variant="primary" size="xl" class="float-right reactive-button" style="font-weight:bold">
+                Cerrar
             </b-button>
 
         </template>
-        <hr>
-        <b-form-group label="Archivos: " label-cols-sm="2" label-size="lg">
-            <b-form-file id="file-large" size="lg"></b-form-file>
-        </b-form-group>
+
     </b-modal>
 </validation-observer>
 </template>
 
 <script>
 import solicitanteService from "@/helpers/api-services/Solicitante.service"
+import empresaService from "@/helpers/api-services/Empresa.service"
 export default {
-   
+    watch: {
+        userData: {
+            handler() {
+                console.log("PROP CHANGED", this.userData)
+
+              
+                this.Rut = this.userData.rut_solicitante
+                this.Nombre = this.userData.nombre
+                this.Primer_apellido = this.userData.primer_apellido
+                this.Segundo_apellido = this.userData.segundo_apellido
+                this.Movil = this.userData.telefono
+                this.Correo = this.userData.correo
+                this.Fono_proveedores = this.userData.fono_contacto_proveedores
+                this.Contacto_factura = this.userData.direccion_contacto_proveedores
+                this.Direccion_factura = this.userData.direccion_envio_factura
+                this.Tipo = this.userData.tipo_cliente
+                this.Id_ciudad = this.userData.id_ciudad
+                this.obtenerDetalles(this.Rut);
+                this.obtenerDetallesEmpresa(this.userData.rut_empresa);
+            }
+        }
+    },
+    props: {
+        userData: Object
+    },
     data() {
-        
+
         return {
-            Nombre: "",
-            Rut: "",
+            Nombre_empresa: "",
+            Ciudad_empresa: "",
+            Id_ciudad: "",
+            Rut_empresa: "",
             Correo: "",
-            Apellidos: "",
+            Rut: "",
+            Nombre: "",
+            Primer_apellido: "",
+            Segundo_apellido: "",
             Movil: "",
-            Emergencia: "",
-            Cargo: "",
             Tipo: "",
+            Direccion_factura: "",
+            Contacto_factura: "",
+            Fono_proveedores: "",
+            
             tipos: [{
                     value: 'Practicante',
                     text: 'Practicante'
@@ -177,65 +154,32 @@ export default {
         }
     },
     methods: {
-        getValidationState({
+
+        obtenerDetallesEmpresa(rutEmpresa) {
+            console.log(rutEmpresa)
+            this.Rut_empresa = rutEmpresa;
+            empresaService.obtenerDetallesEmpresa(rutEmpresa).then((response => {
+                if (response.data != null) {
+                    this.Nombre_empresa = response.data.nombre_empresa;
+                    this.Ciudad_empresa = response.data.ciudades.find(obj => obj.id_ciudad == this.Id_ciudad).nombre_ciudad
+                  
+                }
+            }))
+        },
+        ionState({
             dirty,
             validated,
             valid = null
         }) {
             return dirty || validated ? valid : null;
         },
-        enviarFormulario() {
-            
-            this.$refs.form.validate().then(success => {
-                if (!success) {
-                    return;
-                } else {
-
-                    var data = {
-                        "rut_empleado": this.Rut,
-                        "nombre": this.Nombre,
-                        "apellido": this.Apellidos,
-                        "correo": this.Correo,
-                        "rol": this.Cargo,
-                        "tipo_trabajador": this.Tipo,
-                        "telefono_movil" : this.Movil,
-                        "telefono_emergencia": this.Emergencia,
-                        "estado": true,
-                        //"fecha_inicio_vacaciones": "01-01-2000",
-                       // "fecha_termino_vacaciones": "01-01-2099",
-                        //"//dias_administrativos": "1"
-                    }
-                    console.log("data a enviar", data)
-                    solicitanteService.ingresarSolicitante(data).then((response) => {
-                        console.log(response)
-                        if (response != null) {
-                            if (response.status == 200) {
-                                this.$bvToast.toast(`Creación de personal exitosa`, {
-                                    title: 'Exito',
-                                    toaster: 'b-toaster-top-center',
-                                    solid: true,
-                                    variant: "success",
-                                    appendToast: true
-                                })
-                                this.$emit('refrescar');
-                            }
-                            this.$bvModal.hide('modal-personal')
-                        } else {
-                            this.$bvToast.toast(`Error al crear personal`, {
-                                title: 'Error',
-                                toaster: 'b-toaster-top-center',
-                                solid: true,
-                                variant: "warning",
-                                appendToast: true
-                            })
-                        }
-
-                    })
-
+        obtenerDetalles(rut) {
+            solicitanteService.obtenerDetallesSolicitante(rut).then((response) => {
+                console.log(response)
+                if (response.request.status == 200) {
+                    console.log("detalles de solicitante", response.data)
                 }
-
-            });
-
+            })
         }
     }
 }
