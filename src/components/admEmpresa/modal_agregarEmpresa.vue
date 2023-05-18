@@ -6,7 +6,7 @@
             <!-- Emulate built in modal header close button action -->
 
             <b-row class="d-flex justify-content-around">
-                <div class="pl-3">Agregar Empresa</div>
+                <div class="pl-3">Agregar Cliente</div>
 
             </b-row>
 
@@ -18,7 +18,7 @@
         <b-row class="pb-2">
             <b-col class="col-6">
                 <label for="input-live">Nombre:</label>
-                <ValidationProvider name="nombre" rules="required" v-slot="validationContext">
+                <ValidationProvider name="nombre" rules="required|min:2" v-slot="validationContext">
 
                     <b-form-input size="sm"  class="mb-1" v-model="Nombre" :state="getValidationState(validationContext)" aria-describedby="rut-live-feedback" trim></b-form-input>
 
@@ -50,7 +50,7 @@
                         validationContext.errors[0] }}
                     </b-form-invalid-feedback>
                 </ValidationProvider>
-                <ValidationProvider name="razon" rules="required" v-slot="validationContext">
+                <ValidationProvider name="razón social" rules="required" v-slot="validationContext">
                     <label for="input-live">Razón Social:</label>
                     <b-form-input size="sm" class="mb-1" id="input-live" :state="getValidationState(validationContext)" v-model="Razon_social" aria-describedby="input-live-help nombre-live-feedback" placeholder="" trim></b-form-input>
                     <b-form-invalid-feedback id="razon-live-feedback">{{
@@ -75,7 +75,7 @@
                
                 <b-row padding="0">
                     <b-col class="col-4">
-                        <ValidationProvider :name="'ciudad' + k" rules="required" v-slot="validationContext">
+                        <ValidationProvider :name="'ciudad ' + (k+1)" rules="required" v-slot="validationContext">
                         <b-form-input :state="getValidationState(validationContext)" :placeholder="'Ciudad '+(parseInt(k) +1)"  style="height:30px" type="text" class="form-control" v-model="input.ciudad"/>
                 
                         <b-form-invalid-feedback id="ciudad-live-feedback">{{
@@ -84,7 +84,7 @@
                 </ValidationProvider>
                     </b-col>
                     <b-col class="col-6">
-                        <ValidationProvider :name="'direccion' + k" rules="required" v-slot="validationContext">
+                        <ValidationProvider :name="'direccion ' + (k+1)" rules="required" v-slot="validationContext">
                         <b-form-input :state="getValidationState(validationContext)"   :placeholder="'Dirección ' + (parseInt(k) +1)" style="height:30px" type="text" class="form-control" v-model="input.direccion"/>
                         <b-form-invalid-feedback id="ciudad-live-feedback">{{
                         validationContext.errors[0] }}
@@ -193,7 +193,7 @@ export default {
                         console.log(response)
                         if (response != null) {
                             if (response.status == 200) {
-                                this.$bvToast.toast(`Creación de empresa exitosa`, {
+                                this.$bvToast.toast(`Creación de cliente exitosa`, {
                                     title: 'Exito',
                                     toaster: 'b-toaster-top-center',
                                     solid: true,
@@ -204,7 +204,7 @@ export default {
                             }
                             this.$bvModal.hide('modal-empresa')
                         } else {
-                            this.$bvToast.toast(`Error al crear empresa`, {
+                            this.$bvToast.toast(`Error al registrar cliente`, {
                                 title: 'Error',
                                 toaster: 'b-toaster-top-center',
                                 solid: true,

@@ -18,47 +18,86 @@
                 <span aria-hidden="true" style="color:white">&times;</span>
             </button>
         </template>
-        <b-list-group style="font-weight:bold" horizontal class="d-flex">
-            <b-list-group-item class="col-5">
+        <b-list-group style="font-weight:bold;" horizontal class="d-flex">
+            <b-list-group-item style="padding:10px" class="col-2 d-flex justify-content-center">
+                        <div>
+                            RUM
+                        </div>
+                       
+                    </b-list-group-item>
+            <b-list-group-item style="padding:10px" class="col-2 d-flex justify-content-center">
+                        <div>
+                            N° Cotización
+                        </div>
+                       
+                    </b-list-group-item>
+            <b-list-group-item style="padding:10px" class="col-3 d-flex justify-content-center">
                         <div>
                             Nombre Archivo
                         </div>
                        
                     </b-list-group-item>  
-                    <b-list-group-item class="col-5">
+                    <b-list-group-item style="padding:10px" class="col-3 d-flex justify-content-center">
                         <div>
                         Fecha emisión
                         </div>
                        
                     </b-list-group-item>
-                    <b-list-group-item class="col-2">
+                    <b-list-group-item style="padding:10px" class="col-2 d-flex justify-content-center">
                         <div>
                            Acción
                         </div>
                        
                     </b-list-group-item>
         </b-list-group>
+        <div v-if="Cotizaciones.length == 0">
+            <b-list-group-item>
+                    <div class="text-center lsa-light-blue-text my-2 row">
+                        <div class="col">
+                            <b-icon icon="file-earmark-break" animation="fade" variant="secondary"></b-icon>
+                        <div style="font-weight:bold; color:gray">No hay cotizaciones registradas por mostrar</div>
+                        </div>
+                    
+                    </div>
+                </b-list-group-item>
+            </div>
         <b-list-group v-for="file in Cotizaciones" :key="file.id">
+            
             <b-list-group horizontal class="d-flex">
-                <b-list-group-item class="col-5">
+                
+               
+
+                <b-list-group-item style="padding:10px" class="col-2 d-flex justify-content-center">
+                        <div>
+                            -
+                        </div>
+                       
+                    </b-list-group-item>
+                <b-list-group-item style="padding:10px" class="col-2 d-flex justify-content-center">
+                        <div>
+                            {{ file.id_cotizacion }}
+                        </div>
+                       
+                    </b-list-group-item>
+                <b-list-group-item style="padding:10px" class="col-3 d-flex justify-content-center">
                         <div>
                             {{ file.nombre_original_documento }}
                         </div>
                        
                     </b-list-group-item>
-                    <b-list-group-item class="col-5">
+                    <b-list-group-item style="padding:10px" class="col-3 d-flex justify-content-center">
                         <div>
                             {{ file.fecha_emision }}
                         </div>
                        
                     </b-list-group-item>
-                    <b-list-group-item class="col-2 d-flex justify-content-around">
+                    <b-list-group-item style="padding:10px" class="col-2 d-flex justify-content-around">
                       
-                        <b-button variant="info" @click="descargarArchivo(file)" style=" heigth: 25px; width: 26px; border-style: none; padding: 0px; background-color: white;">
+                        <b-button variant="info" @click="descargarArchivo(file)" style=" height: 30px; width: 30px; border-style: none; padding: 0px; background-color: white;">
                             <b-icon-download variant="info"></b-icon-download>
                         </b-button>
 
-                        <b-button variant="danger" @click="borrarArchivo(file)" style=" heigth: 25px; width: 26px; border-style: none; padding: 0px;">
+                        <b-button variant="danger" @click="borrarArchivo(file)" style=" height: 30px; width: 30px; border-style: none; padding: 0px; aspect-ratio: 1;">
                             <b-icon icon="trash-fill"></b-icon>
                         </b-button>
                     </b-list-group-item>

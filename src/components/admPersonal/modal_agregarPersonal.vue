@@ -20,7 +20,7 @@
                 <label for="input-live">Rut:</label>
                 <ValidationProvider name="rut" rules="required|rut" v-slot="validationContext">
 
-                    <b-form-input id="rut-input" class="mb-1" v-model="Rut" :state="getValidationState(validationContext)" aria-describedby="rut-live-feedback"></b-form-input>
+                    <b-form-input size="sm" id="rut-input" class="mb-1" v-model="Rut" :state="getValidationState(validationContext)" aria-describedby="rut-live-feedback"></b-form-input>
 
                     <b-form-invalid-feedback id="rut-live-feedback">{{
                         validationContext.errors[0] }}
@@ -28,7 +28,7 @@
                 </ValidationProvider>
                 <ValidationProvider name="de apellidos" rules="required" v-slot="validationContext">
                     <label for="input-live">Apellidos:</label>
-                    <b-form-input class="mb-1" id="apellido-input" v-model="Apellidos" :state="getValidationState(validationContext)" aria-describedby="input-live-help apellido-live-feedback" placeholder="" trim></b-form-input>
+                    <b-form-input size="sm" class="mb-1" id="apellido-input" v-model="Apellidos" :state="getValidationState(validationContext)" aria-describedby="input-live-help apellido-live-feedback" placeholder="" trim></b-form-input>
                     <b-form-invalid-feedback id="apellido-live-feedback">{{
                         validationContext.errors[0] }}
                     </b-form-invalid-feedback>
@@ -36,16 +36,16 @@
 
             </b-col>
             <b-col class="col-6">
-                <ValidationProvider name="nombre" rules="required" v-slot="validationContext">
+                <ValidationProvider name="nombre" rules="required|min:2" v-slot="validationContext">
                     <label for="input-live">Nombres:</label>
-                    <b-form-input class="mb-1" id="input-live" :state="getValidationState(validationContext)" v-model="Nombre" aria-describedby="input-live-help nombre-live-feedback" placeholder="" trim></b-form-input>
+                    <b-form-input size="sm" class="mb-1" id="input-live" :state="getValidationState(validationContext)" v-model="Nombre" aria-describedby="input-live-help nombre-live-feedback" placeholder="" trim></b-form-input>
                     <b-form-invalid-feedback id="nombre-live-feedback">{{
                         validationContext.errors[0] }}
                     </b-form-invalid-feedback>
                 </ValidationProvider>
                 <ValidationProvider name="correo" rules="required|email" v-slot="validationContext">
                     <label for="input-live">Correo:</label>
-                    <b-form-input class="mb-1" id="input-live" :state="getValidationState(validationContext)" v-model="Correo" aria-describedby="input-live-help correo-live-feedback" placeholder="" trim></b-form-input>
+                    <b-form-input size="sm" class="mb-1" id="input-live" :state="getValidationState(validationContext)" v-model="Correo" aria-describedby="input-live-help correo-live-feedback" placeholder="" trim></b-form-input>
                     <b-form-invalid-feedback id="correo-live-feedback">{{
                         validationContext.errors[0] }}
                     </b-form-invalid-feedback>
@@ -54,11 +54,11 @@
         </b-row>
         <hr>
 
-        <b-row class="pt-2">
+        <b-row>
             <b-col class="col-6">
                 <label for="input-live">Telefono Movil:</label>
-                <ValidationProvider name="Nro. movil" rules="required|numeric" v-slot="validationContext">
-                    <b-input-group class="mb-1">
+                <ValidationProvider name="Nro. movil" rules="required|numeric|min:8|max:15" v-slot="validationContext">
+                    <b-input-group size="sm" class="mb-1">
 
                         <b-input-group-prepend is-text>
                             +56 9
@@ -71,8 +71,8 @@
 
                 </ValidationProvider>
                 <label for="input-live">Contacto Emergencia:</label>
-                <ValidationProvider name="Nro. emergencia" rules="required|numeric" v-slot="validationContext">
-                    <b-input-group class="mb-1">
+                <ValidationProvider name="Nro. emergencia" rules="required|numeric|min:8|max:15" v-slot="validationContext">
+                    <b-input-group size="sm" class="mb-1">
 
                         <b-input-group-prepend is-text>
                             +56 9
@@ -87,14 +87,14 @@
             <b-col class="col-6">
                 <ValidationProvider name="cargo" rules="required" v-slot="validationContext">
                     <label for="input-live">Cargo:</label>
-                    <b-form-select aria-describedby="cargo-live-feedback" :state="getValidationState(validationContext)" class="mb-1" v-model="Cargo" :options="cargos"></b-form-select>
+                    <b-form-select size="sm" aria-describedby="cargo-live-feedback" :state="getValidationState(validationContext)" class="mb-1" v-model="Cargo" :options="cargos"></b-form-select>
                     <b-form-invalid-feedback id="cargo-live-feedback">{{
                         validationContext.errors[0] }}
                     </b-form-invalid-feedback>
                 </ValidationProvider>
                 <ValidationProvider name="tipo" rules="required" v-slot="validationContext">
                     <label for="input-live">Tipo Trabajador:</label>
-                    <b-form-select aria-describedby="tipo-live-feedback" :state="getValidationState(validationContext)" class="mb-1" v-model="Tipo" :options="tipos"></b-form-select>
+                    <b-form-select size="sm" aria-describedby="tipo-live-feedback" :state="getValidationState(validationContext)" class="mb-1" v-model="Tipo" :options="tipos"></b-form-select>
                     <b-form-invalid-feedback id="tipo-live-feedback">{{
                         validationContext.errors[0] }}
                     </b-form-invalid-feedback>
@@ -110,13 +110,45 @@
 
         </template>
         <hr>
-        <div>
-            <b-form-file v-on:change="onChange" :multiple="true" v-model="Archivos" ref="file-input" class="mb-2"></b-form-file>
 
-            <b-button @click="Archivos = null">Limpiar</b-button>
+        <b-row>
+            <b-col class="col-6">
+                <ValidationProvider name="archivo" rules="required" v-slot="validationContext">
+                    Adjuntar Archivos:
+                    <div>
+                        <b-form-file :state="getValidationState(validationContext)" placeholder="seleccione archivo(s) a subir" browse-text="Buscar" v-on:change="onChange" :multiple="true" v-model="Archivos" ref="file-input"></b-form-file>
+                        <b-form-invalid-feedback id="archivo-live-feedback">{{
+                        validationContext.errors[0] }}
+                        </b-form-invalid-feedback>
 
-            <p class="mt-2">Selected files: <b v-for="archivo in Archivos" :key="archivo.index">{{ archivo ? archivo.name : '' }}</b></p>
-        </div>
+                    </div>
+                </ValidationProvider>
+            </b-col>
+            <b-col class="col-6">
+
+                <div style="font-weight:bold">Archivos seleccionados: </div>
+
+                <b-list-group>
+                    <b-list-group-item style="padding-top:4px; padding-bottom:4px" v-for="archivo in Archivos" :key="archivo.index">
+                     
+
+                        
+                        <b-row class="d-flex justify-content-between align-items-center">
+                          
+                            <span>{{ archivo ? archivo.name : '' }}</span>
+
+                            <b-button variant="danger" @click="remove(archivo.index)" style="padding:1px; aspect-ratio: 1 / 1; height: 27px; width: 27px">
+                                <b-icon icon="x"></b-icon>
+                            </b-button>
+                        </b-row>
+                   
+                    </b-list-group-item>
+
+                </b-list-group>
+
+            </b-col>
+        </b-row>
+
     </b-modal>
 </validation-observer>
 </template>
@@ -124,9 +156,9 @@
 <script>
 import personalService from "@/helpers/api-services/Personal.service"
 export default {
-   
+
     data() {
-        
+
         return {
             Archivos: null,
             Archivos_enviar: "",
@@ -185,26 +217,32 @@ export default {
         }
     },
     methods: {
+        remove(index) {
+            this.Archivos.splice(index, 1)
+        },
+        limpiarArchivos() {
+            this.Archivos = null
+        },
         onChange(e) {
             this.Archivos_enviar = [];
             this.files = e.target.files;
             //this.Archivos_enviar = this.files[0];
-            for(var i = 0; i < this.files.length; i++){
+            for (var i = 0; i < this.files.length; i++) {
                 this.Archivos_enviar[i] = this.files[i];
             }
-          //  this.files = e.target.files;
-          //  console.log(this.files)
-          //  for (var i = 0; i < this.files.length; i++) {
-          //      let blob = this.files[i];
-          //      this.imagenToBase64(blob).then((textoConvertido) => {
-          //          this.Archivos_enviar.push({
-          //              nombreArchivo: (blob.name).split(".")[0],
-          //              archivoBase64: textoConvertido
-//
-          //          })
-//
-          //      })
-          //  }
+            //  this.files = e.target.files;
+            //  console.log(this.files)
+            //  for (var i = 0; i < this.files.length; i++) {
+            //      let blob = this.files[i];
+            //      this.imagenToBase64(blob).then((textoConvertido) => {
+            //          this.Archivos_enviar.push({
+            //              nombreArchivo: (blob.name).split(".")[0],
+            //              archivoBase64: textoConvertido
+            //
+            //          })
+            //
+            //      })
+            //  }
             console.log(this.Archivos_enviar)
         },
         getValidationState({
@@ -215,7 +253,7 @@ export default {
             return dirty || validated ? valid : null;
         },
         enviarFormulario() {
-            
+
             this.$refs.form.validate().then(success => {
                 if (!success) {
                     return;
@@ -228,14 +266,14 @@ export default {
                         "correo": this.Correo,
                         "rol": this.Cargo,
                         "tipo_trabajador": this.Tipo,
-                        "telefono_movil" : this.Movil,
+                        "telefono_movil": this.Movil,
                         "telefono_emergencia": this.Emergencia,
                         "estado": 1,
                         //"fecha_inicio_vacaciones": "01-01-2000",
-                       // "fecha_termino_vacaciones": "01-01-2099",
+                        // "fecha_termino_vacaciones": "01-01-2099",
                         //"//dias_administrativos": "1"
                     }
-                    if(this.Archivos_enviar.length != 0){
+                    if (this.Archivos_enviar.length != 0) {
                         formData.documentos = this.Archivos_enviar;
                     }
                     console.log("data a enviar", formData)

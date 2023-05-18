@@ -6,13 +6,19 @@
     <modal_editarPersonal @refrescar="obtenerPersonal" :user-data="this.modalEditarData" />
     <modal_estadoPersonal @refrescar="obtenerPersonal" :user-data="this.modalEstadoData" />
   
-
+    <b-row align-h="start" style="padding-top:30px;">
+        <b-col class="col-6">
+            <div style="font-size:2rem; font-weight: bold; color: var(--lsa-blue)">
+                Sistema administración de personal
+            </div>
+        </b-col>
+    </b-row>
   
 
     <b-row class="justify-content-center">
 
 <b-col class="col-10">
-    <b-row style="padding-top:50px; padding-bottom:10px">
+    <b-row style="padding-top:30px; padding-bottom:10px">
             <b-col class="col-6">
 
                 <b-col class="col-6">
@@ -30,6 +36,11 @@
             <b-col lg="6" class="my-1">
                 <b-form-group label-cols-sm="3" label-align-sm="right" label-size="md" class="mb-0">
                     <b-input-group size="md">
+                        <b-input-group-prepend is-text>
+                         <b-icon icon="search"></b-icon>
+                        
+
+                    </b-input-group-prepend>
                         <b-form-input id="filter-input" v-model="filter" type="search" placeholder="Escriba rut, nombre, etc. para filtrar"></b-form-input>
 
                         <b-input-group-append>
@@ -43,8 +54,27 @@
      
 
         <b-col class="col-10">
-            <b-table :filter="filter" @filtered="onFiltered" :fields="campos_tabla" :items="personal" style="" :busy="loading" :per-page="perPage" :current-page="currentPage">
+            <b-table fixed show-empty :filter="filter" @filtered="onFiltered" :fields="campos_tabla" :items="personal" style="" :busy="loading" :per-page="perPage" :current-page="currentPage">
 
+                <template #empty>
+                    <div class="text-center lsa-light-blue-text my-2 row">
+                        <div class="col">
+                            
+                        <div style=" color:gray"> No hay personal registrado para mostrar</div>
+                        </div>
+                    
+                    </div>
+    </template>
+
+                <template #emptyfiltered>
+                    <div class="text-center lsa-light-blue-text my-2 row">
+                        <div class="col">
+                            <b-icon icon="search" animation="fade" variant="secondary"></b-icon>
+                        <div style="font-weight:bold; color:gray"> No hay resultados que coincidan con su búsqueda</div>
+                        </div>
+                    
+                    </div>
+                </template>
                 <template #table-busy>
                     <div class="text-center lsa-orange-text my-2">
                         <b-spinner class="align-middle"></b-spinner>

@@ -18,7 +18,7 @@
         <b-row class="pb-2">
             <b-col class="col-6">
                 <label for="input-live">Nombre:</label>
-                <ValidationProvider name="nombre" rules="required" v-slot="validationContext">
+                <ValidationProvider name="nombre" rules="required|min:2" v-slot="validationContext">
 
                     <b-form-input size="sm"  class="mb-1" v-model="Nombre" :state="getValidationState(validationContext)" aria-describedby="rut-live-feedback" trim></b-form-input>
 

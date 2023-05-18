@@ -6,7 +6,7 @@
             <!-- Emulate built in modal header close button action -->
 
             <b-row class="d-flex justify-content-around">
-                <div class="pl-3">Agregar Solicitante</div>
+                <div class="pl-3">Editar Solicitante</div>
 
             </b-row>
 
@@ -18,7 +18,7 @@
         <b-row class="pb-2">
             <b-col class="col-4">
                 <label for="input-live">Nombre:</label>
-                <ValidationProvider name="nombre" rules="required" v-slot="validationContext">
+                <ValidationProvider name="nombre" rules="required|min:2" v-slot="validationContext">
 
                     <b-form-input size="sm" id="nombre-input" class="mb-1" v-model="Nombre" :state="getValidationState(validationContext)" aria-describedby="nombre-live-feedback"></b-form-input>
 
@@ -57,7 +57,7 @@
                     </b-form-invalid-feedback>
                 </ValidationProvider>
                 <label for="input-live">Telefono Movil:</label>
-                <ValidationProvider name="Nro. movil" rules="required|numeric" v-slot="validationContext">
+                <ValidationProvider name="Nro. movil" rules="required|numeric|min:8|max:15" v-slot="validationContext">
                     <b-input-group size="sm" class="mb-1">
 
                         <b-input-group-prepend is-text>
@@ -80,10 +80,13 @@
             </b-col>
             <b-col class="col-4">
                 <label for="input-live">Fono proveedores:</label>
-                <ValidationProvider name="nombre" rules="required|numeric" v-slot="validationContext">
-
-                    <b-form-input size="sm" id="nombre-input" class="mb-1" v-model="Movil_proveedores" :state="getValidationState(validationContext)" aria-describedby="nombre-live-feedback"></b-form-input>
-
+                <ValidationProvider name="nombre" rules="required|numeric|min:8|max:15" v-slot="validationContext">
+                    <b-input-group size="sm" class="mb-1">
+                    <b-input-group-prepend is-text>
+                            +56 9
+                        </b-input-group-prepend>
+                    <b-form-input size="sm" id="nombre-input" v-model="Movil_proveedores" :state="getValidationState(validationContext)" aria-describedby="nombre-live-feedback"></b-form-input>
+                </b-input-group>
                     <b-form-invalid-feedback id="nombre-live-feedback">{{
                         validationContext.errors[0] }}
                     </b-form-invalid-feedback>

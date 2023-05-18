@@ -63,10 +63,17 @@
                         <div>
                             {{ file.nombre_documento }}
                         </div>
-
-                        <b-button variant="info" @click="descargarArchivo(file)" style=" heigth: 25px; width: 26px; border-style: none; padding: 0px; background-color: white;">
+<div class="d-flex justify-content-around">
+    <b-button variant="info" @click="descargarArchivo(file)" style=" heigth: 30px; width: 30px; border-style: none; padding: 0px; background-color: white;">
                             <b-icon-download variant="info"></b-icon-download>
                         </b-button>
+                        
+                        <b-button variant="danger" @click="borrarArchivo(file)" style=" height: 25px; width: 25px; border-style: none; padding: 0px; aspect-ratio: 1;">
+                            <b-icon icon="trash-fill"></b-icon>
+                        </b-button>
+</div>
+                    
+
                     </b-list-group-item>
                 </b-list-group>
 

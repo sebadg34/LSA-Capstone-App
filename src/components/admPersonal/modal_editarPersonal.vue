@@ -20,7 +20,7 @@
                 <label for="input-live">Rut:</label>
                 <ValidationProvider name="rut" rules="required|rut" v-slot="validationContext">
 
-                    <b-form-input disabled id="rut-input" class="mb-1" v-model="Rut" :state="getValidationState(validationContext)" aria-describedby="rut-live-feedback"></b-form-input>
+                    <b-form-input size="sm"  disabled id="rut-input" class="mb-1" v-model="Rut" :state="getValidationState(validationContext)" aria-describedby="rut-live-feedback"></b-form-input>
 
                     <b-form-invalid-feedback id="rut-live-feedback">{{
                             validationContext.errors[0] }}
@@ -28,7 +28,7 @@
                 </ValidationProvider>
                 <ValidationProvider name="de apellidos" rules="required" v-slot="validationContext">
                     <label for="input-live">Apellidos:</label>
-                    <b-form-input class="mb-1" id="apellido-input" v-model="Apellidos" :state="getValidationState(validationContext)" aria-describedby="input-live-help apellido-live-feedback" placeholder="" trim></b-form-input>
+                    <b-form-input size="sm"  class="mb-1" id="apellido-input" v-model="Apellidos" :state="getValidationState(validationContext)" aria-describedby="input-live-help apellido-live-feedback" placeholder="" trim></b-form-input>
                     <b-form-invalid-feedback id="apellido-live-feedback">{{
                             validationContext.errors[0] }}
                     </b-form-invalid-feedback>
@@ -36,16 +36,16 @@
 
             </b-col>
             <b-col class="col-6">
-                <ValidationProvider name="nombre" rules="required" v-slot="validationContext">
+                <ValidationProvider name="nombre" rules="required|min:2" v-slot="validationContext">
                     <label for="input-live">Nombres:</label>
-                    <b-form-input class="mb-1" id="input-live" :state="getValidationState(validationContext)" v-model="Nombre" aria-describedby="input-live-help nombre-live-feedback" placeholder="" trim></b-form-input>
+                    <b-form-input size="sm"  class="mb-1" id="input-live" :state="getValidationState(validationContext)" v-model="Nombre" aria-describedby="input-live-help nombre-live-feedback" placeholder="" trim></b-form-input>
                     <b-form-invalid-feedback id="nombre-live-feedback">{{
                             validationContext.errors[0] }}
                     </b-form-invalid-feedback>
                 </ValidationProvider>
                 <ValidationProvider name="correo" rules="required|email" v-slot="validationContext">
                     <label for="input-live">Correo:</label>
-                    <b-form-input class="mb-1" id="input-live" :state="getValidationState(validationContext)" v-model="Correo" aria-describedby="input-live-help correo-live-feedback" placeholder="" trim></b-form-input>
+                    <b-form-input size="sm"  class="mb-1" id="input-live" :state="getValidationState(validationContext)" v-model="Correo" aria-describedby="input-live-help correo-live-feedback" placeholder="" trim></b-form-input>
                     <b-form-invalid-feedback id="correo-live-feedback">{{
                             validationContext.errors[0] }}
                     </b-form-invalid-feedback>
@@ -54,11 +54,11 @@
         </b-row>
         <hr>
 
-        <b-row class="pt-2">
+        <b-row>
             <b-col class="col-6">
                 <label for="input-live">Telefono Movil:</label>
-                <ValidationProvider name="Nro. movil" rules="required|numeric" v-slot="validationContext">
-                    <b-input-group class="mb-1">
+                <ValidationProvider name="Nro. movil" rules="required|numeric|min:8|max:15" v-slot="validationContext">
+                    <b-input-group size="sm"  class="mb-1">
 
                         <b-input-group-prepend is-text>
                             +56 9
@@ -71,8 +71,8 @@
 
                 </ValidationProvider>
                 <label for="input-live">Contacto Emergencia:</label>
-                <ValidationProvider name="Nro. emergencia" rules="required|numeric" v-slot="validationContext">
-                    <b-input-group class="mb-1">
+                <ValidationProvider name="Nro. emergencia" rules="required|numeric|min:8|max:15" v-slot="validationContext">
+                    <b-input-group size="sm"  class="mb-1">
 
                         <b-input-group-prepend is-text>
                             +56 9
@@ -87,14 +87,14 @@
             <b-col class="col-6">
                 <ValidationProvider name="cargo" rules="required" v-slot="validationContext">
                     <label for="input-live">Cargo:</label>
-                    <b-form-select aria-describedby="cargo-live-feedback" :state="getValidationState(validationContext)" class="mb-1" v-model="Cargo" :options="cargos"></b-form-select>
+                    <b-form-select size="sm"  aria-describedby="cargo-live-feedback" :state="getValidationState(validationContext)" class="mb-1" v-model="Cargo" :options="cargos"></b-form-select>
                     <b-form-invalid-feedback id="cargo-live-feedback">{{
                             validationContext.errors[0] }}
                     </b-form-invalid-feedback>
                 </ValidationProvider>
                 <ValidationProvider name="tipo" rules="required" v-slot="validationContext">
                     <label for="input-live">Tipo Trabajador:</label>
-                    <b-form-select aria-describedby="tipo-live-feedback" :state="getValidationState(validationContext)" class="mb-1" v-model="Tipo" :options="tipos"></b-form-select>
+                    <b-form-select size="sm"  aria-describedby="tipo-live-feedback" :state="getValidationState(validationContext)" class="mb-1" v-model="Tipo" :options="tipos"></b-form-select>
                     <b-form-invalid-feedback id="tipo-live-feedback">{{
                             validationContext.errors[0] }}
                     </b-form-invalid-feedback>
