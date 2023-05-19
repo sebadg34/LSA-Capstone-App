@@ -40,11 +40,11 @@
 <br/>
 <div>Archivo:
                     </div>
-        <ValidationProvider name="archivo" rules="required" v-slot="validationContext">
+        <ValidationProvider name="archivo" rules="required|size:5000" v-slot="validationContext">
             
                 <b-form-file placeholder="seleccione archivo" browse-text="Buscar" :state="getValidationState(validationContext)" v-model="Archivo" id="file-large" size="md"></b-form-file>
-                <b-form-invalid-feedback id="archivo-live-feedback">{{
-                        validationContext.errors[0] }}
+                <b-form-invalid-feedback id="archivo-live-feedback">
+                    El archivo no puede pesar mas de 5MB
             </b-form-invalid-feedback>
             <div class="mt-3">Archivo seleccionado: 
                 <b-list-group-item v-if="Archivo" style="padding:10px; font-weight: bold;" class="d-flex justify-content-between"> {{ Archivo ? Archivo.name : '' }}

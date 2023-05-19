@@ -102,13 +102,46 @@
             </b-col>
         </b-row>
         <hr />
-        <div>
-            <b-form-file v-on:change="onChange" :multiple="true" v-model="Archivos" ref="file-input" class="mb-2"></b-form-file>
+       
 
-            <b-button @click="Archivos = null">Limpiar</b-button>
+        
+        <b-row>
+            <b-col class="col-6">
+                <ValidationProvider name="archivo" rules="size:10000" v-slot="validationContext">
+                    Adjuntar Archivos:
+                    <div>
+                        <b-form-file :state="getValidationState(validationContext)" placeholder="seleccione archivo(s) a subir" browse-text="Buscar" v-on:change="onChange" :multiple="true" v-model="Archivos" ref="file-input"></b-form-file>
+                        <b-form-invalid-feedback id="archivo-live-feedback">
+                            Los archivos deben pesar menos de 10MB
+                        </b-form-invalid-feedback>
 
-            <p class="mt-2">Selected files: <b v-for="archivo in Archivos" :key="archivo.index">{{ archivo ? archivo.name : '' }}</b></p>
-        </div>
+                    </div>
+                </ValidationProvider>
+            </b-col>
+            <b-col class="col-6">
+
+                <div style="font-weight:bold">Archivos seleccionados: </div>
+
+                <b-list-group>
+                    <b-list-group-item style="padding-top:4px; padding-bottom:4px" v-for="archivo in Archivos" :key="archivo.index">
+                     
+
+                        
+                        <b-row class="d-flex justify-content-between align-items-center">
+                          
+                            <span>{{ archivo ? archivo.name : '' }}</span>
+
+                            <b-button variant="danger" @click="remove(archivo.index)" style="padding:1px; aspect-ratio: 1 / 1; height: 27px; width: 27px">
+                                <b-icon icon="x"></b-icon>
+                            </b-button>
+                        </b-row>
+                   
+                    </b-list-group-item>
+
+                </b-list-group>
+
+            </b-col>
+        </b-row>
 
         <template #modal-footer>
 
@@ -209,6 +242,9 @@ export default {
         }
     },
     methods: {
+        remove(index) {
+            this.Archivos.splice(index, 1)
+        },
         imagenToBase64(newfile) {
             return new Promise((resolve, reject) => {
                 // obtener la data de la imagen
@@ -299,7 +335,9 @@ export default {
                                 })
                                 this.$emit('refrescar');
                             }
-                            this.$bvModal.hide('modal-editar-personal')
+                            this.$bvModal.hide('modal-editar-personal');
+                            this.Archivos = null;
+                            this.Archivos_enviar = null;
                         } else {
                             this.$bvToast.toast(`Error al editar personal`, {
                                 title: 'Error',

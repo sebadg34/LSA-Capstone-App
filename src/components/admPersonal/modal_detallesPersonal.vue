@@ -58,18 +58,18 @@
             </div>
             <div class="col-12" style="background-color: white; ">
 
-                <b-list-group v-for="file in Documentos" :key="file.id">
-                    <b-list-group-item class="d-flex justify-content-between">
+                <b-list-group >
+                    <b-list-group-item v-for="file in Documentos" :key="file.id" style="padding:5px" class="d-flex justify-content-between">
                         <div>
-                            {{ file.nombre_documento }}
+                            {{ file.nombre_original_documento }}
                         </div>
 <div class="d-flex justify-content-around">
-    <b-button variant="info" @click="descargarArchivo(file)" style=" heigth: 30px; width: 30px; border-style: none; padding: 0px; background-color: white;">
-                            <b-icon-download variant="info"></b-icon-download>
+    <b-button variant="info" @click="descargarArchivo(file)" style=" heigth: 33px; width: 33px; border-style: none; padding: 0px; background-color: white;">
+                            <b-icon-download scale="1" variant="info"></b-icon-download>
                         </b-button>
                         
-                        <b-button variant="danger" @click="borrarArchivo(file)" style=" height: 25px; width: 25px; border-style: none; padding: 0px; aspect-ratio: 1;">
-                            <b-icon icon="trash-fill"></b-icon>
+                        <b-button variant="danger" @click="borrarArchivo(file)" style=" height: 23px; width: 23px; border-style: none; padding: 0px; aspect-ratio: 1;">
+                            <b-icon scale="0.7" icon="trash-fill"></b-icon>
                         </b-button>
 </div>
                     
@@ -130,10 +130,39 @@ export default {
         userData: Object
     },
     methods: {
+        borrarArchivo(file){
+            console.log('archivo a borrar',file)
+
+           
+            var data = {
+                rut_empleado: file.rut_empleado,
+                nombre_original_documento: file.nombre_original_documento,
+                nombre_documento: file.nombre_documento
+            }
+            console.log('data a enviar',data)
+            personalService.eliminarDocumento(data).then((response) =>{
+                if(response.status == 200){
+                    this.$bvToast.toast(`Archivo borrado exitosamente`, {
+                        title: 'Exito',
+                        toaster: 'b-toaster-top-center',
+                        solid: true,
+                        variant: "success",
+                        appendToast: true
+                    })
+                    console.log(response)
+                    this.obtenerArchivos();
+                }
+            })
+        },
         descargarArchivo(file) {
             console.log(file)
-            //let blob = file.data;
-            FileSaver.saveAs(file, file.nombre_documento);
+            personalService.descargarDocumento(file).then((response) =>{
+                if(response.data != null){
+                    
+                    FileSaver.saveAs(response.data, file.nombre_original_documento);
+                }
+            })
+           
 
         },
         obtenerDetalles(rut){

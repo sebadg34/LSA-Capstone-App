@@ -1,5 +1,5 @@
 <template>
-<b-modal id="modal-estado-personal" ref="modal" title="Agregar Personal" size="lg" :hide-footer="true" @hide="resetVariables" @close="resetVariables">
+<b-modal centered id="modal-estado-personal" ref="modal" title="Agregar Personal" size="lg" :hide-footer="true" @hide="resetVariables" @close="resetVariables">
 
     <template #modal-header="{ close }">
         <!-- Emulate built in modal header close button action -->
@@ -24,7 +24,7 @@
     <b-row class="d-flex justify-content-center">
         <b-col class="col-6" align="center">
             <div>
-                <span style="font-weight:bold">ESTADO: </span>
+                <span style="font-weight:bold">ESTADO ACTUAL: </span>
             </div>
             <div style="font-weight: bold;">
                 <span v-if="this.Estado" style="color:green">ACTIVO</span>
@@ -34,18 +34,20 @@
 
     </b-row>
     <br>
-    <b-button v-if="!this.Confirming" block class="lsa-light-blue" @click="confirmarCambio(true)" style="font-weight:bold">CAMBIAR ESTADO</b-button>
+    <b-button v-if="!this.Confirming" block class="lsa-light-blue reactive-button" @click="confirmarCambio(true)" style="font-weight:bold">CAMBIAR ESTADO</b-button>
 
     <div v-else>
 
         <b-row class="d-flex justify-content-center">
             <b-col class="col-8" align="center">
-                <div>
-                    <span>Confirmar cambio de estado</span>
+                <div v-if="this.Estado">
+                    <span>Está a punto de cambiar el estado a <span style="color:red; font-weight: bold;">INACTIVO</span></span>
                 </div>
-                <div style="padding: 10px" class="d-flex justify-content-center">
-                    <b-button class="lsa-light-blue" style="font-weight:bold" @click="enviarFormulario()">CAMBIAR</b-button>
-                    <b-button class="lsa-orange" style="font-weight:bold" @click="confirmarCambio(false)">Cancelar</b-button>
+                <div v-else>  <span>Está a punto de cambiar el estado a <span style="color:green; font-weight: bold;">ACTIVO</span></span></div>
+                <div>¿Desea continuar con el cambio de estado?</div>
+                <div style="padding: 10px" class="d-flex justify-content-around row">
+                    <b-button  class="lsa-light-blue reactive-button" style="font-weight:bold; width:45%" @click="enviarFormulario()">CAMBIAR</b-button>
+                    <b-button  class="lsa-orange reactive-button" style="font-weight:bold ;width:45%" @click="confirmarCambio(false)">Cancelar</b-button>
                 </div>
             </b-col>
 
@@ -68,6 +70,12 @@ this.Confirming = false;
         },
         confirmarCambio(value) {
             this.Confirming = value;
+            if(!value)
+            {
+                this.$bvModal.hide('modal-estado-personal')
+            }
+      
+
         },
         enviarFormulario() {
             var data = {

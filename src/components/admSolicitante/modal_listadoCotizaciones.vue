@@ -1,6 +1,6 @@
 <template>
 <validation-observer ref="form">
-    <b-modal  centered id="modal-cotizaciones-solicitante" ref="modal" title="Agregar Cotización" size="lg">
+    <b-modal  centered id="modal-cotizaciones-solicitante" ref="modal" title="Agregar Cotización" size="xl">
 
         <template #modal-header="{ close }">
             <!-- Emulate built in modal header close button action -->
