@@ -20,18 +20,13 @@ const routes = [
     path: '/',
     name: 'home',
     component: HomeView
-  },{
+  },
+  {
     path: '/login',
     name: 'login',
     component: LoginView
-  }
-  ,
+  },
   {
-    path: '/Form',
-    name: 'formulario',
-    component: MUS001
-
-  },{
     path: '/admPersonal',
     name: 'admPersonal',
     component: USU004_admPersonal
@@ -50,11 +45,11 @@ const routes = [
 
   },
   {
-    path: '/AdministrarMuestra',
-    name: 'AdminMuestra',
-    component: MUS004
-  }
-  ,
+    path: '/Form',
+    name: 'formulario',
+    component: MUS001
+
+  },  
   {
     path: '/IngMuesLab',
     name: 'IngresoLab',
@@ -69,12 +64,16 @@ const routes = [
 
   },
   {
+    path: '/AdministrarMuestra',
+    name: 'AdminMuestra',
+    component: MUS004
+  },
+  {
 
     path: '/Gerente',
     name:'vistaGerente',
     component: MUS006
   },
-
   {
 
     path: '/AdmFin',

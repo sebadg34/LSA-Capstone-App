@@ -1,158 +1,73 @@
-<template>
-   
+<template> 
+<validation-observer ref="form">  
    <div>
+    
+
       <!--Empieza el Formulario de recepción-->
         <div class="formulario">
-          <b-form name="formulario" @submit.prevent="submitForm">
-          <div class="row">
-            
+          <b-form name="formulario">
+          <div class="row">            
             <!-- Grupo de elementos del recepcionista -->
-            <div class="col-md-4">
-            
-              <h1>RECEPCIONISTA</h1>
-              <!-- <b-form-group id="recepcionista-group" class="my-form-group" label="Nombre Recepcionista: " label-for="recepcionista-input">
-                <b-form-input id="recepcionista-input"  v-model="recepcionista" required></b-form-input>
-              </b-form-group> -->
 
-              <b-form-group id="solicitante-group" class="my-form-group" label="Nombre Solicitante: " label-for="solicitante-input">
-                <b-form-input id="solicitante-input" v-model="solicitante" required></b-form-input>
-              </b-form-group>
-        
-              <b-form-group id="solicitante-RUT" class="my-form-group" label="RUT Solicitante/Empresa: " label-for="RUT-input">
-                <b-form-input id="RUT-input" v-model="rut" required></b-form-input>
-              </b-form-group>
-
-              <b-form-group id="solicitante-Dirección" class="my-form-group" label="Dirección: " label-for="Dirección-input">
-                <b-form-input id="Dirección-input" v-model="direccion" required></b-form-input>
-              </b-form-group>
-            </div>
-            
+            <div class="col-md-4">            
+              <h1>RECEPCION</h1> 
+              <div style="display: flex; justify-content: center; align-items: center; height: 25vh;"> 
+              <modal_datosRecepcion @datosIngresados="capturarDatos" />            
+            <b-button v-b-modal.modal-recepcion style="border-radius: 15px; font-weight: bold; font-size: 18px; " class="lsa-light-blue reactive-button">
+                Agregar Datos de recepcion
+            <b-icon icon="clipboard"></b-icon>
+            </b-button>
+          </div> 
+            </div>            
             <!-- Grupo de elementos de la muestra -->
-
             <div class="col-md-4">
-
               <h1> MUESTRA </h1>
-
-              <b-form-group id="n-muestras-group" class="my-form-group" label="N° SubMuestras: " label-for="n-muestras-input">
-                <b-form-input id="n-muestras-input" v-model="nMuestras" min="1"></b-form-input>
-              </b-form-group>
-
-               <!--<b-button @click="agregarMuestras">Agregar Muestra</b-button>
-              <b-button @click="verMuestras" v-if="muestras.length > 0">Ver Muestras</b-button>
-
-               <b-modal v-model="modalVerMuestras">
-                <template v-slot:modal-title>
-                  <h4>Muestras</h4>
-                </template>
-
-                <template v-slot:default>
-                  <b-table :items="muestras" :fields="fields"></b-table>
-                </template>
-
-                <template v-slot:modal-footer>
-                  <b-button variant="primary" @click="modalVerMuestras = false">Cerrar</b-button>
-                </template>
-              </b-modal> -->
-
-              <b-form-group id="fecha-group" class="my-form-group" label="Fecha (Recepción): " label-for="fecha-input">
-                <b-form-input id="fecha-input" v-model="fecha" readonly ></b-form-input>
-              </b-form-group>
-
-              <b-form-group id="hora-group" class="my-form-group" label="Hora (Recepción): " label-for="hora-input">
-                <b-form-input id="hora-input" v-model="hora" readonly></b-form-input>
-              </b-form-group>
-              
-              <b-button @click="generarFechaHoraActual()">Generar Fecha & Hora de Recepción</b-button>
-
-              <b-form-group id="muestreado-group" class="my-form-group" label="Muestreado por: " label-for="muestreado-input">
-               <b-form-select v-model="muestreado" :options="opcionesMuestreado">
-                 <template #first>
-                  <option :value="null" disabled>Seleccione una opción</option>
-                 </template>
-               </b-form-select>
-              </b-form-group>
-        
-              <b-form-group id="prioridad-group" class="my-form-group" label="Prioridad: " label-for="prioridad-input">
-                <b-form-select v-model="prioridad" :options="opcionesPrioridad">
-                  <template #first>
-                    <option :value="null" disabled>Seleccione una opción</option>
-                  </template>
-                  <template #option="option">
-                   <span :style="{ color: option.value.color }">{{ option.text }}</span>
-                  </template>
-                </b-form-select>
-              </b-form-group>
-
-              <b-form-group id="TipoMatriz-group" class="my-form-group" label="Tipo de Matriz: " label-for="prioridad-input">
-                <b-form-select v-model="TipoMatriz" :options="opcionesMatriz">
-                  <template #first>
-                    <option :value="null" disabled>Seleccione una Matriz</option>
-                  </template>
-                </b-form-select>
-              </b-form-group>
-              
-            </div>             
-                  
+              <div style="display: flex; justify-content: center; align-items: center; height: 25vh;"> 
+              <modal_datosMuestra @datosIngresados="capturardatosMuestra" />
+              <b-button v-b-modal.modal-recepcionMuestra style="border-radius: 15px; font-weight: bold; font-size: 18px; " class="lsa-light-blue reactive-button">
+                Agregar Datos de la Muestra
+              <b-icon icon="clipboard"></b-icon>
+              </b-button>
+              </div>              
+            </div>                 
               <!-- Grupo de elementos del transportista -->
               <div class="col-md-4">
-
               <h1> TRANSPORTISTA</h1>
-
-              <b-form-group id="Transportista-group" class="my-form-group" label="Nombre Transportista: " label-for="transportista-input">
-                <b-form-input id="transportista-input" v-model="transportista" required></b-form-input>
-              </b-form-group>
-
-              <b-form-group id="TransportistaRUT-group" class="my-form-group" label="RUT Transportista: " label-for="transportistaRUT-input">
-                <b-form-input id="transportistaRUT-input" v-model="transportistaRut" required></b-form-input>
-              </b-form-group>
-                
-              <b-form-group id="FONO-group" class="my-form-group" label="Fono transportista: " label-for="FONO-input">
-                <b-form-input id="FONO-input" v-model="fono" required></b-form-input>
-              </b-form-group>
-
-              <b-form-group id="Patente-group" class="my-form-group" label="Patente: " label-for="Patente-input">
-                <b-form-input id="Patente-input" v-model="patente" required></b-form-input>
-              </b-form-group>
-        
-              <b-form-group id="Temp-group" class="my-form-group" label="T° de muestra(s): " label-for="Temp-input">
-                <b-form-input id="Temp-input" v-model="Temperatura" title="Por favor ingrese un número válido"></b-form-input>
-              </b-form-group>
-    
-              <b-form-group id="fechaE-group" label="Fecha de entrega:" class="my-form-group" label-for="fechaE-input">
-                <b-form-datepicker id="fechaE-input" v-model="fechaEntrega"></b-form-datepicker>
-              </b-form-group>
-            
+              <div style="display: flex; justify-content: center; align-items: center; height: 25vh;"> 
+              <Modal_datosTransportista @datosIngresados="capturardatosTransportista" />
+              <b-button v-b-modal.modal-recepcionTransportista style="border-radius: 15px; font-weight: bold; font-size: 18px; " class="lsa-light-blue reactive-button">
+                Agregar Datos del Transportista
+              <b-icon icon="clipboard"></b-icon>
+              </b-button>   
+            </div>        
               </div>
+          </div>              
+          <div style="display: flex; justify-content: center; align-items: center; height: 25vh;">
+          <b-button @click="enviarFormulario()" variant="primary" size="xl" class="reactive-button" style="font-weight:bold;">
+            Recepcionar Muestra
+          </b-button>
           </div>
-              <b-form-group id="observaciones-group" class="my-form-group-wide" label="Observaciones: " label-for="observaciones-input">
-                <b-form-textarea id="observaciones-input" v-model="observaciones"></b-form-textarea>
-              </b-form-group>
-
-              <button @click="submitForm()">Enviar</button>
-              
       </b-form>
     </div>
     </div>
-       
-
-
+  </validation-observer>
 </template>
 
 <script>
-
 import MuestraService from '@/helpers/api-services/Muestra.Service';
-// import SubmuestraService from "@/helpers/api-services/subMuestra.Service.js";
-
-import { BFormDatepicker } from 'bootstrap-vue'
-
+import modal_datosRecepcion from '@/components/recepcionMuestra/modal_datosRecepcion.vue';
+import modal_datosMuestra from '@/components/recepcionMuestra/modal_datosMuestra.vue';
+import Modal_datosTransportista from '@/components/recepcionMuestra/modal_datosTransportista.vue';
 export default{ 
   components: {
-  BFormDatepicker
+    modal_datosRecepcion,
+    modal_datosMuestra,
+    Modal_datosTransportista
 },
-
   data() {
     return {
       recepcionista: '',
+      recepcionistaRUT: '',
       solicitante:'',
       rut: '',
       direccion: '',
@@ -177,32 +92,14 @@ export default{
       fechaEntrega: '',
       observaciones:'',
       nMuestras: null,
-      muestras: [],      
-      fields: ['nMuestra', 'codigoMuestra'],
-      showModal: false,     
+      muestras: [],            
       fecha: "",
       hora: "",
       patente: "",
       estado: null
-
     };
-  },
-  
-  
-  methods: {
-        
-  /* agregarMuestras() {
-      for (let i = 0; i < this.nMuestras; i++) {
-        const codigo = ++this.ultimoCodigo;
-        this.muestras.push({ nMuestra: `Muestra ${this.muestras.length + 1}`, codigoMuestra: codigo })
-      }
-    },
-
-    verMuestras() {
-      this.modalVerMuestras = true
-    }, */
-
-
+  }, 
+  methods: {    
     generarFechaHoraActual() {
   const now = new Date();
   const dia = now.getDate().toString().padStart(2, '0');
@@ -211,64 +108,94 @@ export default{
   this.fecha = `${dia}/${mes}/${anio}`;
   this.hora = now.toLocaleTimeString();
 },
+capturarDatos(datos) {
+      // Aquí recibes los datos del componente hijo 
+      this.recepcionistaRUT = datos.recepcionistaRUT;
+      this.recepcionista = datos.recepcionista;
+      this.rut = datos.rut;
+      this.solicitante = datos.solicitante;
+      this.direccion = datos.direccion;
+    },
+capturardatosMuestra(dato){
+      this.nMuestras = dato.nMuestras;
+      this.fecha = dato.fecha;
+      this.hora = dato.hora;
+      this.muestreado = dato.muestreado;
+      this.prioridad = dato.prioridad;
+      this.TipoMatriz= dato.TipoMatriz;
+      this.observaciones = dato.observaciones;
+},
+capturardatosTransportista(dat){
+  this.transportista = dat.transportista;
+  this.transportistaRut = dat.transportistaRut;
+  this.fono = dat.fono;
+  this.patente = dat.patente;
+  this.Temperatura = dat.Temperatura;
+  this.fechaEntrega = dat.fechaEntrega;
+},    
+    enviarFormulario() {
+            
+            this.$refs.form.validate().then(success => {
+                if (!success) {
+                    return;
+                } else { 
 
-   submitForm(event) {
+                    this.generarFechaHoraActual();
+                    var data = {
+                      recepcionista: this.recepcionista,
+                      nombre_empresa: this.solicitante,
+                      direccion_empresa: this.direccion,
+                      nombre_solicitante: this.solicitante,
+                      muestreado_por: this.muestreado,
+                      matriz: this.TipoMatriz,
+                      cantidad_muestras: this.nMuestras,
+                      prioridad: this.prioridad,
+                      fecha_muestreo: '',
+                      hora_muestreo: '',
+                      temperatura_transporte: this.Temperatura,
+                      fecha_entrega: this.fechaEntrega,
+                      nombre_transportista: this.transportista,
+                      patente_vehiculo: this.patente,
+                      rut_transportista: this.transportistaRut,
+                      rut: this.rut,       
+                      telefono_transportista: this.fono,       
+                      estado: 'Recepcionado',
+                      observaciones: this.observaciones,
+                      fecha_ingreso: this.fecha,
+                      hora_ingreso: this.hora
+                    }
+                    console.log("data a enviar", data)
+                    MuestraService.ingresarMuestra(data).then((response) => {
+                        console.log(response)
+                        if (response != null) {
+                            if (response.status == 200) {
+                                this.$bvToast.toast(`Creación de la muestra exitosa`, {
+                                    title: 'Exito',
+                                    toaster: 'b-toaster-top-center',
+                                    solid: true,
+                                    variant: "success",
+                                    appendToast: true
+                                })
+                                
+                            }
+                            this.$bvModal.hide('modal-personal')
+                        } else {
+                            this.$bvToast.toast(`Error al agregar muestra`, {
+                                title: 'Error',
+                                toaster: 'b-toaster-top-center',
+                                solid: true,
+                                variant: "warning",
+                                appendToast: true
+                            })
+                        }
 
-    event.preventDefault();
-      // Obtener datos del formulario
-      this.generarFechaHoraActual();
-      var data = {
-        //recepcionista: this.recepcionista,
-        nombre_empresa: this.solicitante,
-        direccion_empresa: this.direccion,
-        nombre_solicitante: this.solicitante,
-        muestreado_por: this.muestreado,
-        matriz: this.TipoMatriz,
-        cantidad_muestras: this.nMuestras,
-        prioridad: this.prioridad,
-        fecha_muestreo: '',
-        hora_muestreo: '',
-        temperatura_transporte: this.Temperatura,
-        fecha_entrega: this.fechaEntrega,
-        nombre_transportista: this.transportista,
-        patente_vehiculo: this.patente,
-        rut_transportista: this.transportistaRut,
-        //rut: this.rut,       
-        telefono_transportista: this.fono,       
-        estado: 'Recepcionado',
-        observaciones: this.observaciones,
-        fecha_ingreso: this.fecha,
-        hora_ingreso: this.hora
+                    })
 
-      }         
-      console.log("data a enviar", data)
-      MuestraService.ingresarMuestra(data)
-      .then((response) => {
-      console.log(response);
-      if (response && response.status === 200) {
-      alert('Muestra enviada con éxito!');
-      document.formulario.reset();
-      this.$router.push('/Form?s=1');      
-    } else {
-      alert('Error al agregar muestra!');
-      throw new Error('No se pudo agregar la muestra');
-    }
-  })
-  .then((response) => {
-    console.log(response);
-    if (response && response.status === 200) {
-      alert('Submuestra creada con éxito!');
-    }
-  })
-  .catch((error) => {
-    console.log(error);
-    alert('Ocurrió un error al enviar la muestra.');
-  });
-      
-    },   
+                }
 
+            });
+
+        }
   }
 }
 </script>
-
-
