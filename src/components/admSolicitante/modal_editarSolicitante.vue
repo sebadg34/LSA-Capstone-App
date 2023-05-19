@@ -125,15 +125,27 @@
                 </ValidationProvider>
             </b-col>
             <b-col class="col-4">
+
                 <ValidationProvider name="ciudad" rules="required" v-slot="validationContext">
                     <label for="input-live">Ciudad empresa:</label>
+                    <b-overlay
+      :show="CargandoCiudad"
+      rounded
+      opacity="0.6"
+      spinner-small
+      spinner-variant="primary"
+      class="d-inline-block"
+      
+    >
                     <b-form-select @change="cargarDataCiudad" :disabled="Empresa ? false : true" aria-describedby="cargo-live-feedback" :state="getValidationState(validationContext)" class="mb-1" v-model="Ciudad" value-field="id_ciudad" text-field="nombre_ciudad" :options="Ciudades">
 
                     </b-form-select>
+                    </b-overlay>
                     <b-form-invalid-feedback id="cargo-live-feedback">{{
                         validationContext.errors[0] }}
                     </b-form-invalid-feedback>
                 </ValidationProvider>
+
             </b-col>
             <b-col class="col-4">
                 <ValidationProvider name="cargo" rules="required" v-slot="validationContext">
@@ -146,11 +158,19 @@
             </b-col>
         </b-row>
         <template #modal-footer>
-
+<b-overlay
+      :show="Cargando"
+      rounded
+      opacity="0.6"
+      spinner-small
+      spinner-variant="primary"
+      class="d-inline-block"
+      
+    >
             <b-button @click="enviarFormulario()" variant="primary" size="xl" class="float-right reactive-button" style="font-weight:bold">
                 Crear y Guardar
             </b-button>
-
+</b-overlay>
         </template>
     </b-modal>
 </validation-observer>
@@ -188,6 +208,7 @@ export default {
     data() {
 
         return {
+            Cargando: false,
             Nombre: "",
             Rut: "",
             Primer_apellido: "",
@@ -200,6 +221,7 @@ export default {
             Cargo: "",
             Tipo: "",
             Ciudad: "",
+            CargandoCiudad: false,
             Rut_empresa: "",
             Empresa: "",
             Nombre_ciudad: "",
@@ -239,6 +261,7 @@ export default {
         },
         cargarDataCiudad(id){
             console.log(id)
+            
          var ciudadSeleccionada =   this.Ciudades.find(x=> x.id_ciudad === id);
          this.Nombre_ciudad = ciudadSeleccionada.nombre_ciudad;
          this.Direccion_ciudad = ciudadSeleccionada.direccion;
@@ -280,7 +303,7 @@ export default {
                 if (!success) {
                     return;
                 } else {
-
+this.Cargando = true;
                     var data = {
                         "rut_solicitante": this.Rut,
                         "nombre": this.Nombre,
@@ -305,6 +328,7 @@ export default {
                     console.log("data a enviar", data)
                     solicitanteService.editarSolicitante(data).then((response) => {
                         console.log(response)
+                        this.Cargando = false;
                         if (response != null) {
                             if (response.status == 200) {
                                 this.$bvToast.toast(`Edición de solicitante exitosa`, {

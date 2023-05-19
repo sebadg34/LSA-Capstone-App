@@ -103,11 +103,12 @@
         </b-row>
 
         <template #modal-footer>
-
+ <b-overlay :show="Cargando" rounded opacity="0.6" spinner-small spinner-variant="primary" class="d-inline-block">
+      
             <b-button @click="enviarFormulario()" variant="primary" size="xl" class="float-right reactive-button" style="font-weight:bold">
                 Crear y Guardar
             </b-button>
-
+ </b-overlay>
         </template>
         <hr>
 
@@ -160,6 +161,7 @@ export default {
     data() {
 
         return {
+            Cargando: false,
             Archivos: null,
             Archivos_enviar: "",
             file: "",
@@ -258,6 +260,7 @@ export default {
                 if (!success) {
                     return;
                 } else {
+                    this.Cargando = true;
                     let formData = new FormData();
                     formData = {
                         "rut_empleado": this.Rut,
@@ -278,6 +281,7 @@ export default {
                     }
                     console.log("data a enviar", formData)
                     personalService.ingresarPersonal(formData).then((response) => {
+                        this.Cargando = false;
                         console.log(response)
                         if (response != null) {
                             if (response.status == 200) {

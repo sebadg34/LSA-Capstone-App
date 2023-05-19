@@ -16,11 +16,19 @@
         </template>
 
         <template #modal-footer>
-
+<b-overlay
+      :show="busy"
+      rounded
+      opacity="0.6"
+      spinner-small
+      spinner-variant="primary"
+      class="d-inline-block"
+      
+    >
             <b-button @click="enviarFormulario()" variant="primary" size="xl" class="float-right reactive-button" style="font-weight:bold">
                 Subir archivo
             </b-button>
-
+</b-overlay>
         </template>
 
       
@@ -84,6 +92,7 @@ export default {
     data() {
         const now = new Date()
         return {
+            busy: false,
             Archivo: null,
             Fecha: "",
             FechaFormatted: "",
@@ -123,8 +132,11 @@ export default {
                         fecha_emision: this.FechaFormatted,
                     }
                     formData.documento_cotizacion = this.Archivo;
+                    formData.enctype= "multipart/form-data";
                     console.log("data a enviar", formData);
+                    this.busy = true;
                     solicitanteService.agregarCotizacion(formData).then((response) => {
+                        this.busy = false;
                         console.log(response);
                         if (response.request.status == 200) {
                             this.$bvToast.toast(`Guardado de cotización exitoso`, {

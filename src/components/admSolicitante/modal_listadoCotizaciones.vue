@@ -61,8 +61,18 @@
                     </div>
                 </b-list-group-item>
             </div>
-        <b-list-group v-for="file in Cotizaciones" :key="file.id">
+
             
+        <b-list-group v-for="file in Cotizaciones" :key="file.id">
+            <b-overlay
+      :show="BorrandoArchivo"
+      rounded
+      opacity="0.6"
+      spinner-small
+      spinner-variant="primary"
+      class="d-inline-block"
+      
+    >
             <b-list-group horizontal class="d-flex">
                 
                
@@ -101,9 +111,9 @@
                             <b-icon icon="trash-fill"></b-icon>
                         </b-button>
                     </b-list-group-item>
-                    
+
             </b-list-group>
-                    
+           </b-overlay>         
                 </b-list-group>
 
 
@@ -141,6 +151,7 @@ export default {
     data() {
 
         return {
+            BorrandoArchivo: false,
             Archivos: "",
             Nombre_completo: "",
             Cotizaciones: "",
@@ -148,8 +159,10 @@ export default {
     },
     methods: {
         borrarArchivo(file){
+            this.BorrandoArchivo = true;
             console.log('archivo a borrar',file)
             solicitanteService.eliminarCotizacion(file).then((response) =>{
+                this.BorrandoArchivo = false;
                 if(response.status == 200){
                     this.$bvToast.toast(`Cotización borrada exitosamente`, {
                         title: 'Exito',

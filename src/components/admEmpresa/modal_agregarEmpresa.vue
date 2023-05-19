@@ -113,11 +113,12 @@
 
         </div>
         <template #modal-footer>
+<b-overlay :show="Cargando" rounded opacity="0.6" spinner-small spinner-variant="primary" class="d-inline-block">
 
             <b-button @click="enviarFormulario()" variant="primary" size="xl" class="float-right reactive-button" style="font-weight:bold">
                 Crear y Guardar
             </b-button>
-
+</b-overlay>
         </template>
 
     </b-modal>
@@ -131,6 +132,7 @@ export default {
     data() {
 
         return {
+            Cargando: false,
             direcciones: [{
                 ciudad: '',
                 direccion: ''
@@ -170,6 +172,8 @@ export default {
                 if (!success) {
                     return;
                 } else {
+
+                    this.Cargando = true;
                     var rutData = {
                 rut_empresa: this.Rut
                     }
@@ -191,6 +195,7 @@ export default {
                     console.log("data a enviar", data)
                     empresaService.ingresarEmpresa(data).then((response) => {
                         console.log(response)
+                        this.Cargando = false;
                         if (response != null) {
                             if (response.status == 200) {
                                 this.$bvToast.toast(`Creación de cliente exitosa`, {

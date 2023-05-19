@@ -51,6 +51,11 @@
 <hr/>
 
 <div>
+     <div v-if="CargandoArchivos" class="text-center lsa-orange-text my-2">
+                        <b-spinner class="align-middle"></b-spinner>
+                        <strong> Cargando...</strong>
+                    </div>
+
         <b-row v-if="Documentos.length" class="mx-auto col-xl-8 col-lg-9 col-md-10 col-12">
             <div class="col-12 d-flex align-items-center" style="background-color: white;height:50px; border-top:2px solid var(--ucn-light-gray); font-weight: bold;">
                 <div>Archivos Adjuntos</div>
@@ -80,6 +85,17 @@
                 <br>
             </div>
         </b-row>
+        <div v-if="Documentos.length == 0 && Cargando == false">
+            <b-list-group-item>
+                    <div class="text-center lsa-light-blue-text my-2 row">
+                        <div class="col">
+                            <b-icon icon="file-earmark-break" animation="fade" variant="secondary"></b-icon>
+                        <div style="font-weight:bold; color:gray">No hay documentos registrados por mostrar</div>
+                        </div>
+                    
+                    </div>
+                </b-list-group-item>
+            </div>
     </div>
 
 
@@ -166,9 +182,11 @@ export default {
 
         },
         obtenerDetalles(rut){
+            this.CargandoArchivos = true; 
             personalService.obtenerDetallesPersonal(rut).then((response) => {
                 if(response.data != null){
                     this.Documentos = response.data.documentos;
+                    this.CargandoArchivos = false;
                 }
                
             
@@ -177,6 +195,7 @@ export default {
     },
     data() {
         return {
+            CargandoArchivos: false,
             Nombre: this.userData.nombre,
             Rut: this.userData.rut_empleado,
             Correo: this.userData.correo,
