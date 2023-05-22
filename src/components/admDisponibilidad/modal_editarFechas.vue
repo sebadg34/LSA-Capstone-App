@@ -15,14 +15,24 @@
         </template>
 
         <b-col class="col-6 mx-auto">
-            <b-row>
-                <div style="font-weight:bold">
-                    Dias disponibles:
-                    <span v-if="this.DiasDisponibles == null">0</span>
-                    <span v-else>{{ this.DiasDisponibles }}</span>
-                </div>
+            <div style="font-weight:bold">
+                Dias totales posibles:
+                <span>{{ this.DiasTotablesAsignables }}</span>
+            </div>
+            <br/>
+            <div style="font-weight:bold">
+                Dias disponibles:
+                <span v-if="this.DiasDisponibles == null">0</span>
+                <span v-else>{{ this.DiasDisponibles }}</span>
+            </div>
+            <div v-if="this.FechaInicio != null && this.FechaTermino != null" style="font-weight:bold">
+                Dias vacaciones actuales:
+                <span v-if="this.diasVacacionesActuales <= this.DiasTotablesAsignables">{{ this.diasVacacionesActuales }}</span>
+                <span v-else style="color: red">{{ this.diasVacacionesActuales }}
+                <div>El numero de vacaciones no puede superar los dias totales disponibles</div>
+                </span>
+            </div>
 
-            </b-row>
             <br />
             <b-row class="d-flex justify-content-between">
 
@@ -70,19 +80,51 @@ export default {
                 this.DiasDisponibles = this.userData.dias_vacaciones_disponibles;
                 this.Rut = this.userData.rut_empleado;
 
-                if(this.userData.fecha_inicio_vacaciones != null){
+                if (this.userData.fecha_inicio_vacaciones != null) {
                     this.FechaInicio = this.userData.fecha_inicio_vacaciones;
                 }
-                if(this.userData.fecha_termino_vacaciones != null){
+                if (this.userData.fecha_termino_vacaciones != null) {
                     this.FechaTermino = this.userData.fecha_termino_vacaciones;
                 }
+                this.calcularDiasDisponiblesTotales();
             }
         }
+    },
+    computed: {
+        diasVacacionesActuales() {
+            if(this.FechaInicio != null && this.FechaTermino != null){
+                var d1 = new Date(this.FechaInicio);
+            var d2 = new Date(this.FechaTermino);
+            var diff = d2.getTime() - d1.getTime();
+
+            var daydiff = diff / (1000 * 60 * 60 * 24);
+            return daydiff;
+            }else{
+                return 0;
+            }
+        },
+        diasDisponiblesTotales(){
+            return this.DiasDisponibles + this.diasVacacionesActuales;
+        }
+
     },
     props: {
         userData: Object
     },
     methods: {
+        calcularDiasDisponiblesTotales(){
+            if(this.FechaInicio != null && this.FechaTermino != null){
+                var d1 = new Date(this.FechaInicio);
+            var d2 = new Date(this.FechaTermino);
+            var diff = d2.getTime() - d1.getTime();
+
+            var daydiff = diff / (1000 * 60 * 60 * 24);
+            this.DiasTotablesAsignables = this.DiasDisponibles + daydiff;
+            }else{
+                this.DiasTotablesAsignables = this.DiasDisponibles;
+            }
+        }
+        ,
         revisarFecha(date) {
             console.log("fecha a verificar", date)
             if (this.FechaInicio > this.FechaTermino) {
@@ -112,12 +154,11 @@ export default {
         },
 
         enviarFormulario() {
-
             this.$refs.form.validate().then(success => {
                 if (!success) {
                     return;
                 } else {
-                    
+
                     var data = {
                         fecha_inicio_vacaciones: this.FechaInicioFormatted,
                         fecha_termino_vacaciones: this.FechaTerminoFormatted,
@@ -125,18 +166,18 @@ export default {
                     }
                     console.log("data a enviar", data)
                     disponibilidadService.editarFechas(data).then((response) => {
-                        console.log(response)
-                        if (response.status == 200){
+                        console.log("respuesta axios", response)
+                        if (response.request.status == 200) {
                             this.$bvToast.toast(`Cambio de fechas exitosa`, {
-                                    title: 'Exito',
-                                    toaster: 'b-toaster-top-center',
-                                    solid: true,
-                                    variant: "success",
-                                    appendToast: true
-                                })
-                        this.$emit('refrescar');
+                                title: 'Exito',
+                                toaster: 'b-toaster-top-center',
+                                solid: true,
+                                variant: "success",
+                                appendToast: true
+                            })
+                            this.$emit('refrescar');
                             this.$bvModal.hide('modal-editar-fechas');
-                        }else{
+                        } else {
                             this.$bvToast.toast(`Error al cambiar fechas`, {
                                 title: 'Error',
                                 toaster: 'b-toaster-top-center',
@@ -145,9 +186,8 @@ export default {
                                 appendToast: true
                             })
                         }
-                        
+
                     })
-                  
 
                 }
             });
@@ -158,6 +198,7 @@ export default {
         const now = new Date()
         return {
             DiasDisponibles: 0,
+            DiasTotablesAsignables: 0,
             CargandoArchivos: false,
             busy: false,
             Archivo: null,

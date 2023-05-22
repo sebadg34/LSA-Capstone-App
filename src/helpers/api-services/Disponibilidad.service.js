@@ -11,7 +11,7 @@ const editarFechas = async (data) => {
         return response;
     } catch (error) {
         console.log(error);
-        return;
+        return error;
     }
 };
 const editarDiasDisponibles = async (data) => {
@@ -22,7 +22,7 @@ const editarDiasDisponibles = async (data) => {
         return response;
     } catch (error) {
         console.log(error);
-        return;
+        return error;
     }
 };
 

@@ -67,14 +67,23 @@
                     </div>
 
         <b-row v-if="Documentos.length != 0" class="mx-auto col-xl-8 col-lg-9 col-md-10 col-12">
-            <div class="col-12 d-flex align-items-center" style="background-color: white;height:50px; border-top:2px solid var(--ucn-light-gray); font-weight: bold;">
-                <div>Archivos Adjuntos</div>
-
+            <div class="col-12" style="background-color: white;height:50px; border-top:2px solid var(--ucn-light-gray); font-weight: bold;">
+                <b-list-group >
+                <b-list-group-item class="d-flex justify-content-between" style="padding-right:5px; padding-left:5px">
+                    <div>Fecha Subida</div>
+                    <div>Archivos Adjuntos</div>
+                    <div>Accion</div>
+                </b-list-group-item>
+               
+            </b-list-group>
             </div>
             <div class="col-12" style="background-color: white; ">
 
                 <b-list-group >
                     <b-list-group-item v-for="file in Documentos" :key="file.id" style="padding:5px" class="d-flex justify-content-between">
+                        <div>
+                            {{ file.fecha_subida }}
+                        </div>
                         <div>
                             {{ file.nombre_original_documento }}
                         </div>
@@ -125,6 +134,8 @@ import personalService from "@/helpers/api-services/Personal.service"
 import FileSaver from 'file-saver';
 
 export default {
+
+    
     watch: {
         userData: {
             handler() {
