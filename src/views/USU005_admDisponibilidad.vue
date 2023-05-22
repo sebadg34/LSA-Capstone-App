@@ -1,11 +1,10 @@
 <template>
 <div style="margin-bottom:50px">
 
-    <modal_agregarPersonal @refrescar="obtenerPersonal" />
+    <modal_editarFechas :user-data="this.modalFechasData" @refrescar="obtenerPersonal" />
     <modal_detallesPersonal :user-data="this.modalDetallesData" />
-    <modal_editarPersonal @refrescar="obtenerPersonal" :user-data="this.modalEditarData" />
-    <modal_estadoPersonal @refrescar="obtenerPersonal" :user-data="this.modalEstadoData" />
-  
+    <modal_editarDiasDisponibles :user-data="this.modalDiasDisponiblesData" />
+
     <b-row align-h="start" style="padding-top:30px;">
         <b-col class="col-6">
             <div style="font-size:2rem; font-weight: bold; color: var(--lsa-blue)">
@@ -13,66 +12,63 @@
             </div>
         </b-col>
     </b-row>
-  
 
     <b-row class="justify-content-center">
 
-<b-col class="col-10">
-    <b-row style="padding-top:30px; padding-bottom:10px">
-            <b-col class="col-6">
-
+        <b-col class="col-10">
+            <b-row style="padding-top:30px; padding-bottom:10px">
                 <b-col class="col-6">
-                    <b-row>
-                        <b-button v-b-modal.modal-personal style="border-radius: 15px; font-weight: bold; font-size: 18px; " class="lsa-light-blue reactive-button">
 
-                            Agregar Personal
-                            <b-icon icon="person-plus-fill"></b-icon>
-                        </b-button>
-                    </b-row>
+                    <b-col class="col-6">
+                        <b-row>
+                            <b-button v-b-modal.modal-personal style="border-radius: 15px; font-weight: bold; font-size: 18px; " class="lsa-light-blue reactive-button">
+
+                                Agregar Personal
+                                <b-icon icon="person-plus-fill"></b-icon>
+                            </b-button>
+                        </b-row>
+                    </b-col>
+
                 </b-col>
 
-            </b-col>
+                <b-col lg="6" class="my-1">
+                    <b-form-group label-cols-sm="3" label-align-sm="right" label-size="md" class="mb-0">
+                        <b-input-group size="md">
+                            <b-input-group-prepend is-text>
+                                <b-icon icon="search"></b-icon>
 
-            <b-col lg="6" class="my-1">
-                <b-form-group label-cols-sm="3" label-align-sm="right" label-size="md" class="mb-0">
-                    <b-input-group size="md">
-                        <b-input-group-prepend is-text>
-                         <b-icon icon="search"></b-icon>
-                        
+                            </b-input-group-prepend>
+                            <b-form-input id="filter-input" v-model="filter" type="search" placeholder="Escriba rut, nombre, etc. para filtrar"></b-form-input>
 
-                    </b-input-group-prepend>
-                        <b-form-input id="filter-input" v-model="filter" type="search" placeholder="Escriba rut, nombre, etc. para filtrar"></b-form-input>
-
-                        <b-input-group-append>
-                            <b-button style="font-weight:bold" class="lsa-blue" :disabled="!filter" @click="filter = ''">Limpiar filtro</b-button>
-                        </b-input-group-append>
-                    </b-input-group>
-                </b-form-group>
-            </b-col>
-        </b-row>
-</b-col>
-     
+                            <b-input-group-append>
+                                <b-button style="font-weight:bold" class="lsa-blue" :disabled="!filter" @click="filter = ''">Limpiar filtro</b-button>
+                            </b-input-group-append>
+                        </b-input-group>
+                    </b-form-group>
+                </b-col>
+            </b-row>
+        </b-col>
 
         <b-col class="col-10">
-            <b-table fixed show-empty :filter="filter" @filtered="onFiltered" :fields="campos_tabla" :items="personal" style="" :busy="loading" :per-page="perPage" :current-page="currentPage">
+            <b-table  show-empty :filter="filter" @filtered="onFiltered" :fields="campos_tabla" :items="personal" style="" :busy="loading" :per-page="perPage" :current-page="currentPage">
 
                 <template #empty>
                     <div class="text-center lsa-light-blue-text my-2 row">
                         <div class="col">
-                            
-                        <div style=" color:gray"> No hay personal registrado para mostrar</div>
+
+                            <div style=" color:gray"> No hay personal registrado para mostrar</div>
                         </div>
-                    
+
                     </div>
-    </template>
+                </template>
 
                 <template #emptyfiltered>
                     <div class="text-center lsa-light-blue-text my-2 row">
                         <div class="col">
                             <b-icon icon="search" animation="fade" variant="secondary"></b-icon>
-                        <div style="font-weight:bold; color:gray"> No hay resultados que coincidan con su búsqueda</div>
+                            <div style="font-weight:bold; color:gray"> No hay resultados que coincidan con su búsqueda</div>
                         </div>
-                    
+
                     </div>
                 </template>
                 <template #table-busy>
@@ -80,6 +76,15 @@
                         <b-spinner class="align-middle"></b-spinner>
                         <strong> Cargando...</strong>
                     </div>
+                </template>
+                <template #cell(dias_vacaciones_disponibles)="row">
+                    <span v-if="!row.item.dias_vacaciones_disponibles">0</span>
+                    <span v-else>{{ row.item.dias_vacaciones_disponibles }}</span>
+                </template>
+                <template #cell(periodo_vacaciones)="row">
+                    <span v-if="!row.item.fecha_inicio_vacaciones || !row.item.fecha_termino_vacaciones">
+                    -</span>
+                    <span v-else>{{ row.item.fecha_inicio_vacaciones + " " + row.item.fecha_termino_vacaciones }}</span>
                 </template>
 
                 <template #cell(estado)="row">
@@ -99,11 +104,11 @@
                             <b-icon icon="file-earmark-medical" aria-hidden="true" class="mr-2"></b-icon>Ver detalles
 
                         </b-dropdown-item>
-                        <b-dropdown-item @click="abrirEditarPersonal(row.item)">
-                            <b-icon icon="pencil" aria-hidden="true" class="mr-2"></b-icon>Editar
+                        <b-dropdown-item @click="abrirEditarFechas(row.item)">
+                            <b-icon icon="pencil" aria-hidden="true" class="mr-2"></b-icon>Modifcar fechas
                         </b-dropdown-item>
-                        <b-dropdown-item @click="abrirEstadoPersonal(row.item)">
-                            <b-icon icon="person-check" aria-hidden="true" class="mr-2"></b-icon>Cambiar estado
+                        <b-dropdown-item @click="abrirEditarDiasDisponibles(row.item)">
+                            <b-icon icon="person-check" aria-hidden="true" class="mr-2"></b-icon>Modificar días disponibles
                         </b-dropdown-item>
                     </b-dropdown>
 
@@ -118,20 +123,18 @@
 
 <script>
 // @ is an alias to /src
-import modal_agregarPersonal from '@/components/admPersonal/modal_agregarPersonal.vue'
-import modal_detallesPersonal from '@/components/admPersonal/modal_detallesPersonal.vue'
-import modal_editarPersonal from '@/components/admPersonal/modal_editarPersonal.vue'
-import modal_estadoPersonal from '@/components/admPersonal/modal_estadoPersonal.vue'
+import modal_editarFechas from '@/components/admDisponibilidad/modal_editarFechas.vue'
+import modal_editarDiasDisponibles from '@/components/admDisponibilidad/modal_editarDiasDisponibles.vue'
 
+import modal_detallesPersonal from '@/components/admPersonal/modal_detallesPersonal.vue'
 import personalService from "@/helpers/api-services/Personal.service"
 
 export default {
     name: 'admPersonal',
     components: {
-        modal_agregarPersonal,
+        modal_editarFechas,
         modal_detallesPersonal,
-        modal_editarPersonal,
-        modal_estadoPersonal
+        modal_editarDiasDisponibles
     },
     mounted() {
         this.obtenerPersonal();
@@ -150,30 +153,36 @@ export default {
             perPage: 10,
             loading: true,
             modalEditarData: {},
+            modalDiasDisponiblesData: {},
             modalDetallesData: {},
-            modalEstadoData: {},
+            modalFechasData: {},
             campos_tabla: [{
-                key: 'rut_empleado',
-                label: 'Rut'
-            }, {
-                key: 'nombre',
-                label: 'Nombre'
-            }, {
-                key: 'apellido',
-                label: 'Apellido'
-            }, {
-                key: 'correo',
-                label: 'Correo'
-            }, {
-                key: 'rol',
-                label: 'Cargo'
-            }, {
-                key: 'estado',
-                label: 'Estado'
-            }, {
-                key: 'accion',
-                label: 'Acción'
-            }],
+                    key: 'rut_empleado',
+                    label: 'Rut'
+                }, {
+                    key: 'nombre',
+                    label: 'Nombre'
+                }, {
+                    key: 'apellido',
+                    label: 'Apellido'
+                }, {
+                    key: 'dias_vacaciones_disponibles',
+                    label: 'Días de vacaciones disponible'
+                }, {
+                    key: 'periodo_vacaciones',
+                    label: 'Periodo de vacaciones'
+                }, {
+                    key: 'rol',
+                    label: 'Cargo'
+                },
+                {
+                    key: 'estado',
+                    label: 'Estado'
+                }, {
+                    key: 'accion',
+                    label: 'Acción'
+                }
+            ],
             personal: [{}],
         }
     },
@@ -193,26 +202,25 @@ export default {
                     console.log(response)
                     this.personal = response.data
                     console.log(this.personal)
-
                     this.loading = false;
                 }
 
             })
         },
-        abrirEditarPersonal(data) {
+        abrirEditarFechas(data) {
             console.log(data)
-            this.modalEditarData = data;
-            this.$bvModal.show('modal-editar-personal')
+            this.modalFechasData = data;
+            this.$bvModal.show('modal-editar-fechas')
         },
         abrirDetallesPersonal(data) {
             console.log(data)
             this.modalDetallesData = data;
             this.$bvModal.show('modal-detalles-personal')
         },
-        abrirEstadoPersonal(data) {
+        abrirEditarDiasDisponibles(data) {
             console.log(data)
-            this.modalEstadoData = data;
-            this.$bvModal.show('modal-estado-personal')
+            this.modalDiasDisponiblesData = data;
+            this.$bvModal.show('modal-editar-dias-disponibles')
         }
 
     }

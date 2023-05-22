@@ -27,7 +27,7 @@
                     </b-form-invalid-feedback>
                 </ValidationProvider>
                 <label for="input-live">Primer apellido:</label>
-                <ValidationProvider name="apellido" rules="required" v-slot="validationContext">
+                <ValidationProvider name="primer apellido" rules="required" v-slot="validationContext">
 
                     <b-form-input size="sm" id="primerapellido-input" class="mb-1" v-model="Primer_apellido" :state="getValidationState(validationContext)" aria-describedby="primerapellido-live-feedback"></b-form-input>
 
@@ -36,7 +36,7 @@
                     </b-form-invalid-feedback>
                 </ValidationProvider>
                 <label for="input-live">Segundo apellido:</label>
-                <ValidationProvider name="apellido" rules="required" v-slot="validationContext">
+                <ValidationProvider name="segundo apellido" rules="required" v-slot="validationContext">
 
                     <b-form-input size="sm" id="rsegundoapellidout-input" class="mb-1" v-model="Segundo_apellido" :state="getValidationState(validationContext)" aria-describedby="segundoapellido-live-feedback"></b-form-input>
 
@@ -93,20 +93,20 @@
                     </b-input-group>
                 </ValidationProvider>
                 <label for="input-live">Dir. pago proveedores:</label>
-                <ValidationProvider name="apellido" rules="required" v-slot="validationContext">
+                <ValidationProvider name="dirección pago proveedores" rules="required" v-slot="validationContext">
 
-                    <b-form-input size="sm" id="primerapellido-input" class="mb-1" v-model="Contacto_proveedores" :state="getValidationState(validationContext)" aria-describedby="primerapellido-live-feedback"></b-form-input>
+                    <b-form-input size="sm" id="dirpago-input" class="mb-1" v-model="Contacto_proveedores" :state="getValidationState(validationContext)" aria-describedby="primerapellido-live-feedback"></b-form-input>
 
-                    <b-form-invalid-feedback id="primerapellido-live-feedback">{{
+                    <b-form-invalid-feedback id="dirpago-live-feedback">{{
     validationContext.errors[0] }}
                     </b-form-invalid-feedback>
                 </ValidationProvider>
                 <label for="input-live">Dir. envío factura:</label>
-                <ValidationProvider name="apellido" rules="required" v-slot="validationContext">
+                <ValidationProvider name="dirección envío factura" rules="required" v-slot="validationContext">
 
-                    <b-form-input size="sm" id="rsegundoapellidout-input" class="mb-1" v-model="Direccion_factura" :state="getValidationState(validationContext)" aria-describedby="segundoapellido-live-feedback"></b-form-input>
+                    <b-form-input size="sm" id="dirfactura-input" class="mb-1" v-model="Direccion_factura" :state="getValidationState(validationContext)" aria-describedby="segundoapellido-live-feedback"></b-form-input>
 
-                    <b-form-invalid-feedback id="segundoapellido-live-feedback">{{
+                    <b-form-invalid-feedback id="dirfactura-live-feedback">{{
     validationContext.errors[0] }}
                     </b-form-invalid-feedback>
                 </ValidationProvider>
