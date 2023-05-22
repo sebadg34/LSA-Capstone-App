@@ -1,48 +1,48 @@
 <template>
 <div style="margin-bottom:50px">
 
-    <modal_agregarPersonal @refrescar="obtenerPersonal" />
-    <modal_detallesPersonal :user-data="this.modalDetallesData" />
-    <modal_editarPersonal @refrescar="obtenerPersonal" :user-data="this.modalEditarData" />
-    <modal_estadoPersonal @refrescar="obtenerPersonal" :user-data="this.modalEstadoData" />
-  
+    <modal_agregarEmpresa @refrescar="obtenerEmpresa" />
+    <modal_editarEmpresa :empresa-data="this.modalEditarData" @refrescar="obtenerEmpresa" />
+    <modal_detallesEmpresa :empresa-data="this.modalDetallesData" />
+    
     <b-row align-h="start" style="padding-top:30px;">
-        <b-col class="col-6">
-            <div style="font-size:2rem; font-weight: bold; color: var(--lsa-blue)">
-                Sistema administración de personal
-            </div>
-        </b-col>
-    </b-row>
-  
+    <b-col class="col-6">
+        <div style="font-size:2rem; font-weight: bold; color: var(--lsa-blue)">
+            Sistema administración de clientes
+        </div>
+    </b-col>
+</b-row>
 
     <b-row class="justify-content-center">
 
-<b-col class="col-10">
+      
+        <b-col class="col-10">
     <b-row style="padding-top:30px; padding-bottom:10px">
             <b-col class="col-6">
 
                 <b-col class="col-6">
-                    <b-row>
-                        <b-button v-b-modal.modal-personal style="border-radius: 15px; font-weight: bold; font-size: 18px; " class="lsa-light-blue reactive-button">
 
-                            Agregar Personal
-                            <b-icon icon="person-plus-fill"></b-icon>
-                        </b-button>
-                    </b-row>
+                    <b-row>
+                    <b-button v-b-modal.modal-empresa style="border-radius: 15px; font-weight: bold; font-size: 18px; " class="lsa-light-blue reactive-button">
+                        Agregar Cliente
+                        <b-icon icon="person-plus-fill"></b-icon>
+                    </b-button>
+                </b-row>
+
                 </b-col>
 
             </b-col>
 
             <b-col lg="6" class="my-1">
                 <b-form-group label-cols-sm="3" label-align-sm="right" label-size="md" class="mb-0">
+                   
                     <b-input-group size="md">
                         <b-input-group-prepend is-text>
                          <b-icon icon="search"></b-icon>
                         
 
                     </b-input-group-prepend>
-                        <b-form-input id="filter-input" v-model="filter" type="search" placeholder="Escriba rut, nombre, etc. para filtrar"></b-form-input>
-
+                    <b-form-input id="filter-input" v-model="filter" type="search" placeholder="Escriba rut, nombre, etc. para filtrar"></b-form-input>
                         <b-input-group-append>
                             <b-button style="font-weight:bold" class="lsa-blue" :disabled="!filter" @click="filter = ''">Limpiar filtro</b-button>
                         </b-input-group-append>
@@ -51,16 +51,16 @@
             </b-col>
         </b-row>
 </b-col>
-     
 
         <b-col class="col-10">
-            <b-table fixed show-empty :filter="filter" @filtered="onFiltered" :fields="campos_tabla" :items="personal" style="" :busy="loading" :per-page="perPage" :current-page="currentPage">
+            <b-table fixed show-empty :filter="filter" @filtered="onFiltered" :fields="campos_tabla" :items="empresa" style="" :busy="loading" :per-page="perPage" :current-page="currentPage">
 
+                
                 <template #empty>
                     <div class="text-center lsa-light-blue-text my-2 row">
                         <div class="col">
                             
-                        <div style=" color:gray"> No hay personal registrado para mostrar</div>
+                        <div style=" color:gray"> No hay cliente registrado para mostrar</div>
                         </div>
                     
                     </div>
@@ -81,12 +81,14 @@
                         <strong> Cargando...</strong>
                     </div>
                 </template>
+                <!--
 
-                <template #cell(estado)="row">
+                    <template #cell(estado)="row">
 
-                    <span v-if="row.item.estado == true" style="text-transform:uppercase; color:green; font-weight: bold;">activo</span>
-                    <span v-else style="text-transform:uppercase; color:red; font-weight: bold;">inactivo</span>
-                </template>
+                        <span v-if="row.item.estado == true" style="text-transform:uppercase; color:green; font-weight: bold;">activo</span>
+                        <span v-else-if="row.item.estado " style="text-transform:uppercase; color:red; font-weight: bold;">inactivo</span>
+                    </template>
+                       -->
                 <template #cell(accion)="row">
 
                     <b-dropdown right size="sm" variant="link" toggle-class="text-decoration-none" no-caret>
@@ -95,16 +97,14 @@
                             <b-icon style="height: 80%; width: 80%; align-items: center;" icon="three-dots" variant="dark" aria-hidden="true"></b-icon>
 
                         </template>
-                        <b-dropdown-item @click="abrirDetallesPersonal(row.item)">
+                        <b-dropdown-item @click="abrirDetallesEmpresa(row.item)">
                             <b-icon icon="file-earmark-medical" aria-hidden="true" class="mr-2"></b-icon>Ver detalles
 
                         </b-dropdown-item>
-                        <b-dropdown-item @click="abrirEditarPersonal(row.item)">
+                        <b-dropdown-item @click="abrirEditarEmpresa(row.item)">
                             <b-icon icon="pencil" aria-hidden="true" class="mr-2"></b-icon>Editar
                         </b-dropdown-item>
-                        <b-dropdown-item @click="abrirEstadoPersonal(row.item)">
-                            <b-icon icon="person-check" aria-hidden="true" class="mr-2"></b-icon>Cambiar estado
-                        </b-dropdown-item>
+
                     </b-dropdown>
 
                 </template>
@@ -116,29 +116,28 @@
 </div>
 </template>
 
+    
 <script>
 // @ is an alias to /src
-import modal_agregarPersonal from '@/components/admPersonal/modal_agregarPersonal.vue'
-import modal_detallesPersonal from '@/components/admPersonal/modal_detallesPersonal.vue'
-import modal_editarPersonal from '@/components/admPersonal/modal_editarPersonal.vue'
-import modal_estadoPersonal from '@/components/admPersonal/modal_estadoPersonal.vue'
+import modal_agregarEmpresa from '@/components/admEmpresa/modal_agregarEmpresa.vue'
+import modal_editarEmpresa from '@/components/admEmpresa/modal_editarEmpresa.vue'
+import modal_detallesEmpresa from '@/components/admEmpresa/modal_detallesEmpresa.vue'
 
-import personalService from "@/helpers/api-services/Personal.service"
+import empresaService from "@/helpers/api-services/Empresa.service"
 
 export default {
-    name: 'admPersonal',
+    name: 'admEmpresa',
     components: {
-        modal_agregarPersonal,
-        modal_detallesPersonal,
-        modal_editarPersonal,
-        modal_estadoPersonal
+        modal_agregarEmpresa,
+        modal_editarEmpresa,
+        modal_detallesEmpresa
     },
     mounted() {
-        this.obtenerPersonal();
+        this.obtenerEmpresa();
     },
     computed: {
         rows() {
-            return this.personal.length
+            return this.empresa.length
         }
     },
     data() {
@@ -146,35 +145,29 @@ export default {
             filter: null,
             filterOn: [],
             editarID: 0,
-            currentPage: 1,
+            currentPage: 3,
             perPage: 10,
-            loading: true,
+            loading: false,
             modalEditarData: {},
             modalDetallesData: {},
             modalEstadoData: {},
             campos_tabla: [{
-                key: 'rut_empleado',
+                key: 'rut_empresa',
                 label: 'Rut'
             }, {
-                key: 'nombre',
-                label: 'Nombre'
-            }, {
-                key: 'apellido',
-                label: 'Apellido'
+                key: 'nombre_abreviado',
+                label: 'Nombre Abreviado'
             }, {
                 key: 'correo',
                 label: 'Correo'
             }, {
-                key: 'rol',
-                label: 'Cargo'
-            }, {
-                key: 'estado',
-                label: 'Estado'
+                key: 'giro',
+                label: 'Giro'
             }, {
                 key: 'accion',
                 label: 'Acción'
             }],
-            personal: [{}],
+            empresa: [{}],
         }
     },
     methods: {
@@ -183,38 +176,50 @@ export default {
             this.totalRows = filteredItems.length
             this.currentPage = 1
         },
+        abrirEditarEmpresa(data) {
+            console.log(data)
+            this.modalEditarData = data;
+            this.$bvModal.show('modal-editar-empresa')
+        },
+        abrirDetallesEmpresa(data) {
+            console.log(data)
+            this.modalDetallesData = data;
+            this.$bvModal.show('modal-detalles-empresa')
+        },
         testEvent() {
             console.log('evento leido')
         },
-        obtenerPersonal() {
+        obtenerEmpresa() {
             this.loading = true;
-            personalService.obtenerTodosPersonal().then((response) => {
+            empresaService.obtenerTodasEmpresa().then((response) => {
                 if (response != null) {
                     console.log(response)
-                    this.personal = response.data
-                    console.log(this.personal)
+                    this.empresa = response.data
+                    console.log(this.empresa)
 
                     this.loading = false;
                 }
 
             })
-        },
-        abrirEditarPersonal(data) {
-            console.log(data)
-            this.modalEditarData = data;
-            this.$bvModal.show('modal-editar-personal')
-        },
-        abrirDetallesPersonal(data) {
-            console.log(data)
-            this.modalDetallesData = data;
-            this.$bvModal.show('modal-detalles-personal')
-        },
-        abrirEstadoPersonal(data) {
-            console.log(data)
-            this.modalEstadoData = data;
-            this.$bvModal.show('modal-estado-personal')
-        }
 
+        },
+        /** 
+            abrirEditarPersonal(data) {
+                console.log(data)
+                this.modalEditarData = data;
+                this.$bvModal.show('modal-editar-personal')
+            },
+            abrirDetallesPersonal(data) {
+                console.log(data)
+                this.modalDetallesData = data;
+                this.$bvModal.show('modal-detalles-personal')
+            },
+            abrirEstadoPersonal(data){
+                console.log(data)
+                this.modalEstadoData =data;
+                this.$bvModal.show('modal-estado-personal')
+            }
+    */
     }
 }
 </script>

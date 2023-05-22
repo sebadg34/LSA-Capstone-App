@@ -1,6 +1,6 @@
 <template>
 <validation-observer ref="form">
-    <b-modal id="modal-personal" ref="modal" title="Agregar Personal" size="lg">
+    <b-modal id="modal-editar-personal" title="Editar Personal" size="lg">
 
         <template #modal-header="{ close }">
             <!-- Emulate built in modal header close button action -->
@@ -20,17 +20,17 @@
                 <label for="input-live">Rut:</label>
                 <ValidationProvider name="rut" rules="required|rut" v-slot="validationContext">
 
-                    <b-form-input size="sm" id="rut-input" class="mb-1" v-model="Rut" :state="getValidationState(validationContext)" aria-describedby="rut-live-feedback"></b-form-input>
+                    <b-form-input size="sm" disabled id="rut-input" class="mb-1" v-model="Rut" :state="getValidationState(validationContext)" aria-describedby="rut-live-feedback"></b-form-input>
 
                     <b-form-invalid-feedback id="rut-live-feedback">{{
-                        validationContext.errors[0] }}
+                            validationContext.errors[0] }}
                     </b-form-invalid-feedback>
                 </ValidationProvider>
                 <ValidationProvider name="de apellidos" rules="required" v-slot="validationContext">
                     <label for="input-live">Apellidos:</label>
                     <b-form-input size="sm" class="mb-1" id="apellido-input" v-model="Apellidos" :state="getValidationState(validationContext)" aria-describedby="input-live-help apellido-live-feedback" placeholder="" trim></b-form-input>
                     <b-form-invalid-feedback id="apellido-live-feedback">{{
-                        validationContext.errors[0] }}
+                            validationContext.errors[0] }}
                     </b-form-invalid-feedback>
                 </ValidationProvider>
 
@@ -40,14 +40,14 @@
                     <label for="input-live">Nombres:</label>
                     <b-form-input size="sm" class="mb-1" id="input-live" :state="getValidationState(validationContext)" v-model="Nombre" aria-describedby="input-live-help nombre-live-feedback" placeholder="" trim></b-form-input>
                     <b-form-invalid-feedback id="nombre-live-feedback">{{
-                        validationContext.errors[0] }}
+                            validationContext.errors[0] }}
                     </b-form-invalid-feedback>
                 </ValidationProvider>
                 <ValidationProvider name="correo" rules="required|email" v-slot="validationContext">
                     <label for="input-live">Correo:</label>
                     <b-form-input size="sm" class="mb-1" id="input-live" :state="getValidationState(validationContext)" v-model="Correo" aria-describedby="input-live-help correo-live-feedback" placeholder="" trim></b-form-input>
                     <b-form-invalid-feedback id="correo-live-feedback">{{
-                        validationContext.errors[0] }}
+                            validationContext.errors[0] }}
                     </b-form-invalid-feedback>
                 </ValidationProvider>
             </b-col>
@@ -65,7 +65,7 @@
                         </b-input-group-prepend>
                         <b-form-input id="input-live" v-model="Movil" aria-describedby="input-live-help movil-live-feedback" :state="getValidationState(validationContext)" placeholder=""></b-form-input>
                         <b-form-invalid-feedback id="movil-live-feedback">{{
-                        validationContext.errors[0] }}
+                            validationContext.errors[0] }}
                         </b-form-invalid-feedback>
                     </b-input-group>
 
@@ -79,7 +79,7 @@
                         </b-input-group-prepend>
                         <b-form-input id="input-live" v-model="Emergencia" aria-describedby="input-live-help emergencia-live-feedback" :state="getValidationState(validationContext)" placeholder=""></b-form-input>
                         <b-form-invalid-feedback id="emergencia-live-feedback">{{
-                        validationContext.errors[0] }}
+                            validationContext.errors[0] }}
                         </b-form-invalid-feedback>
                     </b-input-group>
                 </ValidationProvider>
@@ -89,28 +89,19 @@
                     <label for="input-live">Cargo:</label>
                     <b-form-select size="sm" aria-describedby="cargo-live-feedback" :state="getValidationState(validationContext)" class="mb-1" v-model="Cargo" :options="cargos"></b-form-select>
                     <b-form-invalid-feedback id="cargo-live-feedback">{{
-                        validationContext.errors[0] }}
+                            validationContext.errors[0] }}
                     </b-form-invalid-feedback>
                 </ValidationProvider>
                 <ValidationProvider name="tipo" rules="required" v-slot="validationContext">
                     <label for="input-live">Tipo Trabajador:</label>
                     <b-form-select size="sm" aria-describedby="tipo-live-feedback" :state="getValidationState(validationContext)" class="mb-1" v-model="Tipo" :options="tipos"></b-form-select>
                     <b-form-invalid-feedback id="tipo-live-feedback">{{
-                        validationContext.errors[0] }}
+                            validationContext.errors[0] }}
                     </b-form-invalid-feedback>
                 </ValidationProvider>
             </b-col>
         </b-row>
-
-        <template #modal-footer>
- <b-overlay :show="Cargando" rounded opacity="0.6" spinner-small spinner-variant="primary" class="d-inline-block">
-      
-            <b-button @click="enviarFormulario()" variant="primary" size="xl" class="float-right reactive-button" style="font-weight:bold">
-                Crear y Guardar
-            </b-button>
- </b-overlay>
-        </template>
-        <hr>
+        <hr />
 
         <b-row>
             <b-col class="col-6">
@@ -119,7 +110,7 @@
                     <div>
                         <b-form-file :state="getValidationState(validationContext)" placeholder="seleccione archivo(s) a subir" browse-text="Buscar" v-on:change="onChange" :multiple="true" v-model="Archivos" ref="file-input"></b-form-file>
                         <b-form-invalid-feedback id="archivo-live-feedback">
-                            Los archivos deben ser menor a 10mb
+                            Los archivos deben pesar menos de 10MB
                         </b-form-invalid-feedback>
 
                     </div>
@@ -131,24 +122,30 @@
 
                 <b-list-group>
                     <b-list-group-item style="padding-top:4px; padding-bottom:4px" v-for="archivo in Archivos" :key="archivo.index">
-                     
 
-                        
                         <b-row class="d-flex justify-content-between align-items-center">
-                          
+
                             <span>{{ archivo ? archivo.name : '' }}</span>
 
                             <b-button variant="danger" @click="remove(archivo.index)" style="padding:1px; aspect-ratio: 1 / 1; height: 27px; width: 27px">
                                 <b-icon icon="x"></b-icon>
                             </b-button>
                         </b-row>
-                   
+
                     </b-list-group-item>
 
                 </b-list-group>
 
             </b-col>
         </b-row>
+
+        <template #modal-footer>
+            <b-overlay :show="Cargando" rounded opacity="0.6" spinner-small spinner-variant="primary" class="d-inline-block">
+                <b-button @click="enviarFormulario()" variant="primary" size="xl" class="float-right reactive-button" style="font-weight:bold">
+                    Guardar cambios
+                </b-button>
+            </b-overlay>
+        </template>
 
     </b-modal>
 </validation-observer>
@@ -157,23 +154,46 @@
 <script>
 import personalService from "@/helpers/api-services/Personal.service"
 export default {
+    watch: {
+        userData: {
+            handler() {
+                console.log("PROP CHANGED, UPDATE MODAL")
+                this.Nombre = this.userData.nombre
+                this.Rut = this.userData.rut_empleado
+                this.Correo = this.userData.correo
+                this.Apellidos = this.userData.apellido
+                this.Movil = this.userData.telefono_movil
+                this.Emergencia = this.userData.telefono_emergencia
+                this.Cargo = this.userData.rol
+                this.Tipo = this.userData.tipo_trabajador
+                this.Estado = this.userData.estado
+            }
+        }
+    },
+    props: {
+        userData: Object
+    },
+    mounted() {
+        console.log("editando")
+
+    },
 
     data() {
-
         return {
             Cargando: false,
+            Nombre: this.userData.nombre,
+            Rut: this.userData.rut_empleado,
+            Correo: this.userData.correo,
+            Apellidos: this.userData.apellido,
+            Movil: this.userData.telefono_movil,
+            Emergencia: this.userData.telefono_emergencia,
+            Cargo: this.userData.cargo,
+            Tipo: "",
+            Estado: "",
             Archivos: null,
             Archivos_enviar: "",
             file: "",
             files: "",
-            Nombre: "",
-            Rut: "",
-            Correo: "",
-            Apellidos: "",
-            Movil: "",
-            Emergencia: "",
-            Cargo: "",
-            Tipo: "",
             tipos: [{
                     value: 'Practicante',
                     text: 'Practicante'
@@ -222,8 +242,21 @@ export default {
         remove(index) {
             this.Archivos.splice(index, 1)
         },
-        limpiarArchivos() {
-            this.Archivos = null
+        imagenToBase64(newfile) {
+            return new Promise((resolve, reject) => {
+                // obtener la data de la imagen
+                var reader = new FileReader();
+                reader.readAsDataURL(newfile);
+
+                reader.onload = () => {
+                    resolve(reader.result);
+                };
+
+                reader.onerror = function (error) {
+                    console.log("Error: ", error);
+                    reject("");
+                };
+            });
         },
         onChange(e) {
             this.Archivos_enviar = [];
@@ -254,10 +287,14 @@ export default {
         }) {
             return dirty || validated ? valid : null;
         },
+        enviarDocumentos() {
+            console.log(this.Archivos);
+        },
         enviarFormulario() {
 
             this.$refs.form.validate().then(success => {
                 if (!success) {
+
                     return;
                 } else {
                     this.Cargando = true;
@@ -271,21 +308,23 @@ export default {
                         "tipo_trabajador": this.Tipo,
                         "telefono_movil": this.Movil,
                         "telefono_emergencia": this.Emergencia,
-                        "estado": 1,
+                        "estado": this.Estado,
                         //"fecha_inicio_vacaciones": "01-01-2000",
-                        // "fecha_termino_vacaciones": "01-01-2099",
-                        //"//dias_administrativos": "1"
+                        //"fecha_termino_vacaciones": "01-01-2099",
+                        //"dias_administrativos" : "1"
                     }
+
                     if (this.Archivos_enviar.length != 0) {
                         formData.documentos = this.Archivos_enviar;
                     }
                     console.log("data a enviar", formData)
-                    personalService.ingresarPersonal(formData).then((response) => {
+                    personalService.editarPersonal(formData).then((response) => {
                         this.Cargando = false;
                         console.log(response)
                         if (response != null) {
                             if (response.status == 200) {
-                                this.$bvToast.toast(`Creación de personal exitosa`, {
+
+                                this.$bvToast.toast(`Edición de personal exitosa`, {
                                     title: 'Exito',
                                     toaster: 'b-toaster-top-center',
                                     solid: true,
@@ -294,9 +333,11 @@ export default {
                                 })
                                 this.$emit('refrescar');
                             }
-                            this.$bvModal.hide('modal-personal')
+                            this.$bvModal.hide('modal-editar-personal');
+                            this.Archivos = null;
+                            this.Archivos_enviar = "";
                         } else {
-                            this.$bvToast.toast(`Error al crear personal`, {
+                            this.$bvToast.toast(`Error al editar personal`, {
                                 title: 'Error',
                                 toaster: 'b-toaster-top-center',
                                 solid: true,
@@ -316,8 +357,6 @@ export default {
 }
 </script>
 
-<style lang="scss">
-.custom-file-input:lang(en)~.custom-file-label::after {
-    content: 'Buscar';
-}
-</style>
+<style lang="">
+
+    </style>
