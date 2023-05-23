@@ -107,6 +107,41 @@ const rehacerMuestra = async (RUM) => {
         return;
     }
 };
+
+
+const calcularDiasTranscurridos = async (RUM) => {
+    try {
+      const response = await axios.get(apiUrl + "/muestras/" + RUM + "/dias-transcurridos");
+      console.log(response);
+      if (response.status == 200) {        
+        return response; 
+      } else {
+        return;
+      }
+    } catch (error) {
+      console.log(error);
+      return;
+    }
+  };
+
+  const obtenerNombreEmpleados = async () => {
+    try {
+         const response = await axios.get(apiUrl + '/nombres-empleados');
+             console.log(response);
+         if(response.status == 200){
+             return response;
+         }else{
+             return;
+         }
+         
+     } catch (error) {
+         console.log(error);
+         return;
+     }
+ };
+
+
+  
  
 export default {
     ingresarMuestra,
@@ -115,6 +150,8 @@ export default {
     obtenerDatosMuestra,
     obtenerFonos,
     completarMuestra,
-    rehacerMuestra
+    rehacerMuestra,
+    calcularDiasTranscurridos,
+    obtenerNombreEmpleados
 
 };

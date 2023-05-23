@@ -18,17 +18,13 @@
                 <b-form-input id="recepcionista-input" v-model="recepcionista"></b-form-input>
               </b-form-group>             
              
-              <b-form-group id="solicitante-group" class="my-form-group" label="Solicitante: " label-for="solicitante-input">
+              <b-form-group id="solicitante-group" class="my-form-group" label="Cliente: " label-for="solicitante-input">
                 <b-form-input id="solicitante-input" v-model="solicitante"></b-form-input>
               </b-form-group>
 
               <b-form-group id="TipoPago-group" class="my-form-group" label="Medio de pago: " label-for="TipoPago-input">
-                <div class="d-flex flex-column">
-                <div v-for="(opcion, index) in opciones" :key="index" class="mb-2">
-                <b-form-radio v-model="pago" :value="opcion.valor">{{ opcion.texto }}</b-form-radio>
-                </div>
-                </div>
-                </b-form-group>
+                <b-form-select v-model="pago" :options="opciones" value-field="valor" text-field="texto"></b-form-select>
+              </b-form-group>
 
             </div>
 
@@ -70,7 +66,7 @@
                 <b-form-input id="Matriz-input" v-model="matriz"></b-form-input>
               </b-form-group>
 
-              <b-modal v-model="showModal" title="Mi Modal">
+              <b-modal v-model="showModal" title="Parametro">
                  <b-form>
                <b-form-group id="Parametro-group" class="my-form-group" label="Parametro(s): " label-for="Parametro-input">
                <b-form-input id="Parametro-input" v-model="Parametro" ></b-form-input>
@@ -83,10 +79,19 @@
               </b-form-group>
                </b-form>
                 </b-modal>
+                
+              <b-button variant="primary" @click="showModal = true">Visualizar Parametro(s)</b-button>
+              <b-button variant="primary" @click="showAna = true">Asignar Analista(s)</b-button>
 
-              <b-button variant="primary" @click="showModal = true">Abrir Modal</b-button>
+               <b-modal v-model="showAna" title="Analista">
 
-             
+                 <b-form>
+               <b-form-group id="Analista-group" class="my-form-group" label="Analista: " label-for="Analista-input">
+               <b-form-input id="Analista-input" v-model="Analista" ></b-form-input>
+                </b-form-group>
+              
+               </b-form>
+                </b-modal>             
               <b-form-group id="NMuestras-group" class="my-form-group" label="N°Muestras: " label-for="NMuestras-input">
                 <b-form-input id="NMuestras-input" v-model="NMuestras" disabled></b-form-input>
               </b-form-group>
@@ -96,9 +101,9 @@
               </b-form-group>
 
               <b-form-group id="fechaE-group" label="Fecha de entrega:" class="my-form-group" label-for="fechaE-input">
-                <b-form-datepicker id="fechaE-input" v-model="fechaEntrega" disabled></b-form-datepicker>
+                <b-form-datepicker id="fechaE-input" v-model="fechaEntrega"></b-form-datepicker>
               </b-form-group>
-            </div>
+            </div>            
 
             <!-- Datos transportista/Empresa -->
 
@@ -107,11 +112,7 @@
                 
                 <b-form-group id="TransportistaRUT-group" class="my-form-group" label="RUT Transportista: " label-for="transportistaRUT-input">
                 <b-form-input id="transportistaRUT-input" v-model="transportistaRut" disabled></b-form-input>
-              </b-form-group>
-
-              <b-form-group id="empresa-group" class="my-form-group" label="Empresa: " label-for="empresa-input">
-                <b-form-input id="empresa-input" v-model="empresa"></b-form-input>
-              </b-form-group>    
+              </b-form-group>                 
               
               <b-form-group id="direccion-group" class="my-form-group" label="Dirección Empresa: " label-for="direccion-input">
                 <b-form-input id="direccion-input" v-model="direccion"></b-form-input>
@@ -131,18 +132,16 @@
 
               <b-form-group id="Patente-group" class="my-form-group" label="Patente: " label-for="Patente-input">
                 <b-form-input id="Patente-input" v-model="patente" required></b-form-input>
-              </b-form-group> 
-          </div>
+              </b-form-group>    
+              
+              <b-button variant="primary">Enviar Muestra a laboratorio</b-button>
+          </div>         
+
         </div>
-        </b-form>
-            
-          </div>
-            <b-form-group id="observaciones-group" class="my-form-group-wide" label="Observaciones: " label-for="observaciones-input">
-                <b-form-textarea id="observaciones-input" v-model="observaciones"></b-form-textarea>
-            </b-form-group>
-        
-          </div>
-    
+
+        </b-form>            
+          </div>       
+          </div>     
   </template>
 
 <script>
@@ -163,8 +162,8 @@ export default {
       cotizacion:'',
       muestreado:'',
       opcionesMuestreado: [
-      { value: 'UCN', text: 'UCN' },
-      { value: 'LSA', text: 'LSA' }],
+      { value: 'UCN', text: 'UCN-LSA' },
+      { value: 'Cliente', text: 'Cliente' }],
       NMuestras:'',
       matriz:'',
       prioridad:'',
@@ -190,6 +189,7 @@ export default {
       fechaRecepcion: '',
       HrsRecepcion: '',
       showModal: false,
+      showAna: false
     }
   },
 
@@ -202,6 +202,8 @@ export default {
   this.fecha = `${dia}/${mes}/${anio}`;
   this.Hrs = now.toLocaleTimeString();
 },
+
+
 
   RellenarForm(response) {
 
@@ -238,8 +240,10 @@ export default {
         console.error(error);
       });
     
-    
 
   }
+
+
+
 }
 </script>

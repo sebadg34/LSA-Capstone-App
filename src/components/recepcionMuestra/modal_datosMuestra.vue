@@ -1,5 +1,4 @@
-<template>
-    
+<template>    
     <validation-observer ref="form">    
     <b-modal id="modal-recepcionMuestra" ref="modal" title="Agregar datos de Muestra" size="lg">
 
@@ -28,7 +27,7 @@
                 <label for="input-live">Fecha de Ingreso:</label>
                 <ValidationProvider name="fechaI" rules="required" v-slot="validationContext">
                     <b-input-group class="mb-1">                        
-                        <b-form-input id="input-live" v-model="fecha" aria-describedby="input-live-help fechaI-live-feedback" :state="getValidationState(validationContext)" placeholder=""></b-form-input>
+                        <b-form-input id="input-live" readonly v-model="fecha" aria-describedby="input-live-help fechaI-live-feedback" :state="getValidationState(validationContext)" placeholder=""></b-form-input>
                         <b-form-invalid-feedback id="fechaI-live-feedback">{{
                         validationContext.errors[0] }}
                         </b-form-invalid-feedback>
@@ -38,7 +37,7 @@
 
                 <ValidationProvider name="horaI" rules="required" v-slot="validationContext">
                     <label for="input-live">Hora de Ingreso:</label>
-                    <b-form-input class="mb-1" id="input-live" :state="getValidationState(validationContext)" v-model="hora" aria-describedby="input-live-help horaI-live-feedback" placeholder="" trim></b-form-input>
+                    <b-form-input class="mb-1" id="input-live" readonly :state="getValidationState(validationContext)" v-model="hora" aria-describedby="input-live-help horaI-live-feedback" placeholder="" trim></b-form-input>
                     <b-form-invalid-feedback id="horaI-live-feedback">{{
                         validationContext.errors[0] }}
                     </b-form-invalid-feedback>
@@ -85,6 +84,7 @@
 
               <template #modal-footer>
                 <b-button @click="GuardarFormulario()" variant="primary" size="xl" class="float-right reactive-button" style="font-weight:bold">Guardar</b-button>
+                
               </template>
             </b-modal>
           </validation-observer>
@@ -92,8 +92,10 @@
 </template>
 
 <script>
-
 export default {
+
+
+    
     data(){
         return{
             nMuestras:'',
@@ -101,19 +103,20 @@ export default {
             hora: '',
             muestreado: '',
             opcionesMuestreado: [
-            { value: 'UCN', text: 'UCN' },
-            { value: 'LSA', text: 'LSA' }],
-            prioridad: null,
+            { value: 'UCN-LSA', text: 'UCN-LSA' },
+            { value: 'Cliente', text: 'Cliente' }],
+            prioridad: '',
             opcionesPrioridad: [
             { value: 'Normal', text: 'Normal'},
             { value: 'Alta', text: 'Alta'}, 
             { value: 'Urgente', text: 'Urgente'}],
-            TipoMatriz: null,
+            TipoMatriz: '',
             opcionesMatriz: [
             { value: 'Agua', text: 'Agua'},
             { value: 'Tierra', text: 'Tierra'}, 
             { value: 'Mineral', text: 'Mineral'}], 
-            observaciones: ''           
+            observaciones: ''  ,
+                 
         }
     },
     
@@ -125,7 +128,18 @@ export default {
             valid = null
         }) {
             return dirty || validated ? valid : null;
-        },
+        },    
+
+        resetearCampos() {
+    // Restablecer los valores de los campos a un estado en blanco
+    this.nMuestras = null;
+    this.fecha = '';
+    this.hora = '';
+    this.muestreado = '';
+    this.prioridad = null;
+    this.TipoMatriz = null;
+    this.observaciones = '';
+ },
     GuardarFormulario() {
       const datosIngresados = {
         nMuestras: this.nMuestras,

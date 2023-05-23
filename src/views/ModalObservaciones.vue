@@ -8,6 +8,18 @@
       <div class="text-center">
         {{ this.observaciones }}
       </div>
+
+      <div>
+
+        <ValidationProvider name="observaciones" rules="required" v-slot="validationContext">
+                    <label for="input-live">Observaciones:</label>
+                    <b-form-textarea id="input-live" v-model="observaciones" aria-describedby="input-live-help observaciones-live-feedback" :state="getValidationState(validationContext)"></b-form-textarea>
+                    <b-form-invalid-feedback id="observaciones-live-feedback">{{
+                        validationContext.errors[0] }}
+                    </b-form-invalid-feedback>
+                </ValidationProvider> 
+
+      </div>
     </div>
   </b-modal>
 </template>
@@ -30,10 +42,13 @@ export default {
     }
   },  
   methods: {
-    /*async MostrarObservaciones(row){
-      MuestraService.obtenerObservaciones(row);
-      console.log(this.observacionesData)
-    },*/
+    getValidationState({
+            dirty,
+            validated,
+            valid = null
+        }) {
+            return dirty || validated ? valid : null;
+        },
     onHidden() {
       this.showObservaciones = false;
       this.$emit('modal-cerrado');
