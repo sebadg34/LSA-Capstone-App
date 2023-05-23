@@ -43,7 +43,7 @@
 
                                     <br>
                                     
-                                    <b-button id="button-interactive"  type="submit" block style="font-weight: bold; font-size: 1.2rem;  background-color: var(--lsa-orange) !important; " pill>
+                                    <b-button @click="enviarFormulario" id="button-interactive"  type="submit" block style="font-weight: bold; font-size: 1.2rem;  background-color: var(--lsa-orange) !important; " pill>
                                         <b-spinner v-if="loading" small variant="primary" label="Spinning">
                                         </b-spinner> Iniciar Sesión <b-icon icon="box-arrow-in-right" aria-hidden="true"></b-icon>
                                     </b-button>
@@ -58,7 +58,18 @@
   </template>
   
   <script>
+  import userService from "@/helpers/api-services/User.service"
   export default {
+    methods:{
+      enviarFormulario() {
+        var data = {
+          test:"test"
+        }
+        userService.login(data).then((response) => {
+          console.log(response)
+        });
+      } 
+    },
     data() {
       return {
         loading: false

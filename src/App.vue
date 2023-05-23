@@ -20,34 +20,7 @@
 
 </b-navbar>
 <b-navbar style="height:50px;background-color: var(--lsa-blue)">
-
-
-
-<b-button class="lsa-light-gray btn-margin reactive-button">
- <b-icon class="lsa-orange-text" icon="eyedropper"></b-icon>
-  <span class="lsa-gray-text"> 
-    Muestras
-  </span>
-  
-</b-button>
-<b-button class="lsa-light-gray btn-margin reactive-button">
-  <b-icon class="lsa-orange-text"  icon="people-fill"></b-icon>
- 
- <span class="lsa-gray-text">   Personal </span>
-  
-</b-button>
-<b-button class="lsa-light-gray btn-margin reactive-button">
-  <b-icon class="lsa-orange-text"  icon="building"></b-icon>
- 
- <span class="lsa-gray-text">   Empresa </span>
-  
-</b-button>
-<b-button class="lsa-light-gray btn-margin reactive-button">
-  <b-icon class="lsa-orange-text"  icon="briefcase-fill"></b-icon>
- 
- <span class="lsa-gray-text">   Solicitante </span>
-  
-</b-button>
+<MenuBar/>
 </b-navbar>
 <!--
     <b-navbar toggleable="lg" style="background-color: pink" class="my-custom-nav">
@@ -88,7 +61,16 @@
 </b-navbar>
   </div>
 </template>
+<script>
+import MenuBar from '@/components/MenuBar.vue';
+export default {
+    
+    components: {
+      MenuBar
+    },
+  }
 
+    </script>
 <style>
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
