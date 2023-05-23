@@ -1,5 +1,5 @@
 <template>
-<b-modal centered id="modal-editar-fechas" ref="modal" title="Agregar Personal" size="lg">
+<b-modal centered id="modal-editar-fechas" ref="modal" title="Modificar fechas" size="lg">
     <validation-observer ref="form">
         <template #modal-header="{ close }">
             <!-- Emulate built in modal header close button action -->

@@ -1,5 +1,5 @@
 <template>
-<b-modal centered id="modal-editar-dias-disponibles" ref="modal" title="Agregar Personal" size="lg">
+<b-modal centered id="modal-editar-dias-disponibles" ref="modal" title="Modificar días disponibles" size="lg">
     <validation-observer ref="form">
         <template #modal-header="{ close }">
             <!-- Emulate built in modal header close button action -->
