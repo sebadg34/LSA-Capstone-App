@@ -1,8 +1,6 @@
 <template> 
 <validation-observer ref="form">  
-   <div>
-    
-
+    <div> 
       <!--Empieza el Formulario de recepción-->
         <div class="formulario">
           <b-form name="formulario">
@@ -12,7 +10,7 @@
             <div class="col-md-4">            
               <h1>RECEPCION</h1> 
               <div style="display: flex; justify-content: center; align-items: center; height: 25vh;"> 
-              <modal_datosRecepcion @datosIngresados="capturarDatos" />            
+              <modal_datosRecepcion ref="modalRecepcion" @datosIngresados="capturarDatos" />            
             <b-button v-b-modal.modal-recepcion style="border-radius: 15px; font-weight: bold; font-size: 18px; " class="lsa-light-blue reactive-button">
                 Agregar Datos de recepcion
             <b-icon icon="clipboard"></b-icon>
@@ -23,7 +21,7 @@
             <div class="col-md-4">
               <h1> MUESTRA </h1>
               <div style="display: flex; justify-content: center; align-items: center; height: 25vh;"> 
-              <modal_datosMuestra @datosIngresados="capturardatosMuestra" />
+              <modal_datosMuestra ref="modalMuestra" @datosIngresados="capturardatosMuestra" />
               <b-button v-b-modal.modal-recepcionMuestra style="border-radius: 15px; font-weight: bold; font-size: 18px; " class="lsa-light-blue reactive-button">
                 Agregar Datos de la Muestra
               <b-icon icon="clipboard"></b-icon>
@@ -34,7 +32,7 @@
               <div class="col-md-4">
               <h1> TRANSPORTISTA</h1>
               <div style="display: flex; justify-content: center; align-items: center; height: 25vh;"> 
-              <Modal_datosTransportista @datosIngresados="capturardatosTransportista" />
+              <Modal_datosTransportista ref="modalTransportista" @datosIngresados="capturardatosTransportista" />
               <b-button v-b-modal.modal-recepcionTransportista style="border-radius: 15px; font-weight: bold; font-size: 18px; " class="lsa-light-blue reactive-button">
                 Agregar Datos del Transportista
               <b-icon icon="clipboard"></b-icon>
@@ -55,6 +53,7 @@
 
 <script>
 import MuestraService from '@/helpers/api-services/Muestra.Service';
+
 import modal_datosRecepcion from '@/components/recepcionMuestra/modal_datosRecepcion.vue';
 import modal_datosMuestra from '@/components/recepcionMuestra/modal_datosMuestra.vue';
 import Modal_datosTransportista from '@/components/recepcionMuestra/modal_datosTransportista.vue';
@@ -73,8 +72,8 @@ export default{
       direccion: '',
       muestreado:'',
       opcionesMuestreado: [
-      { value: 'UCN', text: 'UCN' },
-      { value: 'LSA', text: 'LSA' }],
+      { value: 'UCN-LSA', text: 'UCN-LSA' },
+      { value: 'Cliente', text: 'Cliente' }],
       prioridad: null,
       opcionesPrioridad: [
       { value: 'Normal', text: 'Normal'},
@@ -96,7 +95,8 @@ export default{
       fecha: "",
       hora: "",
       patente: "",
-      estado: null
+      estado: null,
+      
     };
   }, 
   methods: {    
@@ -109,7 +109,7 @@ export default{
   this.hora = now.toLocaleTimeString();
 },
 capturarDatos(datos) {
-      // Aquí recibes los datos del componente hijo 
+      
       this.recepcionistaRUT = datos.recepcionistaRUT;
       this.recepcionista = datos.recepcionista;
       this.rut = datos.rut;
@@ -139,8 +139,7 @@ capturardatosTransportista(dat){
                 if (!success) {
                     return;
                 } else { 
-
-                    this.generarFechaHoraActual();
+                    
                     var data = {
                       recepcionista: this.recepcionista,
                       nombre_empresa: this.solicitante,
@@ -149,9 +148,7 @@ capturardatosTransportista(dat){
                       muestreado_por: this.muestreado,
                       matriz: this.TipoMatriz,
                       cantidad_muestras: this.nMuestras,
-                      prioridad: this.prioridad,
-                      fecha_muestreo: '',
-                      hora_muestreo: '',
+                      prioridad: this.prioridad,                      
                       temperatura_transporte: this.Temperatura,
                       fecha_entrega: this.fechaEntrega,
                       nombre_transportista: this.transportista,
@@ -164,6 +161,19 @@ capturardatosTransportista(dat){
                       fecha_ingreso: this.fecha,
                       hora_ingreso: this.hora
                     }
+
+                      for (var key in data) {
+                        if (data[key] === '') {
+                          this.$bvToast.toast(`Error: El campo ${key} está vacío`, {
+                          title: 'Error',
+                          toaster: 'b-toaster-top-center',
+                          solid: true,
+                          variant: 'warning',
+                          appendToast: true
+                          });
+                            return; 
+                        }
+                      }
                     console.log("data a enviar", data)
                     MuestraService.ingresarMuestra(data).then((response) => {
                         console.log(response)
@@ -175,10 +185,30 @@ capturardatosTransportista(dat){
                                     solid: true,
                                     variant: "success",
                                     appendToast: true
-                                })
-                                
+                                })                                
                             }
-                            this.$bvModal.hide('modal-personal')
+
+                            this.recepcionista = '';
+                            this.recepcionistaRUT = '';
+                            this.solicitante = '';
+                            this.rut = '';
+                            this.direccion = '';
+                            this.muestreado = '';
+                            this.prioridad = null;
+                            this.TipoMatriz = null;
+                            this.nMuestras = null;
+                            this.Temperatura = '';
+                            this.fechaEntrega = '';
+                            this.transportista = '';
+                            this.patente = '';
+                            this.transportistaRut = '';
+                            this.fono = '';
+                            this.observaciones = '';
+
+                            this.$refs.modalRecepcion.resetearCampos();
+                            this.$refs.modalMuestra.resetearCampos();
+                            this.$refs.modalTransportista.resetearCampos();
+                            
                         } else {
                             this.$bvToast.toast(`Error al agregar muestra`, {
                                 title: 'Error',
