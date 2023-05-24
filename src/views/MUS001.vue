@@ -52,11 +52,13 @@
 </template>
 
 <script>
+
 import MuestraService from '@/helpers/api-services/Muestra.Service';
 
 import modal_datosRecepcion from '@/components/recepcionMuestra/modal_datosRecepcion.vue';
 import modal_datosMuestra from '@/components/recepcionMuestra/modal_datosMuestra.vue';
 import Modal_datosTransportista from '@/components/recepcionMuestra/modal_datosTransportista.vue';
+
 export default{ 
   components: {
     modal_datosRecepcion,
@@ -110,12 +112,12 @@ export default{
 },
 capturarDatos(datos) {
       
-      this.recepcionistaRUT = datos.recepcionistaRUT;
-      this.recepcionista = datos.recepcionista;
-      this.rut = datos.rut;
-      this.solicitante = datos.solicitante;
-      this.direccion = datos.direccion;
-    },
+  this.recepcionistaRUT = datos.recepcionistaRUT;
+  this.recepcionista = datos.recepcionista;
+  this.rut = datos.rut;
+  this.solicitante = datos.solicitante;
+  this.direccion = datos.direccion;
+  },
 capturardatosMuestra(dato){
       this.nMuestras = dato.nMuestras;
       this.fecha = dato.fecha;
@@ -124,7 +126,7 @@ capturardatosMuestra(dato){
       this.prioridad = dato.prioridad;
       this.TipoMatriz= dato.TipoMatriz;
       this.observaciones = dato.observaciones;
-},
+  },
 capturardatosTransportista(dat){
   this.transportista = dat.transportista;
   this.transportistaRut = dat.transportistaRut;
@@ -132,8 +134,9 @@ capturardatosTransportista(dat){
   this.patente = dat.patente;
   this.Temperatura = dat.Temperatura;
   this.fechaEntrega = dat.fechaEntrega;
-},    
-    enviarFormulario() {
+  },    
+
+enviarFormulario() {
             
             this.$refs.form.validate().then(success => {
                 if (!success) {
@@ -154,7 +157,7 @@ capturardatosTransportista(dat){
                       nombre_transportista: this.transportista,
                       patente_vehiculo: this.patente,
                       rut_transportista: this.transportistaRut,
-                      rut: this.rut,       
+                      rut_empleado: this.rut,       
                       telefono_transportista: this.fono,       
                       estado: 'Recepcionado',
                       observaciones: this.observaciones,

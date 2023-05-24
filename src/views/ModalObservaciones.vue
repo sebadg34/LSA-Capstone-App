@@ -17,7 +17,7 @@
                     <b-form-invalid-feedback id="observaciones-live-feedback">{{
                         validationContext.errors[0] }}
                     </b-form-invalid-feedback>
-                </ValidationProvider> 
+        </ValidationProvider> 
 
       </div>
     </div>

@@ -5,8 +5,7 @@ const apiUrl = config.BASE_URL_SIS_API;
 
 const ingresarMuestra = async (data) => {
     try {  
-        const response = await axios.post(apiUrl + "/muestras", data,
-            );
+        const response = await axios.post(apiUrl + "/muestras", data,);
         console.log(response);
         return response;
     } catch (error) {
@@ -62,9 +61,9 @@ const obtenerObservaciones = async (RUM) => {
      }
  };
 
- const obtenerFonos = async (RUM) => {
+ const obtenerTelefono = async (RUM) => {
     try {
-         const response = await axios.get(apiUrl + "/muestras/" + RUM);
+         const response = await axios.get(apiUrl + "/muestras/" + RUM + "/telefonos");
          console.log(response);
          if(response.status == 200){
              return response;
@@ -77,6 +76,22 @@ const obtenerObservaciones = async (RUM) => {
          return;
      }
  };
+
+ const actualizarMuestra = async (data) => {
+    try {
+        const response = await axios.put(apiUrl + "/muestras/" + data.RUM + "/update", data);
+        console.log(response);
+        if (response.status == 200) {
+            return response;
+        } else {
+            return;
+        }
+    } catch (error) {
+        console.log(error);
+        return;
+    }
+};
+
 
  const completarMuestra = async (RUM) => {
     try {
@@ -148,10 +163,12 @@ export default {
     obtenerMuestras,
     obtenerObservaciones,
     obtenerDatosMuestra,
-    obtenerFonos,
+    obtenerTelefono,
     completarMuestra,
     rehacerMuestra,
     calcularDiasTranscurridos,
-    obtenerNombreEmpleados
+    obtenerNombreEmpleados,
+    actualizarMuestra
+
 
 };
