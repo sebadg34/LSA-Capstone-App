@@ -101,6 +101,7 @@ export default {
     this.solicitante = '';
     this.direccion = '';
   },
+  
     guardarFormulario() {
       this.$refs.form.validate().then(success => {
         if (success) {
@@ -116,7 +117,7 @@ export default {
         }
       });
     }
-    
+
   },
 
 }
