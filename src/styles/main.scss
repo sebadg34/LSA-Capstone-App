@@ -34,6 +34,9 @@
   .lsa-orange{
     background-color: var(--lsa-orange) !important;
   }
+  .lsa-light-orange{
+    background-color: var(--lsa-light-orange) !important;
+  }
   .lsa-orange-text{
     color: var(--lsa-orange) !important;
   }
@@ -96,7 +99,9 @@
     margin-left: 10px;
     margin-right: 10px;
   }
-
+  .cursorToHand {
+    cursor: pointer;
+  }
   .my-form-group-wide > div {
     width: 100%;
     align-items: center;
@@ -110,8 +115,22 @@
     margin-right: 10px;
     margin-top: 25px;
   }
-  
-  
+  .menuButton {
+    background-color: white;
+}
+  .menuButton:hover {
+    transition-duration: 0.1s;
+    background-color: var(--ucn-light-gray);
+}
+
+.menuButton:active {
+    transition-duration: 0.1s;
+    scale: 1.05;
+    background-color: var(--ucn-light-gray);
+    color: black;
+    border: solid 1px gray;
+    z-index:25;
+}
   .buttons {
     margin-right: 10px;
   }

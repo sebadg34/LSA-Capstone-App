@@ -1,11 +1,15 @@
-import axios from "axios";
-import config from '@/../public/config.json'
 
-const apiUrl = config.BASE_URL_SIS_API;
+//import config from '@/../public/config.json'
+import {
+    crearApi
+} from "../api-services/InstanciadorAxios";
+
+
 
 const ingresarPersonal = async (data) => {
     try {  
-        const response = await axios.post(apiUrl + "/empleados/agregarEmpleado", data,{
+        const instanciaApi = await crearApi();
+        const response = await instanciaApi.post("/empleados/agregarEmpleado", data,{
             headers: {
                 'Content-Type': 'multipart/form-data'
             }
@@ -21,7 +25,8 @@ const ingresarPersonal = async (data) => {
 };
 const descargarDocumento = async (data) => {
     try {  
-        const response = await axios.post(apiUrl + "/empleados/descargarDocumento", data,{
+        const instanciaApi = await crearApi();
+        const response = await instanciaApi.post("/empleados/descargarDocumento", data,{
             responseType: 'blob',
         }
             );
@@ -34,7 +39,8 @@ const descargarDocumento = async (data) => {
 };
 const eliminarDocumento = async (data) => {
     try {  
-        const response = await axios.delete(apiUrl + "/empleados/eliminarDocumentoEmpleado", {data: data}
+        const instanciaApi = await crearApi();
+        const response = await instanciaApi.delete("/empleados/eliminarDocumentoEmpleado", {data: data}
             );
         console.log(response);
         return response;
@@ -45,7 +51,12 @@ const eliminarDocumento = async (data) => {
 };
 const obtenerTodosPersonal = async () => {
     try {
-        const response = await axios.get(apiUrl + "/empleados");
+        const instanciaApi = await crearApi();
+        const response = await instanciaApi.get("/empleados", {
+            headers: {
+                Authorization: 'Bearer ' + localStorage.getItem('token') //the token is a variable which holds the token
+              }
+        });
             console.log(response);
         if(response.status == 200){
             return response;
@@ -61,7 +72,8 @@ const obtenerTodosPersonal = async () => {
 
 const obtenerDetallesPersonal = async (data) => {
     try {
-        const response = await axios.get(apiUrl + "/empleados/detallesEmpleado/" + data);
+        const instanciaApi = await crearApi();
+        const response = await instanciaApi.get("/empleados/detallesEmpleado/" + data);
             console.log(response);
         if(response.status == 200){
             return response;
@@ -78,7 +90,8 @@ const obtenerDetallesPersonal = async (data) => {
 
 const cambiarEstadoPersonal = async (data) => {
     try {
-        const response = await axios.post(apiUrl + "/empleados/cambiarEstado", data);
+        const instanciaApi = await crearApi();
+        const response = await instanciaApi.post("/empleados/cambiarEstado", data);
             console.log(response);
         return response;
         
@@ -90,7 +103,8 @@ const cambiarEstadoPersonal = async (data) => {
 
 const editarPersonal = async (data) => {
     try {
-        const response = await axios.post(apiUrl + "/empleados/editarEmpleado", data, {
+        const instanciaApi = await crearApi();
+        const response = await instanciaApi.post("/empleados/editarEmpleado", data, {
             headers: {
                 'Content-Type': 'multipart/form-data'
             }
