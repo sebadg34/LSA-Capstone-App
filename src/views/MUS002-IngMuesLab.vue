@@ -224,7 +224,7 @@ export default {
   },
 
   methods: {
-    generarFechaHoraActual() {
+generarFechaHoraActual() {
   const now = new Date();
   const dia = now.getDate().toString().padStart(2, '0');
   const mes = (now.getMonth() + 1).toString().padStart(2, '0');
@@ -235,7 +235,7 @@ export default {
 
 
 
-  RellenarForm(response) {
+RellenarForm(response) {
 
     this.direccion = response.direccion_empresa
     this.transportistaRut = response.rut_transportista
@@ -290,7 +290,7 @@ export default {
                     console.log("DATOS A ENVIAR:", data)
                     console.log("RUM A ENVIAR:" + this.RUM)
 
-                    MuestraService.actualizarMuestra(this.RUM, data).then((response) => {
+                    MuestraService.actualizarMuestra(data).then((response) => {
                       console.log("data enviada", response.data)  
                       console.log(response)
                         
@@ -319,13 +319,6 @@ export default {
 
 
   },
-
-
-
-
-
-
-
 
 },
   created(){

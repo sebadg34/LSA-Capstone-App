@@ -5,16 +5,27 @@
   
   
 
-  <!-- Fin Filtrador-->    
+  <!-- Fin Filtrador-->   
+  
+  <b-row style="padding-top:30px; ">
+        <b-col class="col-6">
+            <div style="font-size:2rem; font-weight: bold; color: var(--lsa-blue)">
+                Administración de Muestras
+            </div>
+        </b-col>
+    </b-row>
 
-  <h1>Muestras asignadas al: Supervisor/Jefe laboratorio</h1>  
+   
 
   <ModalObservaciones :muestra-data="this.modalData" @modal-cerrado="onModalCerrado"></ModalObservaciones>
   <ModalDetalleMuestra :detalles-data="this.detallesData"/> 
   <modal_analistaDesignado/>
   <modal_rehacerAnalisis/>
   <!-- Inicio tabla -->  
-  <b-table fixed :items="items" :fields="fields">   
+
+  <div class="row justify-content-center">
+        <div class="col-10"> 
+  <b-table fixed :items="items" :fields="fields" :per-page="perPage" :current-page="currentPage">   
     
     <template #cell(prioridad)="row">
 
@@ -25,62 +36,61 @@
 
   <template #cell(Acción)="row">   
     
-    <b-dropdown variant="primary" size="sm" menu-class="custom-dropdown-menu" right :text="'Ver opciones'">
+    <b-dropdown right size="sm" variant="link" toggle-class="text-decoration-none" no-caret>
+      <template #button-content>
+
+          <b-icon style="height: 80%; width: 80%; align-items: center;" icon="three-dots" variant="dark" aria-hidden="true"></b-icon>
+
+      </template>
       <b-dropdown-item v-for="opcion in generarOpcionesEstado(row.item.estado)" :key="opcion.value">
         
-        <b-dropdown-item v-if="opcion.text === 'Detalle muestra'" :key="opcion.value">          
-            
-            <b-button @click="DetalleMuestra(row)">Detalle de Muestra</b-button>
-           
+        <b-dropdown-item @click="DetalleMuestra(row)" v-if="opcion.text === 'Detalle muestra'" :key="opcion.value">            
+          <b-icon icon="file-earmark-medical" aria-hidden="true" class="mr-2"></b-icon>Ver Detalles          
         </b-dropdown-item>
 
-        <b-dropdown-item v-if="opcion.text === 'Observaciones'" :key="opcion.value">
-          <b-button @click="MostrarObservaciones(row)">Observaciones de la muestra</b-button>         
+        <b-dropdown-item @click="MostrarObservaciones(row)" v-if="opcion.text === 'Observaciones'" :key="opcion.value">
+          <b-icon icon="menu-down" aria-hidden="true" class="mr-2"></b-icon>Observaciones     
         </b-dropdown-item>
 
-        <b-dropdown-item v-if="opcion.text === 'Ingresar muestra a lab.'" :key="opcion.value">
-          <b-button @click="IngresarMuestraLab(row)">Ingresar muestra al Laboratorio</b-button>
+        <b-dropdown-item @click="IngresarMuestraLab(row)" v-if="opcion.text === 'Ingresar muestra a lab.'" :key="opcion.value">          
+          <b-icon icon="capslock-fill" aria-hidden="true" class="mr-2"></b-icon>Ingresar Muestra a Laboratorio
         </b-dropdown-item>
 
-        <b-dropdown-item v-if="opcion.text === 'Analista Designado'" :key="opcion.value">
-          <b-button @click="Analista(row)">
-            Analista Designado
-          </b-button>
+        <b-dropdown-item @click="Analista(row)" v-if="opcion.text === 'Analista Designado'" :key="opcion.value">
+          <b-icon icon="file-earmark-person-fill" aria-hidden="true" class="mr-2"></b-icon>Analista Designado
         </b-dropdown-item>
 
-        <b-dropdown-item v-if="opcion.text === 'Descargar Informe'" :key="opcion.value">
-          <b-button variant="link" @click="Descargar(row)">
-            Descargar Informe
-          </b-button>
+        <b-dropdown-item @click="Descargar(row)" v-if="opcion.text === 'Descargar Informe'" :key="opcion.value">
+          <b-icon icon="file-earmark-pdf-fill" aria-hidden="true" class="mr-2"></b-icon>Descargar Informe
         </b-dropdown-item>       
 
-        <b-dropdown-item v-if="opcion.text === 'Ingresar resultados de análisis'" :key="opcion.value">
-          <b-button variant="link" @click="Ingresar(row)">
-            Ingresar resultados de análisis
-          </b-button>
+        <b-dropdown-item @click="Ingresar(row)" v-if="opcion.text === 'Ingresar resultados de análisis'" :key="opcion.value">
+          <b-icon icon="file-earmark-font" aria-hidden="true" class="mr-2"></b-icon>Ingresar Resultados de Análisis           
         </b-dropdown-item>
 
-        <b-dropdown-item v-if="opcion.text === 'Administrar cartas de control'" :key="opcion.value">
-          <b-button variant="link" @click="AdministrarCartas(row)">
-            Administrar Cartas de control
-          </b-button>
+        <b-dropdown-item @click="AdministrarCartas(row)" v-if="opcion.text === 'Administrar cartas de control'" :key="opcion.value">
+          <b-icon icon="markdown" aria-hidden="true" class="mr-2"></b-icon> Administrar Cartas de Control          
         </b-dropdown-item>
 
-        <b-dropdown-item v-if="opcion.text === 'Rehacer Análisis'" :key="opcion.value">
-          <b-button @click="RehacerAnalisis(row)">
-            Rehacer Análisis
-          </b-button>
+        <b-dropdown-item @click="RehacerAnalisis(row)" v-if="opcion.text === 'Rehacer Análisis'" :key="opcion.value">
+          <b-icon icon="journal-minus" aria-hidden="true" class="mr-2"></b-icon> Rehacer Análisis           
         </b-dropdown-item>        
 
-        <b-dropdown-item v-if="opcion.text === 'Marcar Analisis como completado'" :key="opcion.value">
-          <b-button @click="MarcarAnalisis(row)">
-            Marcar analisis como completado
-          </b-button>
-        </b-dropdown-item>       
+        <b-dropdown-item @click="MarcarAnalisis(row)" v-if="opcion.text === 'Marcar Analisis como completado'" :key="opcion.value">
+          <b-icon icon="clipboard-check" aria-hidden="true" class="mr-2"></b-icon> Marcar Análisis como Completado         
+        </b-dropdown-item>  
+
       </b-dropdown-item>
     </b-dropdown>
   </template>
-</b-table>    
+</b-table>   
+<b-pagination v-model="currentPage" :total-rows="rows" :per-page="perPage" align="right"></b-pagination>
+
+</div>
+</div>
+
+
+
   </div>
 </template>
 
@@ -100,7 +110,9 @@ export default {
       RUM: '',     
       obtenerObservaciones: this.obtenerObservaciones,
       modalData: {},     
-      observaciones: '',     
+      observaciones: '',
+      currentPage: 1,
+      perPage: 10,     
       items: [],      
       opcionesEstado: [
       
@@ -128,6 +140,11 @@ export default {
       detallesData: {}         
      }
   },
+  computed: {
+      rows() {
+        return this.items.length
+      }
+    },
 
   components: {
     ModalObservaciones,

@@ -12,6 +12,11 @@ import MUS007 from '../views/MUS007-vistaAdmFinanza.vue'
 import USU002_admEmpresa from '../views/USU002_admEmpresa'
 import USU003_admSolicitante from '../views/USU003_admSolicitante'
 import USU005_admDisponibilidad from '../views/USU005_admDisponibilidad'
+import ANA001 from '../views/ANA001-RelacionDatos'
+import ANA002 from '../views/ANA002-AdmMatriz'
+import ANA003 from '../views/ANA003-AdmParam'
+import ANA004 from '../views/ANA004-AdmMetodologia'
+import ANA005 from '../views/ANA005-AdmNorma'
 
 
 Vue.use(VueRouter)
@@ -19,7 +24,7 @@ Vue.use(VueRouter)
 const routes = [
   {
     path: '/',
-    name: 'home',
+    name: 'home', 
     component: HomeView
   },
   {
@@ -86,6 +91,44 @@ const routes = [
     path: '/AdmFin',
     name: 'AdmFinanzas',
     component: MUS007
+
+  },
+  {
+
+    path: '/AdmElementos',
+    name: 'AdmElementos',
+    component: ANA001
+
+  },
+  {
+
+    path: '/AdmMatriz',
+    name: 'AdmMatriz',
+    component: ANA002
+
+  },
+
+  {
+
+    path: '/AdmParam',
+    name: 'AdmParam',
+    component: ANA003
+
+  },
+
+  {
+
+    path: '/AdmMetodologia',
+    name: 'AdmMetodologia',
+    component: ANA004
+
+  },
+
+  {
+
+    path: '/AdmNorma',
+    name: 'AdmNorma',
+    component: ANA005
 
   },
 
