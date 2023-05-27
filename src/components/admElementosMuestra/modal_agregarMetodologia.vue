@@ -75,20 +75,22 @@ export default {
 
   mounted() {
     PersonalService.obtenerTodosPersonal()
-      .then((response) => {
-        console.log(response.data);
-        if (response.data != null) {
-          this.analistas = response.data;
-          this.rutEmpleados = this.analistas.map((analista) => analista.rut_empleado);
-          this.opcionesAnalista = this.analistas.filter((analista) => analista.rol === 'Analista Químico').map((analista) => ({
-              value: analista.nombre,
-              text: analista.nombre,
-          }));
-        }
-      })
-      .catch((error) => {
-        console.error('Error al obtener los analistas:', error);
-      });
+  .then((response) => {
+    console.log(response.data);
+    if (response.data != null) {
+      this.analistas = response.data;
+      this.rutEmpleados = this.analistas.map((analista) => analista.rut_empleado);
+
+      this.opcionesAnalista = this.analistas.filter((analista) => {
+        return analista.rol === 'Analista Químico' || analista.rol === 'Químico';}).map((analista) => ({
+        value: analista.nombre,
+        text: analista.nombre,
+      }));
+    }
+  })
+  .catch((error) => {
+    console.error('Error al obtener los analistas:', error);
+  });
   },
 
   methods: {
