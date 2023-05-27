@@ -189,7 +189,8 @@ export default {
                         'correo' : this.Correo,
                         'razon_social': this.Razon_social,
                         'giro': this.Giro,
-                        'direcciones': this.dataDirecciones
+                        'direcciones': this.dataDirecciones,
+                        'estado': true
                     }
                     
                     console.log("data a enviar", data)
