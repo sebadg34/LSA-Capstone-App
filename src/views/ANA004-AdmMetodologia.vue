@@ -86,7 +86,7 @@ export default {
     
   ];
 
-    this.obtenerMetodologias();  //Descomentar cuando se haya implementado la API y se quieran obtener datos de la BD.
+      // this.obtenerMetodologias();  //Descomentar cuando se haya implementado la API y se quieran obtener datos de la BD.
 
   
 },

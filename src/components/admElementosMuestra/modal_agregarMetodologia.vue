@@ -12,6 +12,10 @@
     <b-form-group label="Nombre de la Metodología">
       <b-form-input v-model="Nombre"></b-form-input>
     </b-form-group>
+
+    <b-form-group label="Descripción">
+      <b-form-textarea v-model="Descripción"></b-form-textarea>
+    </b-form-group>
    
     <b-row>
       <b-col>
@@ -119,7 +123,8 @@ export default {
       var data = {
 
         nombre_metodologia: this.Nombre,
-        rut_empleado: this.rutEmpleadosSeleccionados
+        rut_empleado: this.rutEmpleadosSeleccionados,
+        detalle_metodologia: this.Descripción
 
 
       }
@@ -128,7 +133,7 @@ export default {
         console.log(response)
         if(response != null){
           if (response.status == 200) {
-            this.$bvToast.toast(`Creación de la muestra exitosa`, {
+            this.$bvToast.toast(`Creación de la metodología exitosa`, {
               title: 'Exito',
               toaster: 'b-toaster-top-center',
               solid: true,
@@ -137,7 +142,7 @@ export default {
             })                                
           }
         } else {
-          this.$bvToast.toast(`Error al agregar muestra`, {
+          this.$bvToast.toast(`Error al agregar la metodología.`, {
             title: 'Error',
             toaster: 'b-toaster-top-center',
             solid: true,
