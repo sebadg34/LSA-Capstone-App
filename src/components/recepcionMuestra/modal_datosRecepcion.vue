@@ -4,7 +4,7 @@
       <!-- Encabezado del modal -->
       <template #modal-header="{ close }">
         <b-row class="d-flex justify-content-around">
-          <div class="pl-3">Agregar datos de recepción</div>
+          <div class="pl-3">Agregar datos de Recepción</div>
         </b-row>
         <button type="button" class="close" aria-label="Close" @click="close()">
           <span aria-hidden="true" style="color:white">&times;</span>
@@ -14,6 +14,7 @@
       <!-- Contenido del modal -->
       <b-row class="pb-2">
         <b-col class="col-6">
+
           <label for="Rut Recepcionista-input">Rut:</label>
           <ValidationProvider name="Rut Recepcionista" rules="required|rut" v-slot="validationContext">
             <b-form-input id="Rut Recepcionista-input" readonly class="mb-1" v-model="recepcionistaRUT" :state="getValidationState(validationContext)"></b-form-input>
@@ -25,17 +26,20 @@
             <b-form-select v-model="recepcionista" :state="getValidationState(validationContext)" :options="opcionesRecepcionistas" placeholder="Seleccione un recepcionista" ></b-form-select>
             <b-form-invalid-feedback>{{ validationContext.errors[0] }}</b-form-invalid-feedback>
           </ValidationProvider>
+
         </b-col>
+
         <b-col class="col-6">
+
           <ValidationProvider name="rut" rules="required|rut" v-slot="validationContext">
             <label for="input-live">Rut Cliente:</label>
-            <b-form-input class="mb-1" id="input-live" v-model="rut" :state="getValidationState(validationContext)"></b-form-input>
+            <b-form-input class="mb-1" id="input-live" readonly v-model="rut" :state="getValidationState(validationContext)"></b-form-input>
             <b-form-invalid-feedback>{{ validationContext.errors[0] }}</b-form-invalid-feedback>
           </ValidationProvider>
 
           <ValidationProvider name="solicitante" rules="required" v-slot="validationContext">
             <label for="input-live">Cliente:</label>
-            <b-form-input class="mb-1" id="input-live" v-model="solicitante" :state="getValidationState(validationContext)"></b-form-input>
+            <b-form-select v-model="solicitante" :state="getValidationState(validationContext)" :options="opcionesClientes" placeholder="Seleccione un Cliente" ></b-form-select>
             <b-form-invalid-feedback>{{ validationContext.errors[0] }}</b-form-invalid-feedback>
           </ValidationProvider> 
           
@@ -44,6 +48,7 @@
             <b-form-input class="mb-1" id="input-live" v-model="direccion" :state="getValidationState(validationContext)"></b-form-input>
             <b-form-invalid-feedback>{{ validationContext.errors[0] }}</b-form-invalid-feedback>
           </ValidationProvider> 
+
         </b-col>
       </b-row> 
 
@@ -58,6 +63,9 @@
 <script>
 
 import MuestraService from '@/helpers/api-services/Muestra.Service';
+
+import EmpresaService from '@/helpers/api-services/Empresa.service';
+
 export default {
   data() {
     return {
@@ -66,7 +74,9 @@ export default {
       rut: '',
       solicitante: '',
       direccion: '',
-      opcionesRecepcionistas: []
+      opcionesRecepcionistas: [],
+      opcionesClientes: [],
+      empresas: []
     }
   },
   mounted() {
@@ -78,6 +88,15 @@ export default {
     }
   });
 
+  EmpresaService.obtenerTodasEmpresa().then((response) => {
+    console.log(response.data);
+    if (response != null) {
+      this.empresas = response.data;
+      this.opcionesClientes = this.empresas.map((empresa) => empresa.nombre_empresa);
+      console.log("Los clientes son: ", this.opcionesClientes);
+    }
+  });
+
 
   },
 
@@ -86,8 +105,22 @@ export default {
     console.log(newValue)    
     this.recepcionistaRUT = newValue;
     
+  },
+
+  solicitante(newValue) {
+    console.log(newValue);
+    const empresaSeleccionada = this.empresas.find((empresa) => empresa.nombre_empresa === newValue);
+    if (empresaSeleccionada) {
+      this.rut = empresaSeleccionada.rut_empresa;
+    }
   }
+  
+
+
+
 },
+
+
   methods: {
     
     getValidationState({ dirty, validated, valid = null }) {

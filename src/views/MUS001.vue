@@ -12,7 +12,7 @@
               <div style="display: flex; justify-content: center; align-items: center; height: 25vh;"> 
               <modal_datosRecepcion ref="modalRecepcion" @datosIngresados="capturarDatos" />            
             <b-button v-b-modal.modal-recepcion style="border-radius: 15px; font-weight: bold; font-size: 18px; " class="lsa-light-blue reactive-button">
-                Agregar Datos de recepcion
+                Agregar Datos de Recepción
             <b-icon icon="clipboard"></b-icon>
             </b-button>
           </div> 
@@ -54,7 +54,6 @@
 <script>
 
 import MuestraService from '@/helpers/api-services/Muestra.Service';
-
 import modal_datosRecepcion from '@/components/recepcionMuestra/modal_datosRecepcion.vue';
 import modal_datosMuestra from '@/components/recepcionMuestra/modal_datosMuestra.vue';
 import Modal_datosTransportista from '@/components/recepcionMuestra/modal_datosTransportista.vue';
@@ -102,14 +101,14 @@ export default{
     };
   }, 
   methods: {    
-    generarFechaHoraActual() {
+  generarFechaHoraActual() {
   const now = new Date();
   const dia = now.getDate().toString().padStart(2, '0');
   const mes = (now.getMonth() + 1).toString().padStart(2, '0');
   const anio = now.getFullYear().toString();
   this.fecha = `${dia}/${mes}/${anio}`;
   this.hora = now.toLocaleTimeString();
-},
+  },
 capturarDatos(datos) {
       
   this.recepcionistaRUT = datos.recepcionistaRUT;

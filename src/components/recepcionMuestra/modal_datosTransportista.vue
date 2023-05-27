@@ -115,6 +115,8 @@ export default {
      },
 
         GuardarFormulario() {
+            this.$refs.form.validate().then(success => {
+                if (success) {
         const datosIngresados = {
             transportista: this.transportista,
             transportistaRut: this.transportistaRut,
@@ -123,11 +125,20 @@ export default {
             Temperatura: this.Temperatura,
             fechaEntrega: this.fechaEntrega              
         }
+
+
+
       // Emitir el evento 'datosIngresados' junto con los datos
       this.$emit('datosIngresados', datosIngresados)
 
       // Cerrar el modal después de enviar los datos (si es necesario)
       this.$refs.modal.hide()
+    }
+});
+
+
+
+
     },
     }
 }

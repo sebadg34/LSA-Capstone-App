@@ -141,6 +141,8 @@ export default {
     this.observaciones = '';
  },
     GuardarFormulario() {
+        this.$refs.form.validate().then(success => {
+            if (success) {
       const datosIngresados = {
         nMuestras: this.nMuestras,
         fecha: this.fecha,
@@ -150,11 +152,30 @@ export default {
         TipoMatriz: this.TipoMatriz,  
         observaciones: this.observaciones     
       }
+
+
+
+
       // Emitir el evento 'datosIngresados' junto con los datos
       this.$emit('datosIngresados', datosIngresados)
       // Cerrar el modal después de enviar los datos (si es necesario)
       this.$refs.modal.hide()
+    }
+});
+
+
+
+
+
+
     },
+
+
+
+
+
+
+
     generarFechaHoraActual() {
   const now = new Date();
   const dia = now.getDate().toString().padStart(2, '0');

@@ -38,10 +38,9 @@
     
     <b-dropdown right size="sm" variant="link" toggle-class="text-decoration-none" no-caret>
       <template #button-content>
-
           <b-icon style="height: 80%; width: 80%; align-items: center;" icon="three-dots" variant="dark" aria-hidden="true"></b-icon>
-
       </template>
+      
       <b-dropdown-item v-for="opcion in generarOpcionesEstado(row.item.estado)" :key="opcion.value">
         
         <b-dropdown-item @click="DetalleMuestra(row)" v-if="opcion.text === 'Detalle muestra'" :key="opcion.value">            
