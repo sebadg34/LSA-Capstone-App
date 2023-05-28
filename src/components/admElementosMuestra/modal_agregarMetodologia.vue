@@ -124,8 +124,7 @@ export default {
 
       var data = {
 
-        nombre_metodologia: this.Nombre,
-        rut_empleado: this.rutEmpleadosSeleccionados,
+        nombre_metodologia: this.Nombre,        
         detalle_metodologia: this.Descripción,
         empleados: this.empleados
 
