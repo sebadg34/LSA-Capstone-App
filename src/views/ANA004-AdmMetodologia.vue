@@ -9,7 +9,8 @@
         </b-col>
     </b-row>
       <modal_detallesMetodologia :detalles-data="this.detallesData"/>
-      <modal_agregarMetodologia/> 
+      <modal_agregarMetodologia/>
+      <modal_editarMetodologia :metodologia-data="this.modalEditarData"/>
 
       <div class="row justify-content-center" style="padding-top:30px; padding-bottom:10px; margin-left: 5px;">
         <div class="col-10">  
@@ -33,7 +34,7 @@
           <b-dropdown-item v-if="row" @click="verDetalles(row)">
             <b-icon icon="file-earmark-medical" aria-hidden="true" class="mr-2"></b-icon>Ver Detalles 
           </b-dropdown-item>
-          <b-dropdown-item v-if="row" @click="editar(row)">
+          <b-dropdown-item v-if="row" @click="EditarMetodología(row.item)">
             <b-icon icon="file" aria-hidden="true" class="mr-2"></b-icon>Editar
           </b-dropdown-item>
         </b-dropdown>
@@ -49,6 +50,7 @@
 <script>
 
 import modal_agregarMetodologia from '@/components/admElementosMuestra/modal_agregarMetodologia.vue';
+import modal_editarMetodologia from '@/components/admElementosMuestra/modal_editarMetodologia.vue';
 import modal_detallesMetodologia from '@/components/admElementosMuestra/modal_detallesMetodologia.vue';
 import ElementosService from '@/helpers/api-services/Elementos.service';
 export default {
@@ -56,7 +58,8 @@ export default {
   components: {  
     
     modal_agregarMetodologia,
-    modal_detallesMetodologia
+    modal_detallesMetodologia,
+    modal_editarMetodologia
     
     },
 
@@ -71,7 +74,8 @@ export default {
           ],
 
           items: [],
-          detallesData: {} 
+          detallesData: {},
+          modalEditarData: {}, 
 
         }
 
@@ -79,14 +83,14 @@ export default {
 
     mounted() {
   // Agregar datos ficticios a 'items'; eliminar --this. items-- cuando se obtengan datos reales desde la API.
-  this.items = [
+  /* this.items = [
     { Nombre: 'Metodología 1', Analista: 'Analista 1' },
     { Nombre: 'Metodología 2', Analista: 'Analista 2' },
     { Nombre: 'Metodología 3', Analista: 'Analista 3' },
     
-  ];
+  ]; */
 
-      // this.obtenerMetodologias();  //Descomentar cuando se haya implementado la API y se quieran obtener datos de la BD.
+       this.obtenerMetodologias();  //Descomentar cuando se haya implementado la API y se quieran obtener datos de la BD.
 
   
 },
@@ -121,6 +125,14 @@ export default {
           }
         }); 
       },
+
+      EditarMetodología(data) {
+        console.log(data)
+        this.modalEditarData = data;
+        this.$bvModal.show('modal-Editar-Metodologia')
+
+
+      }
 
     }
 

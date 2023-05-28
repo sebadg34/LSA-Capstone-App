@@ -1,5 +1,5 @@
 <template>
-    <b-modal id="modal-detalle-metodologia" :title="`Detalles de la Metodologia`" size="lg" @hidden="onHidden">
+    <b-modal id="modal-detalle-metodologia" :title="`Detalles de la Metodologia`" size="lg"  >
 
       <template #modal-header="{ close }">
             <!-- Emulate built in modal header close button action -->
@@ -20,6 +20,10 @@
             <b-col class="col-6">
                 <div>
                     Nombre Metodología: <span>{{this.nombre_metodologia}}</span>
+                </div>
+
+                <div>
+                    Descripción: <span>{{this.Descripcion}}</span>
                 </div>
 
                 <div>
@@ -50,34 +54,25 @@
         
         Nombre: '',
         Analista: '',
+        Descripcion: '',
         nombre_metodologia: '',
+        rut_empleado: [],
 
         
       }
     },  
     methods: {      
-      onHidden() {        
-        this.$emit('modal-cerrado');
-      }
+      
     },
     watch: {
       detallesData: {
               handler() {
                   console.log("detallesData actualizada")
                   
-                  this.nombre = this.detallesData.RUM;
-                  this.fecha = this.detallesData.fecha_ingreso
-                  this.hora = this.detallesData.hora_ingreso
-                  this.nMuestras = this.detallesData.cantidad_muestras
-                  this.muestreado = this.detallesData.muestreado_por
-                  this.prioridad = this.detallesData.prioridad
-                  this.fechaEntrega = this.detallesData.fecha_entrega
-                  this.TipoMatriz = this.detallesData.matriz
-
-                  
-
-
-                  
+                  this.Nombre = this.detallesData.nombre_metodologia;
+                  this.Descripcion = this.detallesData.detalle_metodologia;
+                  this.Analista = this.detallesData.rut_empleado;
+                  this.rut_empleado = this.detallesData.rut_empleado;               
               }
           }
     }

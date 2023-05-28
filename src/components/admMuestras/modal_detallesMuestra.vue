@@ -90,9 +90,7 @@
         hora: '',
         fechaEntrega: '',
         prioridad: '',
-        TipoMatriz: '',
-
-        
+        TipoMatriz: '',        
         loading: false,
         showObservaciones: false,
         
@@ -115,12 +113,7 @@
                   this.muestreado = this.detallesData.muestreado_por
                   this.prioridad = this.detallesData.prioridad
                   this.fechaEntrega = this.detallesData.fecha_entrega
-                  this.TipoMatriz = this.detallesData.matriz
-
-                  
-
-
-                  
+                  this.TipoMatriz = this.detallesData.matriz                  
               }
           }
     }

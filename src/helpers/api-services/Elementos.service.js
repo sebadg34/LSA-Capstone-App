@@ -30,9 +30,9 @@ const obtenerMetodologias= async () => {
      }
  };
 
- const obtenerDetallesMetodologia = async (RUM) => {
+ const obtenerDetallesMetodologia = async (data) => {
     try {
-         const response = await axios.get(apiUrl + "/muestras/" + RUM);
+         const response = await axios.get(apiUrl + "/metodologias/" + data.nombre_metodologia, data);
          console.log(response);
          if(response.status == 200){
              return response;
