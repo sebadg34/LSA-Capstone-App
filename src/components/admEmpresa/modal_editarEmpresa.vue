@@ -266,6 +266,7 @@ export default {
                                     variant: "success",
                                     appendToast: true
                                 })
+                                this.direcciones_eliminar = [];
                                 this.$emit('refrescar');
                             }
                             this.$bvModal.hide('modal-editar-empresa')
