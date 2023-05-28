@@ -1,3 +1,4 @@
+
 <template>
     <b-modal id="modal-detalle-muestra" :title="`Detalles de la muestra ${RUM}`" size="lg" @hidden="onHidden">
 
@@ -33,7 +34,7 @@
                     Hora de Ingreso: <span>{{this.hora}}</span>
                 </div>
                 <div>
-                    Fecha de Entrega: <span>{{this.fechaEntrega}}</span>
+                    Fecha de Entrega: <span>{{this.fechaEntregaFormateada}}</span>
                 </div>
                 <div>
                     Matriz: <span>{{this.TipoMatriz}}</span>
@@ -75,7 +76,7 @@
   
   <script>
  
-  
+ import moment from 'moment';
   export default {
     props: {
       detallesData: Object
@@ -113,6 +114,7 @@
                   this.muestreado = this.detallesData.muestreado_por
                   this.prioridad = this.detallesData.prioridad
                   this.fechaEntrega = this.detallesData.fecha_entrega
+                  this.fechaEntregaFormateada = moment(this.detallesData.fecha_entrega).format('DD/MM/YYYY');
                   this.TipoMatriz = this.detallesData.matriz                  
               }
           }

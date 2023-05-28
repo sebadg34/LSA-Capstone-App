@@ -56,7 +56,7 @@
         Analista: '',
         Descripcion: '',
         nombre_metodologia: '',
-        rut_empleado: [],
+        r: [],
 
         
       }
@@ -69,7 +69,7 @@
               handler() {
                   console.log("detallesData actualizada")
                   
-                  this.Nombre = this.detallesData.nombre_metodologia;
+                  this.nombre_metodologia = this.detallesData.nombre_metodologia; 
                   this.Descripcion = this.detallesData.detalle_metodologia;
                   this.Analista = this.detallesData.rut_empleado;
                   this.rut_empleado = this.detallesData.rut_empleado;               

@@ -112,6 +112,7 @@ export default {
     if (recepcionistaSeleccionado) {
       this.recepcionista = newValue;
       this.recepcionistaRUT = recepcionistaSeleccionado.rut_empleado;
+      console.log("el rut del recepcionista es: ", this.recepcionistaRUT)
     }
     
   },
@@ -152,8 +153,10 @@ export default {
             recepcionista: this.recepcionista,
             rut: this.rut,
             solicitante: this.solicitante,
-            direccion: this.direccion
+            direccion: this.direccion,
+            
           }
+          console.log("el rut recepcionsta es: ", this.recepcionistaRUT)
           this.$emit('datosIngresados', datosIngresados)
           this.$refs.modal.hide()
         }

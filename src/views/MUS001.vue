@@ -156,7 +156,7 @@ enviarFormulario() {
                       nombre_transportista: this.transportista,
                       patente_vehiculo: this.patente,
                       rut_transportista: this.transportistaRut,
-                      rut_empleado: this.rut,       
+                      rut_empleado: this.recepcionistaRUT,       
                       telefono_transportista: this.fono,       
                       estado: 'Recepcionado',
                       observaciones: this.observaciones,

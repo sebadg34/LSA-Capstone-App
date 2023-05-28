@@ -68,8 +68,8 @@ export default {
         return {
 
           fields: [
-          { key: 'Nombre', label: 'Nombre', thClass: 'text-center', tdClass: 'text-center' },
-          { key: 'Analista', label: 'Analista', thClass: 'text-center', tdClass: 'text-center' },
+          { key: 'nombre_metodologia', label: 'Nombre', thClass: 'text-center', tdClass: 'text-center' },
+          { key: 'rut_empleado', label: 'Analista', thClass: 'text-center', tdClass: 'text-center' },
           { key: 'Accion', label: 'Acción', thClass: 'text-center', tdClass: 'text-center' },          
           ],
 
@@ -82,13 +82,7 @@ export default {
     },
 
     mounted() {
-  // Agregar datos ficticios a 'items'; eliminar --this. items-- cuando se obtengan datos reales desde la API.
-  /* this.items = [
-    { Nombre: 'Metodología 1', Analista: 'Analista 1' },
-    { Nombre: 'Metodología 2', Analista: 'Analista 2' },
-    { Nombre: 'Metodología 3', Analista: 'Analista 3' },
-    
-  ]; */
+  
 
        this.obtenerMetodologias();  //Descomentar cuando se haya implementado la API y se quieran obtener datos de la BD.
 
@@ -105,7 +99,7 @@ export default {
 
       obtenerMetodologias() {
         console.log("Obteniendo Metodologias: ")     
-      ElementosService.obtenerMetodologias().then((response)=>{
+          ElementosService.obtenerMetodologias().then((response)=>{
         if (response.data != null && response.status === 200) {
         this.items = response.data
         }
