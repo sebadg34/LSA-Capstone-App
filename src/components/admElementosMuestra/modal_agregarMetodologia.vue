@@ -73,6 +73,7 @@ export default {
       analistaDuplicado: false,
       alertaDuplicado: false,      
       rutEmpleadosSeleccionados: [],
+      empleados: []
       
     };
   },
@@ -107,6 +108,7 @@ export default {
         } else {
           this.analistasSeleccionados.push(this.AnalistaAsignado);
           this.rutEmpleadosSeleccionados.push(this.analistas.find(a => a.nombre === this.AnalistaAsignado).rut_empleado);
+          this.empleados = this.rutEmpleadosSeleccionados;
           this.AnalistaAsignado = '';
           this.alertaDuplicado = false;
         }
@@ -124,7 +126,8 @@ export default {
 
         nombre_metodologia: this.Nombre,
         rut_empleado: this.rutEmpleadosSeleccionados,
-        detalle_metodologia: this.Descripción
+        detalle_metodologia: this.Descripción,
+        empleados: this.empleados
 
 
       }

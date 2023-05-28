@@ -62,9 +62,10 @@
 
 <script>
 
-import MuestraService from '@/helpers/api-services/Muestra.Service';
+// import MuestraService from '@/helpers/api-services/Muestra.Service';
 
 import EmpresaService from '@/helpers/api-services/Empresa.service';
+import PersonalService from '@/helpers/api-services/Personal.service';
 
 export default {
   data() {
@@ -76,17 +77,21 @@ export default {
       direccion: '',
       opcionesRecepcionistas: [],
       opcionesClientes: [],
-      empresas: []
+      empresas: [],
+      recepcionistas: []
     }
   },
-  mounted() {
+  mounted() {   
 
-    MuestraService.obtenerNombreEmpleados().then((response) => {    
-    console.log(response.data); 
+  PersonalService.obtenerTodosPersonal().then((response) => {
+    console.log(response.data);
     if (response != null) {
-      this.opcionesRecepcionistas = response.data;
+      this.recepcionistas = response.data
+      this.opcionesRecepcionistas = this.recepcionistas.map((recepcionista) => recepcionista.nombre);
+      console.log("Los recepcionistas son: " , this.opcionesRecepcionistas);
+
     }
-  });
+  })
 
   EmpresaService.obtenerTodasEmpresa().then((response) => {
     console.log(response.data);
@@ -101,9 +106,13 @@ export default {
   },
 
   watch: {
-  recepcionista(newValue) {
-    console.log(newValue)    
-    this.recepcionistaRUT = newValue;
+  recepcionista(newValue) {    
+    console.log("este es el nuevo valor: " , newValue) 
+    const recepcionistaSeleccionado = this.recepcionistas.find((recepcionista) => recepcionista.nombre === newValue)   
+    if (recepcionistaSeleccionado) {
+      this.recepcionista = newValue;
+      this.recepcionistaRUT = recepcionistaSeleccionado.rut_empleado;
+    }
     
   },
 

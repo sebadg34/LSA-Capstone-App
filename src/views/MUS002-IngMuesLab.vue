@@ -252,6 +252,7 @@ RellenarForm(response) {
     this.transportista = response.nombre_transportista
     this.prioridad = response.prioridad
     this.NMuestras = response.cantidad_muestras
+    this.recepcionista = response.recepcionista
 
 
 
@@ -262,7 +263,7 @@ RellenarForm(response) {
     var data = {
       //DATOS GENERALES
                       RUM: this.RUM,
-                      //recepcionista: this.recepcionista,
+                      recepcionista: this.recepcionista,
                       nombre_empresa: this.solicitante, //OJITO CON ESTE
                       direccion_empresa: this.direccion,
                       nombre_solicitante: this.solicitante,
