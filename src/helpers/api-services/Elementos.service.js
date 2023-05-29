@@ -14,6 +14,17 @@ const agregarMetodología = async (data) => {
     }
 };
 
+const agregarParametro = async (data) => {
+    try {  
+        const response = await axios.post(apiUrl + "/parametros/agregarParametro", data,);
+        console.log(response);
+        return response;
+    } catch (error) {
+        console.log(error);
+        return;
+    }
+};
+
 const obtenerMetodologias= async () => {
     try {
          const response = await axios.get(apiUrl + "/metodologias");
@@ -95,6 +106,7 @@ export default {
     actualizarMetodologia,
     agregar_Empleados_Asociados,
     eliminar_Empleados_Asociados,
-    obtenerDetallesMetodologia
+    obtenerDetallesMetodologia,
+    agregarParametro
 
 }

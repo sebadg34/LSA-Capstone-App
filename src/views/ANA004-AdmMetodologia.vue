@@ -9,8 +9,9 @@
         </b-col>
     </b-row>
       <modal_detallesMetodologia :detalles-data="this.detallesData"/>
-      <modal_agregarMetodologia/>
-      <modal_editarMetodologia :metodologia-data="this.modalEditarData"/>
+      <modal_agregarMetodologia @metodologiaAgregada="MetodologiaAgregada" />
+      <modal_editarMetodologia :metodologia-data="this.modalEditarData" @metodologiaAgregada="MetodologiaAgregada"/>
+     
 
       <div class="row justify-content-center" style="padding-top:30px; padding-bottom:10px; margin-left: 5px;">
         <div class="col-10">  
@@ -69,7 +70,7 @@ export default {
 
           fields: [
           { key: 'nombre_metodologia', label: 'Nombre', thClass: 'text-center', tdClass: 'text-center' },
-          { key: 'rut_empleado', label: 'Analista', thClass: 'text-center', tdClass: 'text-center' },
+          { key: 'empleado', label: 'Analista', thClass: 'text-center', tdClass: 'text-center' },
           { key: 'Accion', label: 'Acción', thClass: 'text-center', tdClass: 'text-center' },          
           ],
 
@@ -81,11 +82,9 @@ export default {
 
     },
 
-    mounted() {
-  
+    mounted() {  
 
-       this.obtenerMetodologias();  //Descomentar cuando se haya implementado la API y se quieran obtener datos de la BD.
-
+       this.obtenerMetodologias();  
   
 },
 
@@ -101,31 +100,32 @@ export default {
         console.log("Obteniendo Metodologias: ")     
           ElementosService.obtenerMetodologias().then((response)=>{
         if (response.data != null && response.status === 200) {
-        this.items = response.data
+          this.items = response.data
         }
         })             
-    }, 
+      }, 
 
       verDetalles(row) {
         this.nombre_metodologia = row.item.nombre_metodologia;
-        console.log('El nombre es: ' + this.nombre_metodologia)
-        this.$bvModal.show('modal-detalle-metodologia');
+        console.log('El nombre es: ' + this.nombre_metodologia)        
          ElementosService.obtenerDetallesMetodologia(this.nombre_metodologia).then((response)=>{    
           console.log(response); 
           if (response.data != null){
             console.log( response.data);           
             this.detallesData = response.data        
-            this.$bvModal.show('modal-detalle-muestra');
+            this.$bvModal.show('modal-detalle-metodologia');
           }
         }); 
       },
 
       EditarMetodología(data) {
-        console.log(data)
+        console.log("los datos a editar son : ", data)
         this.modalEditarData = data;
         this.$bvModal.show('modal-Editar-Metodologia')
+      },
 
-
+      MetodologiaAgregada() {
+        this.obtenerMetodologias();
       }
 
     }

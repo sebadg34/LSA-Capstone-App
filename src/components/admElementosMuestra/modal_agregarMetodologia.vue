@@ -141,7 +141,8 @@ export default {
               solid: true,
               variant: "success",
               appendToast: true
-            })                                
+            })    
+            this.$emit('metodologiaAgregada');                            
           }
         } else {
           this.$bvToast.toast(`Error al agregar la metodología.`, {
@@ -154,6 +155,8 @@ export default {
         }
       })
     },
+
+    
 
 
 

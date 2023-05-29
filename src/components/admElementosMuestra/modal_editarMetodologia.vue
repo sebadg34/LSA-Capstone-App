@@ -64,12 +64,11 @@ export default {
 
     watch: {
         metodologiaData: {
-            handler() {
+            handler() {               
                 
-                this.Nombre = this.metodologiaData.nombre_metodologia
-                this.rutEmpleadosSeleccionados = this.metodologiaData.rut_empleado
-                this.Descripción = this.metodologiaData.detalle_metodologia               
-                         
+                this.Nombre = this.metodologiaData.nombre_metodologia;
+                this.Descripción = this.metodologiaData.detalle_metodologia;
+                this.analistasSeleccionados = this.metodologiaData.empleados;                        
          
             }
         }
@@ -140,10 +139,9 @@ export default {
 
       var data = {
 
-        nombre_metodologia: this.Nombre,
-        rut_empleado: this.rutEmpleadosSeleccionados,
-        detalle_metodologia: this.Descripción
-
+        nombre_metodologia: this.Nombre,        
+        detalle_metodologia: this.Descripción,
+        empleados: this.empleados
 
       }
       console.log("data a enviar", data)
@@ -157,7 +155,9 @@ export default {
               solid: true,
               variant: "success",
               appendToast: true
-            })                                
+            }) 
+            
+            this.$emit('metodologiaAgregada');
           }
         } else {
           this.$bvToast.toast(`Error al agregar la metodología.`, {
@@ -170,10 +170,6 @@ export default {
         }
       })
     },
-
-
-
-
 
   },
 };

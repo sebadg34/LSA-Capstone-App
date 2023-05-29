@@ -18,21 +18,36 @@
          <b-form-input v-model="Nombre"></b-form-input>
       </b-form-group>
 
-    <b-row>      
+      <b-row>
       <b-col>
-        <b-form-group label="Metodología">
-          <b-form-select v-model="metodologiaSeleccionada">
-            <option disabled value="">Seleccione Metodología</option>
-            <!-- Opciones de metodología -->
-            <option v-for="opcion in opcionesMetodologia" :key="opcion.id" :value="opcion.id">{{ opcion.nombre }}</option>
-          </b-form-select>
+        <b-form-group label="Asignar una metodología">
+          <b-form-select v-model="metodologiaAsignada" :options="opcionesMetodologia" placeholder="Seleccione un Analista" @change="agregarMetodologiaSeleccionada"></b-form-select>
         </b-form-group>
-      </b-col>      
+      </b-col>
     </b-row>
 
-    <b-list-group v-if="metodologiaSeleccionada" class="mt-3">
-      <b-list-group-item>{{ getMetodologiaNombre(metodologiaSeleccionada) }}</b-list-group-item>
-    </b-list-group>
+    <b-row v-if="metodologiaSeleccionada.length > 0" class="mt-3">
+  <b-col>
+    <b-form-group label="Metodologías Seleccionadas">
+      <div v-for="(metodologia, index) in metodologiaSeleccionada" :key="index" class="d-flex align-items-center analista-item">
+        <b-input readonly :value="metodologia"></b-input>
+        <b-button variant="danger" @click="eliminarMetodologiaSeleccionada(index)" class="ml-2">
+          <b-icon-trash-fill></b-icon-trash-fill>
+        </b-button>
+      </div>
+    </b-form-group>
+  </b-col>
+</b-row>
+
+<b-alert variant="danger" :show="alertaDuplicado" dismissible @dismissed="alertaDuplicado = false">
+  La metodología ya fue agregada.
+</b-alert>
+
+<div class="d-flex justify-content-center">
+  <b-button @click="AgregarParametro()" variant="primary" size="xl" class="reactive-button" style="font-weight:bold">
+    Agregar
+  </b-button>
+</div>
 
       <!-- ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// -->
 
@@ -45,30 +60,96 @@
 </template>
 
 <script>
+
+import ElementosService from '@/helpers/api-services/Elementos.service';
+
 export default {
 
     data(){
 
         return {
-            Nombre: '',
-            metodologiaSeleccionada: '',                       
-            opcionesMetodologia: [
-              { id: 1, nombre: 'Metodología 1' },
-              { id: 2, nombre: 'Metodología 2' },
-              { id: 3, nombre: 'Metodología 3' }
-            ]        
+            Nombre: '',                                   
+            opcionesMetodologia: [],
+            metodologiaAsignada: '',
+            metodologiaSeleccionada: [],  
+            alertaDuplicado: false, 
+            metodologiaDuplicada: false,
+            metodologia: []    
 
         }
 
     },
 
+    mounted() {
+
+      this.obtenerMetodologias();    
+   
+  }, 
+
     methods: { 
       
-      getMetodologiaNombre(metodologiaId) {
-      // Método para obtener el nombre de un parámetro según su ID
-      const metodologia = this.opcionesMetodologia.find(opcion => opcion.id === metodologiaId);
-      return metodologia ? metodologia.nombre : '';
-      },     
+      obtenerMetodologias() {
+  console.log("Obteniendo Metodologias: ");
+  ElementosService.obtenerMetodologias().then((response) => {
+    if (response.data != null && response.status === 200) {
+      this.opcionesMetodologia = response.data.map(item => item.nombre_metodologia);
+    }
+  });
+},    
+
+agregarMetodologiaSeleccionada() {
+      if (this.metodologiaAsignada) {
+        const metodologiaExistente = this.metodologiaSeleccionada.find((metodologia) => metodologia === this.metodologiaAsignada);
+        if (metodologiaExistente) {
+          this.alertaDuplicado = true;
+        } else {
+          this.metodologiaSeleccionada.push(this.metodologiaAsignada);
+          //this.rutEmpleadosSeleccionados.push(this.analistas.find(a => a.nombre === this.metodologiaAsignada).rut_empleado);
+          this.metodologia = this.metodologiaSeleccionada;
+          this.metodologiaAsignada = '';
+          this.alertaDuplicado = false;
+        }
+      }
+    },
+
+    eliminarMetodologiaSeleccionada(index) {
+      this.metodologiaSeleccionada.splice(index, 1);
+      // this.rutEmpleadosSeleccionados.splice(index, 1);
+    },
+
+    AgregarParametro(){
+
+      var data = {
+
+      nombre_parametro: this.Nombre,        
+      nombre_metodología: this.metodologia
+      
+
+    }
+    console.log("data a enviar", data)
+    ElementosService.agregarParametro(data).then((response)=>{
+    console.log(response)
+    if(response != null){
+      if (response.status == 200) {
+        this.$bvToast.toast(`La creación del parámetro ha sido exitosa!`, {
+        title: 'Exito',
+        toaster: 'b-toaster-top-center',
+        solid: true,
+        variant: "success",
+        appendToast: true
+      })                                
+    }
+    } else {
+    this.$bvToast.toast(`Error al agregar el parámetro.!`, {
+      title: 'Error',
+      toaster: 'b-toaster-top-center',
+      solid: true,
+      variant: "warning",
+      appendToast: true
+    })
+  }
+})
+},
     
 
     },
