@@ -36,7 +36,7 @@
             <b-icon icon="file-earmark-medical" aria-hidden="true" class="mr-2"></b-icon>Ver Detalles 
           </b-dropdown-item>
           <b-dropdown-item v-if="row" @click="EditarMetodología(row.item)">
-            <b-icon icon="file" aria-hidden="true" class="mr-2"></b-icon>Editar
+            <b-icon icon="pencil-square" aria-hidden="true" class="mr-2"></b-icon>Editar
           </b-dropdown-item>
         </b-dropdown>
       </template>

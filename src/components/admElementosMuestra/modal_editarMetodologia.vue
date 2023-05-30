@@ -43,8 +43,8 @@
   </b-alert>
   
   <div class="d-flex justify-content-center">
-    <b-button @click="AgregarMetodologia()" variant="primary" size="xl" class="reactive-button" style="font-weight:bold">
-      Agregar
+    <b-button @click="ActualizarMetodologia()" variant="primary" size="xl" class="reactive-button" style="font-weight:bold">
+      Editar Metodología
     </b-button>
   </div>
   
@@ -137,17 +137,18 @@ export default {
       this.rutEmpleadosSeleccionados.splice(index, 1);
     },
 
-    AgregarMetodologia(){
+    ActualizarMetodologia(){
 
       var data = {
 
         nombre_metodologia: this.Nombre,        
         detalle_metodologia: this.Descripción,
         empleados: this.empleados
+        
 
       }
       console.log("data a enviar", data)
-      ElementosService.agregarMetodología(data).then((response)=>{
+      ElementosService.actualizarMetodologia(data).then((response)=>{
         console.log(response)
         if(response != null){
           if (response.status == 200) {
@@ -160,6 +161,12 @@ export default {
             }) 
             
             this.$emit('metodologiaAgregada');
+
+            this.Nombre = '',
+            this.Descripción = '',
+            this.empleados = [],
+            this.analistasSeleccionados = []
+
 
             this.$refs.modal.hide()
           }

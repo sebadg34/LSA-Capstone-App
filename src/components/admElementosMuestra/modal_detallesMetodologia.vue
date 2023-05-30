@@ -26,10 +26,11 @@
                     Descripción: <span>{{this.Descripcion}}</span>
                 </div>
 
-                <div v-for="(analista, index) in analistas" :key="index">
-                  {{ analista.nombre }}
-                  <span v-if="index < analistas.length - 1">, </span>
-                </div>               
+                <div>
+                  Analista(s) Designado(s): <span>{{this.Analista}}</span>
+
+                </div>
+                               
             </b-col>
             
         </b-row>
@@ -66,7 +67,7 @@
         const rutEmpleados = this.detallesData.rut_empleado;
         ElementosService.obtenerNombresEmpleados(rutEmpleados).then((response) => {
           if (response.status === 200) {
-            this.analistas = response.data;
+            this.Analista = response.data;
           }
         }).catch((error) => {
         console.log(error);

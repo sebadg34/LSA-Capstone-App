@@ -142,6 +142,12 @@ export default {
               appendToast: true
             })    
             this.$emit('metodologiaAgregada');   
+
+            this.Nombre = '',
+            this.Descripción = '',
+            this.empleados = [],
+            this.analistasSeleccionados = []
+
             this.$refs.modal.hide()                         
           }
         } else {
