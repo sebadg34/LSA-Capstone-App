@@ -163,10 +163,13 @@ export default {
             this.$emit('metodologiaAgregada');
 
             this.Nombre = '',
-            this.Descripción = '',
+            this.Descripción = '',           
+            this.AnalistaAsignado = '',
+            this.opcionesAnalista = [],
+            this.analistas = [],
+            this.analistasSeleccionados = [],
+            this.rutEmpleadosSeleccionados = [],
             this.empleados = [],
-            this.analistasSeleccionados = []
-
 
             this.$refs.modal.hide()
           }

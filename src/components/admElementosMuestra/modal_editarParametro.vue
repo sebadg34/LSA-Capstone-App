@@ -1,11 +1,11 @@
 <template>
-    <b-modal id="modal-Agregar-Parametro" ref="modal" :title="`Agregar Parametro`" size="lg">
+    <b-modal id="modal-Editar-Parametro" ref="modal" :title="`Editar Parametro`" size="lg">
         
 
       <template #modal-header="{ close }">
             <!-- Emulate built in modal header close button action -->
             <b-row class="d-flex justify-content-around">
-                <div class="pl-3">Agregar Parámetro</div>
+                <div class="pl-3">Editar Parámetro</div>
             </b-row>
             <button type="button" class="close" aria-label="Close" @click="close()">
                 <span aria-hidden="true" style="color:white">&times;</span>
@@ -89,11 +89,11 @@ export default {
     methods: { 
       
       obtenerMetodologias() {
-  console.log("Obteniendo Metodologias: ");
-  ElementosService.obtenerMetodologias().then((response) => {
-    if (response.data != null && response.status === 200) {
-      this.opcionesMetodologia = response.data.map(item => item.nombre_metodologia);
-    }
+        console.log("Obteniendo Metodologias: ");
+        ElementosService.obtenerMetodologias().then((response) => {
+            if (response.data != null && response.status === 200) {
+                this.opcionesMetodologia = response.data.map(item => item.nombre_metodologia);
+        }
   });
 },    
 
