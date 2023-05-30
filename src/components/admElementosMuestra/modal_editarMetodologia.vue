@@ -1,5 +1,5 @@
 <template>
-    <b-modal id="modal-Editar-Metodologia" :title="`Editar Metodologia`" size="lg">
+    <b-modal id="modal-Editar-Metodologia" ref="modal" :title="`Editar Metodologia`" size="lg">
       <template #modal-header="{ close }">
         <b-row class="d-flex justify-content-around">
           <div class="pl-3">Editar Metodología</div>
@@ -94,8 +94,7 @@ export default {
   },
 
   mounted() {
-    PersonalService.obtenerTodosPersonal()
-  .then((response) => {
+    PersonalService.obtenerTodosPersonal().then((response) => {
     console.log(response.data);
     if (response.data != null) {
       this.analistas = response.data;
@@ -118,17 +117,20 @@ export default {
   
     agregarAnalistaSeleccionado() {
       if (this.AnalistaAsignado) {
-        const analistaExistente = this.analistasSeleccionados.find((analista) => analista === this.AnalistaAsignado);
-        if (analistaExistente) {
-          this.alertaDuplicado = true;
-        } else {
-          this.analistasSeleccionados.push(this.AnalistaAsignado);
-          this.rutEmpleadosSeleccionados.push(this.analistas.find(a => a.nombre === this.AnalistaAsignado).rut_empleado);
+    const analistaExistente = this.analistasSeleccionados.find((analista) => analista === this.AnalistaAsignado);
+      if (analistaExistente) {
+        this.alertaDuplicado = true;
+      } else {
+        const analista = this.analistas.find(a => a.nombre === this.AnalistaAsignado);
+        if (analista) {
+          this.analistasSeleccionados.push(analista.nombre);
+          this.rutEmpleadosSeleccionados.push(analista.rut_empleado);
           this.AnalistaAsignado = '';
           this.alertaDuplicado = false;
         }
-      }
-    },
+    }
+  }
+},
 
     eliminarAnalistaSeleccionado(index) {
       this.analistasSeleccionados.splice(index, 1);
@@ -149,7 +151,7 @@ export default {
         console.log(response)
         if(response != null){
           if (response.status == 200) {
-            this.$bvToast.toast(`Creación de la metodología exitosa`, {
+            this.$bvToast.toast(`Se ha editado la metodología exitosamente!`, {
               title: 'Exito',
               toaster: 'b-toaster-top-center',
               solid: true,
@@ -158,9 +160,11 @@ export default {
             }) 
             
             this.$emit('metodologiaAgregada');
+
+            this.$refs.modal.hide()
           }
         } else {
-          this.$bvToast.toast(`Error al agregar la metodología.`, {
+          this.$bvToast.toast(`Error al editar la metodología.`, {
             title: 'Error',
             toaster: 'b-toaster-top-center',
             solid: true,

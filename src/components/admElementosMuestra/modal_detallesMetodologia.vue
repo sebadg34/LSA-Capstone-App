@@ -13,22 +13,23 @@
       </template>
 
       <div class="p-3">
-        <p v-if="this.nombre_metodologia == null">No existen detalles de la metodología o la metodología no existe!!</p>
+        <p v-if="this.Nombre == null">No existen detalles de la metodología o la metodología no existe!!</p>
         <ul v-else>          
         </ul>
         <b-row class="pb-2">
             <b-col class="col-6">
                 <div>
-                    Nombre Metodología: <span>{{this.nombre_metodologia}}</span>
+                    Nombre Metodología: <span>{{this.Nombre}}</span>
                 </div>
 
                 <div>
                     Descripción: <span>{{this.Descripcion}}</span>
                 </div>
 
-                <div>
-                    Analista(s): <span>{{this.Analista}}</span>
-                </div>                
+                <div v-for="(analista, index) in analistas" :key="index">
+                  {{ analista.nombre }}
+                  <span v-if="index < analistas.length - 1">, </span>
+                </div>               
             </b-col>
             
         </b-row>
@@ -44,7 +45,7 @@
   
   <script>
  
-  
+  import ElementosService from '@/helpers/api-services/Elementos.service';
   export default {
     props: {
         detallesData: Object
@@ -53,26 +54,36 @@
       return {
         
         Nombre: '',
-        Analista: '',
         Descripcion: '',
-        nombre_metodologia: '',
-        r: [],
+        Analista: [],       
 
         
       }
     },  
-    methods: {      
+
+    methods: {    
+      obtenerAnalistas() {
+        const rutEmpleados = this.detallesData.rut_empleado;
+        ElementosService.obtenerNombresEmpleados(rutEmpleados).then((response) => {
+          if (response.status === 200) {
+            this.analistas = response.data;
+          }
+        }).catch((error) => {
+        console.log(error);
+        });
+      }  
       
     },
+
     watch: {
       detallesData: {
               handler() {
                   console.log("detallesData actualizada")
                   
-                  this.nombre_metodologia = this.detallesData.nombre_metodologia; 
+                  this.Nombre = this.detallesData.nombre_metodologia; 
                   this.Descripcion = this.detallesData.detalle_metodologia;
                   this.Analista = this.detallesData.rut_empleado;
-                  this.rut_empleado = this.detallesData.rut_empleado;               
+                                
               }
           }
     }

@@ -8,7 +8,7 @@
             </div>
         </b-col>
     </b-row>
-      <modal_detallesMetodologia :detalles-data="this.detallesData"/>
+      <modal_detallesMetodologia :detalles-data="this.modalDetallesData"/>
       <modal_agregarMetodologia @metodologiaAgregada="MetodologiaAgregada" />
       <modal_editarMetodologia :metodologia-data="this.modalEditarData" @metodologiaAgregada="MetodologiaAgregada"/>
      
@@ -32,7 +32,7 @@
           <template #button-content>
             <b-icon style="height: 80%; width: 80%; align-items: center;" icon="three-dots" variant="dark" aria-hidden="true"></b-icon>
           </template>
-          <b-dropdown-item v-if="row" @click="verDetalles(row)">
+          <b-dropdown-item v-if="row" @click="DetallesMetodología(row.item)">
             <b-icon icon="file-earmark-medical" aria-hidden="true" class="mr-2"></b-icon>Ver Detalles 
           </b-dropdown-item>
           <b-dropdown-item v-if="row" @click="EditarMetodología(row.item)">
@@ -77,6 +77,7 @@ export default {
           items: [],
           detallesData: {},
           modalEditarData: {}, 
+          modalDetallesData: {}
 
         }
 
@@ -105,7 +106,7 @@ export default {
         })             
       }, 
 
-      verDetalles(row) {
+      /*verDetalles(row) {
         this.nombre_metodologia = row.item.nombre_metodologia;
         console.log('El nombre es: ' + this.nombre_metodologia)        
          ElementosService.obtenerDetallesMetodologia(this.nombre_metodologia).then((response)=>{    
@@ -116,6 +117,12 @@ export default {
             this.$bvModal.show('modal-detalle-metodologia');
           }
         }); 
+      },*/
+
+      DetallesMetodología(data) {
+        console.log(data)
+        this.modalDetallesData = data;
+        this.$bvModal.show('modal-detalle-metodologia')
       },
 
       EditarMetodología(data) {

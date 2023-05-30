@@ -1,5 +1,5 @@
 <template>
-  <b-modal id="modal-Agregar-Metodologia" :title="`Agregar Metodologia`" size="lg">
+  <b-modal id="modal-Agregar-Metodologia" ref="modal" :title="`Agregar Metodologia`" size="lg">
     <template #modal-header="{ close }">
       <b-row class="d-flex justify-content-around">
         <div class="pl-3">Agregar Metodología</div>
@@ -73,14 +73,13 @@ export default {
       analistaDuplicado: false,
       alertaDuplicado: false,      
       rutEmpleadosSeleccionados: [],
-      empleados: []
+      empleados: [],
       
     };
   },
 
   mounted() {
-    PersonalService.obtenerTodosPersonal()
-  .then((response) => {
+    PersonalService.obtenerTodosPersonal().then((response) => {
     console.log(response.data);
     if (response.data != null) {
       this.analistas = response.data;
@@ -142,7 +141,8 @@ export default {
               variant: "success",
               appendToast: true
             })    
-            this.$emit('metodologiaAgregada');                            
+            this.$emit('metodologiaAgregada');   
+            this.$refs.modal.hide()                         
           }
         } else {
           this.$bvToast.toast(`Error al agregar la metodología.`, {
@@ -155,13 +155,6 @@ export default {
         }
       })
     },
-
-    
-
-
-
-
-
   },
 };
 </script>
