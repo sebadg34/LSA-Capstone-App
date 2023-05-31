@@ -121,7 +121,7 @@ export default {
       var data = {
 
       nombre_parametro: this.Nombre,        
-      nombre_metodología: this.metodologia      
+      nombre_metodologia: this.metodologia      
 
     }
     console.log("data a enviar", data)
