@@ -89,6 +89,7 @@ export default {
       analistaDuplicado: false,
       alertaDuplicado: false,      
       rutEmpleadosSeleccionados: [],
+      empleados: []
       
     };
   },
@@ -123,6 +124,7 @@ export default {
       } else {                 
           this.analistasSeleccionados.push(this.AnalistaAsignado.nombre);
           this.rutEmpleadosSeleccionados.push(this.AnalistaAsignado.rut_empleado);
+          this.empleados = this.rutEmpleadosSeleccionados;
           this.AnalistaAsignado = '';
           this.alertaDuplicado = false;
         
