@@ -25,10 +25,10 @@
         </b-col>
       </b-row>
   
-    <b-row v-if="metodologiaData.analistasSeleccionados.length > 0" class="mt-3">
+    <b-row v-if="analistasSeleccionados.length > 0" class="mt-3">
       <b-col>
         <b-form-group label="Analistas Seleccionados">
-          <div v-for="(analista, index) in metodologiaData.analistasSeleccionados" :key="index" class="d-flex align-items-center analista-item">
+          <div v-for="(analista, index) in analistasSeleccionados" :key="index" class="d-flex align-items-center analista-item">
             <b-input readonly :value="analista.nombre"></b-input>
             <b-button variant="danger" @click="eliminarAnalistaSeleccionado(index)" class="ml-2">
               <b-icon-trash-fill></b-icon-trash-fill>
@@ -69,8 +69,8 @@ export default {
                 this.Nombre = this.metodologiaData.nombre_metodologia;
                 this.Descripción = this.metodologiaData.detalle_metodologia;
                 this.AnalistaAsignado = '';
-                this.analistasSeleccionados = this.metodologiaData.analistasSeleccionados;
-                this.empleados = this.metodologiaData.empleados;
+                this.analistasSeleccionados = []
+                this.empleados = [{}]
 
          
             }
@@ -119,7 +119,6 @@ export default {
 
 
   methods: {
-  
     agregarAnalistaSeleccionado() {
   if (this.AnalistaAsignado) {
     const analistaExistente = this.analistasSeleccionados.find(
