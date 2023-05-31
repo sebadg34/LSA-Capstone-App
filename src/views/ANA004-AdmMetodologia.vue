@@ -54,6 +54,7 @@ import modal_agregarMetodologia from '@/components/admElementosMuestra/modal_agr
 import modal_editarMetodologia from '@/components/admElementosMuestra/modal_editarMetodologia.vue';
 import modal_detallesMetodologia from '@/components/admElementosMuestra/modal_detallesMetodologia.vue';
 import ElementosService from '@/helpers/api-services/Elementos.service';
+import PersonalService from '@/helpers/api-services/Personal.service';
 export default {
 
   components: {  
@@ -77,7 +78,8 @@ export default {
           items: [],
           detallesData: {},
           modalEditarData: {}, 
-          modalDetallesData: {}
+          modalDetallesData: {},
+          empleados: []
 
         }
 
@@ -85,7 +87,8 @@ export default {
 
     mounted() {  
 
-       this.obtenerMetodologias();  
+       this.obtenerMetodologias(); 
+       this.obtenerPersonal(); 
   
 },
 
@@ -106,18 +109,45 @@ export default {
         })             
       }, 
 
-      /*verDetalles(row) {
-        this.nombre_metodologia = row.item.nombre_metodologia;
-        console.log('El nombre es: ' + this.nombre_metodologia)        
-         ElementosService.obtenerDetallesMetodologia(this.nombre_metodologia).then((response)=>{    
-          console.log(response); 
-          if (response.data != null){
-            console.log( response.data);           
-            this.detallesData = response.data        
-            this.$bvModal.show('modal-detalle-metodologia');
+      obtenerPersonal(){
+        console.log("Obteniendo Personal: ")
+          PersonalService.obtenerTodosPersonal().then((response) =>{
+            if (response.data != null && response.status === 200){
+              
+              this.empleados = response.data.map((empleado) => empleado.rut_empleado);
+              console.log(this.empleados)
+            }
+          })
+
+      },
+
+      /* obtenerMetodologias() {
+  console.log("Obteniendo Metodologias:");
+  ElementosService.obtenerMetodologias().then((response) => {
+    if (response.data != null && response.status === 200) {
+      const metodologias = response.data;
+
+      // Obtener los empleados asociados a cada metodología
+      const empleadosPromises = metodologias.map((metodologia) =>
+        ElementosService.obtenerEmpleadosPorMetodologia(metodologia.id_metodologia)
+      );
+
+      // Esperar a que se completen todas las solicitudes de empleados
+      Promise.all(empleadosPromises).then((empleadosResponses) => {
+        empleadosResponses.forEach((empleadosResponse, index) => {
+          if (empleadosResponse.status === 200) {
+            const empleados = empleadosResponse.data;
+
+            // Agregar los empleados asociados a la metodología
+            metodologias[index].empleados = empleados.map((empleado) => empleado.rut_empleado);
           }
-        }); 
-      },*/
+        });
+
+        this.items = metodologias; // Asignar los datos actualizados a items
+      });
+    }
+  });
+}, */ 
 
       DetallesMetodología(data) {
         console.log(data)

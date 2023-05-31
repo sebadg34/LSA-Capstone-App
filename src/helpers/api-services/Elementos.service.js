@@ -25,6 +25,17 @@ const agregarParametro = async (data) => {
     }
 };
 
+const agregarMatriz = async (data) => {
+    try {  
+        const response = await axios.post(apiUrl + "/matrices/agregarMatriz", data,);
+        console.log(response);
+        return response;
+    } catch (error) {
+        console.log(error);
+        return;
+    }
+};
+
 const obtenerMetodologias = async () => {
     try {
          const response = await axios.get(apiUrl + "/metodologias");
@@ -44,6 +55,22 @@ const obtenerMetodologias = async () => {
 const obtenerParametros = async () => {
     try {
          const response = await axios.get(apiUrl + "/parametros");
+             console.log(response);
+         if(response.status == 200){
+             return response;
+         }else{
+             return;
+         }
+         
+     } catch (error) {
+         console.log(error);
+         return;
+     }
+ };
+
+ const obtenerMatriz = async () => {
+    try {
+         const response = await axios.get(apiUrl + "/matrices");
              console.log(response);
          if(response.status == 200){
              return response;
@@ -110,9 +137,44 @@ const actualizarParametro = async (data) => {
     }
 };
 
+const actualizarMatriz = async (data) => {
+    try {
+        console.log("DATA: ", data.nombre_metodologia);
+        const response = await axios.put(apiUrl + "/matrices/" + "/actualizarMatriz/" + data.nombre_matriz, data);      
+        
+        console.log(response);
+        
+        if (response.status == 200) {
+            return response;
+        } else {
+            return;
+        }
+    } catch (error) {
+        console.log(error);
+        return;
+    }
+};
+
 const obtenerDetallesParametro = async (data) => {
     try {
          const response = await axios.get(apiUrl + "/parametros/" + data.id_parametro, data);
+        
+         console.log(response);
+         if(response.status == 200){
+             return response;
+         } else {
+             return;
+         }
+         
+     } catch (error) {
+         console.log(error);
+         return;
+     }
+ };
+
+ const obtenerDetallesMatriz = async (data) => {
+    try { 
+         const response = await axios.get(apiUrl + "/matrices/" + data.id_matriz, data);
         
          console.log(response);
          if(response.status == 200){
@@ -162,6 +224,10 @@ export default {
     agregarParametro,
     actualizarParametro,
     obtenerDetallesParametro,
-    obtenerParametros
+    obtenerParametros,
+    agregarMatriz,
+    actualizarMatriz,
+    obtenerDetallesMatriz,
+    obtenerMatriz
 
 }

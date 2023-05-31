@@ -41,9 +41,9 @@
 
 <script>
 
-import modal_agregarParametro from '@/components/admElementosMuestra/modal_agregarParametro.vue';
-import modal_editarParametro from '@/components/admElementosMuestra/modal_editarParametro.vue';
-import modal_detallesParametro from '@/components/admElementosMuestra/modal_detallesParametro.vue';
+import modal_agregarParametro from '@/components/admParametro/modal_agregarParametro.vue';
+import modal_detallesParametro from '@/components/admParametro/modal_detallesParametro.vue';
+import modal_editarParametro from '@/components/admParametro/modal_editarParametro.vue';
 
 import ElementosService from '@/helpers/api-services/Elementos.service';
 export default {

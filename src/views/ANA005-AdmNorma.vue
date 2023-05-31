@@ -11,7 +11,7 @@
 <div class="row justify-content-center" style="padding-top:30px; padding-bottom:10px; margin-left: 5px;">
   <div class="col-10">  
               <b-row>
-                <modalAgregarNorma/>  
+                <modal_agregarNorma/>  
                   <b-button v-b-modal.modal-Agregar-Norma style="border-radius: 15px; font-weight: bold; font-size: 18px; " class="lsa-light-blue reactive-button">
                       Agregar Norma
                       <b-icon icon="journals"></b-icon>
@@ -36,11 +36,13 @@
 
 <script>
 
-import modalAgregarNorma from '@/components/admElementosMuestra/modal-agregarNorma.vue';
+import modal_agregarNorma from '@/components/admNorma/modal_agregarNorma.vue';
+
 export default {
 
   components: { 
-    modalAgregarNorma       
+
+    modal_agregarNorma       
     
     },
 
