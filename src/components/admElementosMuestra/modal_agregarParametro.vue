@@ -73,7 +73,7 @@ export default {
             metodologiaAsignada: '',
             metodologiaSeleccionada: [],  
             alertaDuplicado: false,            
-            metodologia: []    
+            metodologias: []    
 
         }
 
@@ -104,7 +104,7 @@ export default {
           } else {
             this.metodologiaSeleccionada.push(this.metodologiaAsignada);
             //this.rutEmpleadosSeleccionados.push(this.analistas.find(a => a.nombre === this.metodologiaAsignada).rut_empleado);
-            this.metodologia = this.metodologiaSeleccionada;
+            this.metodologias = this.metodologiaSeleccionada;
             this.metodologiaAsignada = '';
             this.alertaDuplicado = false;
           }
@@ -121,7 +121,7 @@ export default {
       var data = {
 
       nombre_parametro: this.Nombre,        
-      nombre_metodologia: this.metodologia      
+      metodologias: this.metodologias     
 
     }
     console.log("data a enviar", data)
