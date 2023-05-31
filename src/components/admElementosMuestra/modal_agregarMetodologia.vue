@@ -29,7 +29,7 @@
   <b-col>
     <b-form-group label="Analistas Seleccionados">
       <div v-for="(analista, index) in analistasSeleccionados" :key="index" class="d-flex align-items-center analista-item">
-        <b-input readonly :value="analista"></b-input>
+        <b-input readonly :value="analista.nombre"></b-input>
         <b-button variant="danger" @click="eliminarAnalistaSeleccionado(index)" class="ml-2">
           <b-icon-trash-fill></b-icon-trash-fill>
         </b-button>
@@ -73,7 +73,8 @@ export default {
       analistaDuplicado: false,
       alertaDuplicado: false,      
       rutEmpleadosSeleccionados: '',
-      empleados: [{rut_empleado: '',}],
+      empleados: [{rut_empleado: '',
+                   nombre: ''}],
       
       
     };
@@ -103,25 +104,25 @@ export default {
     agregarAnalistaSeleccionado() {
   if (this.AnalistaAsignado) {
     const analistaExistente = this.analistasSeleccionados.find(
-      (analista) => analista === this.AnalistaAsignado
+      (analista) => analista.nombre === this.AnalistaAsignado
     );
     if (analistaExistente) {
       this.alertaDuplicado = true;
     } else {
-      const rutAnalista = this.analistas.find((a) => a.nombre === this.AnalistaAsignado)
-        .rut_empleado;
-      this.analistasSeleccionados.push(this.AnalistaAsignado);
-      this.empleados.push({ rut_empleado: rutAnalista }); // Agregar objeto con el RUT
+      const analistaSeleccionado = this.analistas.find((analista) => analista.nombre === this.AnalistaAsignado);
+      const rutAnalista = analistaSeleccionado.rut_empleado;
+      this.analistasSeleccionados.push({ nombre: this.AnalistaAsignado, rut_empleado: rutAnalista });
+      this.empleados.push({ nombre: this.AnalistaAsignado, rut_empleado: rutAnalista });
       this.AnalistaAsignado = '';
       this.alertaDuplicado = false;
     }
   }
 },
 
-    eliminarAnalistaSeleccionado(index) {
-      this.analistasSeleccionados.splice(index, 1);
-      this.rutEmpleadosSeleccionados.splice(index, 1);
-    },
+eliminarAnalistaSeleccionado(index) {
+  this.analistasSeleccionados.splice(index, 1);
+  this.empleados.splice(index + 1, 1); // Eliminar objeto con el RUT y nombre
+},
 
     AgregarMetodologia(){
 
