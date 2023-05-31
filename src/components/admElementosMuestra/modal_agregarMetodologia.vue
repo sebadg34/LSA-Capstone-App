@@ -72,8 +72,9 @@ export default {
       analistasSeleccionados: [],
       analistaDuplicado: false,
       alertaDuplicado: false,      
-      rutEmpleadosSeleccionados: [],
-      empleados: [],
+      rutEmpleadosSeleccionados: '',
+      empleados: [{rut_empleado: '',}],
+      
       
     };
   },
@@ -100,19 +101,22 @@ export default {
   methods: {
   
     agregarAnalistaSeleccionado() {
-      if (this.AnalistaAsignado) {
-        const analistaExistente = this.analistasSeleccionados.find((analista) => analista === this.AnalistaAsignado);
-        if (analistaExistente) {
-          this.alertaDuplicado = true;
-        } else {
-          this.analistasSeleccionados.push(this.AnalistaAsignado);
-          this.rutEmpleadosSeleccionados.push(this.analistas.find(a => a.nombre === this.AnalistaAsignado).rut_empleado);
-          this.empleados = this.rutEmpleadosSeleccionados;
-          this.AnalistaAsignado = '';
-          this.alertaDuplicado = false;
-        }
-      }
-    },
+  if (this.AnalistaAsignado) {
+    const analistaExistente = this.analistasSeleccionados.find(
+      (analista) => analista === this.AnalistaAsignado
+    );
+    if (analistaExistente) {
+      this.alertaDuplicado = true;
+    } else {
+      const rutAnalista = this.analistas.find((a) => a.nombre === this.AnalistaAsignado)
+        .rut_empleado;
+      this.analistasSeleccionados.push(this.AnalistaAsignado);
+      this.empleados.push({ rut_empleado: rutAnalista }); // Agregar objeto con el RUT
+      this.AnalistaAsignado = '';
+      this.alertaDuplicado = false;
+    }
+  }
+},
 
     eliminarAnalistaSeleccionado(index) {
       this.analistasSeleccionados.splice(index, 1);
@@ -121,14 +125,17 @@ export default {
 
     AgregarMetodologia(){
 
+      const empleadosFiltrados = this.empleados.slice(1);
+
       var data = {
 
         nombre_metodologia: this.Nombre,        
         detalle_metodologia: this.Descripción,
-        empleados: this.empleados
+        empleados: empleadosFiltrados
 
 
       }
+
       console.log("data a enviar", data)
       ElementosService.agregarMetodología(data).then((response)=>{
         console.log(response)
@@ -150,7 +157,7 @@ export default {
             this.analistas = [],
             this.analistasSeleccionados = [],
             this.rutEmpleadosSeleccionados = [],
-            this.empleados = [],
+            this.empleados = [{rut_empleado: ''}],
             
 
             this.$refs.modal.hide()                         

@@ -25,18 +25,18 @@
         </b-col>
       </b-row>
   
-      <b-row v-if="analistasSeleccionados.length > 0" class="mt-3">
-    <b-col>
-      <b-form-group label="Analistas Seleccionados">
-        <div v-for="(analista, index) in analistasSeleccionados" :key="index" class="d-flex align-items-center analista-item">
-          <b-input readonly :value="analista.nombre"></b-input>
-          <b-button variant="danger" @click="eliminarAnalistaSeleccionado(index)" class="ml-2">
-            <b-icon-trash-fill></b-icon-trash-fill>
-          </b-button>
-        </div>
-      </b-form-group>
-    </b-col>
-  </b-row>
+    <b-row v-if="analistasSeleccionados.length > 0" class="mt-3">
+      <b-col>
+        <b-form-group label="Analistas Seleccionados">
+          <div v-for="(analista, index) in analistasSeleccionados" :key="index" class="d-flex align-items-center analista-item">
+            <b-input readonly :value="analista.nombre"></b-input>
+            <b-button variant="danger" @click="eliminarAnalistaSeleccionado(index)" class="ml-2">
+              <b-icon-trash-fill></b-icon-trash-fill>
+            </b-button>
+          </div>
+        </b-form-group>
+      </b-col>
+    </b-row>
   
   <b-alert variant="danger" :show="alertaDuplicado" dismissible @dismissed="alertaDuplicado = false">
     El analista ya fue agregado.
@@ -68,7 +68,10 @@ export default {
                 
                 this.Nombre = this.metodologiaData.nombre_metodologia;
                 this.Descripción = this.metodologiaData.detalle_metodologia;
-                this.analistasSeleccionados = this.metodologiaData.empleados;                        
+                this.AnalistaAsignado = '';
+                //this.analistasSeleccionados = this.metodologiaData.analistasSeleccionados;
+                this.empleados = this.metodologiaData.empleados;
+
          
             }
         }
@@ -89,7 +92,7 @@ export default {
       analistaDuplicado: false,
       alertaDuplicado: false,      
       rutEmpleadosSeleccionados: [],
-      empleados: []
+      empleados: [{rut_empleado: '',}],
       
     };
   },
