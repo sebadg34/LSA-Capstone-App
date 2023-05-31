@@ -25,7 +25,7 @@
       </b-col>
     </b-row>
 
-    <b-row v-if="analistasSeleccionados.length > 0" class="mt-3">
+<b-row v-if="analistasSeleccionados.length > 0" class="mt-3">
   <b-col>
     <b-form-group label="Analistas Seleccionados">
       <div v-for="(analista, index) in analistasSeleccionados" :key="index" class="d-flex align-items-center analista-item">
@@ -64,6 +64,7 @@ export default {
   data() {
     return {
       
+      empleados_eliminar: '',
       Nombre: '',
       Descripción: '',
       AnalistaAsignado: '',
@@ -124,6 +125,8 @@ eliminarAnalistaSeleccionado(index) {
   this.empleados.splice(index + 1, 1); // Eliminar objeto con el RUT y nombre
 },
 
+
+
     AgregarMetodologia(){
 
       const empleadosFiltrados = this.empleados.slice(1);
@@ -158,7 +161,8 @@ eliminarAnalistaSeleccionado(index) {
             this.analistas = [],
             this.analistasSeleccionados = [],
             this.rutEmpleadosSeleccionados = [],
-            this.empleados = [{rut_empleado: ''}],
+            this.empleados = [{rut_empleado: '',
+                              nombre: ''}],
             
 
             this.$refs.modal.hide()                         

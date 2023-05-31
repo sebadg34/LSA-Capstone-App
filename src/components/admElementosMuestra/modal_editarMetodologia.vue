@@ -25,10 +25,10 @@
         </b-col>
       </b-row>
   
-    <b-row v-if="analistasSeleccionados.length > 0" class="mt-3">
+    <b-row v-if="metodologiaData.analistasSeleccionados.length > 0" class="mt-3">
       <b-col>
         <b-form-group label="Analistas Seleccionados">
-          <div v-for="(analista, index) in analistasSeleccionados" :key="index" class="d-flex align-items-center analista-item">
+          <div v-for="(analista, index) in metodologiaData.analistasSeleccionados" :key="index" class="d-flex align-items-center analista-item">
             <b-input readonly :value="analista.nombre"></b-input>
             <b-button variant="danger" @click="eliminarAnalistaSeleccionado(index)" class="ml-2">
               <b-icon-trash-fill></b-icon-trash-fill>
@@ -69,7 +69,7 @@ export default {
                 this.Nombre = this.metodologiaData.nombre_metodologia;
                 this.Descripción = this.metodologiaData.detalle_metodologia;
                 this.AnalistaAsignado = '';
-                //this.analistasSeleccionados = this.metodologiaData.analistasSeleccionados;
+                this.analistasSeleccionados = this.metodologiaData.analistasSeleccionados;
                 this.empleados = this.metodologiaData.empleados;
 
          
@@ -91,8 +91,9 @@ export default {
       analistasSeleccionados: [],
       analistaDuplicado: false,
       alertaDuplicado: false,      
-      rutEmpleadosSeleccionados: [],
-      empleados: [{rut_empleado: '',}],
+      rutEmpleadosSeleccionados: '',
+      empleados: [{rut_empleado: '',
+                   nombre: ''}],
       
     };
   },
@@ -120,33 +121,44 @@ export default {
   methods: {
   
     agregarAnalistaSeleccionado() {
-      if (this.AnalistaAsignado) {
-    const analistaExistente = this.analistasSeleccionados.find((analista) => analista === this.AnalistaAsignado);
-      if (analistaExistente) {
-        this.alertaDuplicado = true;
-      } else {                 
-          this.analistasSeleccionados.push(this.AnalistaAsignado.nombre);
-          this.rutEmpleadosSeleccionados.push(this.AnalistaAsignado.rut_empleado);
-          this.empleados = this.rutEmpleadosSeleccionados;
-          this.AnalistaAsignado = '';
-          this.alertaDuplicado = false;
-        
+  if (this.AnalistaAsignado) {
+    const analistaExistente = this.analistasSeleccionados.find(
+      (analista) => analista.nombre === this.AnalistaAsignado
+    );
+    if (analistaExistente) {
+      this.alertaDuplicado = true;
+    } else {
+      const analistaSeleccionado = this.analistas.find((analista) => analista.nombre === this.AnalistaAsignado);
+      const rutAnalista = analistaSeleccionado.rut_empleado;
+      this.analistasSeleccionados.push({ nombre: this.AnalistaAsignado, rut_empleado: rutAnalista });
+      this.empleados.push({ nombre: this.AnalistaAsignado, rut_empleado: rutAnalista });
+      this.AnalistaAsignado = '';
+      this.alertaDuplicado = false;
     }
   }
 },
 
-    eliminarAnalistaSeleccionado(index) {
-      this.analistasSeleccionados.splice(index, 1);
-      this.rutEmpleadosSeleccionados.splice(index, 1);
-    },
+eliminarAnalistaSeleccionado(index) {
+  
+  if (this.empleados[index + 1].rut_empleado != "") {    
+    this.empleados[index + 1].rut_empleado = "";
+    this.empleados[index + 1].nombre = "";
+    this.empleados_eliminar.push(this.empleados[index]);
+  }
+ 
+  this.analistasSeleccionados.splice(index, 1);  
+  this.empleados.splice(index + 1, 1);
+},
 
     ActualizarMetodologia(){
+
+      const empleadosFiltrados = this.empleados.slice(1);
 
       var data = {
 
         nombre_metodologia: this.Nombre,        
         detalle_metodologia: this.Descripción,
-        empleados: this.empleados
+        empleados: empleadosFiltrados
         
 
       }
@@ -155,7 +167,7 @@ export default {
         console.log(response)
         if(response != null){
           if (response.status == 200) {
-            this.$bvToast.toast(`Se ha editado la metodología exitosamente!`, {
+            this.$bvToast.toast(`Se ha actualizado la metodología exitosamente!`, {
               title: 'Exito',
               toaster: 'b-toaster-top-center',
               solid: true,
@@ -165,15 +177,7 @@ export default {
             
             this.$emit('metodologiaAgregada');
 
-            this.Nombre = '',
-            this.Descripción = '',           
-            this.AnalistaAsignado = '',
-            this.opcionesAnalista = [],
-            this.analistas = [],
-            this.analistasSeleccionados = [],
-            this.rutEmpleadosSeleccionados = [],
-            this.empleados = [],
-
+            
             this.$refs.modal.hide()
           }
         } else {
