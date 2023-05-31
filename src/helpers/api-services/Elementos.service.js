@@ -25,7 +25,7 @@ const agregarParametro = async (data) => {
     }
 };
 
-const obtenerMetodologias= async () => {
+const obtenerMetodologias = async () => {
     try {
          const response = await axios.get(apiUrl + "/metodologias");
              console.log(response);
@@ -41,7 +41,24 @@ const obtenerMetodologias= async () => {
      }
  };
 
- const obtenerDetallesMetodologia = async (data) => {
+const obtenerParametros = async () => {
+    try {
+         const response = await axios.get(apiUrl + "/parametros");
+             console.log(response);
+         if(response.status == 200){
+             return response;
+         }else{
+             return;
+         }
+         
+     } catch (error) {
+         console.log(error);
+         return;
+     }
+ };
+
+
+const obtenerDetallesMetodologia = async (data) => {
     try {
          const response = await axios.get(apiUrl + "/metodologias/" + data.nombre_metodologia, data);
          console.log(response);
@@ -57,7 +74,7 @@ const obtenerMetodologias= async () => {
      }
  };
 
- const actualizarMetodologia = async (data) => {
+const actualizarMetodologia = async (data) => {
     try {
         console.log("DATA: ", data.nombre_metodologia);
         const response = await axios.put(apiUrl + "/metodologias/" + "/actualizarMetodologia/" + data.nombre_metodologia, data);
@@ -74,6 +91,41 @@ const obtenerMetodologias= async () => {
         return;
     }
 };
+
+const actualizarParametro = async (data) => {
+    try {
+        console.log("DATA: ", data.nombre_metodologia);
+        const response = await axios.put(apiUrl + "/parametros/" + "/actualizarParametro/" + data.nombre_parametro, data);      
+        
+        console.log(response);
+        
+        if (response.status == 200) {
+            return response;
+        } else {
+            return;
+        }
+    } catch (error) {
+        console.log(error);
+        return;
+    }
+};
+
+const obtenerDetallesParametro = async (data) => {
+    try {
+         const response = await axios.get(apiUrl + "/parametros/" + data.id_parametro, data);
+        
+         console.log(response);
+         if(response.status == 200){
+             return response;
+         } else {
+             return;
+         }
+         
+     } catch (error) {
+         console.log(error);
+         return;
+     }
+ };
 
 const agregar_Empleados_Asociados = async (nombre_metodologia, data) => {
     try {  
@@ -107,6 +159,9 @@ export default {
     agregar_Empleados_Asociados,
     eliminar_Empleados_Asociados,
     obtenerDetallesMetodologia,
-    agregarParametro
+    agregarParametro,
+    actualizarParametro,
+    obtenerDetallesParametro,
+    obtenerParametros
 
 }

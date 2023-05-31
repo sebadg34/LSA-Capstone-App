@@ -72,8 +72,7 @@ export default {
             opcionesMetodologia: [],
             metodologiaAsignada: '',
             metodologiaSeleccionada: [],  
-            alertaDuplicado: false, 
-            metodologiaDuplicada: false,
+            alertaDuplicado: false,            
             metodologia: []    
 
         }
@@ -89,41 +88,40 @@ export default {
     methods: { 
       
       obtenerMetodologias() {
-  console.log("Obteniendo Metodologias: ");
-  ElementosService.obtenerMetodologias().then((response) => {
-    if (response.data != null && response.status === 200) {
-      this.opcionesMetodologia = response.data.map(item => item.nombre_metodologia);
-    }
-  });
-},    
+        console.log("Obteniendo Metodologias: ");
+        ElementosService.obtenerMetodologias().then((response) => {
+          if (response.data != null && response.status === 200) {
+            this.opcionesMetodologia = response.data.map(item => item.nombre_metodologia);
+          }
+        });
+      },    
 
-agregarMetodologiaSeleccionada() {
-      if (this.metodologiaAsignada) {
-        const metodologiaExistente = this.metodologiaSeleccionada.find((metodologia) => metodologia === this.metodologiaAsignada);
-        if (metodologiaExistente) {
-          this.alertaDuplicado = true;
-        } else {
-          this.metodologiaSeleccionada.push(this.metodologiaAsignada);
-          //this.rutEmpleadosSeleccionados.push(this.analistas.find(a => a.nombre === this.metodologiaAsignada).rut_empleado);
-          this.metodologia = this.metodologiaSeleccionada;
-          this.metodologiaAsignada = '';
-          this.alertaDuplicado = false;
+      agregarMetodologiaSeleccionada() {
+        if (this.metodologiaAsignada) {
+          const metodologiaExistente = this.metodologiaSeleccionada.find((metodologia) => metodologia === this.metodologiaAsignada);
+          if (metodologiaExistente) {
+            this.alertaDuplicado = true;
+          } else {
+            this.metodologiaSeleccionada.push(this.metodologiaAsignada);
+            //this.rutEmpleadosSeleccionados.push(this.analistas.find(a => a.nombre === this.metodologiaAsignada).rut_empleado);
+            this.metodologia = this.metodologiaSeleccionada;
+            this.metodologiaAsignada = '';
+            this.alertaDuplicado = false;
+          }
         }
-      }
-    },
+      },
 
-    eliminarMetodologiaSeleccionada(index) {
-      this.metodologiaSeleccionada.splice(index, 1);
-      // this.rutEmpleadosSeleccionados.splice(index, 1);
-    },
+      eliminarMetodologiaSeleccionada(index) {
+        this.metodologiaSeleccionada.splice(index, 1);
+        // this.rutEmpleadosSeleccionados.splice(index, 1);
+      },
 
     AgregarParametro(){
 
       var data = {
 
       nombre_parametro: this.Nombre,        
-      nombre_metodología: this.metodologia
-      
+      nombre_metodología: this.metodologia      
 
     }
     console.log("data a enviar", data)
@@ -137,7 +135,17 @@ agregarMetodologiaSeleccionada() {
         solid: true,
         variant: "success",
         appendToast: true
-      })                                
+      })  
+
+      this.$emit('parametroAgregado');
+      
+      this.Nombre = '',                                   
+      this.opcionesMetodologia = [],
+      this.metodologiaAsignada = '',
+      this.metodologiaSeleccionada = [],            
+      this.metodologia = [] 
+      
+      this.$refs.modal.hide()
     }
     } else {
     this.$bvToast.toast(`Error al agregar el parámetro.!`, {
