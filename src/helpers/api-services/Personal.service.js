@@ -49,14 +49,28 @@ const eliminarDocumento = async (data) => {
         return;
     }
 };
+
+
 const obtenerTodosPersonal = async () => {
     try {
         const instanciaApi = await crearApi();
-        const response = await instanciaApi.get("/empleados", {
-            headers: {
-                Authorization: 'Bearer ' + localStorage.getItem('token') //the token is a variable which holds the token
-              }
-        });
+        const response = await instanciaApi.get("/empleados");
+            console.log(response);
+        if(response.status == 200){
+            return response;
+        }else{
+            return;
+        }
+        
+    } catch (error) {
+        console.log(error);
+        return;
+    }
+};
+const obtenerPersonal = async (id) => {
+    try {
+        const instanciaApi = await crearApi();
+        const response = await instanciaApi.get("/empleados/" + id);
             console.log(response);
         if(response.status == 200){
             return response;
@@ -125,6 +139,7 @@ export default {
     editarPersonal,
     obtenerDetallesPersonal,
     eliminarDocumento,
-    descargarDocumento
+    descargarDocumento,
+    obtenerPersonal
 
 };

@@ -21,8 +21,18 @@ const store = new Vuex.Store({
   },
   
   state: {
-    count: 0,
     accessToken: null
+  },
+  getters: {
+    rol () {
+      return user.state.rol
+    }
+  },
+  mutations: {
+    setRol (state,rol) {
+      // mutate state
+      user.state.rol = rol;
+    }
   }
 })
 export default store;

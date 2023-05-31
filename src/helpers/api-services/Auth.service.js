@@ -1,7 +1,7 @@
 import axios from "axios";
 import config from '@/../public/config.json'
 import jscookie from "js-cookie";
-
+import store from "@/store/store";
 
 var apiInstance;
 async function crearApi() {
@@ -40,11 +40,50 @@ export function getUserInfo() {
   
     return JSON.parse(jscookie.get('userInfo')) ;
   }
+  export async function clearUserInfo() {
+    jscookie.remove('userInfo');
+}
   export function saveUserInfo(data) {
   
     jscookie.set('userInfo',JSON.stringify(data), { sameSite: 'none', secure: true });
   }
 
+  const obtenerUsuarios = async () => {
+    try {
+        await crearApi();
+        const response = await apiInstance.get("/usuarios");
+            console.log(response);
+        if(response.status == 200){
+            return response;
+        }else{
+            return;
+        }
+        
+    } catch (error) {
+        console.log(error);
+        return;
+    }
+};
+
+
+
+const cambiarPassword = async (data) => {
+    try {
+        await crearApi();
+        const response = await apiInstance.post("/cambiarPassword", data);
+        if (response.status) {
+            console.log(response);
+            return response;
+        }
+        else {
+            console.log(response);
+            return;
+        }
+    } catch (error) {
+        console.log(error);
+        return;
+    }
+}
 
 const login = async (data) => {
     try {
@@ -54,6 +93,7 @@ const login = async (data) => {
             console.log(response);
             setAuthToken(response.data.token);
             saveUserInfo(response.data.user);
+            store.commit('setRol',response.data.user.role);
             localStorage.setItem("token", response.data.token);
             axios.defaults.headers.common['Authorization'] = 'Bearer ' + response.data.token;
             return response;
@@ -68,16 +108,18 @@ const login = async (data) => {
     }
 }
 
+
+
 export function isLoggedIn() {
     let authToken = getAuthToken();
     return !!authToken;
 }
 
-const register = async () => {
+const register = async (data) => {
     try {
-        const response = await apiInstance.get('http://127.0.0.1:8000/api/register');
+        const response = await apiInstance.post('http://127.0.0.1:8000/api/register',data);
         console.log(response);
-        if (response.status == 200) {
+        if (response.status == 201 || response.status ==422) {
             return response;
         } else {
             return;
@@ -85,7 +127,7 @@ const register = async () => {
 
     } catch (error) {
         console.log(error);
-        return;
+        return error.response;
     }
 }
 
@@ -95,6 +137,7 @@ const logout = async () => {
         crearApi();
         const response = await apiInstance.post('http://127.0.0.1:8000/api/logout');
         await clearAuthToken();
+        await clearUserInfo();
         console.log(response);
         if (response.status == 200) {
             return response;
@@ -104,6 +147,7 @@ const logout = async () => {
 
     } catch (error) {
         console.log(error);
+        await clearAuthToken();
         return;
     }
 }
@@ -111,6 +155,9 @@ export default {
     login,
     register,
     logout,
-    isLoggedIn
+    isLoggedIn,
+    obtenerUsuarios,
+    cambiarPassword
+    
 
 };

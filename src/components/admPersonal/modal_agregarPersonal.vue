@@ -179,8 +179,12 @@
 
 <script>
 import personalService from "@/helpers/api-services/Personal.service"
-export default {
+import roleService from "@/helpers/api-services/Role.service"
 
+export default {
+mounted(){
+    this.obtenerRoles();
+},
     data() {
 
         return {
@@ -197,6 +201,7 @@ export default {
             Emergencia: "",
             Cargo: "",
             Tipo: "",
+            Roles: [],
             tipos: [{
                 value: 'Practicante',
                 text: 'Practicante'
@@ -241,7 +246,21 @@ export default {
             ],
         }
     },
+
     methods: {
+        obtenerIdRol(value){
+            return this.Roles.find(x => x.descripcion == value).id_rol;
+        },
+        obtenerRoles() {
+            roleService.obtenerRoles().then((response) => {
+                if (response != null) {
+                    if (response.data != null) {
+                        this.Roles = response.data;
+                        console.log(this.Roles);
+                }
+            }
+            })
+        },
         remove(index) {
             this.Archivos.splice(index, 1)
         },
@@ -302,6 +321,7 @@ export default {
                     if (this.Archivos_enviar.length != 0) {
                         formData.documentos = this.Archivos_enviar;
                     }
+                    formData.id_rol = this.obtenerIdRol(formData.rol);
                     console.log("data a enviar", formData)
                     personalService.ingresarPersonal(formData).then((response) => {
                         this.Cargando = false;

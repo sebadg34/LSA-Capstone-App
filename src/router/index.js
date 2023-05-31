@@ -15,10 +15,36 @@ import USU003_admSolicitante from '../views/USU003_admSolicitante'
 import USU005_admDisponibilidad from '../views/USU005_admDisponibilidad'
 import USU001_vistaInicio from '../views/USU001_vistaInicio'
 import {isLoggedIn} from "@/helpers/api-services/Auth.service";
+import admUsuario from '../views/admUsuario.vue'
+import admPerfil from '../views/USU001_vistaPerfil.vue'
+import Restringido from '../views/vistaNoAutorizada.vue'
+import store from "@/store/store";
+
+
+// TODO: implementar manera mas segura de guarda info de usuario
+import jscookie from "js-cookie";
 
 Vue.use(VueRouter)
 
 const routes = [
+  {
+    path: "/restringido",
+    name: "Restringido",
+    component: Restringido,
+    meta: {
+      title: "Sistema restringido",
+      allowAnonymous: true
+    }
+  },
+  {
+    path: '/perfil',
+    name: 'perfil',
+    component: admPerfil,
+    meta: {
+      title: "Perfil Usuario",
+      
+    }
+  },
   {
     path: '/inicio',
     name: 'inicio',
@@ -55,7 +81,17 @@ const routes = [
     name: 'admPersonal',
     component: USU004_admPersonal,
     meta: {
-      title: "LSA - Administración Personal"
+      title: "LSA - Administración Personal",
+      authorize: [1,2,6,0]
+    }
+
+  } ,{
+    path: '/admUsuario',
+    name: 'admUsuario',
+    component: admUsuario,
+    meta: {
+      title: "LSA - Administración Usuarios",
+      authorize: [0]
     }
 
   },
@@ -64,7 +100,8 @@ const routes = [
     name: 'admDisponibilidad',
     component: USU005_admDisponibilidad,
     meta: {
-      title: "LSA - Administración Disponibilidad"
+      title: "LSA - Administración Disponibilidad",
+      authorize: [7,1,2,0]
     }
 
   },
@@ -73,7 +110,8 @@ const routes = [
     name: 'admEmpresa',
     component: USU002_admEmpresa,
     meta: {
-      title: "LSA - Administración Empresa"
+      title: "LSA - Administración Empresa",
+      authorize: [2,6,0]
     }
 
   },
@@ -82,7 +120,9 @@ const routes = [
     name: 'admSolicitante',
     component: USU003_admSolicitante,
     meta: {
-      title: "LSA - Administración Solicitante"
+      title: "LSA - Administración Solicitante",
+      authorize: [2,6,0]
+      
     }
 
   },
@@ -141,15 +181,7 @@ const routes = [
     }
 
   },
-  //{
-  //  path: "/Bloqueado",
-  //  name: "Bloqueado",
-  //  component: Bloqueado,
-  //  meta: {
-  //    title: "Sistema bloqueado",
-  //    allowAnonymous: true
-  //  }
-  //},
+ 
 
   {
     path: '/about',
@@ -172,6 +204,19 @@ const router = new VueRouter({
 })
 
 router.beforeEach((to, from, next) => {
+
+  // Recuperar datos del usuario al Store en caso de recargar
+  if( isLoggedIn() && store.getters.rol == null){
+    store.commit('setRol',JSON.parse(jscookie.get('userInfo')).role);
+  }
+
+const {authorize} = to.meta;
+var currentUser ="";
+if(jscookie.get('userInfo') != null){
+  currentUser = JSON.parse(jscookie.get('userInfo'));
+}
+
+
   if (to.name == "login" && isLoggedIn()) {
     next({ path: "/inicio" })
   }
@@ -181,7 +226,18 @@ router.beforeEach((to, from, next) => {
   }
   else
   {
-    next()
+    if(authorize){
+
+      // Checkear si la ruta se restringe por rol
+      //if(authorize.length && !authorize.includes(currentUser.role)){
+      if(authorize.length && !authorize.includes(currentUser.role)){
+        // rol no autorizado
+        next({name: "Restringido"})
+      }else{
+        next();
+      }
+    }
+    next();
   }
   
 })

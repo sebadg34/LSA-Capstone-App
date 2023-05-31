@@ -20,33 +20,29 @@
                     <br>
                     <b-col sm="12" xs="12" lg="6">
                         <b-card header-class="lsa-blue" header-tag="header" header="Ingreso sistema administración LSA" text-variant="white">
-
-                            <ValidationProvider name="correo" rules="required|email" v-slot="validationContext">
+                           
+                          
                                 <b-input-group class="mb-2">
 
                                     <b-input-group-prepend is-text>
                                         <b-icon icon="person-fill"></b-icon>
                                     </b-input-group-prepend>
-                                    <b-form-input v-model="Correo" :state="getValidationState(validationContext)" class="input-correo" name="correo" id="correo" type="text" aria-describedby="rut-live-feedback" placeholder="Correo electrónico"></b-form-input>
-                                    <b-form-invalid-feedback id="correo-live-feedback">{{
-                      validationContext.errors[0] }}
-                                    </b-form-invalid-feedback>
+                                    <b-form-input v-model="Correo"  class="input-correo" name="correo" id="correo" type="text" aria-describedby="rut-live-feedback" placeholder="Correo electrónico"></b-form-input>
+                                 
 
                                 </b-input-group>
-                            </ValidationProvider>
-                            <ValidationProvider name="password" rules="required" v-slot="validationContext">
+                          
+                          
                                 <b-input-group class="mb-2">
 
                                     <b-input-group-prepend is-text>
                                         <b-icon icon="lock-fill"></b-icon>
                                     </b-input-group-prepend>
-                                    <b-form-input :state="getValidationState(validationContext)" class="input-pass" name="password" type="password" aria-describedby="password-live-feedback" placeholder="Contraseña" v-model="Password"></b-form-input>
-                                    <b-form-invalid-feedback id="password-live-feedback">{{
-                      validationContext.errors[0] }}
-                                    </b-form-invalid-feedback>
+                                    <b-form-input class="input-pass" name="password" id="password" type="password" aria-describedby="password-live-feedback" placeholder="Contraseña" v-model="Password"></b-form-input>
+                                   
 
                                 </b-input-group>
-                            </ValidationProvider>
+                            
                             <br>
                             <b-overlay :show="Cargando"  opacity="0.6" spinner-small spinner-variant="primary" >
 
@@ -80,12 +76,12 @@ export default {
             return dirty || validated ? valid : null;
         },
         enviarFormulario() {
-this.Cargando = true;
+
             this.$refs.form.validate().then(success => {
                 if (!success) {
                     return;
                 } else {
-
+                    this.Cargando = true;
                     var data = {
                         email: this.Correo,
                         password: this.Password
@@ -93,8 +89,10 @@ this.Cargando = true;
                     userService.login(data).then((response) => {
                       this.Cargando = false;
                         console.log(response)
-                        if (response.status == 200) {
-                          var data = getUserInfo();
+
+                        if (response != null) {
+                            if(response.status == 200){
+                                var data = getUserInfo();
                           this.$root.$bvToast.toast(`Ingreso exitoso \n Bienvenid@ ` + data.nombre + " "+ data.apellido, {
                                     title: 'Exito',
                                     toaster: 'b-toaster-top-center',
@@ -102,7 +100,17 @@ this.Cargando = true;
                                     appendToast: true
                                 })
                             this.$router.push("/inicio");
-                        }
+                            }
+                         
+                        }else{
+                                this.$bvToast.toast('Error al ingresar, Las credenciales de acceso son incorrectas o el usuario no está registrado en el sistema', {
+                                    title: 'Error',
+                                    toaster: 'b-toaster-top-center',
+                                    variant:"warning",
+                                    solid: true,
+                                    appendToast: true
+                                }) 
+                            }
                     });
 
                 }

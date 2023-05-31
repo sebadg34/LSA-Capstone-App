@@ -3,117 +3,109 @@
 
     <b-button v-on:click="menu_active=!menu_active" class="menuDropdownButton menu-button lsa-orange white-text ml-2 mr-2">
         <b-icon style="color:white" icon="menu-app" aria-hidden="true"></b-icon>
-        <span style="color:white" class="px-md-2 dropdown-desktop">{{userData.nombre}}</span>
+        <span style="color:white" class="px-md-2 dropdown-desktop">Menu</span>
         <b-icon class="menuDropdownIcon" style="color:white" icon="caret-down-fill" aria-hidden="true"></b-icon>
     </b-button>
 
     <transition name="menu-pop">
-        <div class="menu" v-show="menu_active">
+            <div class="menu" v-show="menu_active">
 
-            <b-list-group class="menu custom-light-shadowbox ml-2 mr-2" id="menu">
-
-                <b-list-group-item @click="navegarRuta('inicio')"  class="cursorToHand  homeButton">
-                    <b-icon icon="house-fill" aria-hidden="true"></b-icon><span class="px-md-2">Home</span>
-                </b-list-group-item>
-
-                <b-list-group-item id="dropdown-header-label" class="lsa-light-gray cursorToHand menuHeader d-flex justify-content-between" v-b-toggle="'collapse-1'">
-                    <div>
-                        <b-icon class="lsa-orange-text" icon="people-fill"></b-icon>
-                        <span class="px-md-2"></span>
-                        <span>Administrar Personal</span>
-                    </div>
-                    <b-icon icon="chevron-down" variant="dark"></b-icon>
-                </b-list-group-item>
-
-
-                <b-collapse accordion="my-accordion" id="collapse-1">
-                    <b-list-group-item @click="navegarRuta('admPersonal')" class="cursorToHand menuButton">
-                        <b-icon class="lsa-orange-text" icon="people-fill"></b-icon>
-                        <span class="px-md-2"></span> Agregar Personal
+                <b-list-group class="menu custom-light-shadowbox ml-2 mr-2" id="menu">
+                    <b-list-group-item @click="navegarRuta('inicio')" class="cursorToHand  homeButton">
+                        <b-icon icon="house-fill" aria-hidden="true"></b-icon><span class="px-md-2">Home</span>
                     </b-list-group-item>
-                    <b-list-group-item @click="navegarRuta('admDisponibilidad')" class="cursorToHand menuButton">
-                        <b-icon class="lsa-orange-text" icon="people-fill"></b-icon>
-                        <span class="px-md-2"></span> Disponibilidad Personal
+
+                    <template v-if="rol == 1 || rol == 2 || rol == 6 || rol == 0">
+                    <b-list-group-item id="dropdown-header-label" class="lsa-light-gray cursorToHand menuHeader d-flex justify-content-between" v-b-toggle="'collapse-1'">
+                        <div>
+                            <b-icon class="lsa-orange-text" icon="people-fill"></b-icon>
+                            <span class="px-md-2"></span>
+                            <span>Administrar Personal</span>
+                        </div>
+                        <b-icon icon="chevron-down" variant="dark"></b-icon>
                     </b-list-group-item>
-                </b-collapse>
+                    <b-collapse accordion="my-accordion" id="collapse-1">
+                        <b-list-group-item @click="navegarRuta('admPersonal')" class="cursorToHand menuButton">
+                            <b-icon class="lsa-orange-text" icon="person-plus-fill"></b-icon>
+                            <span class="px-md-2"></span> Agregar Personal
+                        </b-list-group-item>
+                        <b-list-group-item v-if="rol == 1 || rol == 2 || rol == 7 || rol == 0" @click="navegarRuta('admDisponibilidad')" class="cursorToHand menuButton">
+                            <b-icon class="lsa-orange-text" icon="person-check-fill"></b-icon>
+                            <span class="px-md-2"></span> Disponibilidad Personal
+                        </b-list-group-item>
+                    </b-collapse>
+                    </template>
 
 
-                <b-list-group-item id="dropdown-header-label" class="lsa-light-gray cursorToHand menuHeader d-flex justify-content-between" v-b-toggle="'collapse-2'">
-                    <div>
-                        <b-icon class="lsa-orange-text" icon="eyedropper"></b-icon>
-                        <span class="px-md-2"></span>
-                        <span>Administrar Laboratorio</span>
-                    </div>
-                    <b-icon icon="chevron-down" variant="dark"></b-icon>
-                </b-list-group-item>
-
-                <b-collapse accordion="my-accordion" id="collapse-2">
-                    <b-list-group-item @click="navegarRuta('/')" class="cursorToHand menuButton">
-                        <b-icon class="lsa-orange-text" icon="eyedropper"></b-icon>
-                        <span class="px-md-2"></span> Administrar Muestra
+                    <b-list-group-item id="dropdown-header-label" class="lsa-light-gray cursorToHand menuHeader d-flex justify-content-between" v-b-toggle="'collapse-2'">
+                        <div>
+                            <b-icon class="lsa-orange-text" icon="eyedropper"></b-icon>
+                            <span class="px-md-2"></span>
+                            <span>Administrar Laboratorio</span>
+                        </div>
+                        <b-icon icon="chevron-down" variant="dark"></b-icon>
                     </b-list-group-item>
-                    <b-list-group-item @click="navegarRuta('/')" class="cursorToHand menuButton">
-                        <b-icon class="lsa-orange-text" icon="people-fill"></b-icon>
-                        <span class="px-md-2"></span> Administrar Elementos
+                    <b-collapse accordion="my-accordion" id="collapse-2">
+
+                        <b-list-group-item @click="navegarRuta('/')" class="cursorToHand menuButton">
+                            <b-icon class="lsa-orange-text" icon="eyedropper"></b-icon>
+                            <span class="px-md-2"></span> Administrar Muestra
+                        </b-list-group-item>
+
+                        <b-list-group-item @click="navegarRuta('/')" class="cursorToHand menuButton">
+                            <b-icon class="lsa-orange-text" icon="archive-fill"></b-icon>
+                            <span class="px-md-2"></span> Administrar Elementos
+                        </b-list-group-item>
+                    </b-collapse>
+
+                    <template v-if="rol == 2 || rol == 6 || rol == 0">
+                    <b-list-group-item id="dropdown-header-label" class="lsa-light-gray cursorToHand menuHeader d-flex justify-content-between" v-b-toggle="'collapse-3'">
+                        <div>
+                            <b-icon class="lsa-orange-text" icon="briefcase-fill"></b-icon>
+                            <span class="px-md-2"></span>
+                            <span>Administrar Cliente</span>
+                        </div>
+                        <b-icon icon="chevron-down" variant="dark"></b-icon>
                     </b-list-group-item>
-                </b-collapse>
+                    <b-collapse accordion="my-accordion" id="collapse-3">
 
 
-                <b-list-group-item id="dropdown-header-label" class="lsa-light-gray cursorToHand menuHeader d-flex justify-content-between" v-b-toggle="'collapse-3'">
-                    <div>
-                        <b-icon class="lsa-orange-text" icon="briefcase-fill"></b-icon>
-                        <span class="px-md-2"></span>
-                        <span>Administrar Cliente</span>
-                    </div>
-                    <b-icon icon="chevron-down" variant="dark"></b-icon>
-                </b-list-group-item>
+                        <b-list-group-item v-if="rol == 2 || rol == 6 || rol == 0" @click="navegarRuta('admSolicitante')" class="cursorToHand menuButton">
+                            <b-icon class="lsa-orange-text" icon="people-fill"></b-icon>
+                            <span class="px-md-2"></span> Administrar Solicitante
+                        </b-list-group-item>
 
 
-                <b-collapse accordion="my-accordion" id="collapse-3">
-                    <b-list-group-item @click="navegarRuta('admSolicitante')" class="cursorToHand menuButton">
-                        <b-icon class="lsa-orange-text" icon="people-fill"></b-icon>
-                        <span class="px-md-2"></span> Administrar Solicitante
+                        <b-list-group-item v-if="rol == 2 || rol == 6 || rol == 0" @click="navegarRuta('admEmpresa')" class="cursorToHand menuButton">
+                            <b-icon class="lsa-orange-text" icon="building"></b-icon>
+                            <span class="px-md-2"></span> Administrar Empresa
+                        </b-list-group-item>
+                    </b-collapse>
+                </template>
+
+
+                <template v-if="rol==0">
+                    <b-list-group-item id="dropdown-header-label" class="lsa-light-gray cursorToHand menuHeader d-flex justify-content-between" v-b-toggle="'collapse-4'">
+                        <div>
+                            <b-icon class="lsa-orange-text" icon="gear-fill"></b-icon>
+                            <span class="px-md-2"></span>
+                            <span>Administrar Sistema</span>
+                        </div>
+                        <b-icon icon="chevron-down" variant="dark"></b-icon>
                     </b-list-group-item>
-                    <b-list-group-item @click="navegarRuta('admEmpresa')" class="cursorToHand menuButton">
-                        <b-icon class="lsa-orange-text" icon="people-fill"></b-icon>
-                        <span class="px-md-2"></span> Administrar Empresa
-                    </b-list-group-item>
-                </b-collapse>
+                    <b-collapse accordion="my-accordion" id="collapse-4">
+                        <b-list-group-item @click="navegarRuta('admUsuario')" class="cursorToHand menuButton">
+                            <b-icon class="lsa-orange-text" icon="people-fill"></b-icon>
+                            <span class="px-md-2"></span> Registrar Usuarios
+                        </b-list-group-item>
+                    </b-collapse>
+                </template>
+                </b-list-group>
 
+            </div>
+      
 
-                <b-list-group-item @click="logoutUser()" class="cursorToHand  logoutButton">
-                    <b-icon icon="power" aria-hidden="true"></b-icon><span class="px-md-2"> Salir</span>
-                </b-list-group-item>
-            </b-list-group>
-            <!--
-            <b-button class="lsa-light-gray btn-margin reactive-button">
-                <b-icon class="lsa-orange-text" icon="eyedropper"></b-icon>
-                <span class="lsa-gray-text">
-                    Muestras
-                </span>
-
-            </b-button>
-            <b-button class="lsa-light-gray btn-margin reactive-button">
-                <b-icon class="lsa-orange-text" icon="people-fill"></b-icon>
-
-                <span class="lsa-gray-text"> Personal </span>
-
-            </b-button>
-            <b-button class="lsa-light-gray btn-margin reactive-button">
-                <b-icon class="lsa-orange-text" icon="building"></b-icon>
-
-                <span class="lsa-gray-text"> Empresa </span>
-
-            </b-button>
-            <b-button class="lsa-light-gray btn-margin reactive-button">
-                <b-icon class="lsa-orange-text" icon="briefcase-fill"></b-icon>
-
-                <span class="lsa-gray-text"> Solicitante </span>
-
-            </b-button>
--->
-
-        </div>
+      
     </transition>
 
 </div>
@@ -122,7 +114,9 @@
 <script>
 import authService from "@/helpers/api-services/Auth.service"
 import vClickOutside from 'v-click-outside';
-import {validarAcceso} from '@/helpers/RoleChecker'
+import {
+    validarAcceso
+} from '@/helpers/RoleChecker'
 import {
     getUserInfo
 } from "@/helpers/api-services/Auth.service";
@@ -135,22 +129,24 @@ export default {
         clickOutside: vClickOutside.directive
     },
 
-    async created(){
+    async created() {
         if (isLoggedIn()) {
             console.log('checkenado user info')
-                this.userData = getUserInfo();
-console.log('data user',this.userData)
-            }
+            this.userData = getUserInfo();
+            console.log('data user', this.userData)
+            this.rol = this.userData.role
+        }
     },
     data() {
         return {
             menu_active: false,
             userData: [],
+            rol: -1,
         };
     },
     methods: {
-        async navegarRuta(ruta){
-            if (await validarAcceso()){
+        async navegarRuta(ruta) {
+            if (await validarAcceso()) {
                 this.$router.push(ruta);
             }
         },
@@ -161,17 +157,17 @@ console.log('data user',this.userData)
             }
 
         },
-         async logoutUser() {
+        async logoutUser() {
 
-           await authService.logout();
-           
+            await authService.logout();
+
             this.$router.push("/");
         },
     }
 }
 </script>
 
-<style>
+<style scoped>
 .logoutButton {
     background-color: var(--lsa-orange) !important;
     color: white;
@@ -191,6 +187,10 @@ console.log('data user',this.userData)
     border-radius: 20px;
 }
 
+.menuHeader:hover {
+    background-color: rgb(220, 234, 255) !important;
+}
+
 .menu {
     position: absolute;
     bottom: 100;
@@ -207,10 +207,11 @@ console.log('data user',this.userData)
     background-color: white;
     z-index: 22;
 }
+
 .menuButton:hover {
     transition-duration: 0.1s;
     background-color: var(--lsa-light-blue) !important;
-    color:white !important;
+    color: white !important;
 
 }
 
@@ -220,6 +221,7 @@ console.log('data user',this.userData)
     background-color: gray;
     color: white;
 }
+
 .homeButton {
 
     padding-top: 4px !important;

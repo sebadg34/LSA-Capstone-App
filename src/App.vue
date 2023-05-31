@@ -17,8 +17,9 @@
     </b-navbar>
     <b-navbar style="height:50px;background-color: var(--lsa-blue)">
 
-        <div v-if="isLoggedIn()">
+        <div style="width:100%" v-if="isLoggedIn()" class="d-flex justify-content-between">
             <MenuBar />
+            <UserBar  :rol="currentRole" />
         </div>
 
     </b-navbar>
@@ -50,26 +51,37 @@
 -->
 
     <router-view />
-
+    <!--
     <b-navbar style="height:45px;background-color: #ebebeb; bottom: 0px; position: fixed; width: 100%">
 
     </b-navbar>
+    -->
 </div>
 </template>
 
 <script>
 import MenuBar from '@/components/MenuBar.vue';
+import UserBar from '@/components/UserBar.vue';
 import {
     isLoggedIn
 } from "@/helpers/api-services/Auth.service";
+
+import {
+    getUserInfo
+} from "@/helpers/api-services/Auth.service";
+
 export default {
-methods: {
-  isLoggedIn() {
+    methods: {
+        isLoggedIn() {
             return isLoggedIn()
         },
-},
+        currentRole(){
+            return getUserInfo().rol;
+        }
+    },
     components: {
-        MenuBar
+        MenuBar,
+        UserBar
     },
 }
 </script>
