@@ -122,7 +122,7 @@ export default {
         this.alertaDuplicado = true;
       } else {                 
           this.analistasSeleccionados.push(this.AnalistaAsignado.nombre);
-          this.rutEmpleadosSeleccionados.push(analista.rut_empleado);
+          this.rutEmpleadosSeleccionados.push(this.AnalistaAsignado.rut_empleado);
           this.AnalistaAsignado = '';
           this.alertaDuplicado = false;
         
