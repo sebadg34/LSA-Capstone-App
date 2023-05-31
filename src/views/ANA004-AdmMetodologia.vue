@@ -98,26 +98,44 @@ export default {
       },
 
       obtenerMetodologias() {
-        console.log("Obteniendo Metodologias: ")     
-          ElementosService.obtenerMetodologias().then((response)=>{
-        if (response.data != null && response.status === 200) {
-          this.items = response.data
-        }
-        })             
-      }, 
+  console.log("Obteniendo Metodologias: ");
+  ElementosService.obtenerMetodologias().then((response) => {
+    if (response.data != null && response.status === 200) {
+      this.items = response.data.map(item => ({
+        nombre_metodologia: item.nombre_metodologia,
+        rut_empleado: item.rut_empleado
+      }));
+    }
+  });
+},
 
-      /*verDetalles(row) {
-        this.nombre_metodologia = row.item.nombre_metodologia;
-        console.log('El nombre es: ' + this.nombre_metodologia)        
-         ElementosService.obtenerDetallesMetodologia(this.nombre_metodologia).then((response)=>{    
-          console.log(response); 
-          if (response.data != null){
-            console.log( response.data);           
-            this.detallesData = response.data        
-            this.$bvModal.show('modal-detalle-metodologia');
+ /* obtenerMetodologias() {
+  console.log("Obteniendo Metodologias:");
+  ElementosService.obtenerMetodologias().then((response) => {
+    if (response.data != null && response.status === 200) {
+      const metodologias = response.data;
+
+      // Obtener los empleados asociados a cada metodología
+      const empleadosPromises = metodologias.map((metodologia) =>
+        ElementosService.obtenerEmpleadosPorMetodologia(metodologia.id_metodologia)
+      );
+
+      // Esperar a que se completen todas las solicitudes de empleados
+      Promise.all(empleadosPromises).then((empleadosResponses) => {
+        empleadosResponses.forEach((empleadosResponse, index) => {
+          if (empleadosResponse.status === 200) {
+            const empleados = empleadosResponse.data;
+
+            // Agregar los empleados asociados a la metodología
+            metodologias[index].empleados = empleados.map((empleado) => empleado.rut_empleado);
           }
-        }); 
-      },*/
+        });
+
+        this.items = metodologias; // Asignar los datos actualizados a items
+      });
+    }
+  });
+}, */ 
 
       DetallesMetodología(data) {
         console.log(data)
