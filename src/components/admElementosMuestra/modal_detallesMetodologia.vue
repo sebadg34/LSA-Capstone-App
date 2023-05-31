@@ -30,6 +30,11 @@
                   Analista(s) Designado(s): <span>{{this.Analista}}</span>
 
                 </div>
+
+                <div>
+                  Analista(s) Designado(s)(2): <span>{{this.AnalistaAsignado}}</span>
+
+                </div>
                                
             </b-col>
             
@@ -56,7 +61,8 @@
         
         Nombre: '',
         Descripcion: '',
-        Analista: [],       
+        Analista: [],
+        AnalistaAsignado: ''       
 
         
       }
@@ -83,7 +89,8 @@
                   
                   this.Nombre = this.detallesData.nombre_metodologia; 
                   this.Descripcion = this.detallesData.detalle_metodologia;
-                  this.Analista = this.detallesData.rut_empleado;
+                  this.AnalistaAsignado = this.detallesData.AnalistaAsignado;
+                  this.Analista = this.detallesData.AnalistaAsignado;
                                 
               }
           }

@@ -70,7 +70,7 @@ export default {
 
           fields: [
           { key: 'nombre_metodologia', label: 'Nombre', thClass: 'text-center', tdClass: 'text-center' },
-          { key: 'empleado', label: 'Analista', thClass: 'text-center', tdClass: 'text-center' },
+          { key: 'rut_empleado', label: 'Analista', thClass: 'text-center', tdClass: 'text-center' },
           { key: 'Accion', label: 'Acción', thClass: 'text-center', tdClass: 'text-center' },          
           ],
 

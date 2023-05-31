@@ -120,14 +120,12 @@ export default {
     const analistaExistente = this.analistasSeleccionados.find((analista) => analista === this.AnalistaAsignado);
       if (analistaExistente) {
         this.alertaDuplicado = true;
-      } else {
-        const analista = this.analistas.find(a => a.nombre === this.AnalistaAsignado);
-        if (analista) {
-          this.analistasSeleccionados.push(analista.nombre);
+      } else {                 
+          this.analistasSeleccionados.push(this.AnalistaAsignado.nombre);
           this.rutEmpleadosSeleccionados.push(analista.rut_empleado);
           this.AnalistaAsignado = '';
           this.alertaDuplicado = false;
-        }
+        
     }
   }
 },
