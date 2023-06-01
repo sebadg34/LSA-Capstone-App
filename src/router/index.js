@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import HomeView from '../views/HomeView.vue'
+//import HomeView from '../views/HomeView.vue'
 import LoginView from '../views/Login.vue'
 import USU004_admPersonal from '../views/USU004_admPersonal'
 import MUS001 from '../views/MUS001.vue'
@@ -9,85 +9,179 @@ import MUS003 from '../views/MUS003-vistaQm-AQm.vue'
 import MUS004 from '../views/MUS004-vistaSuperv-Jefe.vue'
 import MUS006 from '../views/MUS006-vistaGerente.vue'
 import MUS007 from '../views/MUS007-vistaAdmFinanza.vue'
+import NotFound from '../views/vistaNoEncontrada.vue'
 import USU002_admEmpresa from '../views/USU002_admEmpresa'
 import USU003_admSolicitante from '../views/USU003_admSolicitante'
 import USU005_admDisponibilidad from '../views/USU005_admDisponibilidad'
+import USU001_vistaInicio from '../views/USU001_vistaInicio'
+import {isLoggedIn} from "@/helpers/api-services/Auth.service";
+import admUsuario from '../views/admUsuario.vue'
+import admPerfil from '../views/USU001_vistaPerfil.vue'
+import Restringido from '../views/vistaNoAutorizada.vue'
+import store from "@/store/store";
 
+
+// TODO: implementar manera mas segura de guarda info de usuario
+import jscookie from "js-cookie";
 
 Vue.use(VueRouter)
 
 const routes = [
   {
-    path: '/',
-    name: 'home',
-    component: HomeView
+    path: "/restringido",
+    name: "Restringido",
+    component: Restringido,
+    meta: {
+      title: "Sistema restringido",
+      allowAnonymous: true
+    }
   },
   {
-    path: '/login',
-    name: 'login',
-    component: LoginView
+    path: '/perfil',
+    name: 'perfil',
+    component: admPerfil,
+    meta: {
+      title: "Perfil Usuario",
+      
+    }
   },
+  {
+    path: '/inicio',
+    name: 'inicio',
+    component: USU001_vistaInicio,
+    meta: {
+      title: "Dashboard"
+    }
+  },
+  {
+    path: "*",
+    name: "NotFound",
+    component: NotFound,
+    meta: {
+      title: "LSA - pagina desconocida",
+      allowAnonymous: true
+    }
+  },
+  {
+    path: '/',
+    name: 'login',
+    component: LoginView,
+    meta: {
+      title: "Inicio Sesión",
+      allowAnonymous: true
+    }
+  },
+  //{
+  //  path: '/login',
+  //  name: 'login',
+  //  component: LoginView
+  //},
   {
     path: '/admPersonal',
     name: 'admPersonal',
-    component: USU004_admPersonal
+    component: USU004_admPersonal,
+    meta: {
+      title: "LSA - Administración Personal",
+      authorize: [1,2,6,0]
+    }
+
+  } ,{
+    path: '/admUsuario',
+    name: 'admUsuario',
+    component: admUsuario,
+    meta: {
+      title: "LSA - Administración Usuarios",
+      authorize: [0]
+    }
 
   },
   {
     path: '/admDisponibilidad',
     name: 'admDisponibilidad',
-    component: USU005_admDisponibilidad
+    component: USU005_admDisponibilidad,
+    meta: {
+      title: "LSA - Administración Disponibilidad",
+      authorize: [7,1,2,0]
+    }
 
   },
   {
     path: '/admEmpresa',
     name: 'admEmpresa',
-    component: USU002_admEmpresa
+    component: USU002_admEmpresa,
+    meta: {
+      title: "LSA - Administración Empresa",
+      authorize: [2,6,0]
+    }
 
   },
   {
     path: '/admSolicitante',
     name: 'admSolicitante',
-    component: USU003_admSolicitante
+    component: USU003_admSolicitante,
+    meta: {
+      title: "LSA - Administración Solicitante",
+      authorize: [2,6,0]
+      
+    }
 
   },
   {
     path: '/Form',
     name: 'formulario',
-    component: MUS001
+    component: MUS001,
+    meta: {
+      title: "LSA"
+    }
 
   },  
   {
     path: '/IngMuesLab',
     name: 'IngresoLab',
-    component: MUS002
+    component: MUS002,
+    meta: {
+      title: "LSA"
+    }
 
 
   },
   {
     path: '/AdmMuesQm',
     name: 'AdminQm',
-    component: MUS003
+    component: MUS003,
+    meta: {
+      title: "LSA"
+    }
 
   },
   {
     path: '/AdministrarMuestra',
     name: 'AdminMuestra',
-    component: MUS004
+    component: MUS004,
+    meta: {
+      title: "LSA - Administración Muestra"
+    }
   },
   {
 
     path: '/Gerente',
     name:'vistaGerente',
-    component: MUS006
+    component: MUS006,
+    meta: {
+      title: "ADM - No autorizado"
+    }
   },
   {
 
     path: '/AdmFin',
     name: 'AdmFinanzas',
-    component: MUS007
+    component: MUS007,
+    meta: {
+      title: "ADM - No autorizado"
+    }
 
   },
+ 
 
   {
     path: '/about',
@@ -99,10 +193,53 @@ const routes = [
   }
 ]
 
+
+
+
+
 const router = new VueRouter({
   mode: 'history',
   base: process.env.BASE_URL,
   routes
+})
+
+router.beforeEach((to, from, next) => {
+
+  // Recuperar datos del usuario al Store en caso de recargar
+  if( isLoggedIn() && store.getters.rol == null){
+    store.commit('setRol',JSON.parse(jscookie.get('userInfo')).role);
+  }
+
+const {authorize} = to.meta;
+var currentUser ="";
+if(jscookie.get('userInfo') != null){
+  currentUser = JSON.parse(jscookie.get('userInfo'));
+}
+
+
+  if (to.name == "login" && isLoggedIn()) {
+    next({ path: "/inicio" })
+  }
+  else if (!to.meta.allowAnonymous && !isLoggedIn()) {
+    //clearAuthToken();
+    next({ name: "login" })
+  }
+  else
+  {
+    if(authorize){
+
+      // Checkear si la ruta se restringe por rol
+      //if(authorize.length && !authorize.includes(currentUser.role)){
+      if(authorize.length && !authorize.includes(currentUser.role)){
+        // rol no autorizado
+        next({name: "Restringido"})
+      }else{
+        next();
+      }
+    }
+    next();
+  }
+  
 })
 
 export default router

@@ -1,11 +1,11 @@
-import axios from "axios";
-import config from '@/../public/config.json'
-
-const apiUrl = config.BASE_URL_SIS_API;
+import {
+    crearApi
+} from "../api-services/InstanciadorAxios";
 
 const ingresarEmpresa = async (data) => {
     try {  
-        const response = await axios.post(apiUrl + "/empresas/agregarEmpresa", data,
+        const instanciaApi = await crearApi();
+        const response = await instanciaApi.post("/empresas/agregarEmpresa", data,
             );
         console.log(response);
         return response;
@@ -17,7 +17,8 @@ const ingresarEmpresa = async (data) => {
 
 const actualizarEmpresa = async (data) => {
     try {  
-        const response = await axios.put(apiUrl + "/empresas/actualizarEmpresa/"+data.rut_empresa, data,
+        const instanciaApi = await crearApi();
+        const response = await instanciaApi.put("/empresas/actualizarEmpresa/"+data.rut_empresa, data,
             );
         console.log(response);
         return response;
@@ -29,7 +30,8 @@ const actualizarEmpresa = async (data) => {
 
 const obtenerDetallesEmpresa = async (data) => {
     try {
-        const response = await axios.get(apiUrl + "/empresas/"+data);
+        const instanciaApi = await crearApi();
+        const response = await instanciaApi.get("/empresas/"+data);
         console.log(response);
     if(response.status == 200){
         return response;
@@ -43,7 +45,8 @@ const obtenerDetallesEmpresa = async (data) => {
 }
 const obtenerTodasEmpresa = async () => {
     try {
-        const response = await axios.get(apiUrl + "/empresas");
+        const instanciaApi = await crearApi();
+        const response = await instanciaApi.get("/empresas");
             console.log(response);
         if(response.status == 200){
             return response;
@@ -59,7 +62,8 @@ const obtenerTodasEmpresa = async () => {
 
 const obtenerTodasCiudad = async () => {
     try {
-        const response = await axios.get(apiUrl + "/ciudades");
+        const instanciaApi = await crearApi();
+        const response = await instanciaApi.get("/ciudades");
             console.log(response);
         if(response.status == 200){
             return response;
