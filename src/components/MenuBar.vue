@@ -186,9 +186,15 @@ export default {
     color: white;
     border-radius: 20px;
 }
-
+.menuHeader{
+    padding-left:10px;
+    padding-right:10px;
+    font-weight: bold;
+    font-size: 15px;
+}
 .menuHeader:hover {
     background-color: rgb(220, 234, 255) !important;
+
 }
 
 .menu {
@@ -200,18 +206,24 @@ export default {
     margin-top: 3px;
     border-radius: 5px 5px 15px 15px !important;
     z-index: 20;
+    font-size: 15px;
 
 }
 
 .menuButton {
     background-color: white;
     z-index: 22;
+    padding-left:10px;
+    padding-right:10px;
+    font-weight: bold;
+    justify-content: space-between !important;
 }
 
 .menuButton:hover {
     transition-duration: 0.1s;
     background-color: var(--lsa-light-blue) !important;
     color: white !important;
+    font-size: 17px;
 
 }
 

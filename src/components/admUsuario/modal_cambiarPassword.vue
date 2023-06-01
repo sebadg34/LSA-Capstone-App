@@ -1,12 +1,12 @@
 <template>
     <validation-observer ref="form">
-        <b-modal id="modal-cambiar-password" ref="modal" title="Cambo contraseña" size="lg">
+    <b-modal centered id="modal-cambiar-password" ref="modal" title="Cambo contraseña" size="sm"> 
 
             <template #modal-header="{ close }">
                 <!-- Emulate built in modal header close button action -->
 
                 <b-row class="d-flex justify-content-around">
-                    <div class="pl-3">Cambo contraseña</div>
+                    <div class="pl-3">Cambiar contraseña</div>
 
                 </b-row>
 
@@ -27,7 +27,7 @@
                         
                   
 
-                    <ValidationProvider name="contraseña" rules="required|min:10|max:15|confirmed:password_nueva_confirmacion" v-slot="validationContext">
+                    <ValidationProvider name="contraseña" rules="required|min:2|max:15|confirmed:password_nueva_confirmacion" v-slot="validationContext">
                         <label for="contraseña-nueva">Contraseña nueva:</label>
                         <b-form-input size="sm" type="password" class="mb-1" id="contraseña-nueva" :state="getValidationState(validationContext)"
                             v-model="password_nueva" aria-describedby="input-live-help " placeholder=""
