@@ -54,6 +54,7 @@ import modal_agregarMetodologia from '@/components/admElementosMuestra/modal_agr
 import modal_editarMetodologia from '@/components/admElementosMuestra/modal_editarMetodologia.vue';
 import modal_detallesMetodologia from '@/components/admElementosMuestra/modal_detallesMetodologia.vue';
 import ElementosService from '@/helpers/api-services/Elementos.service';
+ //import PersonalService from '@/helpers/api-services/Personal.service';
 export default {
 
   components: {  
@@ -70,14 +71,16 @@ export default {
 
           fields: [
           { key: 'nombre_metodologia', label: 'Nombre', thClass: 'text-center', tdClass: 'text-center' },
-          { key: 'rut_empleado', label: 'Analista', thClass: 'text-center', tdClass: 'text-center' },
+          { key: 'rutEmpleado', label: 'Analista', thClass: 'text-center', tdClass: 'text-center' },
           { key: 'Accion', label: 'Acción', thClass: 'text-center', tdClass: 'text-center' },          
           ],
 
           items: [],
-          detallesData: {},
+          //detallesData: {},
           modalEditarData: {}, 
-          modalDetallesData: {}
+          modalDetallesData: {},
+          nombreE: '',
+          empleados: []
 
         }
 
@@ -98,16 +101,35 @@ export default {
       },
 
       obtenerMetodologias() {
-  console.log("Obteniendo Metodologias: ");
-  ElementosService.obtenerMetodologias().then((response) => {
+      ElementosService.obtenerMetodologias().then((response) => {
     if (response.data != null && response.status === 200) {
-      this.items = response.data.map(item => ({
-        nombre_metodologia: item.nombre_metodologia,
-        rut_empleado: item.rut_empleado
-      }));
+      const metodologias = response.data.map((metodologia) => {
+        // Crear un nuevo objeto con todas las propiedades de metodologia
+        const nuevoObjetoMetodologia = {
+          ...metodologia,
+        };
+
+        // Verificar si la propiedad "empleados" existe y tiene al menos un elemento
+        if (metodologia.empleados && metodologia.empleados.length > 0) {
+          // Asignar el rut_empleado al nuevo objeto
+          nuevoObjetoMetodologia.rutEmpleado = metodologia.empleados[0].nombre;
+          this.nombreE = nuevoObjetoMetodologia.rutEmpleado
+          console.log(this.nombreE)
+        } else {
+          // En caso de que "empleados" no exista o esté vacío, asignar un valor por defecto
+          nuevoObjetoMetodologia.rutEmpleado = 'No asignado';
+        }
+
+        return nuevoObjetoMetodologia;
+      });
+
+      console.log("Obteniendo Metodologías: ", metodologias);
+      this.items = metodologias;
     }
   });
 },
+
+      
 
  /* obtenerMetodologias() {
   console.log("Obteniendo Metodologias:");

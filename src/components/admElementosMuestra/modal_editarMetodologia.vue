@@ -69,7 +69,7 @@ export default {
                 this.Nombre = this.metodologiaData.nombre_metodologia;
                 this.Descripción = this.metodologiaData.detalle_metodologia;
                 this.AnalistaAsignado = '';
-                this.analistasSeleccionados = []
+                
                 this.empleados = [{}]
 
          

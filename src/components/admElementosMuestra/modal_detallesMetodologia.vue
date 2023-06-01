@@ -27,15 +27,13 @@
                 </div>
 
                 <div>
-                  Analista(s) Designado(s): <span>{{this.Analista}}</span>
-
+                  Analista(s) Designado(s):
+                    <ul>
+                      <li v-for="nombre in nombreE" :key="nombre">{{ nombre }}</li>
+                    </ul>
                 </div>
 
-                <div>
-                  Analista(s) Designado(s)(2): <span>{{this.AnalistaAsignado}}</span>
-
-                </div>
-                               
+                                              
             </b-col>
             
         </b-row>
@@ -51,7 +49,7 @@
   
   <script>
  
-  import ElementosService from '@/helpers/api-services/Elementos.service';
+  // import ElementosService from '@/helpers/api-services/Elementos.service';
   export default {
     props: {
         detallesData: Object
@@ -62,35 +60,40 @@
         Nombre: '',
         Descripcion: '',
         Analista: [],
-        AnalistaAsignado: ''       
+        AnalistaAsignado: '',
+        nombreE: '',
+        empleados: '',
+        nombres_empleados: '',
+
 
         
       }
     },  
 
-    methods: {    
-      obtenerAnalistas() {
-        const rutEmpleados = this.detallesData.rut_empleado;
-        ElementosService.obtenerNombresEmpleados(rutEmpleados).then((response) => {
-          if (response.status === 200) {
-            this.Analista = response.data;
-          }
-        }).catch((error) => {
-        console.log(error);
-        });
-      }  
-      
+    mounted() {
+
+     
     },
+
+    methods: {    
+         
+      
+
+      },
+      
+    
 
     watch: {
       detallesData: {
               handler() {
-                  console.log("detallesData actualizada")
+                  console.log("detallesData actualizada", this.detallesData)
                   
                   this.Nombre = this.detallesData.nombre_metodologia; 
                   this.Descripcion = this.detallesData.detalle_metodologia;
-                  this.AnalistaAsignado = this.detallesData.AnalistaAsignado;
-                  this.Analista = this.detallesData.AnalistaAsignado;
+                  this.nombreE = this.detallesData.empleados.map((empleado) => empleado.nombre);
+                  this.empleados = this.detallesData.empleados;
+                  
+
                                 
               }
           }
