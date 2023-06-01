@@ -43,7 +43,7 @@ const obtenerMetodologias= async () => {
 
  const obtenerDetallesMetodologia = async (data) => {
     try {
-         const response = await axios.get(apiUrl + "/metodologias/" + data.nombre_metodologia, data);
+         const response = await axios.get(apiUrl + "/metodologias/" + data.nombre_metodologia);
          console.log(response);
          if(response.status == 200){
              return response;

@@ -18,22 +18,22 @@
         </ul>
         <b-row class="pb-2">
             <b-col class="col-6">
-                <div>
-                    Nombre Metodología: <span>{{this.Nombre}}</span>
-                </div>
+              <div>  
+                Nombre Metodología: <span>{{ nombreMetodologia }}</span>
+              </div>
 
-                <div>
-                    Descripción: <span>{{this.Descripcion}}</span>
-                </div>
+              <div>
+                Descripción: <span>{{detalleMetodologia}}</span>
+              </div>
 
-                <div>
-                  Analista(s) Designado(s):
-                    <ul>
-                      <li v-for="nombre in nombreE" :key="nombre">{{ nombre }}</li>
-                    </ul>
-                </div>
-
-                                              
+              <div>
+                Analista(s) Designado(s):
+                  <ul>
+                    <li v-for="empleado in listaEmpleados" :key="empleado.rut_empleado">
+                      {{ empleado.nombre }} {{ empleado.apellido }}
+                    </li>
+                  </ul>
+              </div>                                              
             </b-col>
             
         </b-row>
@@ -49,7 +49,7 @@
   
   <script>
  
-  // import ElementosService from '@/helpers/api-services/Elementos.service';
+  import ElementosService from '@/helpers/api-services/Elementos.service';
   export default {
     props: {
         detallesData: Object
@@ -58,43 +58,41 @@
       return {
         
         Nombre: '',
-        Descripcion: '',
-        Analista: [],
-        AnalistaAsignado: '',
+        Descripcion: '',        
         nombreE: '',
-        empleados: '',
-        nombres_empleados: '',
+        empleados: '',        
+        nombreMetodologia: '',
+        listaEmpleados: '',
+        detalleMetodologia: ''
 
-
-        
       }
     },  
 
-    mounted() {
+    methods: {
+      obtenerDetallesMetodologia() {
+        const data = {
+          nombre_metodologia: this.Nombre
+        };
 
-     
-    },
-
-    methods: {    
-         
-      
-
-      },
-      
-    
+        ElementosService.obtenerDetallesMetodologia(data).then((response) => {
+          if (response.status === 200) {
+            console.log("Obteniendo detalles:", response.data);            
+            const { nombre_metodologia, detalle_metodologia, empleados } = response.data;          
+            const detalleMetodologia = detalle_metodologia; 
+            this.nombreMetodologia = nombre_metodologia;
+            this.listaEmpleados = empleados;
+            this.detalleMetodologia = detalleMetodologia;            
+          }
+        });
+      }
+},    
 
     watch: {
       detallesData: {
               handler() {
-                  console.log("detallesData actualizada", this.detallesData)
-                  
-                  this.Nombre = this.detallesData.nombre_metodologia; 
-                  this.Descripcion = this.detallesData.detalle_metodologia;
-                  this.nombreE = this.detallesData.empleados.map((empleado) => empleado.nombre);
-                  this.empleados = this.detallesData.empleados;
-                  
-
-                                
+                  console.log("detallesData actualizada", this.detallesData)                  
+                  this.Nombre = this.detallesData.nombre_metodologia;                   
+                  this.obtenerDetallesMetodologia()                                                  
               }
           }
     }

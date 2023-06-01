@@ -71,7 +71,7 @@ export default {
 
           fields: [
           { key: 'nombre_metodologia', label: 'Nombre', thClass: 'text-center', tdClass: 'text-center' },
-          { key: 'rutEmpleado', label: 'Analista', thClass: 'text-center', tdClass: 'text-center' },
+          { key: 'rutEmpleado', label: 'Analista(s)', thClass: 'text-center', tdClass: 'text-center' },
           { key: 'Accion', label: 'Acción', thClass: 'text-center', tdClass: 'text-center' },          
           ],
 
@@ -101,22 +101,19 @@ export default {
       },
 
       obtenerMetodologias() {
-      ElementosService.obtenerMetodologias().then((response) => {
+  ElementosService.obtenerMetodologias().then((response) => {
     if (response.data != null && response.status === 200) {
       const metodologias = response.data.map((metodologia) => {
-        // Crear un nuevo objeto con todas las propiedades de metodologia
-        const nuevoObjetoMetodologia = {
-          ...metodologia,
-        };
+        const nuevoObjetoMetodologia = { ...metodologia };
 
-        // Verificar si la propiedad "empleados" existe y tiene al menos un elemento
         if (metodologia.empleados && metodologia.empleados.length > 0) {
-          // Asignar el rut_empleado al nuevo objeto
-          nuevoObjetoMetodologia.rutEmpleado = metodologia.empleados[0].nombre;
-          this.nombreE = nuevoObjetoMetodologia.rutEmpleado
-          console.log(this.nombreE)
+          nuevoObjetoMetodologia.rutEmpleado = metodologia.empleados[0].nombre + ' ' + metodologia.empleados[0].apellido;
+          
+          // Verificar si hay más de un analista
+          if (metodologia.empleados.length > 1) {
+            nuevoObjetoMetodologia.rutEmpleado += " (+)";
+          }
         } else {
-          // En caso de que "empleados" no exista o esté vacío, asignar un valor por defecto
           nuevoObjetoMetodologia.rutEmpleado = 'No asignado';
         }
 
@@ -128,36 +125,8 @@ export default {
     }
   });
 },
+    
 
-      
-
- /* obtenerMetodologias() {
-  console.log("Obteniendo Metodologias:");
-  ElementosService.obtenerMetodologias().then((response) => {
-    if (response.data != null && response.status === 200) {
-      const metodologias = response.data;
-
-      // Obtener los empleados asociados a cada metodología
-      const empleadosPromises = metodologias.map((metodologia) =>
-        ElementosService.obtenerEmpleadosPorMetodologia(metodologia.id_metodologia)
-      );
-
-      // Esperar a que se completen todas las solicitudes de empleados
-      Promise.all(empleadosPromises).then((empleadosResponses) => {
-        empleadosResponses.forEach((empleadosResponse, index) => {
-          if (empleadosResponse.status === 200) {
-            const empleados = empleadosResponse.data;
-
-            // Agregar los empleados asociados a la metodología
-            metodologias[index].empleados = empleados.map((empleado) => empleado.rut_empleado);
-          }
-        });
-
-        this.items = metodologias; // Asignar los datos actualizados a items
-      });
-    }
-  });
-}, */ 
 
       DetallesMetodología(data) {
         console.log(data)
