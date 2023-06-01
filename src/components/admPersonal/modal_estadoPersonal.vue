@@ -27,8 +27,8 @@
                 <span style="font-weight:bold">ESTADO ACTUAL: </span>
             </div>
             <div style="font-weight: bold;">
-                <span v-if="this.Estado" style="color:green">ACTIVO</span>
-                <span v-else style="color:red">INACTIVO</span>
+                <span v-if="this.Estado" style="color:green">HABILITADO</span>
+                <span v-else style="color:red">DESHABILITADO</span>
             </div>
         </b-col>
 
@@ -41,9 +41,9 @@
         <b-row class="d-flex justify-content-center">
             <b-col class="col-8" align="center">
                 <div v-if="this.Estado">
-                    <span>Está a punto de cambiar el estado a <span style="color:red; font-weight: bold;">INACTIVO</span></span>
+                    <span>Está a punto de cambiar el estado a <span style="color:red; font-weight: bold;">DESHABILITADO</span></span>
                 </div>
-                <div v-else>  <span>Está a punto de cambiar el estado a <span style="color:green; font-weight: bold;">ACTIVO</span></span></div>
+                <div v-else>  <span>Está a punto de cambiar el estado a <span style="color:green; font-weight: bold;">HABILITADO</span></span></div>
                 <div>¿Desea continuar con el cambio de estado?</div>
                 <div style="padding: 10px" class="d-flex justify-content-around row">
                     <b-button  class="lsa-light-blue reactive-button" style="font-weight:bold; width:45%" @click="enviarFormulario()">CAMBIAR</b-button>
@@ -88,7 +88,7 @@ this.Confirming = false;
                 console.log(response)
                 if (response != null) {
                     if (response.status == 200) {
-                        this.$bvToast.toast(`Cambio de estado exitoso`, {
+                        this.$bvToast.toast(`El estado de ` + this.Nombre + " "+ this.Apellido + " ha sido actualizado", {
                             title: 'Exito',
                             toaster: 'b-toaster-top-center',
                             solid: true,

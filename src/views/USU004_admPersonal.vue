@@ -84,8 +84,8 @@
 
                 <template #cell(estado)="row">
 
-                    <span v-if="row.item.estado == true" style="text-transform:uppercase; color:green; font-weight: bold;">activo</span>
-                    <span v-else style="text-transform:uppercase; color:red; font-weight: bold;">inactivo</span>
+                    <span v-if="row.item.estado == true" style="text-transform:uppercase; color:green; font-weight: bold;">HABILITADO</span>
+                    <span v-else style="text-transform:uppercase; color:red; font-weight: bold;">DESHABILITADO</span>
                 </template>
                 <template #cell(accion)="row">
 
