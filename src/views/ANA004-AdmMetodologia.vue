@@ -1,52 +1,52 @@
 <template>
 
-    <div style="margin-bottom:50px">
-      <b-row style="padding-top:30px;">
-        <b-col class="col-6">
-            <div style="font-size:2rem; font-weight: bold; color: var(--lsa-blue)">
-                Administración de Metodologías
-            </div>
-        </b-col>
-    </b-row>
-      <modal_detallesMetodologia :detalles-data="this.modalDetallesData"/>
-      <modal_agregarMetodologia @metodologiaAgregada="MetodologiaAgregada" />
-      <modal_editarMetodologia :metodologia-data="this.modalEditarData" @metodologiaAgregada="MetodologiaAgregada"/>
-     
+  <div style="margin-bottom:50px">
+    <b-row style="padding-top:30px;">
+      <b-col class="col-6">
+          <div style="font-size:2rem; font-weight: bold; color: var(--lsa-blue)">
+              Administración de Metodologías
+          </div>
+      </b-col>
+  </b-row>
+    <modal_detallesMetodologia :detalles-data="this.modalDetallesData"/>
+    <modal_agregarMetodologia @metodologiaAgregada="MetodologiaAgregada" />
+    <modal_editarMetodologia :metodologia-data="this.modalEditarData" @metodologiaAgregada="MetodologiaAgregada"/>
+   
 
-      <div class="row justify-content-center" style="padding-top:30px; padding-bottom:10px; margin-left: 5px;">
-        <div class="col-10">  
-          <b-row>                      
-            <b-button v-b-modal.modal-Agregar-Metodologia style="border-radius: 15px; font-weight: bold; font-size: 18px; " class="lsa-light-blue reactive-button">
-              Agregar Metodología
-                <b-icon icon="journals"></b-icon>
-            </b-button>
-          </b-row>
-        </div>
+    <div class="row justify-content-center" style="padding-top:30px; padding-bottom:10px; margin-left: 5px;">
+      <div class="col-10">  
+        <b-row>                      
+          <b-button v-b-modal.modal-Agregar-Metodologia style="border-radius: 15px; font-weight: bold; font-size: 18px; " class="lsa-light-blue reactive-button">
+            Agregar Metodología
+              <b-icon icon="journals"></b-icon>
+          </b-button>
+        </b-row>
       </div>
-        
-<div class="row justify-content-center">
-  <div class="col-10">
-    <b-table :items="items" :fields="fields" responsive >
-      <template #cell(Accion)="row">
-        <b-dropdown right size="sm" variant="link" toggle-class="text-decoration-none" no-caret >
-          <template #button-content>
-            <b-icon style="height: 80%; width: 80%; align-items: center;" icon="three-dots" variant="dark" aria-hidden="true"></b-icon>
-          </template>
-          <b-dropdown-item v-if="row" @click="DetallesMetodología(row.item)">
-            <b-icon icon="file-earmark-medical" aria-hidden="true" class="mr-2"></b-icon>Ver Detalles 
-          </b-dropdown-item>
-          <b-dropdown-item v-if="row" @click="EditarMetodología(row.item)">
-            <b-icon icon="pencil-square" aria-hidden="true" class="mr-2"></b-icon>Editar
-          </b-dropdown-item>
-        </b-dropdown>
-      </template>
-      </b-table>
     </div>
+      
+<div class="row justify-content-center">
+<div class="col-10">
+  <b-table :items="items" :fields="fields" responsive >
+    <template #cell(Accion)="row">
+      <b-dropdown right size="sm" variant="link" toggle-class="text-decoration-none" no-caret >
+        <template #button-content>
+          <b-icon style="height: 80%; width: 80%; align-items: center;" icon="three-dots" variant="dark" aria-hidden="true"></b-icon>
+        </template>
+        <b-dropdown-item v-if="row" @click="DetallesMetodología(row.item)">
+          <b-icon icon="file-earmark-medical" aria-hidden="true" class="mr-2"></b-icon>Ver Detalles 
+        </b-dropdown-item>
+        <b-dropdown-item v-if="row" @click="EditarMetodología(row.item)">
+          <b-icon icon="pencil-square" aria-hidden="true" class="mr-2"></b-icon>Editar
+        </b-dropdown-item>
+      </b-dropdown>
+    </template>
+    </b-table>
   </div>
+</div>
 
-           
-    </div>   
-  </template>
+         
+  </div>   
+</template>
 
 <script>
 
@@ -54,118 +54,94 @@ import modal_agregarMetodologia from '@/components/admElementosMuestra/modal_agr
 import modal_editarMetodologia from '@/components/admElementosMuestra/modal_editarMetodologia.vue';
 import modal_detallesMetodologia from '@/components/admElementosMuestra/modal_detallesMetodologia.vue';
 import ElementosService from '@/helpers/api-services/Elementos.service';
-import PersonalService from '@/helpers/api-services/Personal.service';
+
 export default {
 
-  components: {  
-    
-    modal_agregarMetodologia,
-    modal_detallesMetodologia,
-    modal_editarMetodologia
-    
-    },
-
-    data(){
-
-        return {
-
-          fields: [
-          { key: 'nombre_metodologia', label: 'Nombre', thClass: 'text-center', tdClass: 'text-center' },
-          { key: 'empleado', label: 'Analista', thClass: 'text-center', tdClass: 'text-center' },
-          { key: 'Accion', label: 'Acción', thClass: 'text-center', tdClass: 'text-center' },          
-          ],
-
-          items: [],
-          detallesData: {},
-          modalEditarData: {}, 
-          modalDetallesData: {},
-          empleados: []
-
-        }
-
-    },
-
-    mounted() {  
-
-       this.obtenerMetodologias(); 
-       this.obtenerPersonal(); 
+components: {  
   
-},
+  modal_agregarMetodologia,
+  modal_detallesMetodologia,
+  modal_editarMetodologia
+  
+  },
 
-    methods: {  
+  data(){
 
-      agregarAnalista(){
+      return {
 
-        this.$bvModal.show('modal-Agregar-Metodologia');        
+        fields: [
+        { key: 'nombre_metodologia', label: 'Nombre', thClass: 'text-center', tdClass: 'text-center' },
+        { key: 'rutEmpleado', label: 'Analista(s)', thClass: 'text-center', tdClass: 'text-center' },
+        { key: 'Accion', label: 'Acción', thClass: 'text-center', tdClass: 'text-center' },          
+        ],
+
+        items: [],
         
-      },
+        modalEditarData: {}, 
+        modalDetallesData: {},
+        nombreE: '',
+        empleados: []
 
-      obtenerMetodologias() {
-        console.log("Obteniendo Metodologias: ")     
-          ElementosService.obtenerMetodologias().then((response)=>{
-        if (response.data != null && response.status === 200) {
-          this.items = response.data
-        }
-        })             
-      }, 
-
-      obtenerPersonal(){
-        console.log("Obteniendo Personal: ")
-          PersonalService.obtenerTodosPersonal().then((response) =>{
-            if (response.data != null && response.status === 200){
-              
-              this.empleados = response.data.map((empleado) => empleado.rut_empleado);
-              console.log(this.empleados)
-            }
-          })
-
-      },
-
-      /* obtenerMetodologias() {
-  console.log("Obteniendo Metodologias:");
-  ElementosService.obtenerMetodologias().then((response) => {
-    if (response.data != null && response.status === 200) {
-      const metodologias = response.data;
-
-      // Obtener los empleados asociados a cada metodología
-      const empleadosPromises = metodologias.map((metodologia) =>
-        ElementosService.obtenerEmpleadosPorMetodologia(metodologia.id_metodologia)
-      );
-
-      // Esperar a que se completen todas las solicitudes de empleados
-      Promise.all(empleadosPromises).then((empleadosResponses) => {
-        empleadosResponses.forEach((empleadosResponse, index) => {
-          if (empleadosResponse.status === 200) {
-            const empleados = empleadosResponse.data;
-
-            // Agregar los empleados asociados a la metodología
-            metodologias[index].empleados = empleados.map((empleado) => empleado.rut_empleado);
-          }
-        });
-
-        this.items = metodologias; // Asignar los datos actualizados a items
-      });
-    }
-  });
-}, */ 
-
-      DetallesMetodología(data) {
-        console.log(data)
-        this.modalDetallesData = data;
-        this.$bvModal.show('modal-detalle-metodologia')
-      },
-
-      EditarMetodología(data) {
-        console.log("los datos a editar son : ", data)
-        this.modalEditarData = data;
-        this.$bvModal.show('modal-Editar-Metodologia')
-      },
-
-      MetodologiaAgregada() {
-        this.obtenerMetodologias();
       }
 
+  },
+
+  mounted() {  
+
+     this.obtenerMetodologias();  
+
+},
+
+  methods: {  
+
+    agregarAnalista(){
+
+      this.$bvModal.show('modal-Agregar-Metodologia');        
+      
+    },
+
+    obtenerMetodologias() {
+ElementosService.obtenerMetodologias().then((response) => {
+  if (response.data != null && response.status === 200) {
+    const metodologias = response.data.map((metodologia) => {
+      const nuevoObjetoMetodologia = { ...metodologia };
+
+      if (metodologia.empleados && metodologia.empleados.length > 0) {
+        nuevoObjetoMetodologia.rutEmpleado = metodologia.empleados[0].nombre + ' ' + metodologia.empleados[0].apellido;
+        
+        // Verificar si hay más de un analista
+        if (metodologia.empleados.length > 1) {
+          nuevoObjetoMetodologia.rutEmpleado += " (+)";
+        }
+      } else {
+        nuevoObjetoMetodologia.rutEmpleado = 'No asignado';
+      }
+
+      return nuevoObjetoMetodologia;
+    });
+
+    console.log("Obteniendo Metodologías: ", metodologias);
+    this.items = metodologias;
+  }
+});
+},
+  
+    DetallesMetodología(data) {
+      console.log(data)
+      this.modalDetallesData = data;
+      this.$bvModal.show('modal-detalle-metodologia')
+    },
+
+    EditarMetodología(data) {
+      console.log("los datos a editar son : ", data)
+      this.modalEditarData = data;
+      this.$bvModal.show('modal-Editar-Metodologia')
+    },
+
+    MetodologiaAgregada() {
+      this.obtenerMetodologias();
     }
 
+  }
 }
 </script>

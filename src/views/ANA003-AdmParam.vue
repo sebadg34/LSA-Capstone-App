@@ -1,43 +1,50 @@
 <template>
-    <div style="margin-bottom:50px">
-<b-row style="padding-top:30px; ">
-  <b-col class="col-6">
-      <div style="font-size:2rem; font-weight: bold; color: var(--lsa-blue)">
+  <div style="margin-bottom:50px">
+    <b-row style="padding-top:30px; ">
+      <b-col class="col-6">
+        <div style="font-size:2rem; font-weight: bold; color: var(--lsa-blue)">
           Administración de Parámetros
+        </div>
+      </b-col>
+    </b-row>
+
+    <modal_agregarParametro @parametroAgregado="parametroAgregado"/>
+    <modal_detallesParametro :detalles-data="this.modalDetallesData"/>
+    <modal_editarParametro :parametro-data="this.modalEditarData" @parametroAgregado="parametroAgregado"/>
+
+
+    <div class="row justify-content-center" style="padding-top:30px; padding-bottom:10px; margin-left: 5px;">
+      <div class="col-10">  
+        <b-row>                 
+          <b-button v-b-modal.modal-Agregar-Parametro style="border-radius: 15px; font-weight: bold; font-size: 18px; " class="lsa-light-blue reactive-button">
+            Agregar Parámetro
+            <b-icon icon="journals"></b-icon>
+          </b-button>
+        </b-row>
       </div>
-  </b-col>
-</b-row>
+    </div>
 
-<modal_agregarParametro @parametroAgregado="parametroAgregado"/>
-<modal_detallesParametro :detalles-data="this.modalDetallesData"/>
-<modal_editarParametro :parametro-data="this.modalEditarData" @parametroAgregado="parametroAgregado"/>
-
-
-<div class="row justify-content-center" style="padding-top:30px; padding-bottom:10px; margin-left: 5px;">
-  <div class="col-10">  
-              <b-row>
-                 
-                  <b-button v-b-modal.modal-Agregar-Parametro style="border-radius: 15px; font-weight: bold; font-size: 18px; " class="lsa-light-blue reactive-button">
-                      Agregar Parámetro
-                      <b-icon icon="journals"></b-icon>
-                  </b-button>
-              </b-row>
-            </div>
-  </div>
-      <div class="row justify-content-center">
-        <div class="col-10">        
-        <b-table :items="items" :fields="fields" responsive>
+    <div class="row justify-content-center">
+      <div class="col-10">
+        <b-table :items="items" :fields="fields" responsive >
           <template #cell(Accion)="row">
-              <b-button variant="primary" class="mb-2 mt-2" block @click="verOpciones(row.item)">
-             Acción
-            </b-button>
+            <b-dropdown right size="sm" variant="link" toggle-class="text-decoration-none" no-caret >
+              <template #button-content>
+                <b-icon style="height: 80%; width: 80%; align-items: center;" icon="three-dots" variant="dark" aria-hidden="true"></b-icon>
+              </template>
+              <b-dropdown-item v-if="row" @click="DetallesParametro(row.item)">
+                <b-icon icon="file-earmark-medical" aria-hidden="true" class="mr-2"></b-icon>Ver Detalles 
+              </b-dropdown-item>
+              <b-dropdown-item v-if="row" @click="EditarParametro(row.item)">
+                <b-icon icon="pencil-square" aria-hidden="true" class="mr-2"></b-icon>Editar
+              </b-dropdown-item>
+            </b-dropdown>
           </template>
-        </b-table>   
-            
-       </div>
-      </div>            
-    </div>   
-  </template>
+        </b-table>
+      </div>
+    </div>           
+  </div>   
+</template>
 
 <script>
 
@@ -77,19 +84,36 @@ export default {
     mounted() {  
 
       this.obtenerParametros();  
+      
 
     },
 
     methods: {
       
-      obtenerParametros(){
-        console.log("Obteniendo Parametro: ")
-        ElementosService.obtenerParametros().then((response)=>{
-          if(response.data != null && response.data === 200){
-            this.items = response.data
-          }
-        })
-      },
+      obtenerParametros() {
+        ElementosService.obtenerParametros().then((response) => {
+        if (response.data != null && response.status === 200) {
+          const parametros = response.data.map((parametro)=> {
+            const nuevoObjetoParametro = { ...parametro};
+
+            if (parametro.metodologias && parametro.metodologias.length > 0){
+              nuevoObjetoParametro.nombreMetodologia = parametro.metodologias[0].nombre_parametro;
+
+              if(parametro.metodologia.length > 1) {
+                nuevoObjetoParametro.nombreMetodologia += "(+)";
+              }
+            } else {
+              nuevoObjetoParametro.nombreMetodologia = 'No existe metodologia asignada'
+            }
+
+            return nuevoObjetoParametro;
+          });
+        
+        this.items = parametros;
+    }
+  });
+},
+
 
       agregarParametro(){
 
