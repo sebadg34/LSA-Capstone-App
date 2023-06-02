@@ -2,6 +2,20 @@ import {
     crearApi
 } from "../api-services/InstanciadorAxios";
 
+
+const existeEmpresa = async (data) => {
+    try {  
+        const instanciaApi = await crearApi();
+        const response = await instanciaApi.post("/empresas/existeEmpresa", data,
+            );
+        console.log(response);
+        return response;
+    } catch (error) {
+        console.log(error);
+        return;
+    }
+};
+
 const ingresarEmpresa = async (data) => {
     try {  
         const instanciaApi = await crearApi();
@@ -82,6 +96,7 @@ export default {
     obtenerTodasEmpresa,
     obtenerDetallesEmpresa,
     actualizarEmpresa,
-    obtenerTodasCiudad
+    obtenerTodasCiudad,
+    existeEmpresa
 
 };

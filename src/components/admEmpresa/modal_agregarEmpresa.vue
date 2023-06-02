@@ -43,9 +43,9 @@
                 </ValidationProvider>
             </b-col>
             <b-col class="col-6">
-                <ValidationProvider name="rut" rules="required|rut" v-slot="validationContext">
+                <ValidationProvider name="rut" rules="required|rut|rutEmpresaDisponible" v-slot="validationContext">
                     <label for="input-live">Rut:</label>
-                    <b-form-input size="sm" class="mb-1" id="input-live" :state="getValidationState(validationContext)" v-model="Rut" aria-describedby="input-live-help nombre-live-feedback" placeholder="" trim></b-form-input>
+                    <b-form-input size="sm" class="mb-1" id="rut_empresa" :state="getValidationState(validationContext)" v-model.lazy="Rut" aria-describedby="input-live-help nombre-live-feedback" placeholder="" trim></b-form-input>
                     <b-form-invalid-feedback id="rut-live-feedback">{{
                         validationContext.errors[0] }}
                     </b-form-invalid-feedback>
@@ -148,6 +148,18 @@ export default {
         }
     },
     methods: {
+        revisarRutEmpresa(){
+            
+            var data = {
+                rut_empresa: this.Rut
+            }
+            empresaService.existeEmpresa(data).then((response)=>{
+                if (response != null){
+                    console.log(response);
+                }
+            })
+            
+        },
         add() {
             this.direcciones.push({
                 ciudad: '',
