@@ -69,7 +69,7 @@ export default {
 
           fields: [
           { key: 'nombre_parametro', label: 'Nombre', thClass: 'text-center', tdClass: 'text-center' },
-          { key: 'nombre_metodologia', label: 'Metodología', thClass: 'text-center', tdClass: 'text-center' },
+          { key: 'nombreMetodologia', label: 'Metodología', thClass: 'text-center', tdClass: 'text-center' },
           { key: 'Accion', label: 'Acción', thClass: 'text-center', tdClass: 'text-center' },          
         ],
 
@@ -91,25 +91,28 @@ export default {
     methods: {
       
       obtenerParametros() {
-        ElementosService.obtenerParametros().then((response) => {
-        if (response.data != null && response.status === 200) {
-          const parametros = response.data.map((parametro)=> {
-            const nuevoObjetoParametro = { ...parametro};
+  ElementosService.obtenerParametros().then((response) => {
+    if (response.data != null && response.status === 200) {
+      console.log("la respuesta es: ",response.data)
+      const parametros = response.data.map((parametro) => {
+        const nuevoObjetoParametro = { ...parametro };
 
-            if (parametro.metodologias && parametro.metodologias.length > 0){
-              nuevoObjetoParametro.nombreMetodologia = parametro.metodologias[0].nombre_parametro;
+        if (parametro.metodologias && parametro.metodologias.length > 0) {
+          nuevoObjetoParametro.nombreMetodologia = parametro.metodologias[0].nombre_parametro;
 
-              if(parametro.metodologia.length > 1) {
-                nuevoObjetoParametro.nombreMetodologia += "(+)";
-              }
-            } else {
-              nuevoObjetoParametro.nombreMetodologia = 'No existe metodologia asignada'
-            }
+          if (parametro.metodologias.length > 1) {
+            nuevoObjetoParametro.nombreMetodologia += "(+)";
+          }
+        } else {
+          nuevoObjetoParametro.nombreMetodologia = 'No Asignado';
+        }
 
-            return nuevoObjetoParametro;
-          });
-        
-        this.items = parametros;
+        return nuevoObjetoParametro;
+      });
+
+      this.items = parametros;
+
+      console.log("los parametros son: ", parametros)
     }
   });
 },

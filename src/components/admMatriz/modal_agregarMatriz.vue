@@ -83,6 +83,7 @@ export default {
             opcionesParametro: ["x","y"], // dejar vacio cuando se implemente las opciones via backend.
             objetosSeleccionados: [],
             alertaDuplicado: false,
+            matrices: [{nombre_matriz: ''}]
             
         }
 
@@ -103,7 +104,7 @@ export default {
     methods: { 
       
             
-      /*obtenerParametro() {
+      obtenerParametro() {
         
         ElementosService.obtenerParametros().then((response) => {
           if (response.data != null && response.status === 200) {
@@ -111,7 +112,16 @@ export default {
             this.opcionesParametro = response.data.map(item => item.nombre_parametro);
           }
         });
-      },*/
+      },
+
+      obtenerMetodologias() {
+        console.log("Obteniendo Metodologias: ");
+        ElementosService.obtenerMetodologias().then((response) => {
+          if (response.data != null && response.status === 200) {
+            this.opcionesMetodologia = response.data.map(item => item.nombre_metodologia);
+          }
+        });
+      }, 
 
       actualizarMetodologias() {
   const parametro = this.parametroSeleccionado;
@@ -153,6 +163,8 @@ agregarObjetosSeleccionados() {
       }
     },
 
+
+
       
     eliminarObjetosSeleccionados(index) {
       
@@ -161,9 +173,12 @@ agregarObjetosSeleccionados() {
 
     AgregarMatriz(){
 
+      const matrizFiltrada = this.matrices.slice(1)
+
       var data = {
 
         nombre_matriz: this.Nombre, 
+        matrices: matrizFiltrada
       }
       console.log("data a enviar", data)
       ElementosService.agregarMatriz(data).then((response)=>{
@@ -181,9 +196,7 @@ agregarObjetosSeleccionados() {
 
       this.Nombre = '',
       this.metodologiaSeleccionada = '',
-      this.parametroSeleccionado = '',
-      this.opcionesMetodologia = [],
-      this.opcionesParametro = [], 
+      this.parametroSeleccionado = '',     
       this.objetosSeleccionados = [],
       
 

@@ -73,7 +73,7 @@ export default {
             metodologiaAsignada: '',
             metodologiaSeleccionada: [],  
             alertaDuplicado: false,            
-            metodologias: []    
+            metodologias: [{nombre_metodologia: ''}]    
 
         }
 
@@ -118,10 +118,12 @@ export default {
 
     AgregarParametro(){
 
+      const metodologiaFiltrada = this.metodologias.slice(1);
+
       var data = {
 
       nombre_parametro: this.Nombre,        
-      metodologias: this.metodologias     
+      metodologias: metodologiaFiltrada     
 
     }
     console.log("data a enviar", data)
@@ -139,12 +141,9 @@ export default {
 
       this.$emit('parametroAgregado');
       
-      this.Nombre = '',                                   
-      this.opcionesMetodologia = [],
+      this.Nombre = '',     
       this.metodologiaAsignada = '',
-      this.metodologiaSeleccionada = [],            
-      this.metodologia = [] 
-      
+     
       this.$refs.modal.hide()
     }
     } else {

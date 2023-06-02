@@ -69,7 +69,7 @@ export default {
         return {
 
           fields: [
-          { key: 'Nombre', label: 'Nombre', thClass: 'text-center', tdClass: 'text-center' },
+          { key: 'nombre_matriz', label: 'Nombre', thClass: 'text-center', tdClass: 'text-center' },
           { key: 'Parametro', label: 'Parámetro', thClass: 'text-center', tdClass: 'text-center' },
           { key: 'Accion', label: 'Acción', thClass: 'text-center', tdClass: 'text-center' },          
         ],

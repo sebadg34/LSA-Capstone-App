@@ -27,9 +27,13 @@
                 </div> -->
 
                 <div>
-                  Analista(s) Designado(s): <span>{{this.Analista}}</span>
-
-                </div>
+              Metodologia(s) Asignada(s):
+                <ul>
+                  <li v-for="empleado in listaEmpleados" :key="empleado.rut_empleado">
+                    {{ empleado.nombre }} {{ empleado.apellido }}
+                  </li>
+                </ul>
+            </div>
                                
             </b-col>
             
@@ -56,34 +60,43 @@
         
         Nombre: '',
         Descripcion: '',
-        Analista: [],       
+        metodologias: [], 
+        listaEmpleados: '' 
+        
+        
 
         
       }
     },  
 
-    methods: {    
-      obtenerAnalistas() {
-        const rutEmpleados = this.detallesData.rut_empleado;
-        ElementosService.obtenerNombresEmpleados(rutEmpleados).then((response) => {
-          if (response.status === 200) {
-            this.Analista = response.data;
-          }
-        }).catch((error) => {
-        console.log(error);
-        });
-      }  
-      
-    },
+    methods: {
+    obtenerDetallesMetodologia() {
+      const data = {
+        nombre_metodologia: this.Nombre
+      };
+
+      ElementosService.obtenerDetallesMetodologia(data).then((response) => {
+        if (response.status === 200) {
+          console.log("Obteniendo detalles:", response.data);            
+          const { nombre_metodologia, detalle_metodologia, empleados } = response.data;          
+          const detalleMetodologia = detalle_metodologia; 
+          this.nombreMetodologia = nombre_metodologia;
+          this.listaEmpleados = empleados;
+          this.detalleMetodologia = detalleMetodologia;            
+        }
+      });
+    }
+}, 
+
 
     watch: {
       detallesData: {
               handler() {
-                  console.log("detallesData actualizada")
+                  console.log("detallesData actualizada", this.detallesData)
                   
                   this.Nombre = this.detallesData.nombre_parametro; 
-                  this.Descripcion = this.detallesData.detalle_metodologia;
-                  this.Analista = this.detallesData.rut_empleado;
+                  
+                  
                                 
               }
           }

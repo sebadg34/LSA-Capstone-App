@@ -25,11 +25,11 @@
       </b-col>
     </b-row>
 
-    <b-row v-if="analistasSeleccionados.length > 0" class="mt-3">
+<b-row v-if="analistasSeleccionados.length > 0" class="mt-3">
   <b-col>
     <b-form-group label="Analistas Seleccionados">
       <div v-for="(analista, index) in analistasSeleccionados" :key="index" class="d-flex align-items-center analista-item">
-        <b-input readonly :value="analista"></b-input>
+        <b-input readonly :value="analista.nombre"></b-input>
         <b-button variant="danger" @click="eliminarAnalistaSeleccionado(index)" class="ml-2">
           <b-icon-trash-fill></b-icon-trash-fill>
         </b-button>
@@ -64,6 +64,7 @@ export default {
   data() {
     return {
       
+      empleados_eliminar: '',
       Nombre: '',
       Descripción: '',
       AnalistaAsignado: '',
@@ -72,8 +73,10 @@ export default {
       analistasSeleccionados: [],
       analistaDuplicado: false,
       alertaDuplicado: false,      
-      rutEmpleadosSeleccionados: [],
-      empleados: [],
+      rutEmpleadosSeleccionados: '',
+      empleados: [{rut_empleado: '',
+                   nombre: ''}],
+      
       
     };
   },
@@ -100,35 +103,43 @@ export default {
   methods: {
   
     agregarAnalistaSeleccionado() {
-      if (this.AnalistaAsignado) {
-        const analistaExistente = this.analistasSeleccionados.find((analista) => analista === this.AnalistaAsignado);
-        if (analistaExistente) {
-          this.alertaDuplicado = true;
-        } else {
-          this.analistasSeleccionados.push(this.AnalistaAsignado);
-          this.rutEmpleadosSeleccionados.push(this.analistas.find(a => a.nombre === this.AnalistaAsignado).rut_empleado);
-          this.empleados = this.rutEmpleadosSeleccionados;
-          this.AnalistaAsignado = '';
-          this.alertaDuplicado = false;
-        }
-      }
-    },
+  if (this.AnalistaAsignado) {
+    const analistaExistente = this.analistasSeleccionados.find(
+      (analista) => analista.nombre === this.AnalistaAsignado
+    );
+    if (analistaExistente) {
+      this.alertaDuplicado = true;
+    } else {
+      const analistaSeleccionado = this.analistas.find((analista) => analista.nombre === this.AnalistaAsignado);
+      const rutAnalista = analistaSeleccionado.rut_empleado;
+      this.analistasSeleccionados.push({ nombre: this.AnalistaAsignado, rut_empleado: rutAnalista });
+      this.empleados.push({ nombre: this.AnalistaAsignado, rut_empleado: rutAnalista });
+      this.AnalistaAsignado = '';
+      this.alertaDuplicado = false;
+    }
+  }
+},
 
-    eliminarAnalistaSeleccionado(index) {
-      this.analistasSeleccionados.splice(index, 1);
-      this.rutEmpleadosSeleccionados.splice(index, 1);
-    },
+eliminarAnalistaSeleccionado(index) {
+  this.analistasSeleccionados.splice(index, 1);
+  this.empleados.splice(index + 1, 1); // Eliminar objeto con el RUT y nombre
+},
+
+
 
     AgregarMetodologia(){
+
+      const empleadosFiltrados = this.empleados.slice(1);
 
       var data = {
 
         nombre_metodologia: this.Nombre,        
         detalle_metodologia: this.Descripción,
-        empleados: this.empleados
+        empleados: empleadosFiltrados
 
 
       }
+
       console.log("data a enviar", data)
       ElementosService.agregarMetodología(data).then((response)=>{
         console.log(response)
@@ -145,12 +156,12 @@ export default {
 
             this.Nombre = '',
             this.Descripción = '',           
-            this.AnalistaAsignado = '',
-            this.opcionesAnalista = [],
+            this.AnalistaAsignado = '',            
             this.analistas = [],
             this.analistasSeleccionados = [],
             this.rutEmpleadosSeleccionados = [],
-            this.empleados = [],
+            this.empleados = [{rut_empleado: '',
+                              nombre: ''}],
             
 
             this.$refs.modal.hide()                         
