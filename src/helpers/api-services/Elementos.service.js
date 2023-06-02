@@ -41,9 +41,36 @@ const obtenerMetodologias= async () => {
      }
  };
 
+ const agregarMatriz = async (data) => {
+    try {  
+        const response = await axios.post(apiUrl + "/matrices/agregarMatriz", data,);
+        console.log(response);
+        return response;
+    } catch (error) {
+        console.log(error);
+        return;
+    }
+};
+
  const obtenerParametros= async () => {
     try {
          const response = await axios.get(apiUrl + "/parametros");
+             console.log(response);
+         if(response.status == 200){
+             return response;
+         }else{
+             return;
+         }
+         
+     } catch (error) {
+         console.log(error);
+         return;
+     }
+ };
+
+ const obtenerMatriz= async () => {
+    try {
+         const response = await axios.get(apiUrl + "/matrices");
              console.log(response);
          if(response.status == 200){
              return response;
@@ -126,6 +153,8 @@ export default {
     eliminar_Empleados_Asociados,
     obtenerDetallesMetodologia,
     agregarParametro,
-    obtenerParametros
+    obtenerParametros,
+    agregarMatriz,
+    obtenerMatriz
 
 }
