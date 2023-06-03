@@ -156,7 +156,7 @@ export default {
       }
       console.log("data a enviar", data)
       ElementosService.actualizarMetodologia(data).then((response)=>{
-        console.log(response)
+        console.log("Respuesta del server: ", response)
         if(response != null){
           if (response.status == 200) {
             this.$bvToast.toast(`Se ha editado la metodología exitosamente!`, {
