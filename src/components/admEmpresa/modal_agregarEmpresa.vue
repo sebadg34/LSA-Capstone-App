@@ -20,7 +20,7 @@
                 <label for="input-live">Nombre:</label>
                 <ValidationProvider name="nombre" rules="required|min:2" v-slot="validationContext">
 
-                    <b-form-input size="sm"  class="mb-1" v-model="Nombre" :state="getValidationState(validationContext)" aria-describedby="rut-live-feedback" trim></b-form-input>
+                    <b-form-input size="sm" class="mb-1" v-model="Nombre" :state="getValidationState(validationContext)" aria-describedby="rut-live-feedback" trim></b-form-input>
 
                     <b-form-invalid-feedback id="nombre-live-feedback">{{
                         validationContext.errors[0] }}
@@ -40,15 +40,24 @@
                     <b-form-invalid-feedback id="correo-live-feedback">{{
                         validationContext.errors[0] }}
                     </b-form-invalid-feedback>
+
                 </ValidationProvider>
             </b-col>
             <b-col class="col-6">
-                <ValidationProvider name="rut" rules="required|rut|rutEmpresaDisponible" v-slot="validationContext">
+
+                <ValidationProvider name="rut" rules="required|rut|rutSinPuntoGuion" v-slot="validationContext">
+
                     <label for="input-live">Rut:</label>
-                    <b-form-input size="sm" class="mb-1" id="rut_empresa" :state="getValidationState(validationContext)" v-model.lazy="Rut" aria-describedby="input-live-help nombre-live-feedback" placeholder="" trim></b-form-input>
-                    <b-form-invalid-feedback id="rut-live-feedback">{{
+                    <!--Mostrar estado cargando solo si se esta revisando rut y no hay errores de validacion (rut valido)-->
+                    <b-overlay :show="Revisando_rut && validationContext.errors[0] == null" rounded opacity="0.6" spinner-small spinner-variant="primary">
+                        <b-form-input size="sm" @blur.native="revisarRutEmpresa" class="mb-1" id="rut_empresa" :state="getValidationState(validationContext)" v-model="Rut" aria-describedby="input-live-help nombre-live-feedback" placeholder="" trim></b-form-input>
+
+                        <b-form-invalid-feedback id="rut-live-feedback">{{
                         validationContext.errors[0] }}
-                    </b-form-invalid-feedback>
+                        </b-form-invalid-feedback>
+                    </b-overlay>
+                    <b-alert fade style="margin:2px; padding:2px;" class="text-center" :show="Rut_ocupado" variant="warning">El rut ya está registrado en el sistema</b-alert>
+
                 </ValidationProvider>
                 <ValidationProvider name="razón social" rules="required" v-slot="validationContext">
                     <label for="input-live">Razón Social:</label>
@@ -72,24 +81,24 @@
             <br />
             <div></div>
             <div class="form-group" v-for="(input,k) in direcciones" :key="k">
-               
+
                 <b-row padding="0">
                     <b-col class="col-4">
                         <ValidationProvider :name="'ciudad ' + (k+1)" rules="required" v-slot="validationContext">
-                        <b-form-input :state="getValidationState(validationContext)" :placeholder="'Ciudad '+(parseInt(k) +1)"  style="height:30px" type="text" class="form-control" v-model="input.ciudad"/>
-                
-                        <b-form-invalid-feedback id="ciudad-live-feedback">{{
+                            <b-form-input :state="getValidationState(validationContext)" :placeholder="'Ciudad '+(parseInt(k) +1)" style="height:30px" type="text" class="form-control" v-model="input.ciudad" />
+
+                            <b-form-invalid-feedback id="ciudad-live-feedback">{{
                         validationContext.errors[0] }}
-                    </b-form-invalid-feedback>
-                </ValidationProvider>
+                            </b-form-invalid-feedback>
+                        </ValidationProvider>
                     </b-col>
                     <b-col class="col-6">
                         <ValidationProvider :name="'direccion ' + (k+1)" rules="required" v-slot="validationContext">
-                        <b-form-input :state="getValidationState(validationContext)"   :placeholder="'Dirección ' + (parseInt(k) +1)" style="height:30px" type="text" class="form-control" v-model="input.direccion"/>
-                        <b-form-invalid-feedback id="ciudad-live-feedback">{{
+                            <b-form-input :state="getValidationState(validationContext)" :placeholder="'Dirección ' + (parseInt(k) +1)" style="height:30px" type="text" class="form-control" v-model="input.direccion" />
+                            <b-form-invalid-feedback id="ciudad-live-feedback">{{
                         validationContext.errors[0] }}
-                    </b-form-invalid-feedback>
-                    </ValidationProvider>
+                            </b-form-invalid-feedback>
+                        </ValidationProvider>
                     </b-col>
                     <b-col class="col-2">
                         <b-button-group>
@@ -102,23 +111,23 @@
                         </b-button-group>
 
                     </b-col>
-                   
+
                 </b-row>
 
                 <span>
 
                 </span>
-           
+
             </div>
 
         </div>
         <template #modal-footer>
-<b-overlay :show="Cargando" rounded opacity="0.6" spinner-small spinner-variant="primary" class="d-inline-block">
+            <b-overlay :show="Cargando" rounded opacity="0.6" spinner-small spinner-variant="primary" class="d-inline-block">
 
-            <b-button @click="enviarFormulario()" variant="primary" size="xl" class="float-right reactive-button" style="font-weight:bold">
-                Crear y Guardar
-            </b-button>
-</b-overlay>
+                <b-button @click="enviarFormulario()" variant="primary" size="xl" class="float-right reactive-button" style="font-weight:bold">
+                    Crear y Guardar
+                </b-button>
+            </b-overlay>
         </template>
 
     </b-modal>
@@ -137,28 +146,65 @@ export default {
                 ciudad: '',
                 direccion: ''
             }],
-            dataDirecciones:"",
+            dataDirecciones: "",
             Nombre: "",
             Nombre_abreviado: "",
             Correo: "",
             Rut: "",
+            Rut_ocupado: false,
+            Revisando_rut: false,
             Razon_social: "",
             Giro: "",
 
         }
     },
     methods: {
-        revisarRutEmpresa(){
-            
+        reiniciarDatos() {
+            this.direcciones = [{
+                ciudad: '',
+                direccion: ''
+            }];
+            this.dataDirecciones = "";
+            this.Nombre = "";
+            this.Nombre_abreviado ="";
+            this.Correo = "";
+            this.Rut = "";
+            this.Rut_ocupado = false;
+            this.Revisando_rut = false;
+            this.Razon_social = "";
+            this.Giro = "";
+
+
+        },
+        revisarRutEmpresa() {
+
             var data = {
-                rut_empresa: this.Rut
+                "rut_empresa": this.Rut
             }
-            empresaService.existeEmpresa(data).then((response)=>{
-                if (response != null){
-                    console.log(response);
-                }
-            })
-            
+            if (this.Rut != "") {
+                this.Revisando_rut = true;
+                empresaService.existeEmpresa(data).then((response) => {
+
+                    if (response != null) {
+                        if (response.status == 200) {
+                            this.Rut_ocupado = true;
+                            this.Revisando_rut = false;
+
+                        } else {
+                            this.Rut_ocupado = false;
+                            this.Revisando_rut = false;
+                        }
+                    } else {
+                        this.Rut_ocupado = false;
+                        this.Revisando_rut = false;
+                    }
+
+                })
+            } else {
+                this.Rut_ocupado = false;
+                this.Revisando_rut = false;
+            }
+
         },
         add() {
             this.direcciones.push({
@@ -187,24 +233,24 @@ export default {
 
                     this.Cargando = true;
                     var rutData = {
-                rut_empresa: this.Rut
+                        rut_empresa: this.Rut
                     }
                     this.dataDirecciones = this.direcciones.slice(0);
 
-                  this.dataDirecciones.unshift(rutData)
-                  
+                    this.dataDirecciones.unshift(rutData)
+
                     console.log(this.dataDirecciones)
                     var data = {
                         'rut_empresa': this.Rut,
                         'nombre_empresa': this.Nombre,
                         'nombre_abreviado': this.Nombre_abreviado,
-                        'correo' : this.Correo,
+                        'correo': this.Correo,
                         'razon_social': this.Razon_social,
                         'giro': this.Giro,
                         'direcciones': this.dataDirecciones,
                         'estado': true
                     }
-                    
+
                     console.log("data a enviar", data)
                     empresaService.ingresarEmpresa(data).then((response) => {
                         console.log(response)
@@ -221,6 +267,9 @@ export default {
                                 this.$emit('refrescar');
                             }
                             this.$bvModal.hide('modal-empresa')
+                            this.reiniciarDatos();
+                            this.$refs.form.reset();
+
                         } else {
                             this.$bvToast.toast(`Error al registrar cliente`, {
                                 title: 'Error',

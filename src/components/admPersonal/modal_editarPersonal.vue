@@ -334,6 +334,8 @@ export default {
                                 this.$emit('refrescar');
                             }
                             this.$bvModal.hide('modal-editar-personal');
+
+                            // Reiniciar archivos a enviar=
                             this.Archivos = null;
                             this.Archivos_enviar = "";
                         } else {

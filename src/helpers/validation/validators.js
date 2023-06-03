@@ -27,6 +27,14 @@ extend('rut', value => {
 
 });
 
+extend('rutSinPuntoGuion', value => {
+if (value.match(/^[a-zA-Z0-9]+$/) !== null){
+  return true;
+}else{
+  return 'Debe ingresar el rut sin puntos ni guión'
+}
+});
+
 
 
 

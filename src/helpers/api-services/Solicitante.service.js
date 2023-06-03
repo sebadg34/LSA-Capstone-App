@@ -105,6 +105,19 @@ const obtenerTodosSolicitantes = async () => {
         return;
     }
 };
+
+const cambiarEstadoSolicitante = async (data) => {
+    try {
+        const instanciaApi = await crearApi();
+        const response = await instanciaApi.post("/solicitantes/cambiarEstado", data);
+            console.log(response);
+        return response;
+        
+    } catch (error) {
+        console.log(error);
+        return;
+    }
+};
 export default {
     ingresarSolicitante,
     obtenerTodosSolicitantes,
@@ -112,6 +125,7 @@ export default {
     obtenerDetallesSolicitante,
     editarSolicitante,
     descargarCotizacion,
-    eliminarCotizacion
+    eliminarCotizacion,
+    cambiarEstadoSolicitante
 
 };

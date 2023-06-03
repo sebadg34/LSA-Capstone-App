@@ -11,8 +11,8 @@ const existeEmpresa = async (data) => {
         console.log(response);
         return response;
     } catch (error) {
-        console.log(error);
-        return;
+        console.log(error.response);
+        return error.response;
     }
 };
 

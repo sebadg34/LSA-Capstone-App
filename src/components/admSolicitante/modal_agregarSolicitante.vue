@@ -48,7 +48,7 @@
             </b-col>
             <b-col class="col-4">
                 <label for="input-live">Rut:</label>
-                <ValidationProvider name="rut" rules="required|rut" v-slot="validationContext">
+                <ValidationProvider name="rut" rules="required|rut|rutSinPuntoGuion" v-slot="validationContext">
 
                     <b-form-input size="sm" id="rut-input" class="mb-1" v-model="Rut" :state="getValidationState(validationContext)" aria-describedby="rut-live-feedback"></b-form-input>
 
@@ -85,11 +85,11 @@
                         <b-input-group-prepend is-text>
                             +56 9
                         </b-input-group-prepend>
-                    <b-form-input size="sm" id="nombre-input"  v-model="Movil_proveedores" :state="getValidationState(validationContext)" aria-describedby="nombre-live-feedback"></b-form-input>
-                    
-                    <b-form-invalid-feedback id="nombre-live-feedback">{{
+                        <b-form-input size="sm" id="nombre-input" v-model="Movil_proveedores" :state="getValidationState(validationContext)" aria-describedby="nombre-live-feedback"></b-form-input>
+
+                        <b-form-invalid-feedback id="nombre-live-feedback">{{
                         validationContext.errors[0] }}
-                    </b-form-invalid-feedback>
+                        </b-form-invalid-feedback>
                     </b-input-group>
                 </ValidationProvider>
                 <label for="input-live">Dir. pago proveedores:</label>
@@ -128,8 +128,7 @@
             <b-col class="col-4">
                 <ValidationProvider name="ciudad" rules="required" v-slot="validationContext">
                     <label for="input-live">Ciudad empresa:</label>
-                    <b-form-select @change="cargarDataCiudad" :disabled="Empresa ? false : true" aria-describedby="cargo-live-feedback" :state="getValidationState(validationContext)" class="mb-1" v-model="Ciudad"
-                     value-field="id_ciudad" text-field="nombre_ciudad" :options="Ciudades">
+                    <b-form-select @change="cargarDataCiudad" :disabled="Empresa ? false : true" aria-describedby="cargo-live-feedback" :state="getValidationState(validationContext)" class="mb-1" v-model="Ciudad" value-field="id_ciudad" text-field="nombre_ciudad" :options="Ciudades">
 
                     </b-form-select>
                     <b-form-invalid-feedback id="cargo-live-feedback">{{
@@ -206,6 +205,26 @@ export default {
         this.cargarEmpresas();
     },
     methods: {
+        reiniciarDatos() {
+            this.Nombre = "";
+            this.Rut = "";
+            this.Primer_apellido = "";
+            this.Segundo_apellido = "";
+            this.Movil = "";
+            this.Movil_proveedores = "";
+            this.Contacto_proveedores = "";
+            this.Direccion_factura = "";
+            this.Correo = "";
+            this.Tipo = "";
+            this.Ciudad = "";
+            this.Rut_empresa = "";
+            this.Empresa = null;
+            this.Nombre_empresa = "";
+            this.Nombre_ciudad = "";
+            this.Direccion_ciudad = "";
+            this.Ciudades = [{}];
+
+        },
         getValidationState({
             dirty,
             validated,
@@ -213,11 +232,11 @@ export default {
         }) {
             return dirty || validated ? valid : null;
         },
-        cargarDataCiudad(id){
+        cargarDataCiudad(id) {
             console.log(id)
-         var ciudadSeleccionada =   this.Ciudades.find(x=> x.id_ciudad === id);
-         this.Nombre_ciudad = ciudadSeleccionada.nombre_ciudad;
-         this.Direccion_ciudad = ciudadSeleccionada.direccion;
+            var ciudadSeleccionada = this.Ciudades.find(x => x.id_ciudad === id);
+            this.Nombre_ciudad = ciudadSeleccionada.nombre_ciudad;
+            this.Direccion_ciudad = ciudadSeleccionada.direccion;
         },
         cargarEmpresas() {
             this.Ciudad = "";
@@ -238,9 +257,9 @@ export default {
             empresaService.obtenerDetallesEmpresa(rutEmpresa).then((response => {
                 if (response.data != null) {
                     this.Nombre_empresa = response.data.nombre_empresa;
-                    
+
                     this.Ciudades = response.data.ciudades;
-                    console.log('ciudades cargadas',this.Ciudades)
+                    console.log('ciudades cargadas', this.Ciudades)
                 }
             }))
         },
@@ -287,6 +306,8 @@ export default {
                                 this.$emit('refrescar');
                             }
                             this.$bvModal.hide('modal-solicitante')
+                            this.reiniciarDatos();
+                            this.$refs.form.reset();
                         } else {
                             this.$bvToast.toast(`Error al crear personal`, {
                                 title: 'Error',

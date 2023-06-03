@@ -6,7 +6,7 @@
     <modal_editarSolicitante @refrescar="obtenerSolicitante" :solicitante-data="this.modalEditarData" />
     <modal_agregarCotizacion @refrescar="obtenerSolicitante" :user-data="this.modalCotizacionData" />
     <modal_listadoCotizaciones :user-data="this.modalCotizacionData" />
-
+    <modal_estadoSolicitante @refrescar="obtenerSolicitante" :user-data="this.modalEstadoData" />
     <b-row align-h="start" style="padding-top:30px;">
         <b-col class="col-6">
             <div style="font-size:2rem; font-weight: bold; color: var(--lsa-blue)">
@@ -55,6 +55,11 @@
 
         <b-col class="col-10">
             <b-table  show-empty :filter="filter" @filtered="onFiltered" :fields="campos_tabla" :items="solicitante" style="" :busy="loading" :per-page="perPage" :current-page="currentPage">
+                <template #cell(estado)="row">
+
+<span v-if="row.item.estado == true" style="text-transform:uppercase; color:green; font-weight: bold;">HABILITADO</span>
+<span v-else style="text-transform:uppercase; color:red; font-weight: bold;">DESHABILITADO</span>
+</template>
 
                 <template #empty>
                     <div class="text-center lsa-light-blue-text my-2 row">
@@ -104,8 +109,8 @@
                         <b-dropdown-item @click="abrirEditarSolicitante(row.item)">
                             <b-icon icon="pencil" aria-hidden="true" class="mr-2"></b-icon>Editar
                         </b-dropdown-item>
-                        <b-dropdown-item>
-                            <b-icon icon="person-check" aria-hidden="true" class="mr-2"></b-icon>Cambiar estado
+                        <b-dropdown-item @click="abrirEstadoSolicitante(row.item)">
+                            <b-icon  icon="person-check" aria-hidden="true" class="mr-2"></b-icon>Cambiar estado
                         </b-dropdown-item>
                         <b-dropdown-item @click="abrirAgregarCotizacion(row.item)">
                             <b-icon icon="file-earmark-plus" aria-hidden="true" class="mr-2"></b-icon>Agregar cotización
@@ -132,6 +137,7 @@ import modal_editarSolicitante from '@/components/admSolicitante/modal_editarSol
 import modal_detallesSolicitante from '@/components/admSolicitante/modal_detallesSolicitante.vue'
 import modal_agregarCotizacion from '@/components/admSolicitante/modal_agregarCotizacion.vue'
 import modal_listadoCotizaciones from '@/components/admSolicitante/modal_listadoCotizaciones.vue'
+import modal_estadoSolicitante from '@/components/admSolicitante/modal_estadoSolicitante.vue'
 import solicitanteService from "@/helpers/api-services/Solicitante.service"
 import empresaService from "@/helpers/api-services/Empresa.service"
 export default {
@@ -141,7 +147,8 @@ export default {
         modal_editarSolicitante,
         modal_detallesSolicitante,
         modal_agregarCotizacion,
-        modal_listadoCotizaciones
+        modal_listadoCotizaciones,
+        modal_estadoSolicitante
     },
     mounted() {
         this.obtenerSolicitante();
@@ -196,7 +203,10 @@ export default {
                 {
                     key: 'tipo_cliente',
                     label: 'Tipo cliente'
-                },
+                },{
+                key: 'estado',
+                label: 'Estado'
+            },
                 {
                     key: 'accion',
                     label: 'Acción'
@@ -210,6 +220,11 @@ export default {
             // Trigger pagination to update the number of buttons/pages due to filtering
             this.totalRows = filteredItems.length
             this.currentPage = 1
+        },
+        abrirEstadoSolicitante(data) {
+            console.log(data)
+            this.modalEstadoData = data;
+            this.$bvModal.show('modal-estado-solicitante')
         },
         abrirEditarSolicitante(data) {
             console.log(data)
