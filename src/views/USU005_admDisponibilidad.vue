@@ -19,15 +19,7 @@
             <b-row style="padding-top:30px; padding-bottom:10px">
                 <b-col class="col-6">
 
-                    <b-col class="col-6">
-                        <b-row>
-                            <b-button v-b-modal.modal-personal style="border-radius: 15px; font-weight: bold; font-size: 18px; " class="lsa-light-blue reactive-button">
-
-                                Agregar Personal
-                                <b-icon icon="person-plus-fill"></b-icon>
-                            </b-button>
-                        </b-row>
-                    </b-col>
+                   
 
                 </b-col>
 
