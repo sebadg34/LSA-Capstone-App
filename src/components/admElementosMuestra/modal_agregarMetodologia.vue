@@ -74,7 +74,7 @@ export default {
       analistaDuplicado: false,
       alertaDuplicado: false,      
       rutEmpleadosSeleccionados: '',
-      empleados: [{rut_empleado: '',
+      empleados_agregar: [{rut_empleado: '',
                    nombre: ''}],
       
       
@@ -113,7 +113,7 @@ export default {
       const analistaSeleccionado = this.analistas.find((analista) => analista.nombre === this.AnalistaAsignado);
       const rutAnalista = analistaSeleccionado.rut_empleado;
       this.analistasSeleccionados.push({ nombre: this.AnalistaAsignado, rut_empleado: rutAnalista });
-      this.empleados.push({ nombre: this.AnalistaAsignado, rut_empleado: rutAnalista });
+      this.empleados_agregar.push({ nombre: this.AnalistaAsignado, rut_empleado: rutAnalista });
       this.AnalistaAsignado = '';
       this.alertaDuplicado = false;
     }
@@ -129,13 +129,13 @@ eliminarAnalistaSeleccionado(index) {
 
     AgregarMetodologia(){
 
-      const empleadosFiltrados = this.empleados.slice(1);
+      const empleadosFiltrados = this.empleados_agregar.slice(1);
 
       var data = {
 
         nombre_metodologia: this.Nombre,        
         detalle_metodologia: this.Descripción,
-        empleados: empleadosFiltrados
+        empleados_agregar: empleadosFiltrados
 
 
       }
