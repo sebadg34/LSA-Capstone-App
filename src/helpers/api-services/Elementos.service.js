@@ -121,7 +121,7 @@ const obtenerMetodologias= async () => {
  const actualizarMetodologia = async (data) => {
     try {
         console.log("DATA: ", data.nombre_metodologia);
-        const response = await axios.put(apiUrl + "/metodologias/" + "actualizarMetodologia/" + data.nombre_metodologia);
+        const response = await axios.put(apiUrl + "/metodologias/" + "actualizarMetodologia/",data.nombre_metodologia);
         
         console.log(response);
         
