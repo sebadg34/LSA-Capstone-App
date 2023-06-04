@@ -30,7 +30,7 @@
   <b-col>
     <b-form-group label="Metodologías Seleccionadas">
       <div v-for="(metodologia, index) in metodologiaSeleccionada" :key="index" class="d-flex align-items-center analista-item">
-        <b-input readonly :value="metodologia"></b-input>
+        <b-input readonly :value="metodologia.nombre_metodologia"></b-input>
         <b-button variant="danger" @click="eliminarMetodologiaSeleccionada(index)" class="ml-2">
           <b-icon-trash-fill></b-icon-trash-fill>
         </b-button>
@@ -72,8 +72,9 @@ export default {
             opcionesMetodologia: [],
             metodologiaAsignada: '',
             metodologiaSeleccionada: [],  
-            alertaDuplicado: false,            
-            metodologias: [{nombre_metodologia: ''}]    
+            alertaDuplicado: false,  
+            metodologiasData: [],          
+            metodologias: [{nombre_metodologia: '', id_metodologia: ''}]    
 
         }
 
@@ -86,30 +87,36 @@ export default {
   }, 
 
     methods: { 
+
+      obtenerIdMetodologia(nombreMetodologia) {
+    const metodologia = this.metodologiasData.find(item => item.nombre_metodologia === nombreMetodologia);
+    return metodologia ? metodologia.id_metodologia : null;
+  },
       
       obtenerMetodologias() {
-        console.log("Obteniendo Metodologias: ");
-        ElementosService.obtenerMetodologias().then((response) => {
-          if (response.data != null && response.status === 200) {
-            this.opcionesMetodologia = response.data.map(item => item.nombre_metodologia);
-          }
-        });
-      },    
+  ElementosService.obtenerMetodologias().then((response) => {
+    if (response.data != null && response.status === 200) {
+      this.metodologiasData = response.data;
+      this.opcionesMetodologia = response.data.map(item => item.nombre_metodologia);
+      console.log("Obteniendo Metodologias: ", response.data);
+    }
+  });
+},    
 
-      agregarMetodologiaSeleccionada() {
-        if (this.metodologiaAsignada) {
-          const metodologiaExistente = this.metodologiaSeleccionada.find((metodologia) => metodologia === this.metodologiaAsignada);
-          if (metodologiaExistente) {
-            this.alertaDuplicado = true;
-          } else {
-            this.metodologiaSeleccionada.push(this.metodologiaAsignada);
-            //this.rutEmpleadosSeleccionados.push(this.analistas.find(a => a.nombre === this.metodologiaAsignada).rut_empleado);
-            this.metodologias = this.metodologiaSeleccionada;
-            this.metodologiaAsignada = '';
-            this.alertaDuplicado = false;
-          }
-        }
-      },
+agregarMetodologiaSeleccionada() {
+  if (this.metodologiaAsignada) {
+    const existeMetodologia = this.metodologiaSeleccionada.some(metodologia => metodologia.nombre_metodologia === this.metodologiaAsignada);
+    if (existeMetodologia) {
+      this.alertaDuplicado = true;
+    } else {
+      const idMetodologia = this.obtenerIdMetodologia(this.metodologiaAsignada);
+      this.metodologiaSeleccionada.push({ nombre_metodologia: this.metodologiaAsignada, id_metodologia: idMetodologia });
+      this.metodologias = this.metodologiaSeleccionada;
+      this.metodologiaAsignada = '';
+      this.alertaDuplicado = false;
+    }
+  }
+},      
 
       eliminarMetodologiaSeleccionada(index) {
         this.metodologiaSeleccionada.splice(index, 1);
@@ -118,12 +125,12 @@ export default {
 
     AgregarParametro(){
 
-      const metodologiaFiltrada = this.metodologias.slice(1);
+      
 
       var data = {
 
       nombre_parametro: this.Nombre,        
-      metodologias: metodologiaFiltrada     
+      metodologias: this.metodologias
 
     }
     console.log("data a enviar", data)

@@ -64,7 +64,9 @@ export default {
 
     watch: {
         metodologiaData: {
-            handler() {               
+            handler() {  
+              
+              console.log("MData actualizada", this.metodologiaData) 
                 
                 this.Nombre = this.metodologiaData.nombre_metodologia;
                 this.Descripción = this.metodologiaData.detalle_metodologia;
