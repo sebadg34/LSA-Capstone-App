@@ -93,12 +93,12 @@ export default {
       obtenerParametros() {
   ElementosService.obtenerParametros().then((response) => {
     if (response.data != null && response.status === 200) {
-      console.log("la respuesta es: ",response.data)
+      console.log("la respuesta es: ", response.data);
       const parametros = response.data.map((parametro) => {
         const nuevoObjetoParametro = { ...parametro };
 
         if (parametro.metodologias && parametro.metodologias.length > 0) {
-          nuevoObjetoParametro.nombreMetodologia = parametro.metodologias[0].nombre_parametro;
+          nuevoObjetoParametro.nombreMetodologia = parametro.metodologias[0].nombre_metodologia;
 
           if (parametro.metodologias.length > 1) {
             nuevoObjetoParametro.nombreMetodologia += "(+)";
@@ -112,7 +112,7 @@ export default {
 
       this.items = parametros;
 
-      console.log("los parametros son: ", parametros)
+      console.log("los parametros son: ", parametros);
     }
   });
 },

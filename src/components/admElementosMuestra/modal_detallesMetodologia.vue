@@ -4,7 +4,7 @@
     <template #modal-header="{ close }">
           <!-- Emulate built in modal header close button action -->
           <b-row class="d-flex justify-content-around">
-              <div class="pl-3">Detalles de la metodologia</div>
+              <div class="pl-3">Detalles de la Metodología</div>
           </b-row>
 
           <button type="button" class="close" aria-label="Close" @click="close()">

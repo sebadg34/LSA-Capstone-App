@@ -35,18 +35,18 @@
       </b-row>
 
       <b-row v-if="objetosSeleccionados.length > 0" class="mt-3">
-    <b-col>
-      <b-form-group label="Param y Met Seleccionados">
-        <div v-for="(objetos, index) in objetosSeleccionados" :key="index" class="d-flex align-items-center objetos-item mb-3">
-          <b-input readonly :value="objetos.parametro" class="mr-2"></b-input>
-          <b-input readonly :value="objetos.metodologia"></b-input>
-          <b-button variant="danger" @click="eliminarObjetosSeleccionados(index)" class="ml-2">
-            <b-icon-trash-fill></b-icon-trash-fill>
-          </b-button>
-        </div>
-      </b-form-group>
-    </b-col>
-  </b-row>
+  <b-col>
+    <b-form-group label="Param y Met Seleccionados">
+      <div v-for="(objetos, index) in objetosSeleccionados" :key="index" class="d-flex align-items-center objetos-item mb-3">
+        <b-input readonly :value="objetos.parametro" class="mr-2"></b-input>
+        <b-input readonly :value="objetos.metodologia" class="mr-2"></b-input>
+        <b-button variant="danger" @click="eliminarObjetosSeleccionados(index)" class="ml-2">
+          <b-icon-trash-fill></b-icon-trash-fill>
+        </b-button>
+      </div>
+    </b-form-group>
+  </b-col>
+</b-row>
 
   <b-alert variant="danger" :show="alertaDuplicado" dismissible @dismissed="alertaDuplicado = false">
     Los Parametros y Metodologias ya se encuentran agregados.
@@ -80,10 +80,12 @@ export default {
             metodologiaSeleccionada: '',
             parametroSeleccionado: '',
             opcionesMetodologia: [],
-            opcionesParametro: ["x","y"], // dejar vacio cuando se implemente las opciones via backend.
+            opcionesParametro: [], // dejar vacio cuando se implemente las opciones via backend.
             objetosSeleccionados: [],
             alertaDuplicado: false,
-            matrices: [{nombre_matriz: ''}]
+            matrices: [{id_parametro: '', nombre_parametro:'', id_metodologia: '', nombre_metodologia: ''}],
+            metodologiasData: [],
+            metodologias: []
             
         }
 
@@ -91,94 +93,111 @@ export default {
 
     mounted() {
 
-      //this.obtenerParametro();    
+      this.obtenerParametro();    
 
     }, 
 
     watch: {
-    parametroSeleccionado(nuevoParametro) {
-      this.actualizarMetodologias(nuevoParametro);
-    },
-  },
+  parametroSeleccionado: function(newParametro) {
+    if (newParametro) {
+      this.actualizarMetodologias();
+    }
+  }
+},
 
     methods: { 
       
             
       obtenerParametro() {
-        
-        ElementosService.obtenerParametros().then((response) => {
-          if (response.data != null && response.status === 200) {
-            console.log("Obteniendo Parametros: ", response.data);
-            this.opcionesParametro = response.data.map(item => item.nombre_parametro);
-          }
-        });
-      },
+  ElementosService.obtenerParametros().then((response) => {
+    if (response.data != null && response.status === 200) {
+      console.log("Obteniendo Parametros: ", response.data);
 
-      obtenerMetodologias() {
-        console.log("Obteniendo Metodologias: ");
-        ElementosService.obtenerMetodologias().then((response) => {
-          if (response.data != null && response.status === 200) {
-            this.opcionesMetodologia = response.data.map(item => item.nombre_metodologia);
-          }
-        });
-      }, 
+      // Almacenar los datos en metodologiasData
+      this.metodologiasData = response.data.map(item => ({
+        id_parametro: item.id_parametro,
+        nombre_parametro: item.nombre_parametro,
+        metodologias: item.metodologias.map(metodologia => ({
+          id_metodologia: metodologia.id_metodologia,
+          nombre_metodologia: metodologia.nombre_metodologia
+        }))
+      }));
 
-      actualizarMetodologias() {
+      console.log("Metodologia Data: ",this.metodologiasData)
+
+      this.opcionesParametro = response.data.map(item => item.nombre_parametro);
+      console.log("opcion",this.opcionesParametro)
+    }
+  });
+},
+     
+
+  eliminarObjetosSeleccionados(index) {
+    this.objetosSeleccionados.splice(index, 1);
+  },
+
+  actualizarObjetosSeleccionados(index, parametro, metodologia) {
+    this.objetosSeleccionados[index].parametro = parametro;
+    this.objetosSeleccionados[index].metodologia = metodologia;
+  },
+
+  actualizarMetodologias() {
   const parametro = this.parametroSeleccionado;
-  
-  // Array de prueba
-  const metodologiasPorParametro = [
-    { parametro: 'x', metodologias: ['Metodología X1', 'Metodología X2'] },
-    { parametro: 'y', metodologias: ['Metodología Y1', 'Metodología Y2'] },
-    
-  ];
 
-  // Buscar en el array de metodologías por parámetro el objeto correspondiente al parámetro seleccionado
-  const objetoMetodologias = metodologiasPorParametro.find(objeto => objeto.parametro === parametro);
-  
-  if (objetoMetodologias) {
-    // Si se encuentra un objeto con las metodologías asociadas al parámetro seleccionado
-    this.opcionesMetodologia = objetoMetodologias.metodologias;
+  // Buscar el objeto correspondiente al parámetro seleccionado en metodologiasData
+  console.log("Metodologia Data 2: ",this.metodologiasData)
+  const parametroData = this.metodologiasData.find(item => item.nombre_parametro === parametro);
+
+  console.log("Parámetro seleccionado:", parametro);
+  console.log("Objeto del parámetro seleccionado:", parametroData);
+  console.log("Metodologías del parámetro seleccionado:", parametroData.metodologias);
+
+  this.metodologias = parametroData.metodologias
+  console.log("Metodologías den array:", this.metodologias);
+
+  this.opcionesMetodologia = this.metodologias.map(item => item.nombre_metodologia);
+  console.log("opciones Metodologia:", this.opcionesMetodologia);
+
+
+
+  /*if (parametroData.metodologias.length > 0) {
+    // Obtener las metodologías asociadas al parámetro seleccionado
+    const metodologias = parametroData.metodologias[0].metodologias;
+
+    console.log("Metodologías asociadas al parámetro seleccionado:", metodologias);
+
+    // Obtener solo los nombres de las metodologías
+    this.opcionesMetodologia = metodologias.map(item => item.nombre_metodologia);
   } else {
-    // Si no se encuentra un objeto para el parámetro seleccionado, se asigna un array vacío a las opciones de metodología
-    this.opcionesMetodologia = [];
-  }
+    this.opcionesMetodologia = []; // No se encontraron metodologías para el parámetro seleccionado
+  }*/
 },
 
 agregarObjetosSeleccionados() {
-      if (this.parametroSeleccionado && this.metodologiaSeleccionada) {
-        const ParamExistente = this.objetosSeleccionados.find(objeto => objeto.parametro === this.parametroSeleccionado);
-        const MetExistente = this.objetosSeleccionados.find(objeto => objeto.metodologia === this.metodologiaSeleccionada);
-        if (ParamExistente && MetExistente) {
-          this.alertaDuplicado = true;
-        } else {
-          this.objetosSeleccionados.push({
-            parametro: this.parametroSeleccionado,
-            metodologia: this.metodologiaSeleccionada
-          });
-          this.parametroSeleccionado = '';
-          this.metodologiaSeleccionada = '';
-          this.alertaDuplicado = false;
-        }
-      }
-    },
+  if (this.parametroSeleccionado && this.metodologiaSeleccionada) {
+    const ParamExistente = this.objetosSeleccionados.find(objeto => objeto.parametro === this.parametroSeleccionado);
+    const MetExistente = this.objetosSeleccionados.find(objeto => objeto.metodologia === this.metodologiaSeleccionada);
 
+    if (ParamExistente && MetExistente) {
+      this.alertaDuplicado = true;
+      this.parametroSeleccionado = ''; 
+      this.metodologiaSeleccionada = '';
+    } else {
+      const metodologiaCompleta = this.metodologiasData.find(item => item.nombre_parametro === this.parametroSeleccionado).metodologias.find(metodologia => metodologia.nombre_metodologia === this.metodologiaSeleccionada);
+      this.objetosSeleccionados.push({parametro: this.parametroSeleccionado,metodologia: metodologiaCompleta.nombre_metodologia});
+      this.parametroSeleccionado = '';
+      this.metodologiaSeleccionada = '';
+      this.alertaDuplicado = false;
+    }
+  }
+},
 
-
-      
-    eliminarObjetosSeleccionados(index) {
-      
-      this.objetosSeleccionados.splice(index, 1);
-    },
-
-    AgregarMatriz(){
-
-      const matrizFiltrada = this.matrices.slice(1)
+AgregarMatriz(){    
 
       var data = {
 
         nombre_matriz: this.Nombre, 
-        matrices: matrizFiltrada
+        matrices: this.matrices
       }
       console.log("data a enviar", data)
       ElementosService.agregarMatriz(data).then((response)=>{

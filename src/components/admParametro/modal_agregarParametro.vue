@@ -94,10 +94,10 @@ export default {
   },
       
       obtenerMetodologias() {
-  ElementosService.obtenerMetodologias().then((response) => {
-    if (response.data != null && response.status === 200) {
-      this.metodologiasData = response.data;
-      this.opcionesMetodologia = response.data.map(item => item.nombre_metodologia);
+        ElementosService.obtenerMetodologias().then((response) => {
+          if (response.data != null && response.status === 200) {
+          this.metodologiasData = response.data;
+          this.opcionesMetodologia = response.data.map(item => item.nombre_metodologia);
       console.log("Obteniendo Metodologias: ", response.data);
     }
   });
