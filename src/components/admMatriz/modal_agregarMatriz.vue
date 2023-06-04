@@ -83,7 +83,7 @@ export default {
             opcionesParametro: [], // dejar vacio cuando se implemente las opciones via backend.
             objetosSeleccionados: [],
             alertaDuplicado: false,
-            matrices: [{id_parametro: '', nombre_parametro:'', id_metodologia: '', nombre_metodologia: ''}],
+            parametros: [{id_parametro: '', id_metodologia: '',}],
             metodologiasData: [],
             metodologias: []
             
@@ -180,11 +180,19 @@ agregarObjetosSeleccionados() {
 
     if (ParamExistente && MetExistente) {
       this.alertaDuplicado = true;
-      this.parametroSeleccionado = ''; 
+      this.parametroSeleccionado = '';
       this.metodologiaSeleccionada = '';
     } else {
-      const metodologiaCompleta = this.metodologiasData.find(item => item.nombre_parametro === this.parametroSeleccionado).metodologias.find(metodologia => metodologia.nombre_metodologia === this.metodologiaSeleccionada);
-      this.objetosSeleccionados.push({parametro: this.parametroSeleccionado,metodologia: metodologiaCompleta.nombre_metodologia});
+      const parametroData = this.metodologiasData.find(item => item.nombre_parametro === this.parametroSeleccionado);
+      const metodologiaCompleta = parametroData.metodologias.find(metodologia => metodologia.nombre_metodologia === this.metodologiaSeleccionada);
+      
+      this.objetosSeleccionados.push({ parametro: this.parametroSeleccionado, metodologia: metodologiaCompleta.nombre_metodologia });
+      this.parametros.push({
+        id_parametro: parametroData.id_parametro,        
+        id_metodologia: metodologiaCompleta.id_metodologia,       
+        
+      });
+      console.log("las matrices ahn guardado lo siguiente: ", this.parametros)
       this.parametroSeleccionado = '';
       this.metodologiaSeleccionada = '';
       this.alertaDuplicado = false;
@@ -194,11 +202,16 @@ agregarObjetosSeleccionados() {
 
 AgregarMatriz(){    
 
-      var data = {
+  const matricesFiltradas = this.parametros.slice(1);
 
-        nombre_matriz: this.Nombre, 
-        matrices: this.matrices
-      }
+  const data = {
+    nombre_matriz: this.Nombre,
+    parametros: matricesFiltradas.map(matriz => ({
+      id_parametro: matriz.id_parametro,      
+      id_metodologia: matriz.id_metodologia,
+      
+    }))
+  };
       console.log("data a enviar", data)
       ElementosService.agregarMatriz(data).then((response)=>{
         console.log(response)
