@@ -28,7 +28,7 @@
 
           <b-col>
             <b-form-group label="Seleccione una Metodología">
-              <b-form-select v-model="metodologiaSeleccionada" :options="opcionesMetodologia" placeholder="Seleccione una metodología" @change="agregarObjetosSeleccionados"></b-form-select>
+              <b-form-select v-model="metodologiaSeleccionada" :options="opcionesMetodologia" placeholder="Seleccione una metodología" :disabled="metodologiaDeshabilitada" @change="agregarObjetosSeleccionados"></b-form-select>
             </b-form-group>
           </b-col>
       
@@ -85,7 +85,9 @@ export default {
             alertaDuplicado: false,
             parametros: [{id_parametro: '', id_metodologia: '',}],
             metodologiasData: [],
-            metodologias: []
+            metodologias: [],
+            metodologiaDeshabilitada: true,
+            
             
         }
 
@@ -98,12 +100,15 @@ export default {
     }, 
 
     watch: {
-  parametroSeleccionado: function(newParametro) {
-    if (newParametro) {
-      this.actualizarMetodologias();
-    }
-  }
-},
+    parametroSeleccionado: function(newParametro) {
+      if (newParametro) {
+        this.actualizarMetodologias();
+        this.metodologiaDeshabilitada = false; // Habilita el input 
+      } else {
+        this.metodologiaDeshabilitada = true; 
+      }
+    },
+  },
 
     methods: { 
       
