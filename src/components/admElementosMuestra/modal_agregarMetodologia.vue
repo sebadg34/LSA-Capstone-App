@@ -74,8 +74,7 @@ export default {
       analistaDuplicado: false,
       alertaDuplicado: false,      
       rutEmpleadosSeleccionados: '',
-      empleados_agregar: [{rut_empleado: '',
-                   nombre: ''}],
+      empleados_agregar: [{rut_empleado: ''}],
       
       
     };
@@ -113,7 +112,7 @@ export default {
       const analistaSeleccionado = this.analistas.find((analista) => analista.nombre === this.AnalistaAsignado);
       const rutAnalista = analistaSeleccionado.rut_empleado;
       this.analistasSeleccionados.push({ nombre: this.AnalistaAsignado, rut_empleado: rutAnalista });
-      this.empleados_agregar.push({ nombre: this.AnalistaAsignado, rut_empleado: rutAnalista });
+      this.empleados_agregar.push({ rut_empleado: rutAnalista });
       this.AnalistaAsignado = '';
       this.alertaDuplicado = false;
     }
