@@ -67,6 +67,7 @@ export default {
             handler() {
 
                 this.Nombre = this.metodologiaData.nombre_metodologia;
+                this.Id = this.metodologiaData.id_metodologia;
                 this.Descripción = this.metodologiaData.detalle_metodologia;
                 this.analistas_ya_seleccionados = this.metodologiaData.empleados;
                 for (var i = 0; i < this.analistas_ya_seleccionados.length; i++) {
@@ -100,6 +101,7 @@ export default {
             analistaDuplicado: false,
             alertaDuplicado: false,
             Nombre: "",
+            Id: "",
 
         };
     },
@@ -193,6 +195,7 @@ export default {
                 empleados_eliminar: this.empleados_eliminar,
                 empleados_agregar: this.empleados_agregar,
                 nombre_metodologia: this.Nombre,
+                id_metodologia: this.Id,
                 detalle_metodologia: this.Descripción,
 
             }
