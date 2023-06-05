@@ -71,7 +71,7 @@ export default {
                 this.Descripción = this.metodologiaData.detalle_metodologia;
                 this.analistas_ya_seleccionados = this.metodologiaData.empleados;
                 for (var i = 0; i < this.analistas_ya_seleccionados.length; i++) {
-                    console.log(this.metodologiaData.empleados)
+                   
                     this.analistas_ya_en_sistema.push({
                         nombre: this.metodologiaData.empleados[i].nombre,
                         rut_empleado: this.metodologiaData.empleados[i].rut_empleado,

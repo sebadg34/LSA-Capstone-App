@@ -136,6 +136,23 @@ const obtenerMetodologias= async () => {
 
 
 
+ const actualizarParametro = async (data) => {
+    try {
+        const response = await axios.put(apiUrl + "/parametros/actualizarParametro/",data);
+        
+        console.log(response);
+        
+        if (response.status == 200) {
+            return response;
+        } else {
+            return;
+        }
+    } catch (error) {
+        console.log(error);
+        return;
+    }
+};
+
  const actualizarMetodologia = async (data) => {
     try {
         console.log("DATA: ", data.nombre_metodologia);
@@ -191,6 +208,7 @@ export default {
     agregarMatriz,
     obtenerMatriz,
     obtenerDetallesParametro,
-    obtenerDetallesMatriz
+    obtenerDetallesMatriz,
+    actualizarParametro
 
 }
