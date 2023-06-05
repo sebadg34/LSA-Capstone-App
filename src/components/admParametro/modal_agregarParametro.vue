@@ -111,7 +111,7 @@ agregarMetodologiaSeleccionada() {
     } else {
       const idMetodologia = this.obtenerIdMetodologia(this.metodologiaAsignada);
       this.metodologiaSeleccionada.push({ nombre_metodologia: this.metodologiaAsignada, id_metodologia: idMetodologia });
-      this.metodologias_agregar = this.metodologiaSeleccionada;
+      this.metodologias_agregar = this.metodologiaSeleccionada.map(metodologia => ({ id_metodologia: metodologia.id_metodologia }));
       this.metodologiaAsignada = '';
       this.alertaDuplicado = false;
     }
