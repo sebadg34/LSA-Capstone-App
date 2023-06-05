@@ -74,7 +74,7 @@ export default {
             metodologiaSeleccionada: [],  
             alertaDuplicado: false,  
             metodologiasData: [],          
-            metodologias: [{nombre_metodologia: '', id_metodologia: ''}]    
+            metodologias_agregar: [{nombre_metodologia: '', id_metodologia: ''}]    
 
         }
 
@@ -111,7 +111,7 @@ agregarMetodologiaSeleccionada() {
     } else {
       const idMetodologia = this.obtenerIdMetodologia(this.metodologiaAsignada);
       this.metodologiaSeleccionada.push({ nombre_metodologia: this.metodologiaAsignada, id_metodologia: idMetodologia });
-      this.metodologias = this.metodologiaSeleccionada;
+      this.metodologias_agregar = this.metodologiaSeleccionada;
       this.metodologiaAsignada = '';
       this.alertaDuplicado = false;
     }
@@ -130,7 +130,7 @@ agregarMetodologiaSeleccionada() {
       var data = {
 
       nombre_parametro: this.Nombre,        
-      metodologias: this.metodologias
+      metodologias_agregar: this.metodologias_agregar
 
     }
     console.log("data a enviar", data)

@@ -15,7 +15,7 @@
       <!-- ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// -->
       
       <b-form-group label="Nombre de Matriz">
-         <b-form-input v-model="Nombre"></b-form-input>
+        <b-form-input v-model="Nombre"></b-form-input>
       </b-form-group>
 
       <b-row>
@@ -83,7 +83,7 @@ export default {
             opcionesParametro: [], // dejar vacio cuando se implemente las opciones via backend.
             objetosSeleccionados: [],
             alertaDuplicado: false,
-            parametros: [{id_parametro: '', id_metodologia: '',}],
+            parametros_agregar: [{id_parametro: '', id_metodologia: '',}],
             metodologiasData: [],
             metodologias: [],
             metodologiaDeshabilitada: true,
@@ -192,7 +192,7 @@ agregarObjetosSeleccionados() {
       const metodologiaCompleta = parametroData.metodologias.find(metodologia => metodologia.nombre_metodologia === this.metodologiaSeleccionada);
       
       this.objetosSeleccionados.push({ parametro: this.parametroSeleccionado, metodologia: metodologiaCompleta.nombre_metodologia });
-      this.parametros.push({
+      this.parametros_agregar.push({
         id_parametro: parametroData.id_parametro,        
         id_metodologia: metodologiaCompleta.id_metodologia,       
         
@@ -211,7 +211,7 @@ AgregarMatriz(){
 
   const data = {
     nombre_matriz: this.Nombre,
-    parametros: matricesFiltradas.map(matriz => ({
+    parametros_agregar: matricesFiltradas.map(matriz => ({
       id_parametro: matriz.id_parametro,      
       id_metodologia: matriz.id_metodologia,
       
@@ -235,6 +235,7 @@ AgregarMatriz(){
       this.metodologiaSeleccionada = '',
       this.parametroSeleccionado = '',     
       this.objetosSeleccionados = [],
+      this.parametros_agregar = [{id_parametro: '', id_metodologia: '',}],
       
 
       this.$refs.modal.hide()                         
