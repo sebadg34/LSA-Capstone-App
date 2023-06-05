@@ -129,11 +129,9 @@ export default {
                     this.alertaDuplicado = true;
                 } else {
 
-                    // En caso de agregar un analista que no está registrado a la metodologia
-                    //var metodologiaAntigua = false;
+                    // En caso de agregar un analista que no está registrado en la BD
                     const metodologiaAntigua = this.metodologias_ya_en_sistema.find(x => x.id_metodologia === value.id_metodologia);
                     if (metodologiaAntigua == null) {
-                      console.log("METODOLOGIA NUEVA, AGREGAR A BD")
                         this.metodologias_agregar.push({
                             id_metodologia: value.id_metodologia
                         });
@@ -154,27 +152,22 @@ export default {
         },
 
         eliminarMetodologiaSeleccionada(index) {
-            console.log(this.metodologiaSeleccionada[index].id_metodologia)
             if (this.metodologias_ya_en_sistema.find(x => x.id_metodologia === this.metodologiaSeleccionada[index].id_metodologia)) {
                 // Se guarda registro de direcciones a eliminar en la BD
-
                 this.metodologias_eliminar.push({
                     id_metodologia: this.metodologiaSeleccionada[index].id_metodologia
                 });
-                console.log('metodologia a eliminar', this.metodologias_eliminar)
             }
             this.metodologiaSeleccionada.splice(index, 1)
         },
         ActualizarParametro() {
 
             var data = {
-
                 nombre_parametro: this.Nombre,
                 metodologias_agregar: this.metodologias_agregar,
                 metodologias_eliminar: this.metodologias_eliminar
 
             }
-            console.log("data a enviar", data)
             ElementosService.actualizarParametro(data).then((response) => {
                 console.log(response)
                 if (response != null) {

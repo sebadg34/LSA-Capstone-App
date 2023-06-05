@@ -70,15 +70,14 @@ export default {
                 this.Id = this.metodologiaData.id_metodologia;
                 this.Descripción = this.metodologiaData.detalle_metodologia;
                 this.analistas_ya_seleccionados = this.metodologiaData.empleados;
+
                 for (var i = 0; i < this.analistas_ya_seleccionados.length; i++) {
-                   
                     this.analistas_ya_en_sistema.push({
                         nombre: this.metodologiaData.empleados[i].nombre,
                         rut_empleado: this.metodologiaData.empleados[i].rut_empleado,
                     })
                 }
 
-                console.log(this.analistas_ya_seleccionados);
             }
         }
     },
@@ -107,28 +106,30 @@ export default {
     },
 
     mounted() {
-        // TODO: Cambiar a obtenerTodosPersonal que sea Analista Quimico o Quimico
-        PersonalService.obtenerTodosPersonal().then((response) => {
-                console.log(response.data);
-                if (response.data != null) {
-                    this.analistas = response.data;
-                    this.rutEmpleados = this.analistas.map((analista) => analista.rut_empleado);
-
-                    this.opcionesAnalista = this.analistas.filter((analista) => {
-                        return analista.rol === 'Analista Químico' || analista.rol === 'Químico';
-                    }).map((analista) => ({
-                        value: analista,
-                        text: analista.nombre,
-                    }));
-                }
-            })
-            .catch((error) => {
-                console.error('Error al obtener los analistas:', error);
-            });
+        this.obtenerAnalistas();
     },
 
     methods: {
 
+        obtenerAnalistas() {
+            // TODO: Cambiar a obtenerTodosPersonal que sea Analista Quimico o Quimico
+            PersonalService.obtenerTodosPersonal().then((response) => {
+                    if (response.data != null) {
+                        this.analistas = response.data;
+                        this.rutEmpleados = this.analistas.map((analista) => analista.rut_empleado);
+
+                        this.opcionesAnalista = this.analistas.filter((analista) => {
+                            return analista.rol === 'Analista Químico' || analista.rol === 'Químico';
+                        }).map((analista) => ({
+                            value: analista,
+                            text: analista.nombre,
+                        }));
+                    }
+                })
+                .catch((error) => {
+                    console.error('Error al obtener los analistas:', error);
+                });
+        },
         eliminarAnalistaSeleccionado(index) {
 
             if (this.analistas_ya_en_sistema.find(x => x.rut_empleado === this.analistas_ya_seleccionados[index].rut_empleado)) {
@@ -136,36 +137,26 @@ export default {
                 this.empleados_eliminar.push({
                     rut_empleado: this.analistas_ya_seleccionados[index].rut_empleado
                 });
-                console.log('empleados a eliminar', this.empleados_eliminar)
             }
             this.analistas_ya_seleccionados.splice(index, 1)
         },
         agregarAnalistaSeleccionado(value) {
-
-            console.log("value seleccionado", value)
             if (value) {
                 const analistaExistente = this.analistas_ya_seleccionados.find(
                     (analista) => analista.rut_empleado === value.rut_empleado
                 );
                 if (analistaExistente) {
-                    console.log("repetido!")
                     this.alertaDuplicado = true;
                 } else {
 
-
-
-                    // En caso de agregar un analista que no está registrado a la metodologia
-                   // var analistaAntiguo = false;
-
+                    // Revisar si el analista a agregar está ya inscrito en la BD
                     const analistaAntiguo = this.analistas_ya_en_sistema.find(x => x.rut_empleado == value.rut_empleado);
                     if (analistaAntiguo == null) {
-                        console.log("analista nuevo, ingresar!");
                         this.empleados_agregar.push({
                             rut_empleado: value.rut_empleado
                         });
-                    }else{
+                    } else {
                         this.empleados_eliminar = this.empleados_eliminar.filter(empleado => empleado.rut_empleado != value.rut_empleado);
-                        console.log("lista restaurada de eliminados",this.empleados_eliminar);
                     }
 
                     this.analistas_ya_seleccionados.push({
@@ -173,10 +164,7 @@ export default {
                         rut_empleado: value.rut_empleado
                     });
 
-                   // // Borrar de la lista de empleados a eliminar (empleado re ingresado)
-                   // if (this.empleados_eliminar.find((empleado) => empleado.rut_empleado === value.rut_empleado)) {
-                   //     this.empleados_eliminar = this.empleados_eliminar.filter(empleado => empleado.rut_empleado != value.rut_empleado);
-                   // }
+                 
                     this.AnalistaAsignado = '';
                     this.alertaDuplicado = false;
                 }
@@ -193,10 +181,7 @@ export default {
                 detalle_metodologia: this.Descripción,
 
             }
-            console.log("analistas que no cambian nada", this.analistas_ya_en_sistema)
-            console.log("data a enviar", data)
             ElementosService.actualizarMetodologia(data).then((response) => {
-                console.log("Respuesta del server: ", response)
                 if (response != null) {
                     if (response.status == 200) {
                         this.$bvToast.toast(`Se ha editado la metodología exitosamente!`, {
