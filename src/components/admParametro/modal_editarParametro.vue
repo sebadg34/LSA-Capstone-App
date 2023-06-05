@@ -68,7 +68,7 @@ export default {
                 console.log("info a editar de parametros", this.parametroData)
                 this.Nombre = this.parametroData.nombre_parametro;
                 this.metodologiaSeleccionada = this.parametroData.metodologias;
-
+this.Id = this.parametroData.id_parametro;
                 console.log(this.metodologiaSeleccionada)
                 for (var i = 0; i < this.metodologiaSeleccionada.length; i++) {
                     console.log(this.parametroData.metodologias[i])
@@ -89,6 +89,7 @@ export default {
 
         return {
             Nombre: '',
+            Id: '',
             opcionesMetodologia: [],
             metodologiaAsignada: '',
             metodologias_eliminar: [],
@@ -163,6 +164,7 @@ export default {
         ActualizarParametro() {
 
             var data = {
+                id_parametro: this.Id,
                 nombre_parametro: this.Nombre,
                 metodologias_agregar: this.metodologias_agregar,
                 metodologias_eliminar: this.metodologias_eliminar
@@ -182,10 +184,11 @@ export default {
 
                         this.$emit('parametroAgregado');
 
-                        this.Nombre = '',
-                            this.opcionesMetodologia = [],
-                            this.metodologiaAsignada = '',
-                            this.metodologiaSeleccionada = [],
+                        this.Nombre = ''
+                        this.Id = ''
+                            this.opcionesMetodologia = []
+                            this.metodologiaAsignada = ''
+                            this.metodologiaSeleccionada = []
                             this.metodologia = []
 
                         this.$refs.modal.hide()
