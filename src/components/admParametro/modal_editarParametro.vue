@@ -68,7 +68,7 @@ export default {
                 console.log("info a editar de parametros", this.parametroData)
                 this.Nombre = this.parametroData.nombre_parametro;
                 this.metodologiaSeleccionada = this.parametroData.metodologias;
-this.Id = this.parametroData.id_parametro;
+                this.Id = this.parametroData.id_parametro;
                 console.log(this.metodologiaSeleccionada)
                 for (var i = 0; i < this.metodologiaSeleccionada.length; i++) {
                     console.log(this.parametroData.metodologias[i])
@@ -186,10 +186,10 @@ this.Id = this.parametroData.id_parametro;
 
                         this.Nombre = ''
                         this.Id = ''
-                            this.opcionesMetodologia = []
-                            this.metodologiaAsignada = ''
-                            this.metodologiaSeleccionada = []
-                            this.metodologia = []
+                        this.opcionesMetodologia = []
+                        this.metodologiaAsignada = ''
+                        this.metodologiaSeleccionada = []
+                        this.metodologia = []
 
                         this.$refs.modal.hide()
                     }

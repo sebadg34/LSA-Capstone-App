@@ -26,7 +26,25 @@
 
     <div class="row justify-content-center">
       <div class="col-10">
-        <b-table :items="items" :fields="fields" responsive >
+        <b-table :busy="loading" show-empty :items="items" :fields="fields" responsive >
+
+          <template #empty>
+                    <div class="text-center lsa-light-blue-text my-2 row">
+                        <div class="col">
+
+                            <div style=" color:gray"> No hay parametros registrados para mostrar</div>
+                        </div>
+
+                    </div>
+                </template>
+
+                <template #table-busy>
+                    <div class="text-center lsa-orange-text my-2">
+                        <b-spinner class="align-middle"></b-spinner>
+                        <strong> Cargando...</strong>
+                    </div>
+                </template>
+
           <template #cell(Accion)="row">
             <b-dropdown right size="sm" variant="link" toggle-class="text-decoration-none" no-caret >
               <template #button-content>
@@ -66,7 +84,7 @@ export default {
     data(){
 
         return {
-
+          loading: false,
           fields: [
           { key: 'nombre_parametro', label: 'Nombre', thClass: 'text-center', tdClass: 'text-center' },
           { key: 'nombreMetodologia', label: 'Metodología', thClass: 'text-center', tdClass: 'text-center' },
@@ -91,6 +109,7 @@ export default {
     methods: {
       
       obtenerParametros() {
+        this.loading = true;
   ElementosService.obtenerParametros().then((response) => {
     if (response.data != null && response.status === 200) {
       console.log("la respuesta es: ", response.data);
@@ -111,7 +130,7 @@ export default {
       });
 
       this.items = parametros;
-
+      this.loading = false;
       console.log("los parametros son: ", parametros);
     }
   });
