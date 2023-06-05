@@ -39,9 +39,9 @@
     <div class="col-10">
 
     <b-table :items="items" :fields="fields" responsive>
-      <template #cell(Detalles)="row">
+      <template #cell(Accion)="row">
         <b-button variant="primary" class="mb-2 mt-2" block @click="verDetalles(row.item)">
-         Detalles
+        Ver Detalles
         </b-button>
       </template>
     </b-table>
@@ -68,7 +68,7 @@ export default {
         { key: 'nombre_parametro', label: 'Parametros(s)', thClass: 'text-center', tdClass: 'text-center' },
         { key: 'nombre_metodologia', label: 'Metodología(s)', thClass: 'text-center', tdClass: 'text-center' },
         { key: 'nombre', label: 'Analista(s)', thClass: 'text-center', tdClass: 'text-center' },
-        { key: 'Detalles', label: 'Detalles', thClass: 'text-center', tdClass: 'text-center' }
+        { key: 'Accion', label: 'Acción', thClass: 'text-center', tdClass: 'text-center' }
       ],
       items: [],
       modalDetallesData: {},

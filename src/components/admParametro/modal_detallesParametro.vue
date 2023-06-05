@@ -53,22 +53,25 @@
         Descripcion: '',
         metodologias: '', 
         listaMetodologias: '',
-        nombreParametro: ''        
+        nombreParametro: '',
+        id: '',
+        id_parametro: ''      
       }
     },  
 
     methods: {
       obtenerDetallesParametro() {
         const data = {
-          nombre_parametro: this.Nombre
+          id_parametro: this.id
         };
 
         ElementosService.obtenerDetallesParametro(data).then((response) => {
           if (response.status === 200) {
             console.log("Obteniendo detalles parametro:", response.data); 
-            const { nombre_parametro, metodologias} = response.data
+            const { id_parametro, nombre_parametro, metodologias} = response.data
             this.nombreParametro = nombre_parametro;
-            this.listaMetodologias = metodologias;                     
+            this.listaMetodologias = metodologias;
+            this.id_parametro = id_parametro;                     
           }
         });
       }
@@ -79,6 +82,7 @@
         handler() {
           console.log("detallesData actualizada", this.detallesData)                  
           this.Nombre = this.detallesData.nombre_parametro;
+          this.id = this.detallesData.id_parametro;
           this.obtenerDetallesParametro()                               
         }
       }

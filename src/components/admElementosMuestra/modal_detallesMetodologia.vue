@@ -63,7 +63,9 @@ export default {
       empleados: '',        
       nombreMetodologia: '',
       listaEmpleados: '',
-      detalleMetodologia: ''
+      detalleMetodologia: '',
+      id: '',
+      id_metodologia: ''
 
     }
   },  
@@ -71,17 +73,19 @@ export default {
   methods: {
     obtenerDetallesMetodologia() {
       const data = {
-        nombre_metodologia: this.Nombre
+        id_metodologia: this.id
       };
 
       ElementosService.obtenerDetallesMetodologia(data).then((response) => {
         if (response.status === 200) {
           console.log("Obteniendo detalles:", response.data);            
-          const { nombre_metodologia, detalle_metodologia, empleados } = response.data;          
+          const { id_metodologia,nombre_metodologia, detalle_metodologia, empleados } = response.data;          
           const detalleMetodologia = detalle_metodologia; 
           this.nombreMetodologia = nombre_metodologia;
           this.listaEmpleados = empleados;
-          this.detalleMetodologia = detalleMetodologia;            
+          this.detalleMetodologia = detalleMetodologia;
+          this.id_metodologia = id_metodologia
+
         }
       });
     }
@@ -91,7 +95,8 @@ export default {
     detallesData: {
             handler() {
                 console.log("detallesData actualizada", this.detallesData)                  
-                this.Nombre = this.detallesData.nombre_metodologia;                   
+                this.Nombre = this.detallesData.nombre_metodologia;
+                this.id = this.detallesData.id_metodologia;                   
                 this.obtenerDetallesMetodologia()                                                  
             }
     }

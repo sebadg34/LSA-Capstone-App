@@ -77,10 +77,8 @@ export default {
     detallesData: {
       handler() {
         console.log("detallesData actualizada", this.detallesData);
-
         this.Nombre = this.detallesData.nombre_matriz;
         this.id = this.detallesData.id_matriz;
-
         this.obtenerDetallesMatriz();
       },
       deep: true

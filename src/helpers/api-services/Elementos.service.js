@@ -105,7 +105,7 @@ const obtenerMetodologias= async () => {
 
  const obtenerDetallesMetodologia = async (data) => {
     try {
-         const response = await axios.get(apiUrl + "/metodologias/" + data.nombre_metodologia);
+         const response = await axios.get(apiUrl + "/metodologias/" + data.id_metodologia);
          console.log(response);
          if(response.status == 200){
              return response;
@@ -121,7 +121,7 @@ const obtenerMetodologias= async () => {
 
  const obtenerDetallesParametro = async (data) => {
     try {
-         const response = await axios.get(apiUrl + "/parametros/" + data.nombre_parametro);
+         const response = await axios.get(apiUrl + "/parametros/" + data.id_parametro);
          console.log(response);
          if(response.status == 200){
              return response;
