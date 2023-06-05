@@ -84,6 +84,23 @@ const obtenerMetodologias= async () => {
      }
  };
 
+ const obtenerRelacion = async () => {
+    try {
+         const response = await axios.get(apiUrl + "/visualizarDatos");
+             console.log(response);
+         if(response.status == 200){
+             return response;
+         }else{
+             return;
+         }
+         
+     } catch (error) {
+         console.log(error);
+         return;
+     }
+ };
+
+
 
 
  const obtenerDetallesMetodologia = async (data) => {
@@ -121,6 +138,22 @@ const obtenerMetodologias= async () => {
  const obtenerDetallesMatriz = async (data) => {
     try {
          const response = await axios.get(apiUrl + "/matrices/" + data.id_matriz);
+         console.log(response);
+         if(response.status == 200){
+             return response;
+         } else {
+             return;
+         }
+         
+     } catch (error) {
+         console.log(error);
+         return;
+     }
+ };
+
+ const obtenerDetallesElementos = async (data) => {
+    try {
+         const response = await axios.get(apiUrl + "/visualizarDatos/detalles/" + data.id_matriz);
          console.log(response);
          if(response.status == 200){
              return response;
@@ -209,6 +242,8 @@ export default {
     obtenerMatriz,
     obtenerDetallesParametro,
     obtenerDetallesMatriz,
-    actualizarParametro
+    actualizarParametro,
+    obtenerRelacion,
+    obtenerDetallesElementos
 
 }
