@@ -118,6 +118,24 @@ const obtenerMetodologias= async () => {
      }
  };
 
+ const obtenerDetallesMatriz = async (data) => {
+    try {
+         const response = await axios.get(apiUrl + "/matrices/" + data.id_matriz);
+         console.log(response);
+         if(response.status == 200){
+             return response;
+         } else {
+             return;
+         }
+         
+     } catch (error) {
+         console.log(error);
+         return;
+     }
+ };
+
+
+
  const actualizarMetodologia = async (data) => {
     try {
         console.log("DATA: ", data.nombre_metodologia);
@@ -172,6 +190,7 @@ export default {
     obtenerParametros,
     agregarMatriz,
     obtenerMatriz,
-    obtenerDetallesParametro
+    obtenerDetallesParametro,
+    obtenerDetallesMatriz
 
 }

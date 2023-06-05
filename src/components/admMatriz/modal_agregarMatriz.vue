@@ -36,7 +36,7 @@
 
       <b-row v-if="objetosSeleccionados.length > 0" class="mt-3">
   <b-col>
-    <b-form-group label="Param y Met Seleccionados">
+    <b-form-group label="Parámetros Seleccionados:">
       <div v-for="(objetos, index) in objetosSeleccionados" :key="index" class="d-flex align-items-center objetos-item mb-3">
         <b-input readonly :value="objetos.parametro" class="mr-2"></b-input>
         <b-input readonly :value="objetos.metodologia" class="mr-2"></b-input>
@@ -110,10 +110,10 @@ export default {
     },
   },
 
-    methods: { 
+  methods: { 
       
             
-      obtenerParametro() {
+    obtenerParametro() {
   ElementosService.obtenerParametros().then((response) => {
     if (response.data != null && response.status === 200) {
       console.log("Obteniendo Parametros: ", response.data);

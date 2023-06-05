@@ -70,7 +70,7 @@ export default {
 
           fields: [
           { key: 'nombre_matriz', label: 'Nombre', thClass: 'text-center', tdClass: 'text-center' },
-          { key: 'Parametro', label: 'Parámetro', thClass: 'text-center', tdClass: 'text-center' },
+          { key: 'nombreParametro', label: 'Parámetro', thClass: 'text-center', tdClass: 'text-center' },
           { key: 'Accion', label: 'Acción', thClass: 'text-center', tdClass: 'text-center' },          
         ],
 
@@ -97,7 +97,7 @@ export default {
       DetallesMatriz(data){
         console.log(data)
         this.modalDetallesData = data;
-        this.$bvModal.show('modal-detalle-metodologia')
+        this.$bvModal.show('modal-detalle-parametro')
       },
 
       ActualizarMatriz(data){
@@ -111,13 +111,38 @@ export default {
       },
 
       obtenerMatriz() {
-        console.log("Obteniendo Matrices: ")     
+             
           ElementosService.obtenerMatriz().then((response)=>{
           if (response.data != null && response.status === 200) {
-            this.items = response.data
+            console.log("Obteniendo Matrices: ", response)
+
+            const matrices = response.data.map((matriz) => {
+              const nuevoObjetoMatriz = {... matriz};
+
+              if(matriz.parametros && matriz.parametros.length > 0 ){
+                nuevoObjetoMatriz.nombreParametro = matriz.parametros[0].nombre_parametro;
+
+                if (matriz.parametros.length > 1) {
+
+                  nuevoObjetoMatriz.nombreParametro += " (+)";
+                }
+
+
+              } else {
+                nuevoObjetoMatriz.nombreParametro = 'No Asignado';
+              }
+
+              return nuevoObjetoMatriz              
+            });
+
+            this.items = matrices;
+
+            console.log("Las matrices son: ", matrices)
           }
         })             
       },
+
+      
 
     }
 
