@@ -87,6 +87,7 @@ export default {
             metodologiasData: [],
             metodologias: [],
             metodologiaDeshabilitada: true,
+            parametros: []
             
             
         }
@@ -197,7 +198,7 @@ agregarObjetosSeleccionados() {
         id_metodologia: metodologiaCompleta.id_metodologia,       
         
       });
-      console.log("las matrices ahn guardado lo siguiente: ", this.parametros)
+      console.log("las matrices ahn guardado lo siguiente: ", this.parametros_agregar)
       this.parametroSeleccionado = '';
       this.metodologiaSeleccionada = '';
       this.alertaDuplicado = false;
@@ -207,7 +208,7 @@ agregarObjetosSeleccionados() {
 
 AgregarMatriz(){    
 
-  const matricesFiltradas = this.parametros.slice(1);
+  const matricesFiltradas = this.parametros_agregar.slice(1);
 
   const data = {
     nombre_matriz: this.Nombre,

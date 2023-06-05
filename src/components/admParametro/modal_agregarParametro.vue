@@ -74,7 +74,7 @@ export default {
             metodologiaSeleccionada: [],  
             alertaDuplicado: false,  
             metodologiasData: [],          
-            metodologias_agregar: [{nombre_metodologia: '', id_metodologia: ''}]    
+            metodologias_agregar: [{id_metodologia: ''}]    
 
         }
 
