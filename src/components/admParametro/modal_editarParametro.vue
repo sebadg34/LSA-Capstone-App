@@ -124,27 +124,21 @@ export default {
 
         agregarMetodologiaSeleccionada(value) {
             if (value) {
-                console.log('value agregado', value)
-                const metodologiaExistente = this.metodologiaSeleccionada.find((metodologia) => metodologia === this.metodologiaAsignada);
+                const metodologiaExistente = this.metodologiaSeleccionada.find(metodologia => metodologia.id_metodologia === value.id_metodologia);
                 if (metodologiaExistente) {
                     this.alertaDuplicado = true;
                 } else {
 
                     // En caso de agregar un analista que no está registrado a la metodologia
-                    var metodologiaAntigua = false;
-                    for (var i = 0; i < this.metodologias_ya_en_sistema.length; i++) {
-                        if (this.metodologias_ya_en_sistema[i].id_metodologia == value.id_metodologia) {
-                            metodologiaAntigua = true;
-                        }
-                    }
-                    if (metodologiaAntigua == false) {
-                        console.log("analista nuevo, ingresar!");
+                    //var metodologiaAntigua = false;
+                    const metodologiaAntigua = this.metodologias_ya_en_sistema.find(x => x.id_metodologia === value.id_metodologia);
+                    if (metodologiaAntigua == null) {
+                      console.log("METODOLOGIA NUEVA, AGREGAR A BD")
                         this.metodologias_agregar.push({
                             id_metodologia: value.id_metodologia
                         });
                     } else {
                         this.metodologias_eliminar = this.metodologias_eliminar.filter(x => x.id_metodologia != value.id_metodologia);
-                        console.log("lista restaurada de eliminados", this.empleados_eliminar);
                     }
 
                     this.metodologiaSeleccionada.push({
@@ -152,20 +146,10 @@ export default {
                         id_metodologia: value.id_metodologia
                     });
 
-                    // // Borrar de la lista de empleados a eliminar (empleado re ingresado)
-                    // if (this.empleados_eliminar.find((empleado) => empleado.rut_empleado === value.rut_empleado)) {
-                    //     this.empleados_eliminar = this.empleados_eliminar.filter(empleado => empleado.rut_empleado != value.rut_empleado);
-                    // }
                     this.metodologiaAsignada = '';
                     this.alertaDuplicado = false;
                 }
 
-                //else {
-                //this.metodologiaSeleccionada.push(this.metodologiaAsignada.nombre_metodologia);
-                //this.metodologia = this.metodologiaSeleccionada;
-                //this.metodologiaAsignada = '';
-                //this.alertaDuplicado = false;
-                //}
             }
         },
 
@@ -173,10 +157,11 @@ export default {
             console.log(this.metodologiaSeleccionada[index].id_metodologia)
             if (this.metodologias_ya_en_sistema.find(x => x.id_metodologia === this.metodologiaSeleccionada[index].id_metodologia)) {
                 // Se guarda registro de direcciones a eliminar en la BD
+
                 this.metodologias_eliminar.push({
                     id_metodologia: this.metodologiaSeleccionada[index].id_metodologia
                 });
-                console.log('empleados a eliminar', this.metodologias_eliminar)
+                console.log('metodologia a eliminar', this.metodologias_eliminar)
             }
             this.metodologiaSeleccionada.splice(index, 1)
         },

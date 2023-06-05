@@ -155,16 +155,10 @@ export default {
 
 
                     // En caso de agregar un analista que no está registrado a la metodologia
-                    var analistaAntiguo = false;
-                    console.log(this.analistas_ya_en_sistema);
-                    for (var i = 0; i < this.analistas_ya_en_sistema.length; i++) {
-                        console.log(this.analistas_ya_en_sistema[i].rut_empleado);
-                        console.log(value.rut_empleado)
-                        if (this.analistas_ya_en_sistema[i].rut_empleado == value.rut_empleado) {
-                            analistaAntiguo = true;
-                        }
-                    }
-                    if (analistaAntiguo == false) {
+                   // var analistaAntiguo = false;
+
+                    const analistaAntiguo = this.analistas_ya_en_sistema.find(x => x.rut_empleado == value.rut_empleado);
+                    if (analistaAntiguo == null) {
                         console.log("analista nuevo, ingresar!");
                         this.empleados_agregar.push({
                             rut_empleado: value.rut_empleado
@@ -218,7 +212,6 @@ export default {
                         this.Nombre = '',
                             this.Descripción = '',
                             this.AnalistaAsignado = '',
-                            this.opcionesAnalista = [],
                             this.analistas = [],
                             this.analistas_ya_seleccionados = [],
                             this.empleados = [],
