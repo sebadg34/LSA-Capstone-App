@@ -17,7 +17,7 @@
 
         <b-row class="pb-2">
             <b-col class="col-6">
-                <label for="input-live">Nombre:</label>
+                <label for="input-live">Nombre empresa:</label>
                 <ValidationProvider name="nombre" rules="required|min:2" v-slot="validationContext">
 
                     <b-form-input size="sm" class="mb-1" v-model="Nombre" :state="getValidationState(validationContext)" aria-describedby="rut-live-feedback" trim></b-form-input>
@@ -51,7 +51,7 @@
                     </b-form-invalid-feedback>
                 </ValidationProvider>
                 <ValidationProvider name="razon" rules="required" v-slot="validationContext">
-                    <label for="input-live">Razón Social:</label>
+                    <label for="input-live">Razón social:</label>
                     <b-form-input size="sm" class="mb-1" id="input-live" :state="getValidationState(validationContext)" v-model="Razon_social" aria-describedby="input-live-help nombre-live-feedback" placeholder="" trim></b-form-input>
                     <b-form-invalid-feedback id="razon-live-feedback">{{
                         validationContext.errors[0] }}
