@@ -158,6 +158,9 @@ export default {
                 this.metodologias_eliminar.push({
                     id_metodologia: this.metodologiaSeleccionada[index].id_metodologia
                 });
+            }else
+            {   // En caso de borrar una metodologia nueva, revertir el agregar de este.
+                this.metodologias_agregar = this.metodologias_agregar.filter(meto => meto.id_metodologia != this.metodologiaSeleccionada[index].id_metodologia)
             }
             this.metodologiaSeleccionada.splice(index, 1)
         },

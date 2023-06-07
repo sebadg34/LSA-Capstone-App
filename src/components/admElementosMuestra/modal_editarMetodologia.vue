@@ -137,6 +137,9 @@ export default {
                 this.empleados_eliminar.push({
                     rut_empleado: this.analistas_ya_seleccionados[index].rut_empleado
                 });
+            }else{
+                // En caso de borrar un empleado nuevo, revertir el agregar de este.
+                this.empleados_agregar = this.empleados_agregar.filter(empleado => empleado.rut_empleado != this.analistas_ya_seleccionados[index].rut_empleado)
             }
             this.analistas_ya_seleccionados.splice(index, 1)
         },
@@ -194,13 +197,12 @@ export default {
 
                         this.$emit('metodologiaAgregada');
 
-                        this.Nombre = '',
-                            this.Descripción = '',
-                            this.AnalistaAsignado = '',
-                            this.analistas = [],
-                            this.analistas_ya_seleccionados = [],
-                            this.empleados = [],
-
+                            this.AnalistaAsignado = ''
+                            this.analistas = []
+                            this.analistas_ya_seleccionados = []
+                            this.empleados = []
+                            this.empleados_agregar = []
+                            this.empleados_eliminar = [];
                             this.$refs.modal.hide()
                     }
                 } else {

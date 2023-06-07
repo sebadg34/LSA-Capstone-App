@@ -98,21 +98,21 @@ export default {
 
     mounted() {
 
-      console.log("montado, obteniendo parametros")
+        console.log("montado, obteniendo parametros")
         this.obtenerParametro();
 
     },
 
     watch: {
-      matrizData: {
-        handler() {
-          console.log("editando matriz!")
-          console.log(this.matrizData)
+        matrizData: {
+            handler() {
+                console.log("editando matriz!")
+                console.log(this.matrizData)
 
-          this.id = this.matrizData.id_matriz;
-          this.obtenerDetallesMatriz();
-        }
-      },
+                this.id = this.matrizData.id_matriz;
+                this.obtenerDetallesMatriz();
+            }
+        },
         parametroSeleccionado: function (newParametro) {
             if (newParametro) {
                 this.actualizarMetodologias();
@@ -126,43 +126,47 @@ export default {
 
     methods: {
 
-      obtenerDetallesMatriz() {
-        
-      const data = {
-        id_matriz: this.id
-      };
+        obtenerDetallesMatriz() {
 
-      ElementosService.obtenerDetallesMatriz(data).then((response) => {
-        if (response.status === 200) {
-          console.log("obteniendo detalles de la matriz:", response.data);
-          const { nombre_matriz, parametros, id_matriz } = response.data;
-          this.Nombre = nombre_matriz;
+            const data = {
+                id_matriz: this.id
+            };
 
-          this.id_matriz = id_matriz;
-          this.listaParametros = parametros;
-          // cargo parametros ya en el sistema al modal editar
-          for(var i = 0; i < parametros.length; i++){
-              for(var j = 0; j < parametros[i].metodologias.length; j++){
+            ElementosService.obtenerDetallesMatriz(data).then((response) => {
+                if (response.status === 200) {
+                    console.log("obteniendo detalles de la matriz:", response.data);
+                    const {
+                        nombre_matriz,
+                        parametros,
+                        id_matriz
+                    } = response.data;
+                    this.Nombre = nombre_matriz;
 
-                this.parametros_ya_en_sistema.push({
-                  id_parametro: parametros[i].id_parametro,
-                  id_metodologia: parametros[i].metodologias[j].id_metodologia,
-                  nombre_parametro: parametros[i].nombre_parametro,
-                  nombre_metodologia: parametros[i].metodologias[j].nombre_metodologia,
-                })
-              }
-          }
-          console.log("parametros ya en sistema",this.parametros_ya_en_sistema)
-        
-          for(var v = 0; v < this.parametros_ya_en_sistema.length; v++){
-            this.objetosSeleccionados.push({
-              parametro: this.parametros_ya_en_sistema[v].nombre_parametro,
-              metodologia: this.parametros_ya_en_sistema[v].nombre_metodologia
-            })
-          }
-        }
-      });
-    },
+                    this.id_matriz = id_matriz;
+                    this.listaParametros = parametros;
+                    // cargo parametros ya en el sistema al modal editar
+                    for (var i = 0; i < parametros.length; i++) {
+                        for (var j = 0; j < parametros[i].metodologias.length; j++) {
+
+                            this.parametros_ya_en_sistema.push({
+                                id_parametro: parametros[i].id_parametro,
+                                id_metodologia: parametros[i].metodologias[j].id_metodologia,
+                                nombre_parametro: parametros[i].nombre_parametro,
+                                nombre_metodologia: parametros[i].metodologias[j].nombre_metodologia,
+                            })
+                        }
+                    }
+                    console.log("parametros ya en sistema", this.parametros_ya_en_sistema)
+
+                    for (var v = 0; v < this.parametros_ya_en_sistema.length; v++) {
+                        this.objetosSeleccionados.push({
+                            parametro: this.parametros_ya_en_sistema[v].nombre_parametro,
+                            metodologia: this.parametros_ya_en_sistema[v].nombre_metodologia
+                        })
+                    }
+                }
+            });
+        },
         agregarObjetosSeleccionados() {
             if (this.parametroSeleccionado && this.metodologiaSeleccionada) {
 
@@ -173,17 +177,29 @@ export default {
                     this.alertaDuplicado = true;
                     this.parametroSeleccionado = '';
                     this.metodologiaSeleccionada = '';
-                } else {        
+                } else {
+
                     this.objetosSeleccionados.push({
                         parametro: this.parametroSeleccionado.nombre_parametro,
+                        id_parametro: this.parametroSeleccionado.id_parametro,
+                        id_metodologia: this.metodologiaSeleccionada.id_metodologia,
                         metodologia: this.metodologiaSeleccionada.nombre_metodologia
                     });
 
+                    // En caso de agregar un parametro que no está registrado en la BD
+                    const parametroAntiguo = this.parametros_ya_en_sistema.find(param => param.nombre_metodologia == this.metodologiaSeleccionada.nombre_metodologia &&
+                        param.nombre_parametro == this.parametroSeleccionado.nombre_parametro);
+                    if (parametroAntiguo == null) {
+                        this.parametros_agregar.push({
+                            id_parametro: this.parametroSeleccionado.id_parametro,
+                            id_metodologia: this.metodologiaSeleccionada.id_metodologia,
+                        });
+                    } else {
+                        this.parametros_eliminar = this.parametros_eliminar.filter(param => param.id_metodologia != this.metodologiaSeleccionada.id_metodologia &&
+                    param.id_parametro != this.parametroSeleccionado.id_parametro)
 
-                    this.parametros_agregar.push({
-                        id_parametro: this.parametroSeleccionado.id_parametro,
-                        id_metodologia: this.metodologiaSeleccionada.id_metodologia,
-                    });
+                    }
+
                     this.parametroSeleccionado = '';
                     this.metodologiaSeleccionada = '';
                     this.alertaDuplicado = false;
@@ -197,23 +213,20 @@ export default {
             const parametroData = this.metodologiasData.find(item => item.nombre_parametro === parametro.nombre_parametro);
             this.metodologias = parametroData.metodologias
 
-
             // Cargamos las metodologias al select de metodologias
-            for(var i = 0; i < this.metodologias.length; i++){
-                      this.opcionesMetodologia.push({
-                        value: this.metodologias[i],
-                        text: this.metodologias[i].nombre_metodologia
-                      })
-                    }
-          
+            for (var i = 0; i < this.metodologias.length; i++) {
+                this.opcionesMetodologia.push({
+                    value: this.metodologias[i],
+                    text: this.metodologias[i].nombre_metodologia
+                })
+            }
 
         },
         obtenerParametro() {
             ElementosService.obtenerParametros().then((response) => {
                 if (response.data != null && response.status === 200) {
                     console.log("Obteniendo Parametros: ", response.data);
-                  var parametrosObtenidos = response.data;
-
+                    var parametrosObtenidos = response.data;
 
                     // Almacenar los datos en metodologiasData
                     this.metodologiasData = response.data.map(item => ({
@@ -227,11 +240,11 @@ export default {
 
                     console.log("Metodologia Data: ", this.metodologiasData)
 
-                    for(var i = 0; i < parametrosObtenidos.length; i++){
-                      this.opcionesParametro.push({
-                        value: parametrosObtenidos[i],
-                        text: parametrosObtenidos[i].nombre_parametro
-                      })
+                    for (var i = 0; i < parametrosObtenidos.length; i++) {
+                        this.opcionesParametro.push({
+                            value: parametrosObtenidos[i],
+                            text: parametrosObtenidos[i].nombre_parametro
+                        })
                     }
                     console.log("opcion", this.opcionesParametro)
                 }
@@ -241,16 +254,22 @@ export default {
         eliminarObjetosSeleccionados(index) {
 
             console.log(this.objetosSeleccionados[index])
-            const yaEnSistema = this.parametros_ya_en_sistema.find(param => param.nombre_metodologia == this.objetosSeleccionados[index].metodologia 
-            && param.nombre_parametro == this.objetosSeleccionados[index].parametro);
-          console.log(yaEnSistema)
-            if(yaEnSistema != null){
-            
-              this.parametros_eliminar.push({
-                id_parametro: yaEnSistema.id_parametro,
-                id_metodologia: yaEnSistema.id_metodologia
-              })
-              console.log("ya en sistema, agregar para que se borre en la DB",this.parametros_eliminar)
+            const yaEnSistema = this.parametros_ya_en_sistema.find(param => param.nombre_metodologia == this.objetosSeleccionados[index].metodologia &&
+                param.nombre_parametro == this.objetosSeleccionados[index].parametro);
+            console.log(yaEnSistema)
+            if (yaEnSistema != null) {
+
+                this.parametros_eliminar.push({
+                    id_parametro: yaEnSistema.id_parametro,
+                    id_metodologia: yaEnSistema.id_metodologia
+                })
+                console.log("ya en sistema, agregar para que se borre en la DB", this.parametros_eliminar)
+            } else {
+
+                console.log("parametro nuevo, borralo para que no se agregue por equivocacion")
+                this.parametros_agregar = this.parametros_agregar.filter(param => param.id_metodologia != this.objetosSeleccionados[index].id_metodologia &&
+                    param.id_parametro != this.objetosSeleccionados[index].id_parametro)
+                    console.log(this.parametros_agregar)
             }
             this.objetosSeleccionados.splice(index, 1);
         },
@@ -284,8 +303,9 @@ export default {
                             this.opcionesMetodologia = [],
                             this.opcionesParametro = [],
                             this.objetosSeleccionados = [],
-
-                            this.$refs.modal.hide()
+                            this.parametros_agregar = [];
+                        this.parametros_eliminar = [];
+                        this.$refs.modal.hide()
                     }
                 } else {
                     this.$bvToast.toast(`Error al agregar la matriz.`, {
