@@ -203,7 +203,23 @@ const obtenerMetodologias= async () => {
         return;
     }
 };
-
+const actualizarMatriz = async (data) => {
+    try {
+        console.log("DATA: ", data.nombre_metodologia);
+        const response = await axios.put(apiUrl + "/matrices/actualizarMatriz/",data);
+        
+        console.log(response);
+        
+        if (response.status == 200) {
+            return response;
+        } else {
+            return;
+        }
+    } catch (error) {
+        console.log(error);
+        return;
+    }
+};
 const agregar_Empleados_Asociados = async (nombre_metodologia, data) => {
     try {  
         const response = await axios.post(apiUrl + "/metodologias/"+ nombre_metodologia + "/eliminarEmpleados" , data.nombre_metodologia,);
@@ -244,6 +260,7 @@ export default {
     obtenerDetallesMatriz,
     actualizarParametro,
     obtenerRelacion,
-    obtenerDetallesElementos
+    obtenerDetallesElementos,
+    actualizarMatriz
 
 }

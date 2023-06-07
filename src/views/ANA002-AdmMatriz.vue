@@ -11,7 +11,7 @@
 
     <modal_agregarMatriz @matrizAgregada="MatrizAgregada"/>
     <modal_detalleMatriz :detalles-data="this.modalDetallesData"/>
-    <modal_editarMatriz :metodologia-data="this.modalEditarData" @matrizAgregada="MatrizAgregada"/>
+    <modal_editarMatriz :matriz-data="this.modalEditarData" :metodologia-data="this.modalEditarData" @matrizAgregada="MatrizAgregada"/>
 
 <div class="row justify-content-center" style="padding-top:30px; padding-bottom:10px; margin-left: 5px;">
   <div class="col-10">  

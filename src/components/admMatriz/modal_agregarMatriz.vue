@@ -1,78 +1,76 @@
 <template>
-    <b-modal id="modal-Agregar-Matriz" ref="modal" :title="`Agregar Matriz`" size="lg">
-        
+<b-modal id="modal-Agregar-Matriz" ref="modal" :title="`Agregar Matriz`" size="lg">
 
-      <template #modal-header="{ close }">
-            <!-- Emulate built in modal header close button action -->
-            <b-row class="d-flex justify-content-around">
-                <div class="pl-3">Agregar Matriz</div>
-            </b-row>
-            <button type="button" class="close" aria-label="Close" @click="close()">
-                <span aria-hidden="true" style="color:white">&times;</span>
-            </button>
-      </template> 
-      
-      <!-- ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// -->
-      
-      <b-form-group label="Nombre de Matriz">
+    <template #modal-header="{ close }">
+        <!-- Emulate built in modal header close button action -->
+        <b-row class="d-flex justify-content-around">
+            <div class="pl-3">Agregar Matriz</div>
+        </b-row>
+        <button type="button" class="close" aria-label="Close" @click="close()">
+            <span aria-hidden="true" style="color:white">&times;</span>
+        </button>
+    </template>
+
+    <!-- ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// -->
+
+    <b-form-group label="Nombre de Matriz">
         <b-form-input v-model="Nombre"></b-form-input>
-      </b-form-group>
-
-      <b-row>
-        
-          <b-col>
-            <b-form-group label="Seleccione un parámetro">
-              <b-form-select v-model="parametroSeleccionado" :options="opcionesParametro" placeholder="Seleccione un Parámetro" @change="agregarObjetosSeleccionados"></b-form-select>
-            </b-form-group>
-          </b-col>
-
-          <b-col>
-            <b-form-group label="Seleccione una Metodología">
-              <b-form-select v-model="metodologiaSeleccionada" :options="opcionesMetodologia" placeholder="Seleccione una metodología" :disabled="metodologiaDeshabilitada" @change="agregarObjetosSeleccionados"></b-form-select>
-            </b-form-group>
-          </b-col>
-      
-      </b-row>
-
-      <b-row v-if="objetosSeleccionados.length > 0" class="mt-3">
-  <b-col>
-    <b-form-group label="Parámetros Seleccionados:">
-      <div v-for="(objetos, index) in objetosSeleccionados" :key="index" class="d-flex align-items-center objetos-item mb-3">
-        <b-input readonly :value="objetos.parametro" class="mr-2"></b-input>
-        <b-input readonly :value="objetos.metodologia" class="mr-2"></b-input>
-        <b-button variant="danger" @click="eliminarObjetosSeleccionados(index)" class="ml-2">
-          <b-icon-trash-fill></b-icon-trash-fill>
-        </b-button>
-      </div>
     </b-form-group>
-  </b-col>
-</b-row>
 
-  <b-alert variant="danger" :show="alertaDuplicado" dismissible @dismissed="alertaDuplicado = false">
-    Los Parametros y Metodologias ya se encuentran agregados.
-  </b-alert>
+    <b-row>
 
-  <div class="d-flex justify-content-center">
-  <b-button @click="AgregarMatriz()" variant="primary" size="xl" class="reactive-button" style="font-weight:bold">
-    Agregar Matriz
-  </b-button>
-</div>
+        <b-col>
+            <b-form-group label="Seleccione un parámetro">
+                <b-form-select v-model="parametroSeleccionado" :options="opcionesParametro" placeholder="Seleccione un Parámetro" @change="agregarObjetosSeleccionados"></b-form-select>
+            </b-form-group>
+        </b-col>
 
-      <!-- ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// -->
-      <template #modal-footer="{ close }">
-        <b-button @click="close()" variant="primary" size="xl" class="float-right reactive-button" style="font-weight:bold">
-          Cerrar
+        <b-col>
+            <b-form-group label="Seleccione una Metodología">
+                <b-form-select v-model="metodologiaSeleccionada" :options="opcionesMetodologia" placeholder="Seleccione una metodología" :disabled="metodologiaDeshabilitada" @change="agregarObjetosSeleccionados"></b-form-select>
+            </b-form-group>
+        </b-col>
+
+    </b-row>
+
+    <b-row v-if="objetosSeleccionados.length > 0" class="mt-3">
+        <b-col>
+            <b-form-group label="Parámetros Seleccionados:">
+                <div v-for="(objetos, index) in objetosSeleccionados" :key="index" class="d-flex align-items-center objetos-item mb-3">
+                    <b-input readonly :value="objetos.parametro" class="mr-2"></b-input>
+                    <b-input readonly :value="objetos.metodologia" class="mr-2"></b-input>
+                    <b-button variant="danger" @click="eliminarObjetosSeleccionados(index)" class="ml-2">
+                        <b-icon-trash-fill></b-icon-trash-fill>
+                    </b-button>
+                </div>
+            </b-form-group>
+        </b-col>
+    </b-row>
+
+    <b-alert variant="danger" :show="alertaDuplicado" dismissible @dismissed="alertaDuplicado = false">
+        Los Parametros y Metodologias ya se encuentran agregados.
+    </b-alert>
+
+    <div class="d-flex justify-content-center">
+        <b-button @click="AgregarMatriz()" variant="primary" size="xl" class="reactive-button" style="font-weight:bold">
+            Agregar Matriz
         </b-button>
-      </template>      
-    </b-modal>
+    </div>
+
+    <!-- ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// -->
+    <template #modal-footer="{ close }">
+        <b-button @click="close()" variant="primary" size="xl" class="float-right reactive-button" style="font-weight:bold">
+            Cerrar
+        </b-button>
+    </template>
+</b-modal>
 </template>
 
 <script>
-
 import ElementosService from '@/helpers/api-services/Elementos.service';
 export default {
 
-    data(){
+    data() {
 
         return {
 
@@ -83,178 +81,178 @@ export default {
             opcionesParametro: [], // dejar vacio cuando se implemente las opciones via backend.
             objetosSeleccionados: [],
             alertaDuplicado: false,
-            parametros_agregar: [{id_parametro: '', id_metodologia: '',}],
+            parametros_agregar: [{
+                id_parametro: '',
+                id_metodologia: '',
+            }],
             metodologiasData: [],
             metodologias: [],
             metodologiaDeshabilitada: true,
             parametros: []
-            
-            
+
         }
 
     },
 
     mounted() {
 
-      this.obtenerParametro();    
+        this.obtenerParametro();
 
-    }, 
+    },
 
     watch: {
-    parametroSeleccionado: function(newParametro) {
-      if (newParametro) {
-        this.actualizarMetodologias();
-        this.metodologiaDeshabilitada = false; // Habilita el input 
-      } else {
-        this.metodologiaDeshabilitada = true; 
-      }
+        parametroSeleccionado: function (newParametro) {
+            if (newParametro) {
+                this.actualizarMetodologias();
+                this.metodologiaDeshabilitada = false; // Habilita el input 
+            } else {
+                this.metodologiaDeshabilitada = true;
+            }
+        },
     },
-  },
 
-  methods: { 
-      
-            
-    obtenerParametro() {
-  ElementosService.obtenerParametros().then((response) => {
-    if (response.data != null && response.status === 200) {
-      console.log("Obteniendo Parametros: ", response.data);
+    methods: {
 
-      // Almacenar los datos en metodologiasData
-      this.metodologiasData = response.data.map(item => ({
-        id_parametro: item.id_parametro,
-        nombre_parametro: item.nombre_parametro,
-        metodologias: item.metodologias.map(metodologia => ({
-          id_metodologia: metodologia.id_metodologia,
-          nombre_metodologia: metodologia.nombre_metodologia
-        }))
-      }));
+        obtenerParametro() {
+            ElementosService.obtenerParametros().then((response) => {
+                if (response.data != null && response.status === 200) {
+                    console.log("Obteniendo Parametros: ", response.data);
 
-      console.log("Metodologia Data: ",this.metodologiasData)
+                    // Almacenar los datos en metodologiasData
+                    this.metodologiasData = response.data.map(item => ({
+                        id_parametro: item.id_parametro,
+                        nombre_parametro: item.nombre_parametro,
+                        metodologias: item.metodologias.map(metodologia => ({
+                            id_metodologia: metodologia.id_metodologia,
+                            nombre_metodologia: metodologia.nombre_metodologia
+                        }))
+                    }));
 
-      this.opcionesParametro = response.data.map(item => item.nombre_parametro);
-      console.log("opcion",this.opcionesParametro)
-    }
-  });
-},
-     
+                    console.log("Metodologia Data: ", this.metodologiasData)
 
-  eliminarObjetosSeleccionados(index) {
-    this.objetosSeleccionados.splice(index, 1);
-  },
+                    this.opcionesParametro = response.data.map(item => item.nombre_parametro);
+                    console.log("opcion", this.opcionesParametro)
+                }
+            });
+        },
 
-  actualizarObjetosSeleccionados(index, parametro, metodologia) {
-    this.objetosSeleccionados[index].parametro = parametro;
-    this.objetosSeleccionados[index].metodologia = metodologia;
-  },
+        eliminarObjetosSeleccionados(index) {
+            this.objetosSeleccionados.splice(index, 1);
+        },
 
-  actualizarMetodologias() {
-  const parametro = this.parametroSeleccionado;
+        actualizarObjetosSeleccionados(index, parametro, metodologia) {
+            this.objetosSeleccionados[index].parametro = parametro;
+            this.objetosSeleccionados[index].metodologia = metodologia;
+        },
 
-  // Buscar el objeto correspondiente al parámetro seleccionado en metodologiasData
-  console.log("Metodologia Data 2: ",this.metodologiasData)
-  const parametroData = this.metodologiasData.find(item => item.nombre_parametro === parametro);
+        actualizarMetodologias() {
+            const parametro = this.parametroSeleccionado;
 
-  console.log("Parámetro seleccionado:", parametro);
-  console.log("Objeto del parámetro seleccionado:", parametroData);
-  console.log("Metodologías del parámetro seleccionado:", parametroData.metodologias);
+            // Buscar el objeto correspondiente al parámetro seleccionado en metodologiasData
+            console.log("Metodologia Data 2: ", this.metodologiasData)
+            const parametroData = this.metodologiasData.find(item => item.nombre_parametro === parametro);
 
-  this.metodologias = parametroData.metodologias
-  console.log("Metodologías den array:", this.metodologias);
+            console.log("Parámetro seleccionado:", parametro);
+            console.log("Objeto del parámetro seleccionado:", parametroData);
+            console.log("Metodologías del parámetro seleccionado:", parametroData.metodologias);
 
-  this.opcionesMetodologia = this.metodologias.map(item => item.nombre_metodologia);
-  console.log("opciones Metodologia:", this.opcionesMetodologia);
+            this.metodologias = parametroData.metodologias
+            console.log("Metodologías den array:", this.metodologias);
 
+            this.opcionesMetodologia = this.metodologias.map(item => item.nombre_metodologia);
+            console.log("opciones Metodologia:", this.opcionesMetodologia);
 
+            /*if (parametroData.metodologias.length > 0) {
+              // Obtener las metodologías asociadas al parámetro seleccionado
+              const metodologias = parametroData.metodologias[0].metodologias;
 
-  /*if (parametroData.metodologias.length > 0) {
-    // Obtener las metodologías asociadas al parámetro seleccionado
-    const metodologias = parametroData.metodologias[0].metodologias;
+              console.log("Metodologías asociadas al parámetro seleccionado:", metodologias);
 
-    console.log("Metodologías asociadas al parámetro seleccionado:", metodologias);
+              // Obtener solo los nombres de las metodologías
+              this.opcionesMetodologia = metodologias.map(item => item.nombre_metodologia);
+            } else {
+              this.opcionesMetodologia = []; // No se encontraron metodologías para el parámetro seleccionado
+            }*/
+        },
 
-    // Obtener solo los nombres de las metodologías
-    this.opcionesMetodologia = metodologias.map(item => item.nombre_metodologia);
-  } else {
-    this.opcionesMetodologia = []; // No se encontraron metodologías para el parámetro seleccionado
-  }*/
-},
+        agregarObjetosSeleccionados() {
+            if (this.parametroSeleccionado && this.metodologiaSeleccionada) {
+                const ParamExistente = this.objetosSeleccionados.find(objeto => objeto.parametro === this.parametroSeleccionado);
+                const MetExistente = this.objetosSeleccionados.find(objeto => objeto.metodologia === this.metodologiaSeleccionada);
 
-agregarObjetosSeleccionados() {
-  if (this.parametroSeleccionado && this.metodologiaSeleccionada) {
-    const ParamExistente = this.objetosSeleccionados.find(objeto => objeto.parametro === this.parametroSeleccionado);
-    const MetExistente = this.objetosSeleccionados.find(objeto => objeto.metodologia === this.metodologiaSeleccionada);
+                if (ParamExistente && MetExistente) {
+                    this.alertaDuplicado = true;
+                    this.parametroSeleccionado = '';
+                    this.metodologiaSeleccionada = '';
+                } else {
+                    const parametroData = this.metodologiasData.find(item => item.nombre_parametro === this.parametroSeleccionado);
+                    const metodologiaCompleta = parametroData.metodologias.find(metodologia => metodologia.nombre_metodologia === this.metodologiaSeleccionada);
 
-    if (ParamExistente && MetExistente) {
-      this.alertaDuplicado = true;
-      this.parametroSeleccionado = '';
-      this.metodologiaSeleccionada = '';
-    } else {
-      const parametroData = this.metodologiasData.find(item => item.nombre_parametro === this.parametroSeleccionado);
-      const metodologiaCompleta = parametroData.metodologias.find(metodologia => metodologia.nombre_metodologia === this.metodologiaSeleccionada);
-      
-      this.objetosSeleccionados.push({ parametro: this.parametroSeleccionado, metodologia: metodologiaCompleta.nombre_metodologia });
-      this.parametros_agregar.push({
-        id_parametro: parametroData.id_parametro,        
-        id_metodologia: metodologiaCompleta.id_metodologia,       
-        
-      });
-      console.log("las matrices ahn guardado lo siguiente: ", this.parametros_agregar)
-      this.parametroSeleccionado = '';
-      this.metodologiaSeleccionada = '';
-      this.alertaDuplicado = false;
-    }
-  }
-},
+                    this.objetosSeleccionados.push({
+                        parametro: this.parametroSeleccionado,
+                        metodologia: metodologiaCompleta.nombre_metodologia
+                    });
+                    this.parametros_agregar.push({
+                        id_parametro: parametroData.id_parametro,
+                        id_metodologia: metodologiaCompleta.id_metodologia,
 
-AgregarMatriz(){    
+                    });
+                    console.log("las matrices ahn guardado lo siguiente: ", this.parametros_agregar)
+                    this.parametroSeleccionado = '';
+                    this.metodologiaSeleccionada = '';
+                    this.alertaDuplicado = false;
+                }
+            }
+        },
 
-  const matricesFiltradas = this.parametros_agregar.slice(1);
+        AgregarMatriz() {
 
-  const data = {
-    nombre_matriz: this.Nombre,
-    parametros_agregar: matricesFiltradas.map(matriz => ({
-      id_parametro: matriz.id_parametro,      
-      id_metodologia: matriz.id_metodologia,
-      
-    }))
-  };
-      console.log("data a enviar", data)
-      ElementosService.agregarMatriz(data).then((response)=>{
-        console.log(response)
-        if(response != null){
-          if (response.status == 200) {
-            this.$bvToast.toast(`Creación de la matriz exitosa`, {
-              title: 'Exito',
-              toaster: 'b-toaster-top-center',
-              solid: true,
-              variant: "success",
-              appendToast: true
-            })    
-      this.$emit('matrizAgregada');   
+            const matricesFiltradas = this.parametros_agregar.slice(1);
 
-      this.Nombre = '',
-      this.metodologiaSeleccionada = '',
-      this.parametroSeleccionado = '',     
-      this.objetosSeleccionados = [],
-      this.parametros_agregar = [{id_parametro: '', id_metodologia: '',}],
-      
+            const data = {
+                nombre_matriz: this.Nombre,
+                parametros_agregar: matricesFiltradas.map(matriz => ({
+                    id_parametro: matriz.id_parametro,
+                    id_metodologia: matriz.id_metodologia,
 
-      this.$refs.modal.hide()                         
-    }
-  } else {
-    this.$bvToast.toast(`Error al agregar la matriz.`, {
-      title: 'Error',
-      toaster: 'b-toaster-top-center',
-      solid: true,
-      variant: "warning",
-      appendToast: true
-    })
-  }
-})
-},
+                }))
+            };
+            console.log("data a enviar", data)
+            ElementosService.agregarMatriz(data).then((response) => {
+                console.log(response)
+                if (response != null) {
+                    if (response.status == 200) {
+                        this.$bvToast.toast(`Creación de la matriz exitosa`, {
+                            title: 'Exito',
+                            toaster: 'b-toaster-top-center',
+                            solid: true,
+                            variant: "success",
+                            appendToast: true
+                        })
+                        this.$emit('matrizAgregada');
 
+                        this.Nombre = '',
+                            this.metodologiaSeleccionada = '',
+                            this.parametroSeleccionado = '',
+                            this.objetosSeleccionados = [],
+                            this.parametros_agregar = [{
+                                id_parametro: '',
+                                id_metodologia: '',
+                            }],
 
-    
+                            this.$refs.modal.hide()
+                    }
+                } else {
+                    this.$bvToast.toast(`Error al agregar la matriz.`, {
+                        title: 'Error',
+                        toaster: 'b-toaster-top-center',
+                        solid: true,
+                        variant: "warning",
+                        appendToast: true
+                    })
+                }
+            })
+        },
 
     },
 
