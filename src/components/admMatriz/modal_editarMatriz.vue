@@ -52,8 +52,8 @@
     </b-alert>
 
     <div class="d-flex justify-content-center">
-        <b-button @click="EditarMatriz()" variant="primary" size="xl" class="reactive-button" style="font-weight:bold">
-            Agregar Matriz
+        <b-button @click="actualizarMatriz()" variant="primary" size="xl" class="reactive-button" style="font-weight:bold">
+            Editar Matriz
         </b-button>
     </div>
 
@@ -248,7 +248,7 @@ export default {
             
               this.parametros_eliminar.push({
                 id_parametro: yaEnSistema.id_parametro,
-                id_matriz: yaEnSistema.id_matriz
+                id_metodologia: yaEnSistema.id_metodologia
               })
               console.log("ya en sistema, agregar para que se borre en la DB",this.parametros_eliminar)
             }
