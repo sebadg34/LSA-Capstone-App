@@ -90,11 +90,11 @@
                             <b-icon style="height: 80%; width: 80%; align-items: center;" icon="three-dots" variant="dark" aria-hidden="true"></b-icon>
 
                         </template>
-                        <b-dropdown-item disabled @click="abrirEstadoPersonal(row.item)">
+                        <b-dropdown-item  @click="abrirEstadoPersonal(row.item)">
                             <b-icon icon="person-check" aria-hidden="true" class="mr-2"></b-icon>Cambiar estado
                         </b-dropdown-item>
-                        <b-dropdown-item disabled @click="abrirEstadoPersonal(row.item)">
-                            <b-icon icon="person-check" aria-hidden="true" class="mr-2"></b-icon>Cambiar contraseña
+                        <b-dropdown-item  @click="abrirEstadoPersonal(row.item)">
+                            <b-icon icon="key" aria-hidden="true" class="mr-2"></b-icon>Cambiar contraseña
                         </b-dropdown-item>
                     </b-dropdown>
 
@@ -144,19 +144,23 @@ export default {
             modalEstadoData: {},
             campos_tabla: [{
                 key: 'nombre',
-                label: 'Nombre'
+                label: 'Nombre',
+                sortable: true
             }, {
                 key: 'apellido',
-                label: 'Apellido'
+                label: 'Apellido',
+                sortable: true
             }, {
                 key: 'email',
                 label: 'Correo'
             }, {
                 key: 'cargo',
-                label: 'Cargo'
+                label: 'Cargo',
+                sortable: true
             }, {
                 key: 'estado',
-                label: 'Estado'
+                label: 'Estado',
+                sortable: true
             }, {
                 key: 'accion',
                 label: 'Acción'

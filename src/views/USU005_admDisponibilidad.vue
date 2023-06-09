@@ -227,10 +227,12 @@ export default {
                     label: 'Rut'
                 }, {
                     key: 'nombre',
-                    label: 'Nombre'
+                    label: 'Nombre',
+                sortable: true
                 }, {
                     key: 'apellido',
-                    label: 'Apellido'
+                    label: 'Apellido',
+                sortable: true
                 }, {
                     key: 'dias_vacaciones_disponibles',
                     label: 'Días de vacaciones disponible'
@@ -239,11 +241,13 @@ export default {
                     label: 'Periodo de vacaciones'
                 }, {
                     key: 'rol',
-                    label: 'Cargo'
+                    label: 'Cargo',
+                sortable: true
                 },
                 {
                     key: 'estado',
-                    label: 'Estado'
+                    label: 'Estado',
+                sortable: true
                 }, {
                     key: 'accion',
                     label: 'Acción'

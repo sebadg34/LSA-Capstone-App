@@ -211,16 +211,19 @@ export default {
             modalCotizacionData: {},
             campos_tabla: [{
                     key: 'nombre_empresa',
-                    label: 'Empresa'
+                    label: 'Empresa',
+                sortable: true
                 }, {
                     key: 'nombre_ciudad',
-                    label: 'Ciudad empresa'
+                    label: 'Ciudad empresa',
+                sortable: true
                 }, {
                     key: 'rut_solicitante',
                     label: 'Rut'
                 }, {
                     key: 'nombre',
-                    label: 'Nombre'
+                    label: 'Nombre',
+                sortable: true
                 }, {
                     key: 'apellidos',
                     label: 'Apellidos'
@@ -235,10 +238,12 @@ export default {
 
                 {
                     key: 'tipo_cliente',
-                    label: 'Tipo cliente'
+                    label: 'Tipo cliente',
+                sortable: true
                 }, {
                     key: 'estado',
-                    label: 'Estado'
+                    label: 'Estado',
+                sortable: true
                 },
                 {
                     key: 'accion',
