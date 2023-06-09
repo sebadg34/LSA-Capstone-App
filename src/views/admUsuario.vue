@@ -93,6 +93,9 @@
                         <b-dropdown-item disabled @click="abrirEstadoPersonal(row.item)">
                             <b-icon icon="person-check" aria-hidden="true" class="mr-2"></b-icon>Cambiar estado
                         </b-dropdown-item>
+                        <b-dropdown-item disabled @click="abrirEstadoPersonal(row.item)">
+                            <b-icon icon="person-check" aria-hidden="true" class="mr-2"></b-icon>Cambiar contraseña
+                        </b-dropdown-item>
                     </b-dropdown>
 
                 </template>

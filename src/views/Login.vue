@@ -93,10 +93,11 @@ export default {
                         if (response != null) {
                             if(response.status == 200){
                                 var data = getUserInfo();
-                          this.$root.$bvToast.toast(`Ingreso exitoso \n Bienvenid@ ` + data.nombre + " "+ data.apellido, {
-                                    title: 'Exito',
+                          this.$root.$bvToast.toast(` Bienvenid@ ` + data.nombre + " "+ data.apellido, {
+                                    title: 'Inicio de sesión',
                                     toaster: 'b-toaster-top-center',
                                     solid: true,
+                                    autoHideDelay: 2000,
                                     appendToast: true
                                 })
                             this.$router.push("/inicio");

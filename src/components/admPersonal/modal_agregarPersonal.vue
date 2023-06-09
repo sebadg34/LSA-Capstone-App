@@ -329,7 +329,7 @@ export default {
                                 this.$emit('refrescar');
                             }
                             this.$bvModal.hide('modal-personal');
-                            this.reiniciarDatos();
+                            //this.reiniciarDatos();
                             this.$refs.form.reset();
                         } else {
                             this.$bvToast.toast(`Error al crear personal`, {

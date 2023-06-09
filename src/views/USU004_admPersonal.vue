@@ -5,7 +5,7 @@
     <modal_detallesPersonal :user-data="this.modalDetallesData" />
     <modal_editarPersonal @refrescar="obtenerPersonal" :user-data="this.modalEditarData" />
     <modal_estadoPersonal @refrescar="obtenerPersonal" :user-data="this.modalEstadoData" />
-  
+
     <b-row align-h="start" style="padding-top:30px;">
         <b-col class="col-6">
             <div style="font-size:2rem; font-weight: bold; color: var(--lsa-blue)">
@@ -13,66 +13,90 @@
             </div>
         </b-col>
     </b-row>
-  
 
     <b-row class="justify-content-center">
 
-<b-col class="col-10">
-    <b-row style="padding-top:30px; padding-bottom:10px">
-            <b-col class="col-6">
+        <b-col class="col-10">
+            <b-row style="padding-top:30px; padding-bottom:10px">
+                <b-col class="col-6">
 
+                    <b-col class="col-6">
+                        <b-row>
+                            <b-button v-b-modal.modal-personal style="border-radius: 15px; font-weight: bold; font-size: 18px; " class="lsa-light-blue reactive-button">
+
+                                Agregar Personal
+                                <b-icon icon="person-plus-fill"></b-icon>
+                            </b-button>
+                        </b-row>
+                    </b-col>
+
+                </b-col>
                 <b-col class="col-6">
                     <b-row>
-                        <b-button v-b-modal.modal-personal style="border-radius: 15px; font-weight: bold; font-size: 18px; " class="lsa-light-blue reactive-button">
 
-                            Agregar Personal
-                            <b-icon icon="person-plus-fill"></b-icon>
-                        </b-button>
+                        <b-form-group>
+
+                            <b-input-group>
+                                <b-input-group-prepend is-text>
+                                    <b-icon icon="search"></b-icon>
+                                </b-input-group-prepend>
+                                <b-form-input placeholder="Nombre usuario..." id="input-1" v-model="nombreFiltro">
+                                </b-form-input>
+                                <b-form-input placeholder="Rut usuario..." id="input-1" v-model="rutFiltro" trim></b-form-input>
+                                <b-form-select placeholder="Cargo" v-model="cargoFiltro" :options="cargoOpciones">
+                                </b-form-select>
+                                <b-button-group style="margin-left:10px">
+                                    <b-button class="reactive-button lsa-blue" @click="filtrarTabla">Filtrar</b-button>
+                                    <b-button class="reactive-button lsa-orange" @click="borrarFiltro">Quitar</b-button>
+                                </b-button-group>
+                            </b-input-group>
+
+                        </b-form-group>
+
                     </b-row>
                 </b-col>
+                <!--
+                <b-col lg="6" class="my-1">
+                    <b-form-group label-cols-sm="3" label-align-sm="right" label-size="md" class="mb-0">
+                        <b-input-group size="md">
+                            <b-input-group-prepend is-text>
+                                <b-icon icon="search"></b-icon>
 
-            </b-col>
+                            </b-input-group-prepend>
+                            <b-form-input id="filter-input" v-model="filter" type="search" placeholder="Escriba rut, nombre, etc. para filtrar"></b-form-input>
 
-            <b-col lg="6" class="my-1">
-                <b-form-group label-cols-sm="3" label-align-sm="right" label-size="md" class="mb-0">
-                    <b-input-group size="md">
-                        <b-input-group-prepend is-text>
-                         <b-icon icon="search"></b-icon>
-                        
+                            <b-input-group-append>
+                                <b-button style="font-weight:bold" class="lsa-blue" :disabled="!filter" @click="filter = ''">Limpiar filtro</b-button>
+                            </b-input-group-append>
+                        </b-input-group>
+                    </b-form-group>
 
-                    </b-input-group-prepend>
-                        <b-form-input id="filter-input" v-model="filter" type="search" placeholder="Escriba rut, nombre, etc. para filtrar"></b-form-input>
-
-                        <b-input-group-append>
-                            <b-button style="font-weight:bold" class="lsa-blue" :disabled="!filter" @click="filter = ''">Limpiar filtro</b-button>
-                        </b-input-group-append>
-                    </b-input-group>
-                </b-form-group>
-            </b-col>
-        </b-row>
-</b-col>
-     
+                </b-col>
+-->
+            </b-row>
+        </b-col>
 
         <b-col class="col-10">
-            <b-table fixed show-empty :filter="filter" @filtered="onFiltered" :fields="campos_tabla" :items="personal" style="" :busy="loading" :per-page="perPage" :current-page="currentPage">
+            <b-table :filter-included-fields="filterOn" fixed show-empty :filter="filter" @filtered="onFiltered" :fields="campos_tabla" :items="personalFiltrado" style="" :busy="loading" :per-page="perPage" :current-page="currentPage">
 
                 <template #empty>
                     <div class="text-center lsa-light-blue-text my-2 row">
                         <div class="col">
-                            
-                        <div style=" color:gray"> No hay personal registrado para mostrar</div>
+
+                            <div style=" color:gray"> No hay personal registrado para mostrar</div>
                         </div>
-                    
+
                     </div>
-    </template>
+                </template>
 
                 <template #emptyfiltered>
                     <div class="text-center lsa-light-blue-text my-2 row">
                         <div class="col">
                             <b-icon icon="search" animation="fade" variant="secondary"></b-icon>
-                        <div style="font-weight:bold; color:gray"> No hay resultados que coincidan con su búsqueda</div>
+                            <div style="font-weight:bold; color:gray"> No hay resultados que coincidan con su búsqueda
+                            </div>
                         </div>
-                    
+
                     </div>
                 </template>
                 <template #table-busy>
@@ -108,8 +132,20 @@
                     </b-dropdown>
 
                 </template>
+
+
+                <template #custom-foot>
+                    <b-tr>
+                        <b-th colspan="7" style="background-color:rgb(235, 235, 235); border-radius:0px 0px 20px 20px; padding:1px" v-if="filtrando">
+                            <div>
+                            <b-icon icon="filter" animation="fade" variant="secondary" scale="0.8"></b-icon>
+                            <div style="font-weight:bold; color:gray">  Resultados filtrados</div>
+                        </div>
+                        </b-th>
+                    </b-tr>
+                </template>
             </b-table>
-            <b-pagination v-model="currentPage" :total-rows="rows" :per-page="perPage" align="right"></b-pagination>
+            <b-pagination v-model="currentPage" :total-rows="totalRows" :per-page="perPage" align="right"></b-pagination>
         </b-col>
     </b-row>
 
@@ -144,7 +180,45 @@ export default {
     data() {
         return {
             filter: null,
+            totalRows: "",
             filterOn: [],
+            nombreFiltro: "",
+            rutFiltro: "",
+            filtrando: false,
+            cargoFiltro: null,
+            cargoOpciones: [{
+                    value: null,
+                    text: 'Seleccione cargo',
+                    disabled: true
+                },
+                {
+                    value: null,
+                    text: '---'
+                },
+                {
+                    value: "gerente",
+                    text: 'Gerente'
+                },
+                {
+                    value: "Analista Químico",
+                    text: 'Analista Químico'
+                },{
+                    value: "Químico",
+                    text: 'Químico'
+                },{
+                    value: "Supervisor(a)",
+                    text: 'Supervisor(a)'
+                },{
+                    value: "Administrador(a) de Finanza",
+                    text: 'Administrador(a) de Finanza'
+                },{
+                    value: "Jefe(a) de laboratorio",
+                    text: 'Jefe(a) de laboratorio'
+                },{
+                    value: "Recepcionista",
+                    text: 'Recepcionista'
+                },
+            ],
             editarID: 0,
             currentPage: 1,
             perPage: 10,
@@ -157,27 +231,68 @@ export default {
                 label: 'Rut'
             }, {
                 key: 'nombre',
-                label: 'Nombre'
+                label: 'Nombre',
+                sortable: true
             }, {
                 key: 'apellido',
-                label: 'Apellido'
+                label: 'Apellido',
+                sortable: true
             }, {
                 key: 'correo',
-                label: 'Correo'
+                label: 'Correo',
+                sortable: true
             }, {
                 key: 'rol',
-                label: 'Cargo'
+                label: 'Cargo',
+                sortable: true
             }, {
                 key: 'estado',
-                label: 'Estado'
+                label: 'Estado',
+                sortable: true
             }, {
                 key: 'accion',
                 label: 'Acción'
             }],
             personal: [{}],
+            personalFiltrado: [],
         }
     },
     methods: {
+
+        borrarFiltro() {
+            this.nombreFiltro = "";
+            this.rutFiltro = "";
+            this.cargoFiltro = null;
+            this.filtrarTabla();
+        },
+        filtrarTabla() {
+            let nombre_filtro = this.nombreFiltro.toLowerCase();
+            let rut_filtro = this.rutFiltro;
+            let cargo_filtro = this.cargoFiltro;
+            //let cargo_filtro = this.cargoFiltro;
+            this.personalFiltrado = this.personal;
+            if (this.cargoFiltro != null) {
+                this.personalFiltrado = this.personalFiltrado.filter(personal => personal.rol.toLowerCase().includes(cargo_filtro.toLowerCase()));
+            }
+            if (nombre_filtro != "" && rut_filtro != "") {
+                this.personalFiltrado = this.personal.filter(personal => personal.nombre.toLowerCase().includes(nombre_filtro) &&
+                    personal.rut_empleado.includes(rut_filtro));
+            } else if (nombre_filtro != "") {
+                this.personalFiltrado = this.personal.filter(personal => personal.nombre.toLowerCase().includes(nombre_filtro));
+            } else if (rut_filtro != "") {
+                this.personalFiltrado = this.personal.filter(personal => personal.rut_empleado.toLowerCase().includes(rut_filtro));
+            }
+
+
+            if (nombre_filtro == "" && rut_filtro == "" && cargo_filtro == null) {
+                this.personalFiltrado = this.personal;
+                this.filtrando = false;
+            }else{
+                this.filtrando = true;
+            }
+
+            this.onFiltered(this.personalFiltrado);
+        },
         onFiltered(filteredItems) {
             // Trigger pagination to update the number of buttons/pages due to filtering
             this.totalRows = filteredItems.length
@@ -192,8 +307,9 @@ export default {
                 if (response != null) {
                     console.log(response)
                     this.personal = response.data
+                    this.personalFiltrado = this.personal
                     console.log(this.personal)
-
+                    this.onFiltered(this.personalFiltrado);
                     this.loading = false;
                 }
 
