@@ -80,7 +80,7 @@ const agregarNorma = async (data) => {
 
  const obtenerMatriz= async () => {
     try {
-         const response = await axios.get(apiUrl + "/matrices-parametros");
+         const response = await axios.get(apiUrl + "/matrices");
              console.log(response);
          if(response.status == 200){
              return response;
