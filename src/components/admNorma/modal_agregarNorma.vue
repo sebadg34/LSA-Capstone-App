@@ -256,6 +256,7 @@ export default {
 
         return {
             nombre_norma: '',
+            id_matriz: '',
             tablas_agregar: [],
             nombreTabla: [],
             matrizSeleccionada: '',
@@ -281,6 +282,7 @@ export default {
     watch: {
         matrizSeleccionada: function (value) {
             if (this.matrizSeleccionada !== '' && value !== '') {
+                this.id_matriz = this.matrizSeleccionada
                 console.log(value)
                 this.cargarParametrosMatriz(value);
             }
@@ -360,6 +362,7 @@ export default {
         enviarFormulario() {
             var data = {
                 nombre_norma: this.nombre_norma,
+                id_matriz: this.id_matriz,
                 tablas_agregar: this.tablas_agregar
             }
             ElementosService.agregarNorma(data).then((response) => {
