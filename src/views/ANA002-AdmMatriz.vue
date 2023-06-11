@@ -111,7 +111,7 @@ export default {
       },
 
       obtenerMatriz() {
-        ElementosService.obtenerMatriz().then((response) => {
+        ElementosService.obtenerMatrizParametro().then((response) => {
           if (response.data != null && response.status === 200) {
             console.log("Obteniendo Matrices: ", response.data);
 
