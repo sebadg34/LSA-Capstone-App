@@ -101,7 +101,10 @@
                             <span>{{ metodo.nombre_metodologia }}</span>
 
                             <div>
-                                <b-button class="boton-ojo-metodo">
+                                <b-popover placement="topleft" :target="'button-'+metodo.id_metodologia+'-'+metodo.id_parametro" title="Descripción metodología" triggers="focus">
+                                    {{ metodo.detalle_metodologia }}
+                                </b-popover>
+                                <b-button class="boton-ojo-metodo" :id="'button-'+metodo.id_metodologia+'-'+metodo.id_parametro">
                                     <b-icon scale="0.9" icon="eye-fill" style="color:gray"></b-icon>
                                 </b-button>
                                 <span class="p-2"></span>
@@ -175,8 +178,10 @@
                                                             <div>
                                                                 {{ metodologia.nombre_metodologia }}
                                                             </div>
-
-                                                            <b-button class="boton-ojo-metodo">
+                                                            <b-popover placement="topleft" :target="'button-'+metodologia.id_metodologia+'-'+parametro.id_parametro" title="Descripción metodología" triggers="focus">
+                                                                {{ metodologia.detalle_metodologia }}
+                                                            </b-popover>
+                                                            <b-button :id="'button-'+metodologia.id_metodologia+'-'+parametro.id_parametro" class="boton-ojo-metodo">
                                                                 <b-icon scale="0.9" icon="eye-fill" style="color:gray"></b-icon>
                                                             </b-button>
                                                         </b-row>
@@ -315,6 +320,7 @@ export default {
                         tabla.parametros[i].metodologias.push({
                             id_metodologia: tablaAgregar.parametros[i].value.metodologias[j].value.id_metodologia,
                             nombre_metodologia: tablaAgregar.parametros[i].value.metodologias[j].nombre_metodologia,
+                            detalle_metodologia: tablaAgregar.parametros[i].value.metodologias[j].detalle_metodologia,
                         })
                     }
                 }
@@ -491,11 +497,14 @@ export default {
             }
             ElementosService.obtenerDetallesParametro(data).then((response) => {
                 if (response.data != null && response.status === 200) {
+                    console.log("metodos del BD",response.data.metodologias)
                     for (var i = 0; i < response.data.metodologias.length; i++) {
+                        response.data.metodologias[i].id_parametro = response.data.metodologias[i].pivot.id_parametro
                         value.metodologias.push({
                             value: response.data.metodologias[i],
                             nombre_metodologia: response.data.metodologias[i].nombre_metodologia,
                             detalle_metodologia: response.data.metodologias[i].detalle_metodologia,
+
                         })
                     }
                     console.log("la respuesta es: ", response.data);
