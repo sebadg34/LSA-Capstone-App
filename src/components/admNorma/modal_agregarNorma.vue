@@ -156,7 +156,7 @@
                 </b-list-group-item>
 
                 <b-list-group-item style="width:65%" class="item-no-padding">
-                    <b-card no-body header="Parametros: ">
+                    <b-card no-body header="Parámetros: ">
 
                         <b-list-group flush>
                             <b-list-group-item v-for="parametro in tabla.parametros" :key="parametro.id_parametro">
@@ -360,10 +360,26 @@ export default {
 
         },
         enviarFormulario() {
+
+            // TODO: Optimizar ciclos FOR
+            var tablas_param_metodo = [];
+            for(var k = 0; k < this.tablas_agregar.length; k++){
+                for(var i = 0; i < this.tablas_agregar[k].parametros.length; i++){
+                for(var j = 0; j < this.tablas_agregar[k].parametros[i].metodologias.length; j++){
+                    tablas_param_metodo.push({
+                        nombre_tabla: this.tablas_agregar[k].nombre_tabla,
+                        id_parametro: this.tablas_agregar[k].parametros[i].id_parametro,
+                        id_metodologia: this.tablas_agregar[k].parametros[i].metodologias[j].id_metodologia
+                    })
+                }
+            }
+            }
+           
+
             var data = {
                 nombre_norma: this.nombre_norma,
                 id_matriz: this.id_matriz,
-                tablas_agregar: this.tablas_agregar
+                tablas_agregar: tablas_param_metodo
             }
             ElementosService.agregarNorma(data).then((response) => {
                 if (response.status == 200) {
