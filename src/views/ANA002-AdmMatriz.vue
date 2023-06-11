@@ -111,39 +111,53 @@ export default {
       },
 
       obtenerMatriz() {
-             
-          ElementosService.obtenerMatriz().then((response)=>{
+        ElementosService.obtenerMatriz().then((response) => {
           if (response.data != null && response.status === 200) {
-            console.log("Obteniendo Matrices: ", response)
+            console.log("Obteniendo Matrices: ", response.data);
 
-            const matrices = response.data.map((matriz) => {
-              const nuevoObjetoMatriz = {... matriz};
+            const matrices = response.data.reduce((acumulador, matriz) => {
+              const matrizExistente = acumulador.find((m) => m.id_matriz === matriz.id_matriz);
 
-              if(matriz.parametros && matriz.parametros.length > 0 ){
-                nuevoObjetoMatriz.nombreParametro = matriz.parametros[0].nombre_parametro;
-
-                if (matriz.parametros.length > 1) {
-
-                  nuevoObjetoMatriz.nombreParametro += " (+)";
+              if (matrizExistente) {
+                if (!matrizExistente.nombreParametro.includes(matriz.nombre_parametro)) {
+                  matrizExistente.nombreParametro.push(matriz.nombre_parametro);
                 }
-
-
               } else {
-                nuevoObjetoMatriz.nombreParametro = 'No Asignado';
+                const nuevaMatriz = {
+                  id_matriz: matriz.id_matriz,
+                  nombre_matriz: matriz.nombre_matriz,
+                  nombreParametro: [matriz.nombre_parametro],
+                  id_metodologia: matriz.id_metodologia,            
+                };
+                acumulador.push(nuevaMatriz);
               }
 
-              return nuevoObjetoMatriz              
+              return acumulador;
+            }, []);
+
+            matrices.forEach((matriz) => {
+              if (matriz.nombreParametro.length > 1) {
+                matriz.nombreParametro.push("(+)");
+              }
+              matriz.nombreParametro = matriz.nombreParametro.join(", ");
             });
+
+            //En caso de que quieran solo un "(+)" borrar el forEach de arriba y descomentar este.
+
+          /*  matrices.forEach((matriz) => {
+              if (matriz.nombreParametro.length > 1) {
+                matriz.nombreParametro = matriz.nombreParametro[0] + " (+)";
+              } else {
+                matriz.nombreParametro = matriz.nombreParametro[0];
+              }
+            }); */
 
             this.items = matrices;
 
-            console.log("Las matrices son: ", matrices)
+            console.log("Las matrices son: ", matrices);
           }
-        })             
+        });
       },
-
-      
-
     }
 
 }

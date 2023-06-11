@@ -70,7 +70,7 @@ const obtenerMetodologias= async () => {
 
  const obtenerMatriz= async () => {
     try {
-         const response = await axios.get(apiUrl + "/matrices");
+         const response = await axios.get(apiUrl + "/matrices-parametros");
              console.log(response);
          if(response.status == 200){
              return response;
@@ -137,7 +137,7 @@ const obtenerMetodologias= async () => {
 
  const obtenerDetallesMatriz = async (data) => {
     try {
-         const response = await axios.get(apiUrl + "/matrices/" + data.id_matriz);
+         const response = await axios.get(apiUrl + "/matrices/detallesMatriz/" + data.id_matriz);
          console.log(response);
          if(response.status == 200){
              return response;

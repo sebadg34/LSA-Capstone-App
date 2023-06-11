@@ -19,13 +19,13 @@
           </div>
 
           <div>
-            Parámetro(s) Asignado(s):
-            <ul>
-              <li v-for="parametro in listaParametros" :key="parametro.id">
-                {{ parametro.nombre_parametro }}
-              </li>
-            </ul>
-          </div>
+    Parámetro(s) Asignado(s):
+    <ul>
+      <li v-for="parametro in filteredParametros" :key="parametro">
+        {{ parametro }}
+      </li>
+    </ul>
+  </div>
         </b-col>
       </b-row>
     </div>
@@ -55,23 +55,36 @@ export default {
     }
   },
 
+  computed: {
+  filteredParametros() {
+    return this.listaParametros.filter(parametro => typeof parametro === 'string');
+  }
+},
+
   methods: {
     obtenerDetallesMatriz() {
-      const data = {
-        id_matriz: this.id
-      };
+  const data = {
+    id_matriz: this.id
+  };
 
-      ElementosService.obtenerDetallesMatriz(data).then((response) => {
-        if (response.status === 200) {
-          console.log("obteniendo detalles de la matriz:", response.data);
-          const { nombre_matriz, parametros, id_matriz } = response.data;
-          this.nombreMatriz = nombre_matriz;
-          this.listaParametros = parametros;
-          this.id_matriz = id_matriz;
-        }
-      });
+  ElementosService.obtenerDetallesMatriz(data).then((response) => {
+    if (response.status === 200) {
+      console.log("obteniendo detalles de la matriz:", response.data);
+
+      // Mapear los nombres de los parámetros en un nuevo array
+      const parametros = response.data.map(objetoDetalle => objetoDetalle.nombre_parametro);
+      
+      this.nombreMatriz = response.data[0].nombre_matriz;
+      this.listaParametros = parametros;
+      this.id_matriz = response.data[0].id_matriz;
+
+      console.log("El nombre de la matriz es: ", this.nombreMatriz);
+      console.log("Los parámetros son: ", this.listaParametros);
     }
+  });
+}
   },
+  
 
   watch: {
     detallesData: {
