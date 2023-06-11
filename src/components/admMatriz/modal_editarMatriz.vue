@@ -135,7 +135,7 @@ export default {
             ElementosService.obtenerDetallesMatriz(data).then((response) => {
                 if (response.status === 200) {
                     console.log("obteniendo detalles de la matriz:", response.data);
-                    const id_matriz = response.data;
+                    const id_matriz = response.data[0].id_matriz;
 
                     const nombre_matriz = response.data[0].nombre_matriz;
                     const parametros = response.data
