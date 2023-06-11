@@ -135,27 +135,29 @@ export default {
             ElementosService.obtenerDetallesMatriz(data).then((response) => {
                 if (response.status === 200) {
                     console.log("obteniendo detalles de la matriz:", response.data);
-                    const {
-                        nombre_matriz,
-                        parametros,
-                        id_matriz
-                    } = response.data;
+                    const id_matriz = response.data[0].id_matriz;
+
+                    const nombre_matriz = response.data[0].nombre_matriz;
+                    const parametros = response.data
+
+
+                    console.log("Parametros obtenidos:", nombre_matriz);
+                    console.log("Parametros obtenidos:", parametros);
                     this.Nombre = nombre_matriz;
 
                     this.id_matriz = id_matriz;
                     this.listaParametros = parametros;
+
+                    console.log("Parametros:", this.listaParametros);
                     // cargo parametros ya en el sistema al modal editar
                     for (var i = 0; i < parametros.length; i++) {
-                        for (var j = 0; j < parametros[i].metodologias.length; j++) {
-
-                            this.parametros_ya_en_sistema.push({
-                                id_parametro: parametros[i].id_parametro,
-                                id_metodologia: parametros[i].metodologias[j].id_metodologia,
-                                nombre_parametro: parametros[i].nombre_parametro,
-                                nombre_metodologia: parametros[i].metodologias[j].nombre_metodologia,
-                            })
+                        this.parametros_ya_en_sistema.push({
+                            id_parametro: parametros[i].id_parametro,
+                            id_metodologia: parametros[i].id_metodologia,
+                            nombre_parametro: parametros[i].nombre_parametro,
+                            nombre_metodologia: parametros[i].nombre_metodologia,
+                            });
                         }
-                    }
                     console.log("parametros ya en sistema", this.parametros_ya_en_sistema)
 
                     for (var v = 0; v < this.parametros_ya_en_sistema.length; v++) {
