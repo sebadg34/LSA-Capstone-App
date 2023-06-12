@@ -29,32 +29,31 @@
     </b-col>
     <hr />
     <b-list-group horizontal>
-        <b-list-group-item style="width:30%;font-weight: bold;">Tablas</b-list-group-item>
-      
-            <b-list-group-item style="width:20.85%;font-weight: bold;">Parametros</b-list-group-item>
-        <b-list-group-item style="width:49.15%;font-weight: bold;">Metodologías</b-list-group-item>
-     
-       
+        <b-list-group-item class="d-flex align-items-center justify-content-center" style="width:30%;font-weight: bold;">Tablas</b-list-group-item>
+
+        <b-list-group-item class="d-flex align-items-center justify-content-center" style="width:20.85%;font-weight: bold;">Parámetros</b-list-group-item>
+        <b-list-group-item class="d-flex align-items-center justify-content-center" style="width:49.15%;font-weight: bold;">Metodologías</b-list-group-item>
+
     </b-list-group>
-    <b-list-group v-for="tabla in this.tablas" :key="tabla.nombre_tabla.trim()" horizontal>
-        <b-list-group-item style="width:30%">
+    <b-list-group  v-for="tabla in this.tablas" :key="tabla.id_tabla" horizontal>
+        <b-list-group-item class="d-flex align-items-center justify-content-center" style="width:30%">
             {{ tabla.nombre_tabla }}
         </b-list-group-item>
         <b-list-group-item style="padding:0px; width:70%">
             <b-list-group>
                 <b-list-group v-for="parametro in tabla.parametros" :key="parametro.id" horizontal>
-                    <b-list-group-item style="width:30%">{{parametro.nombre_parametro}}</b-list-group-item>
+                    <b-list-group-item class="d-flex align-items-center justify-content-center" style="width:30%">{{parametro.nombre_parametro}}</b-list-group-item>
 
                     <b-list-group-item style="padding:0px;width:70%">
 
                         <b-list-group flush>
-                            <b-list-group-item class="d-flex justify-content-between"  style="padding:10px" v-for="metodologia in parametro.metodologias" :key="metodologia.id_metodologia + '-' + parametro.id">
-                             <span class="pl-2">  {{ metodologia.nombre_metodologia }}</span> 
+                            <b-list-group-item class="d-flex justify-content-between align-items-center" style="padding:10px" v-for="metodologia in parametro.metodologias" :key="metodologia.id_metodologia + '-' + parametro.id">
+                                <span class="pl-2"> {{ metodologia.nombre_metodologia }}</span>
 
-                                <b-popover placement="topleft" :target="'button-' + tabla.nombre_tabla.trim() + '-' +metodologia.id_metodologia+'-'+parametro.id_parametro" title="Descripción metodología" triggers="focus">
+                                <b-popover placement="topleft" :target="'button-' + tabla.id_tabla + '-' +metodologia.id_metodologia+'-'+parametro.id_parametro" title="Descripción metodología" triggers="focus">
                                     {{ metodologia.detalle_metodologia }}
                                 </b-popover>
-                                <b-button class="boton-ojo-metodo" :id="'button-' + tabla.nombre_tabla.trim() + '-' +metodologia.id_metodologia+'-'+parametro.id_parametro">
+                                <b-button class="boton-ojo-metodo" :id="'button-' + tabla.id_tabla + '-' +metodologia.id_metodologia+'-'+parametro.id_parametro">
                                     <b-icon scale="0.9" icon="eye-fill" style="color:gray"></b-icon>
                                 </b-button>
                             </b-list-group-item>
@@ -123,16 +122,17 @@ export default {
                             var tablaExistente = this.tablas.find(tabla => tabla.nombre_tabla == response.data[i].nombre_tabla);
                             if (tablaExistente == null) {
                                 this.tablas.push({
-                                    id_tabla: '-1',
+                                    id_tabla: response.data[i].id_tabla,
                                     nombre_tabla: response.data[i].nombre_tabla,
                                     parametros: []
                                 })
                             }
 
-                            var parametroExistente = this.parametros.find(para => para.id_parametro == response.data[i].id_parametro);
+                            var parametroExistente = this.parametros.find(para => para.id_parametro == response.data[i].id_parametro && para.id_tabla == response.data[i].id_tabla);
                             if (parametroExistente == null) {
                                 console.log("param nuevo, agregar a listado")
                                 this.parametros.push({
+                                    id_tabla: response.data[i].id_tabla,
                                     nombre_tabla: response.data[i].nombre_tabla,
                                     id_parametro: response.data[i].id_parametro,
                                     nombre_parametro: response.data[i].nombre_parametro,
@@ -151,10 +151,16 @@ export default {
                             }
                             console.log(response.data[i])
                         }
-
+                        console.log("parametros cargados en: ", this.parametros)
                         for (var j = 0; j < this.tablas.length; j++) {
+                            console.log("evaluando tabla: ", this.tablas[j])
                             for (var k = 0; k < this.parametros.length; k++) {
-                                if (this.tablas[j].nombre_tabla == this.parametros[k].nombre_tabla) {
+                                if (this.tablas[j].id_tabla == this.parametros[k].id_tabla) {
+                                    
+                                    console.log('======================================')
+                                    console.log("tabla :", this.tablas[j])
+                                    console.log("parametro :", this.parametros[k])
+                                    console.log('======================================')
                                     this.tablas[j].parametros.push(this.parametros[k]);
                                 }
                             }

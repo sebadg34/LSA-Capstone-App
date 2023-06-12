@@ -290,7 +290,6 @@ export default {
     mounted() {
 
         this.obtenerMatriz();
-        //this.obtenerParametros();
     },
 
     methods: {
@@ -330,7 +329,7 @@ export default {
                     })
                     for (var j = 0; j < tablaAgregar.parametros[i].value.metodologias.length; j++) {
                         tabla.parametros[i].metodologias.push({
-                            id_metodologia: tablaAgregar.parametros[i].value.metodologias[j].value.id_metodologia,
+                            id_metodologia: tablaAgregar.parametros[i].value.metodologias[j].id_metodologia,
                             nombre_metodologia: tablaAgregar.parametros[i].value.metodologias[j].nombre_metodologia,
                             detalle_metodologia: tablaAgregar.parametros[i].value.metodologias[j].detalle_metodologia,
                         })
@@ -355,15 +354,16 @@ export default {
         },
         agregarParametroTabla() {
             console.log("parametro a agregar en tabla: ", this.parametroSeleccionado_agregar)
-            console.log("parametro a agregar en tabla: ", this.tablaSeleccionada)
-            const existeParametro = this.tablaSeleccionada.parametros.find(parametro => parametro.value.id_parametro == this.parametroSeleccionado_agregar.id_parametro)
+            const existeParametro = this.tablaSeleccionada.parametros.find(parametro => parametro.id_parametro == this.parametroSeleccionado_agregar.id_parametro)
             if (existeParametro == null) {
-                this.parametroSeleccionado_agregar.metodologias = []
+                console.log("agregando parametro a tabla:", this.parametroSeleccionado_agregar)
+                this.parametroSeleccionado_agregar.metodologias = this.parametrosMatriz.find(param => param.id_parametro == this.parametroSeleccionado_agregar.id_parametro).metodologias;
                 this.tablaSeleccionada.parametros.push({
                     value: this.parametroSeleccionado_agregar,
-                    text: this.parametroSeleccionado_agregar.nombre_parametro
+                    text: this.parametroSeleccionado_agregar.nombre_parametro,
+                    id_parametro: this.parametroSeleccionado_agregar.id_parametro
                 })
-                this.obtenerDetallesParametro();
+                //this.obtenerDetallesParametro();
             } else {
                 this.alertaDuplicado = true; // Mostrar la alerta de duplicado
             }
@@ -413,13 +413,33 @@ export default {
                 console.log("detalles matriz", response);
                 if (response.data != null && response.status == 200) {
                     for (var i = 0; i < response.data.length; i++) {
-                        console.log("agregando parametro: ", response.data[i].nombre_parametro)
-                        this.parametrosMatriz.push({
-                            value: response.data[i],
-                            text: response.data[i].nombre_parametro,
-                            metodologias: []
-                        })
+                        var parametroExistente = this.parametrosMatriz.find(param => param.id_parametro == response.data[i].id_parametro);
+
+                        if (parametroExistente == null) {
+                            var parametroAgregar = {
+                                nombre_parametro: response.data[i].nombre_parametro,
+                                id_parametro: response.data[i].id_parametro,
+                              
+                            }
+
+                            this.parametrosMatriz.push({
+                                value: parametroAgregar,
+                                id_parametro: response.data[i].id_parametro,
+                                text: response.data[i].nombre_parametro,
+                                metodologias: [{
+                                    nombre_metodologia: response.data[i].nombre_metodologia,
+                                    id_metodologia: response.data[i].id_metodologia
+                                }]
+                            })
+                        } else {
+                            parametroExistente.metodologias.push({
+                                nombre_metodologia: response.data[i].nombre_metodologia,
+                                id_metodologia: response.data[i].id_metodologia
+                            })
+                        }
+
                     }
+                    console.log("parametros cargados de la matriz: ", this.parametrosMatriz)
                 }
 
             })
@@ -433,43 +453,6 @@ export default {
             // Realiza las acciones adicionales que necesites
             this.parametroSeleccionado = '';
         },
-        /**
-            agregarParametroAArea() {
-              const parametroData = this.opcionesParametro.find(item => item.id_parametro === this.parametroSeleccionado);
-
-              // Obtener la tabla seleccionada actualmente
-              const tablaSeleccionada = this.tablaSeleccionada;
-
-              // Verificar si el parámetro ya existe en la tabla seleccionada
-              const existeParametro = this.tablasParametros[tablaSeleccionada]?.some(parametro => parametro.id_parametro === parametroData.id_parametro);
-
-              if (!existeParametro) {
-                // Verificar si la tabla ya tiene parámetros seleccionados
-                if (this.tablasParametros[tablaSeleccionada]) {
-                  // Agregar el parámetro a la tabla existente
-                  this.tablasParametros[tablaSeleccionada].push(parametroData);
-                } else {
-                  // Crear un nuevo arreglo de parámetros para la tabla
-                  this.tablasParametros[tablaSeleccionada] = [parametroData];
-                }
-
-                console.log('Parámetros por tabla:', this.tablasParametros);
-              } else {
-                this.alertaDuplicado = true; // Mostrar la alerta de duplicado
-              }
-            },
-         */
-        //  eliminarParametroTabla(index) {
-        //      const tablaSeleccionada = this.tablaSeleccionada;
-        //      if (tablaSeleccionada && this.tablasParametros[tablaSeleccionada]) {
-        //          this.tablasParametros[tablaSeleccionada].splice(index, 1);
-        //          this.tablasParametros = {
-        //              ...this.tablasParametros
-        //          }; // Actualizar this.tablasParametros
-        //          console.log('Parámetros por tablaELIMINACION:', this.tablasParametros);
-        //      }
-        //  },
-        //
         parametroSeleccionadoCambiado() {
             console.log('Parámetro seleccionado:', this.parametroSeleccionado);
             this.alertaDuplicado = false;
@@ -504,19 +487,6 @@ export default {
             });
         },
 
-        obtenerParametros() {
-            this.loading = true;
-            ElementosService.obtenerParametros().then((response) => {
-                if (response.data != null && response.status === 200) {
-                    console.log("la respuesta es: ", response.data);
-                    this.opcionesParametro = response.data.map(parametro => ({
-                        id_parametro: parametro.id_parametro,
-                        nombre_parametro: parametro.nombre_parametro
-                    }));
-                }
-                console.log("opciones de los parametros: ", this.opcionesParametro)
-            });
-        },
         obtenerDetallesParametro() {
 
             var value = this.parametroSeleccionado_agregar
