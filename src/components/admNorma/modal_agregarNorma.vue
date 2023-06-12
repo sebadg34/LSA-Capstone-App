@@ -1,5 +1,5 @@
 <template>
-<b-modal id="modal-Agregar-Norma" :title="`Agregar Metodologia`" size="xl">
+<b-modal id="modal-agregar-norma" :title="`Agregar Metodologia`" size="xl">
     <template #modal-header="{ close }">
         <!-- Emulate built in modal header close button action -->
         <b-row class="d-flex justify-content-around">
@@ -267,12 +267,9 @@ export default {
             tablaSeleccionada: '',
             parametroSeleccionado_agregar: '',
             parametroSeleccionado: '',
-            parametroDeshabilitado: true,
             alertaDuplicado: false,
             alertaTablaDuplicada: false,
-            opcionesBD: [],
             nuevoNombreTabla: '',
-            parametrosSeleccionados: [],
             tablasParametros: [],
             metodosKey: 1,
         }
@@ -297,6 +294,19 @@ export default {
     },
 
     methods: {
+        reiniciarDatos() {
+            this.nombre_norma = "";
+            this.id_matriz = "";
+            this.tablas_agregar = [];
+            this.matrizSeleccionada = '';
+            this.parametrosMatriz = [];
+            this.opcionesTabla = [];
+            this.opcionesParametro = [];
+            this.tablaSeleccionada = "";
+            this.parametroSeleccionado = "";
+            this.parametroSeleccionado_agregar = "";
+
+        },
         borrarTabla(tabla) {
             console.log("tabla a borrar: ", tabla)
             this.tablas_agregar = this.tablas_agregar.filter(oldTabla => oldTabla.nombre_tabla != tabla.nombre_tabla);
@@ -363,18 +373,17 @@ export default {
 
             // TODO: Optimizar ciclos FOR
             var tablas_param_metodo = [];
-            for(var k = 0; k < this.tablas_agregar.length; k++){
-                for(var i = 0; i < this.tablas_agregar[k].parametros.length; i++){
-                for(var j = 0; j < this.tablas_agregar[k].parametros[i].metodologias.length; j++){
-                    tablas_param_metodo.push({
-                        nombre_tabla: this.tablas_agregar[k].nombre_tabla,
-                        id_parametro: this.tablas_agregar[k].parametros[i].id_parametro,
-                        id_metodologia: this.tablas_agregar[k].parametros[i].metodologias[j].id_metodologia
-                    })
+            for (var k = 0; k < this.tablas_agregar.length; k++) {
+                for (var i = 0; i < this.tablas_agregar[k].parametros.length; i++) {
+                    for (var j = 0; j < this.tablas_agregar[k].parametros[i].metodologias.length; j++) {
+                        tablas_param_metodo.push({
+                            nombre_tabla: this.tablas_agregar[k].nombre_tabla,
+                            id_parametro: this.tablas_agregar[k].parametros[i].id_parametro,
+                            id_metodologia: this.tablas_agregar[k].parametros[i].metodologias[j].id_metodologia
+                        })
+                    }
                 }
             }
-            }
-           
 
             var data = {
                 nombre_norma: this.nombre_norma,
@@ -383,6 +392,7 @@ export default {
             }
             ElementosService.agregarNorma(data).then((response) => {
                 if (response.status == 200) {
+                    this.reiniciarDatos();
                     this.$bvToast.toast(`Creación de norma exitosa`, {
                         title: 'Exito',
                         toaster: 'b-toaster-top-center',
@@ -391,6 +401,7 @@ export default {
                         appendToast: true
                     })
                     this.$emit('refrescar');
+                    this.$bvModal.hide('modal-Agregar-Norma')
                 }
             })
         },
@@ -448,17 +459,17 @@ export default {
               }
             },
          */
-        eliminarParametroTabla(index) {
-            const tablaSeleccionada = this.tablaSeleccionada;
-            if (tablaSeleccionada && this.tablasParametros[tablaSeleccionada]) {
-                this.tablasParametros[tablaSeleccionada].splice(index, 1);
-                this.tablasParametros = {
-                    ...this.tablasParametros
-                }; // Actualizar this.tablasParametros
-                console.log('Parámetros por tablaELIMINACION:', this.tablasParametros);
-            }
-        },
-
+        //  eliminarParametroTabla(index) {
+        //      const tablaSeleccionada = this.tablaSeleccionada;
+        //      if (tablaSeleccionada && this.tablasParametros[tablaSeleccionada]) {
+        //          this.tablasParametros[tablaSeleccionada].splice(index, 1);
+        //          this.tablasParametros = {
+        //              ...this.tablasParametros
+        //          }; // Actualizar this.tablasParametros
+        //          console.log('Parámetros por tablaELIMINACION:', this.tablasParametros);
+        //      }
+        //  },
+        //
         parametroSeleccionadoCambiado() {
             console.log('Parámetro seleccionado:', this.parametroSeleccionado);
             this.alertaDuplicado = false;
@@ -516,7 +527,7 @@ export default {
             }
             ElementosService.obtenerDetallesParametro(data).then((response) => {
                 if (response.data != null && response.status === 200) {
-                    console.log("metodos del BD",response.data.metodologias)
+                    console.log("metodos del BD", response.data.metodologias)
                     for (var i = 0; i < response.data.metodologias.length; i++) {
                         response.data.metodologias[i].id_parametro = response.data.metodologias[i].pivot.id_parametro
                         value.metodologias.push({

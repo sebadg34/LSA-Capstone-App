@@ -41,6 +41,7 @@ const obtenerMetodologias= async () => {
      }
  };
 
+
  const agregarMatriz = async (data) => {
     try {  
         const response = await axios.post(apiUrl + "/matrices/agregarMatriz", data,);
@@ -142,7 +143,21 @@ const agregarNorma = async (data) => {
 
 
 
-
+ const obtenerDetallesNorma = async (data) => {
+    try {
+         const response = await axios.get(apiUrl + "/normas/detallesNorma/" + data.id_norma);
+         console.log(response);
+         if(response.status == 200){
+             return response;
+         } else {
+             return;
+         }
+         
+     } catch (error) {
+         console.log(error);
+         return;
+     }
+ };
  const obtenerDetallesMetodologia = async (data) => {
     try {
          const response = await axios.get(apiUrl + "/metodologias/" + data.id_metodologia);
@@ -287,6 +302,8 @@ const eliminar_Empleados_Asociados = async (nombre_metodologia, data) => {
 export default {
     obtenerMatrizParametro,
     agregarNorma,
+    obtenerDetallesNorma,
+    obtenerNormas,
     agregarMetodología,
     obtenerMetodologias,
     actualizarMetodologia,
@@ -303,6 +320,5 @@ export default {
     obtenerRelacion,
     obtenerDetallesElementos,
     actualizarMatriz,
-    obtenerNormas
 
 }
