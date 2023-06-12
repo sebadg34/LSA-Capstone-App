@@ -12,7 +12,6 @@
     <modal_detallesParametro :detalles-data="this.modalDetallesData"/>
     <modal_editarParametro :parametro-data="this.modalEditarData" @parametroAgregado="parametroAgregado"/>
 
-
     <div class="row justify-content-center" style="padding-top:30px; padding-bottom:10px; margin-left: 5px;">
       <div class="col-10">  
         <b-row>                 
@@ -26,7 +25,7 @@
 
     <div class="row justify-content-center">
       <div class="col-10">
-        <b-table :busy="loading" show-empty :items="items" :fields="fields" responsive >
+        <b-table :busy="loading" show-empty :items="items" :fields="fields" :per-page="perPage" :current-page="currentPage" responsive >
 
           <template #empty>
                     <div class="text-center lsa-light-blue-text my-2 row">
@@ -59,6 +58,7 @@
             </b-dropdown>
           </template>
         </b-table>
+        <b-pagination v-model="currentPage" :total-rows="rows" :per-page="perPage" align="right"></b-pagination>
       </div>
     </div>           
   </div>   
@@ -66,19 +66,17 @@
 
 <script>
 
-import modal_agregarParametro from '@/components/admParametro/modal_agregarParametro.vue';
-import modal_detallesParametro from '@/components/admParametro/modal_detallesParametro.vue';
-import modal_editarParametro from '@/components/admParametro/modal_editarParametro.vue';
+  import modal_agregarParametro from '@/components/admParametro/modal_agregarParametro.vue';
+  import modal_detallesParametro from '@/components/admParametro/modal_detallesParametro.vue';
+  import modal_editarParametro from '@/components/admParametro/modal_editarParametro.vue';
 
-import ElementosService from '@/helpers/api-services/Elementos.service';
-export default {
+  import ElementosService from '@/helpers/api-services/Elementos.service';
+  export default {
 
-  components: {
-
-    modal_agregarParametro,
-    modal_detallesParametro,
-    modal_editarParametro
-        
+    components: {
+      modal_agregarParametro,
+      modal_detallesParametro,
+      modal_editarParametro        
     },
 
     data(){
@@ -94,77 +92,71 @@ export default {
         items: [],
         modalDetallesData: {},
         modalEditarData: {},
+        currentPage: 1,
+        perPage: 10,
 
         }
 
     },
 
+    computed: {
+      rows() {
+        return this.items.length
+      }
+    },
+
     mounted() {  
-
-      this.obtenerParametros();  
-      
-
+      this.obtenerParametros(); 
     },
 
     methods: {
       
       obtenerParametros() {
         this.loading = true;
-  ElementosService.obtenerParametros().then((response) => {
-    if (response.data != null && response.status === 200) {
-      console.log("la respuesta es: ", response.data);
-      const parametros = response.data.map((parametro) => {
-        const nuevoObjetoParametro = { ...parametro };
+        ElementosService.obtenerParametros().then((response) => {
+          if (response.data != null && response.status === 200) {
+            console.log("la respuesta es: ", response.data);
+            const parametros = response.data.map((parametro) => {
+              const nuevoObjetoParametro = { ...parametro };
 
-        if (parametro.metodologias && parametro.metodologias.length > 0) {
-          nuevoObjetoParametro.nombreMetodologia = parametro.metodologias[0].nombre_metodologia;
+              if (parametro.metodologias && parametro.metodologias.length > 0) {
+                nuevoObjetoParametro.nombreMetodologia = parametro.metodologias[0].nombre_metodologia;
 
-          if (parametro.metodologias.length > 1) {
-            nuevoObjetoParametro.nombreMetodologia += "(+)";
+                if (parametro.metodologias.length > 1) {
+                  nuevoObjetoParametro.nombreMetodologia += "(+)";
+                }
+              } else {
+                  nuevoObjetoParametro.nombreMetodologia = 'No Asignado';
+                }
+                return nuevoObjetoParametro;
+            });
+            this.items = parametros;
+            this.loading = false;
+            console.log("los parametros son: ", parametros);
           }
-        } else {
-          nuevoObjetoParametro.nombreMetodologia = 'No Asignado';
-        }
-
-        return nuevoObjetoParametro;
-      });
-
-      this.items = parametros;
-      this.loading = false;
-      console.log("los parametros son: ", parametros);
-    }
-  });
-},
+        });
+      },
 
 
       agregarParametro(){
-
-        this.$bvModal.show('modal-Agregar-Parametro');        
-        
+        this.$bvModal.show('modal-Agregar-Parametro');       
       },
 
       DetallesParametro(data){
         console.log(data)
         this.modalDetallesData = data;
         this.$bvModal.show('modal-detalle-parametro')
-
       },
 
       EditarParametro(data){
         console.log("los datos a editar son : ", data)
         this.modalEditarData = data;
         this.$bvModal.show('modal-Editar-Parametro')
-
       },
 
       parametroAgregado(){
-
         this.obtenerParametros();
-
-      }     
-
-
+      }
     }
-
-}
+  }
 </script>

@@ -1,5 +1,5 @@
 <template>
-  <b-modal id="modal-detalle-parametro" ref="modal" :title="`Detalles del Parámetro`" size="lg">
+  <b-modal id="modal-detalle-matriz" ref="modal" :title="`Detalles de la Matriz`" size="lg">
     <template #modal-header="{ close }">
       <b-row class="d-flex justify-content-around">
         <div class="pl-3">Detalles de la Matriz</div>
@@ -20,7 +20,7 @@
           <div>
             Parámetro(s) Asignado(s):
             <ul>
-              <li v-for="(parametro, index) in filteredParametros" :key="index">
+              <li v-for="(parametro, index) in uniqueParametros" :key="index">
                 {{ parametro }}
               </li>
             </ul>
@@ -86,7 +86,10 @@ export default {
     },
     filteredMetodologias(){
       return this.listaMetodologias.filter(metodologia => typeof metodologia === 'string');
-    }
+    },
+    uniqueParametros() {
+    return Array.from(new Set(this.filteredParametros));
+    },
   },
     
 
@@ -120,7 +123,6 @@ export default {
       this.detallesMetodologia = this.listaDetalles[index];
       this.$bvModal.show('detalle')      
     },
-
 
   },  
 

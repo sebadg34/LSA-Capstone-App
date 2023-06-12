@@ -24,7 +24,7 @@
 
     <div class="row justify-content-center">
         <div class="col-10">
-            <b-table show-empty :items="items" :busy="loading" :fields="fields" responsive>
+            <b-table show-empty :items="items" :busy="loading" :fields="fields" :per-page="perPage" :current-page="currentPage" responsive>
 
                 <template #empty>
                     <div class="text-center lsa-light-blue-text my-2 row">
@@ -57,6 +57,7 @@
                     </b-dropdown>
                 </template>
             </b-table>
+            <b-pagination v-model="currentPage" :total-rows="rows" :per-page="perPage" align="right"></b-pagination>
         </div>
     </div>
 
@@ -104,29 +105,29 @@ export default {
             ],
 
             items: [],
-
             modalEditarData: {},
             modalDetallesData: {},
             nombreE: '',
             empleados: [],
             loading: false,
-
+            currentPage: 1,
+            perPage: 10,
         }
+    },
 
+    computed: {
+      rows() {
+        return this.items.length
+      }
     },
 
     mounted() {
-
         this.obtenerMetodologias();
-
     },
 
     methods: {
-
         agregarAnalista() {
-
             this.$bvModal.show('modal-Agregar-Metodologia');
-
         },
 
         obtenerMetodologias() {
@@ -137,7 +138,6 @@ export default {
                         const nuevoObjetoMetodologia = {
                             ...metodologia
                         };
-
                         if (metodologia.empleados && metodologia.empleados.length > 0) {
                             nuevoObjetoMetodologia.rutEmpleado = metodologia.empleados[0].nombre + ' ' + metodologia.empleados[0].apellido;
 
@@ -148,10 +148,8 @@ export default {
                         } else {
                             nuevoObjetoMetodologia.rutEmpleado = 'No asignado';
                         }
-
                         return nuevoObjetoMetodologia;
                     });
-
                     console.log("Obteniendo Metodologías: ", metodologias);
                     this.items = metodologias;
                     this.loading = false;

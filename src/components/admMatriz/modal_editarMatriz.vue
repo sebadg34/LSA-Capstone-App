@@ -27,7 +27,7 @@
 
         <b-col>
             <b-form-group label="Seleccione una Metodología">
-                <b-form-select v-model="metodologiaSeleccionada" :options="opcionesMetodologia" placeholder="Seleccione una metodología" @change="agregarObjetosSeleccionados"></b-form-select>
+                <b-form-select v-model="metodologiaSeleccionada" :disabled="metodologiaDeshabilitada" :options="opcionesMetodologia" placeholder="Seleccione una metodología" @change="agregarObjetosSeleccionados"></b-form-select>
             </b-form-group>
         </b-col>
 
@@ -91,7 +91,8 @@ export default {
             listaParametros: [],
             nombreMatriz: '',
             id: '',
-            id_matriz: ''
+            id_matriz: '',
+            metodologiaDeshabilitada: true,
         }
 
     },
@@ -131,6 +132,11 @@ export default {
             const data = {
                 id_matriz: this.id
             };
+
+            this.parametros_ya_en_sistema = [];
+            this.objetosSeleccionados = [];
+            this.parametros_agregar = [];
+            this.parametros_eliminar = [];
 
             ElementosService.obtenerDetallesMatriz(data).then((response) => {
                 if (response.status === 200) {
@@ -210,6 +216,8 @@ export default {
         },
         actualizarMetodologias() {
             const parametro = this.parametroSeleccionado;
+
+            this.opcionesMetodologia.splice(0, this.opcionesMetodologia.length);
 
             // Buscar el objeto correspondiente al parámetro seleccionado en metodologiasData
             const parametroData = this.metodologiasData.find(item => item.nombre_parametro === parametro.nombre_parametro);
@@ -300,12 +308,10 @@ export default {
                         this.$emit('matrizAgregada');
 
                         this.Nombre = '',
-                            this.metodologiaSeleccionada = '',
-                            this.parametroSeleccionado = '',
-                            this.opcionesMetodologia = [],
-                            this.opcionesParametro = [],
-                            this.objetosSeleccionados = [],
-                            this.parametros_agregar = [];
+                        this.metodologiaSeleccionada = '',
+                        this.parametroSeleccionado = '',                           
+                        this.objetosSeleccionados = [],
+                        this.parametros_agregar = [];
                         this.parametros_eliminar = [];
                         this.$refs.modal.hide()
                     }

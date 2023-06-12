@@ -1,4 +1,5 @@
 <template>
+  <validation-observer ref="form">
   <b-modal id="modal-Agregar-Metodologia" ref="modal" :title="`Agregar Metodologia`" size="lg">
     <template #modal-header="{ close }">
       <b-row class="d-flex justify-content-around">
@@ -7,15 +8,19 @@
       <button type="button" class="close" aria-label="Close" @click="close()">
         <span aria-hidden="true" style="color:white">&times;</span>
       </button>
-    </template>
+    </template>  
 
-    <b-form-group label="Nombre de la Metodología">
-      <b-form-input v-model="Nombre"></b-form-input>
-    </b-form-group>
+    <ValidationProvider name="Nombre Metodologia" rules="required" v-slot="validationContext">
+      <label for="input-live">Nombre de la Metodología:</label>
+      <b-form-input id="input-live" v-model="Nombre" :state="getValidationState(validationContext)" placeholder="Nombre de la Metodología ..." ></b-form-input>
+      <b-form-invalid-feedback>{{ validationContext.errors[0] }}</b-form-invalid-feedback>
+    </ValidationProvider>
 
-    <b-form-group label="Descripción">
-      <b-form-textarea v-model="Descripción"></b-form-textarea>
-    </b-form-group>
+    <ValidationProvider name="Descripción" rules="required" v-slot="validationContext">
+      <label for="input-live">Descripción:</label>
+      <b-form-input id="input-live" v-model="Descripción" :state="getValidationState(validationContext)" placeholder="Descripción" ></b-form-input>
+      <b-form-invalid-feedback>{{ validationContext.errors[0] }}</b-form-invalid-feedback>
+    </ValidationProvider>    
    
     <b-row>
       <b-col>
@@ -54,6 +59,7 @@
   </b-button>
     </template>
   </b-modal>
+</validation-observer>
 </template>
 
 <script>
@@ -100,6 +106,10 @@ export default {
   },
 
   methods: {
+
+    getValidationState({ dirty, validated, valid = null }) {
+      return dirty || validated ? valid : null;
+    },
   
     agregarAnalistaSeleccionado() {
   if (this.AnalistaAsignado) {
@@ -128,7 +138,12 @@ eliminarAnalistaSeleccionado(index) {
 
     AgregarMetodologia(){
 
-      const empleadosFiltrados = this.empleados_agregar.slice(1);
+      this.$refs.form.validate().then(success => {
+        if(!success) {
+          return;
+        } else {
+
+          const empleadosFiltrados = this.empleados_agregar.slice(1);
 
       var data = {
 
@@ -138,7 +153,6 @@ eliminarAnalistaSeleccionado(index) {
 
 
       }
-
       console.log("data a enviar", data)
       ElementosService.agregarMetodología(data).then((response)=>{
         console.log(response)
@@ -174,7 +188,24 @@ eliminarAnalistaSeleccionado(index) {
             appendToast: true
           })
         }
+      });
+
+
+          
+
+
+
+
+
+
+        }
+
+
       })
+      
+
+      
+      
     },
   },
 };

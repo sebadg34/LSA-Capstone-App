@@ -1,4 +1,5 @@
 <template>
+  <validation-observer ref="form">
     <b-modal id="modal-Agregar-Parametro" ref="modal" :title="`Agregar Parametro`" size="lg">
         
 
@@ -14,9 +15,11 @@
       
       <!-- ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// -->
       
-      <b-form-group label="Nombre del Parámetro">
-         <b-form-input v-model="Nombre"></b-form-input>
-      </b-form-group>
+      <ValidationProvider name="Nombre Parametros" rules="required" v-slot="validationContext">
+        <label for="input-live">Nombre del parámetro:</label>
+        <b-form-input id="input-live" v-model="Nombre" :state="getValidationState(validationContext)" placeholder="Nombre del parámetro ..." ></b-form-input>
+        <b-form-invalid-feedback>{{ validationContext.errors[0] }}</b-form-invalid-feedback>
+      </ValidationProvider>
 
       <b-row>
       <b-col>
@@ -57,6 +60,7 @@
         </b-button>
       </template>      
     </b-modal>
+  </validation-observer>
 </template>
 
 <script>
@@ -67,17 +71,15 @@ export default {
 
     data(){
 
-        return {
-            Nombre: '',                                   
-            opcionesMetodologia: [],
+      return {
+        Nombre: '',                                   
+        opcionesMetodologia: [],
             metodologiaAsignada: '',
             metodologiaSeleccionada: [],  
             alertaDuplicado: false,  
             metodologiasData: [],          
-            metodologias_agregar: [{id_metodologia: ''}]    
-
+            metodologias_agregar: [{id_metodologia: ''}] 
         }
-
     },
 
     mounted() {
@@ -87,6 +89,9 @@ export default {
   }, 
 
     methods: { 
+      getValidationState({ dirty, validated, valid = null }) {
+      return dirty || validated ? valid : null;
+    },
 
       obtenerIdMetodologia(nombreMetodologia) {
     const metodologia = this.metodologiasData.find(item => item.nombre_metodologia === nombreMetodologia);
@@ -125,16 +130,19 @@ agregarMetodologiaSeleccionada() {
 
     AgregarParametro(){
 
-      
+      this.$refs.form.validate().then(success => {
+        if(!success){
+          return;
+        }else{
 
-      var data = {
+          var data = {
 
-      nombre_parametro: this.Nombre,        
-      metodologias_agregar: this.metodologias_agregar
+nombre_parametro: this.Nombre,        
+metodologias_agregar: this.metodologias_agregar
 
-    }
-    console.log("data a enviar", data)
-    ElementosService.agregarParametro(data).then((response)=>{
+}
+console.log("data a enviar", data)
+ElementosService.agregarParametro(data).then((response)=>{
     console.log(response)
     if(response != null){
       if (response.status == 200) {
@@ -150,6 +158,7 @@ agregarMetodologiaSeleccionada() {
       
       this.Nombre = '',     
       this.metodologiaAsignada = '',
+      this.metodologiaSeleccionada = [],
      
       this.$refs.modal.hide()
     }
@@ -162,7 +171,16 @@ agregarMetodologiaSeleccionada() {
       appendToast: true
     })
   }
-})
+});
+
+
+        }
+
+      })
+
+      
+    
+    
 },
     
 

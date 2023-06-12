@@ -1,10 +1,11 @@
 <template>
+    <validation-observer ref="form">
 <b-modal id="modal-Agregar-Matriz" ref="modal" :title="`Agregar Matriz`" size="lg">
 
     <template #modal-header="{ close }">
         <!-- Emulate built in modal header close button action -->
         <b-row class="d-flex justify-content-around">
-            <div class="pl-3">Agregar Matriz</div>
+            <div class="pl-3">Agregar matriz</div>
         </b-row>
         <button type="button" class="close" aria-label="Close" @click="close()">
             <span aria-hidden="true" style="color:white">&times;</span>
@@ -13,9 +14,11 @@
 
     <!-- ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// -->
 
-    <b-form-group label="Nombre de Matriz">
-        <b-form-input v-model="Nombre"></b-form-input>
-    </b-form-group>
+    <ValidationProvider name="Nombre Matriz" rules="required" v-slot="validationContext">
+      <label for="input-live">Nombre de la matriz:</label>
+      <b-form-input id="input-live" v-model="Nombre" :state="getValidationState(validationContext)" placeholder="Nombre de la Matriz ..." ></b-form-input>
+      <b-form-invalid-feedback>{{ validationContext.errors[0] }}</b-form-invalid-feedback>
+    </ValidationProvider>
 
     <b-row>
 
@@ -26,7 +29,7 @@
         </b-col>
 
         <b-col>
-            <b-form-group label="Seleccione una Metodología">
+            <b-form-group label="Seleccione una metodología">
                 <b-form-select v-model="metodologiaSeleccionada" :options="opcionesMetodologia" placeholder="Seleccione una metodología" :disabled="metodologiaDeshabilitada" @change="agregarObjetosSeleccionados"></b-form-select>
             </b-form-group>
         </b-col>
@@ -64,6 +67,7 @@
         </b-button>
     </template>
 </b-modal>
+</validation-observer>
 </template>
 
 <script>
@@ -134,6 +138,10 @@ export default {
                     console.log("opcion", this.opcionesParametro)
                 }
             });
+        },
+
+        getValidationState({ dirty, validated, valid = null }) {
+            return dirty || validated ? valid : null;
         },
 
         eliminarObjetosSeleccionados(index) {
@@ -207,51 +215,56 @@ export default {
 
         AgregarMatriz() {
 
-            const matricesFiltradas = this.parametros_agregar.slice(1);
+            this.$refs.form.validate().then(success => {
+                if(!success ){
+                    return;
+                }else{
+                    const matricesFiltradas = this.parametros_agregar.slice(1);
+                    const data = {
+                        nombre_matriz: this.Nombre,
+                        parametros_agregar: matricesFiltradas.map(matriz => ({
+                            id_parametro: matriz.id_parametro,
+                            id_metodologia: matriz.id_metodologia,
 
-            const data = {
-                nombre_matriz: this.Nombre,
-                parametros_agregar: matricesFiltradas.map(matriz => ({
-                    id_parametro: matriz.id_parametro,
-                    id_metodologia: matriz.id_metodologia,
+                        }))
+                    };
+                    console.log("data a enviar", data)
+                    ElementosService.agregarMatriz(data).then((response) => {
+                        console.log(response)
+                        if (response != null) {
+                            if (response.status == 200) {
+                                this.$bvToast.toast(`Creación de la matriz exitosa`, {
+                                    title: 'Exito',
+                                    toaster: 'b-toaster-top-center',
+                                    solid: true,
+                                    variant: "success",
+                                    appendToast: true
+                                })
+                                this.$emit('matrizAgregada');
 
-                }))
-            };
-            console.log("data a enviar", data)
-            ElementosService.agregarMatriz(data).then((response) => {
-                console.log(response)
-                if (response != null) {
-                    if (response.status == 200) {
-                        this.$bvToast.toast(`Creación de la matriz exitosa`, {
-                            title: 'Exito',
-                            toaster: 'b-toaster-top-center',
-                            solid: true,
-                            variant: "success",
-                            appendToast: true
-                        })
-                        this.$emit('matrizAgregada');
+                                this.Nombre = '',
+                                this.metodologiaSeleccionada = '',
+                                this.parametroSeleccionado = '',
+                                this.objetosSeleccionados = [],
+                                this.parametros_agregar = [{
+                                    id_parametro: '',
+                                    id_metodologia: '',
+                                }],
 
-                        this.Nombre = '',
-                            this.metodologiaSeleccionada = '',
-                            this.parametroSeleccionado = '',
-                            this.objetosSeleccionados = [],
-                            this.parametros_agregar = [{
-                                id_parametro: '',
-                                id_metodologia: '',
-                            }],
-
-                            this.$refs.modal.hide()
-                    }
-                } else {
-                    this.$bvToast.toast(`Error al agregar la matriz.`, {
-                        title: 'Error',
-                        toaster: 'b-toaster-top-center',
-                        solid: true,
-                        variant: "warning",
-                        appendToast: true
+                                this.$refs.modal.hide()
+                            }
+                        } else {
+                            this.$bvToast.toast(`Error al agregar la matriz.`, {
+                                title: 'Error',
+                                toaster: 'b-toaster-top-center',
+                                solid: true,
+                                variant: "warning",
+                                appendToast: true
+                            })
+                        }
                     })
                 }
-            })
+            })           
         },
 
     },
