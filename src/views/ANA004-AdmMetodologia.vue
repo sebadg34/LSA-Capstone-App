@@ -30,7 +30,7 @@
                     <div class="text-center lsa-light-blue-text my-2 row">
                         <div class="col">
 
-                            <div style=" color:gray"> No hay metodologias registradas para mostrar</div>
+                            <div style=" color:gray"> No hay metodologías registradas para mostrar</div>
                         </div>
 
                     </div>

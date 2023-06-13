@@ -29,6 +29,12 @@
 
                 </b-list-group>
                 <b-list-group>
+                  <b-list-group-item v-if="loading" class="d-flex align-items-center justify-content-center lsa-orange-text" style="height:100px">
+            <div >
+                        <b-spinner class="align-middle"></b-spinner>
+                        <strong> Cargando...</strong>
+                    </div>
+         </b-list-group-item>
                     <b-list-group v-for="parametro in this.parametros" :key="parametro.id_parametro" horizontal>
                         <b-list-group-item class="d-flex align-items-center justify-content-center" style="width:30%">{{parametro.nombre_parametro}}</b-list-group-item>
 
@@ -78,12 +84,14 @@ export default {
             Nombre: '',
             parametros: [],
             id: '',
+            loading: false,
         }
     },
 
 
     methods: {
         obtenerDetallesMatriz() {
+          this.loading = true;
             const data = {
                 id_matriz: this.id
             };
@@ -111,7 +119,7 @@ export default {
                         }
                     }
                     console.log("parametros a desplegar: ", this.parametros)
-                 
+                    this.loading = false;
                 }
             });
         },

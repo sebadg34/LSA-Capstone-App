@@ -31,7 +31,7 @@
                     <div class="text-center lsa-light-blue-text my-2 row">
                         <div class="col">
 
-                            <div style=" color:gray"> No hay parametros registrados para mostrar</div>
+                            <div style=" color:gray"> No hay parámetros registrados para mostrar</div>
                         </div>
 
                     </div>

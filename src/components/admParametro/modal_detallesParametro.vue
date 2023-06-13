@@ -12,6 +12,7 @@
     </template>
 
     <div>
+      
       <p v-if="this.Nombre == null">No existen detalles del parámetro</p>
       <ul v-else>          
       </ul>
@@ -22,7 +23,12 @@
           </div>
           <hr/>
           <div>
-            <b-row>
+            <div v-if="loading" class="text-center lsa-orange-text my-2">
+                        <b-spinner class="align-middle"></b-spinner>
+                        <strong> Cargando...</strong>
+                    </div>
+            <b-row v-if="!loading">
+              
               <b-col class="col-4 d-flex justify-content-between align-items-center">
                 <div class="pb-2" style="font-weight:bold; "> Metodología(s) asignada(s):</div> 
               </b-col>
@@ -71,12 +77,14 @@
         listaMetodologias: '',
         nombreParametro: '',
         id: '',
-        id_parametro: ''      
+        id_parametro: '' ,
+        loading: false,     
       }
     },  
 
     methods: {
       obtenerDetallesParametro() {
+        this.loading = true;
         const data = {
           id_parametro: this.id
         };
@@ -87,7 +95,8 @@
             const { id_parametro, nombre_parametro, metodologias} = response.data
             this.nombreParametro = nombre_parametro;
             this.listaMetodologias = metodologias;
-            this.id_parametro = id_parametro;                     
+            this.id_parametro = id_parametro;  
+            this.loading = false;                   
           }
         });
       }

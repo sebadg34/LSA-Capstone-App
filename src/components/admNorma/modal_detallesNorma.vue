@@ -28,6 +28,9 @@
 
     </b-col>
     <hr />
+
+    
+    <div>
     <b-list-group horizontal>
         <b-list-group-item class="d-flex align-items-center justify-content-center" style="width:30%;font-weight: bold;">Tablas</b-list-group-item>
 
@@ -35,13 +38,23 @@
         <b-list-group-item class="d-flex align-items-center justify-content-center" style="width:49.15%;font-weight: bold;">Metodologías</b-list-group-item>
 
     </b-list-group>
-    <b-list-group  v-for="tabla in this.tablas" :key="tabla.id_tabla" horizontal>
+    <b-list-group-item v-if="loading" style="height:100px">
+            <div class="text-center lsa-orange-text my-2">
+                        <b-spinner class="align-middle"></b-spinner>
+                        <strong> Cargando...</strong>
+                    </div>
+         </b-list-group-item>
+
+    <b-list-group v-for="tabla in this.tablas" :key="tabla.id_tabla" horizontal>
+         
+
+
         <b-list-group-item class="d-flex align-items-center justify-content-center" style="width:30%">
             {{ tabla.nombre_tabla }}
         </b-list-group-item>
         <b-list-group-item style="padding:0px; width:70%">
             <b-list-group>
-                <b-list-group v-for="parametro in tabla.parametros" :key="parametro.id" horizontal>
+                <b-list-group  v-for="parametro in tabla.parametros" :key="parametro.id" horizontal>
                     <b-list-group-item class="d-flex align-items-center justify-content-center" style="width:30%">{{parametro.nombre_parametro}}</b-list-group-item>
 
                     <b-list-group-item style="padding:0px;width:70%">
@@ -66,7 +79,7 @@
         </b-list-group-item>
 
     </b-list-group>
-
+</div>
     <template #modal-footer="{ close }">
 
         <b-button @click="close()" variant="primary" size="xl" class="float-right reactive-button" style="font-weight:bold">
@@ -88,7 +101,8 @@ export default {
             nombre_norma: "",
             nombre_matriz: "",
             tablas: [],
-            parametros: []
+            parametros: [],
+            loading: false,
 
         }
     },
@@ -110,6 +124,7 @@ export default {
     },
     methods: {
         obtenerDetallesNorma(id) {
+            this.loading = true;
             var data = {
                 id_norma: id
             }
@@ -156,17 +171,11 @@ export default {
                             console.log("evaluando tabla: ", this.tablas[j])
                             for (var k = 0; k < this.parametros.length; k++) {
                                 if (this.tablas[j].id_tabla == this.parametros[k].id_tabla) {
-                                    
-                                    console.log('======================================')
-                                    console.log("tabla :", this.tablas[j])
-                                    console.log("parametro :", this.parametros[k])
-                                    console.log('======================================')
                                     this.tablas[j].parametros.push(this.parametros[k]);
                                 }
                             }
                         }
-                        console.log("parametros cargados en: ", this.tablas)
-                        console.log("detalles de norma", response.data);
+                        this.loading = false;
                     }
                 }
             })

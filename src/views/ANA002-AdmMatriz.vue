@@ -25,7 +25,36 @@
 
   <div class="row justify-content-center">
     <div class="col-10">
-      <b-table :items="items" :fields="fields" :per-page="perPage" :current-page="currentPage" responsive >
+      <b-table  :busy="loading" show-empty :items="items" :fields="fields" :per-page="perPage" :current-page="currentPage" responsive >
+
+
+        <template #empty>
+                    <div class="text-center lsa-light-blue-text my-2 row">
+                        <div class="col">
+
+                            <div style=" color:gray"> No hay matrices registradas para mostrar</div>
+                        </div>
+
+                    </div>
+                </template>
+
+                <template #table-busy>
+                    <div class="text-center lsa-orange-text my-2">
+                        <b-spinner class="align-middle"></b-spinner>
+                        <strong> Cargando...</strong>
+                    </div>
+                </template>
+
+
+
+
+
+
+
+
+
+
+
         <template #cell(Accion)="row">
           <b-dropdown right size="sm" variant="link" toggle-class="text-decoration-none" no-caret >
             <template #button-content>
@@ -74,6 +103,7 @@
         modalDetallesData: {},
         currentPage: 1,
         perPage: 10,
+        loading: false,
 
         }
 
@@ -113,6 +143,7 @@
       },
 
       obtenerMatriz() {
+        this.loading = true;
         ElementosService.obtenerMatrizParametro().then((response) => {
           if (response.data != null && response.status === 200) {
             console.log("Obteniendo Matrices: ", response.data);
@@ -148,8 +179,8 @@
             });
 
             this.items = matrices;
-
             console.log("Las matrices son: ", matrices);
+            this.loading = false;
           }
         });
       },
