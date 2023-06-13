@@ -4,7 +4,7 @@
     <template #modal-header="{ close }">
           <!-- Emulate built in modal header close button action -->
           <b-row class="d-flex justify-content-around">
-              <div class="pl-3">Detalles de la Metodología</div>
+              <div class="pl-3">Detalles de la metodología</div>
           </b-row>
 
           <button type="button" class="close" aria-label="Close" @click="close()">
@@ -17,17 +17,21 @@
       <ul v-else>          
       </ul>
       <b-row class="pb-2">
-          <b-col class="col-6">
+          <b-col class="col-12">
             <div>  
-              Nombre Metodología: <span>{{ nombreMetodologia }}</span>
+             <span style="font-weight:bold; padding-right:20px">Nombre Metodología: </span>  <span>{{ nombreMetodologia }}</span>
             </div>
-
+<hr/>
             <div>
-              Descripción: <span>{{detalleMetodologia}}</span>
+              <div style="font-weight:bold; padding-right:20px">Descripción:</div>
+              
+              
+              <span>{{detalleMetodologia}}</span>
             </div>
-
+<hr/>
             <div>
-              Analista(s) Designado(s):
+              <div style="font-weight:bold; padding-right:20px"> Analista(s) Designado(s):</div>
+             
                 <ul>
                   <li v-for="empleado in listaEmpleados" :key="empleado.rut_empleado">
                     {{ empleado.nombre }} {{ empleado.apellido }}

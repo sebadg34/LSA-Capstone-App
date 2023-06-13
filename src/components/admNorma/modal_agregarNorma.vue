@@ -145,16 +145,13 @@
         <b-card no-body header="Tablas de norma">
             <b-list-group v-for="tabla in tablas_agregar" :key="tabla.index" horizontal="lg">
                 <b-list-group-item style="width:35%" class=" d-flex justify-content-start align-items-center">
-
                     <b-button @click="borrarTabla(tabla)" variant="danger" style="padding:1px; aspect-ratio: 1 / 1; height: 30px; width: 30px">
                         <b-icon scale="0.9" icon="trash-fill"></b-icon>
                     </b-button>
                     <div class="pl-2 pr-2" style="font-weight:bold">
                         {{ tabla.nombre_tabla }}
                     </div>
-
                 </b-list-group-item>
-
                 <b-list-group-item style="width:65%" class="item-no-padding">
                     <b-card no-body header="Parámetros: ">
 
@@ -163,10 +160,8 @@
                                 <b-col>
                                     <b-row class="d-flex justify-content-between align-items-center" style="margin-bottom:10px">
                                         <div>{{ parametro.nombre_parametro }}</div>
-
                                         <b-button v-b-toggle="'colapse-'+parametro.id_parametro" pill class="lsa-blue">detalles <b-icon icon="journals" aria-hidden="true"></b-icon>
                                         </b-button>
-
                                     </b-row>
                                     <b-collapse :id="'colapse-'+parametro.id_parametro">
 
@@ -189,16 +184,12 @@
                                                 </b-list-group-item>
                                             </b-list-group>
                                         </b-card>
-
                                     </b-collapse>
                                 </b-col>
-
                             </b-list-group-item>
-
                         </b-list-group>
                     </b-card>
                 </b-list-group-item>
-
             </b-list-group>
         </b-card>
     </div>
@@ -217,7 +208,6 @@
         <b-form-group label="Nombre de la Tabla">
             <b-form-input v-model="nuevoNombreTabla"></b-form-input>
         </b-form-group>
-
         <template #modal-footer>
             <b-col>
                 <b-row class="d-flex justify-content-between">
@@ -234,16 +224,13 @@
     <b-alert variant="danger" :show="alertaTablaDuplicada" dismissible @dismissed="alertaDuplicado = false">
         La tabla ya se encuentra agregada a la norma.
     </b-alert>
-
-    <!-- ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// -->
     <template #modal-footer>
         <div class="d-flex justify-content-center">
             <b-button @click="enviarFormulario()" variant="primary" size="xl" class="reactive-button" style="font-weight:bold; padding-top: 10px;">
-                Agregar Norma
+                Agregar norma
             </b-button>
         </div>
     </template>
-
 </b-modal>
 </template>
 
@@ -276,23 +263,23 @@ export default {
 
     },
 
-  // watch: {
-  //     matrizSeleccionada: function (value) {
-  //         if (this.matrizSeleccionada !== '' && value !== '') {
-  //             if (this.id_matriz == '') {
-  //                 this.id_matriz = this.matrizSeleccionada
+    // watch: {
+    //     matrizSeleccionada: function (value) {
+    //         if (this.matrizSeleccionada !== '' && value !== '') {
+    //             if (this.id_matriz == '') {
+    //                 this.id_matriz = this.matrizSeleccionada
 
-  //                 console.log(value)
-  //                 this.cargarParametrosMatriz(value);
-  //             } else {
-  //                 this.confirmarCambioMatriz();
+    //                 console.log(value)
+    //                 this.cargarParametrosMatriz(value);
+    //             } else {
+    //                 this.confirmarCambioMatriz();
 
-  //             }
+    //             }
 
-  //         }
-  //     },
+    //         }
+    //     },
 
-  // },
+    // },
 
     mounted() {
 
@@ -304,7 +291,6 @@ export default {
             if (this.id_matriz == '') {
                 this.id_matriz = this.matrizSeleccionada
 
-                
                 this.cargarParametrosMatriz(this.id_matriz);
             } else {
                 this.confirmarCambioMatriz();
@@ -333,7 +319,7 @@ export default {
 
                     } else {
                         this.matrizSeleccionada = this.id_matriz;
-                    }   
+                    }
 
                 })
                 .catch(err => {

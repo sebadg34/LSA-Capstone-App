@@ -3,7 +3,7 @@
     <template #modal-header="{ close }">
       <!-- Emulate built in modal header close button action -->
       <b-row class="d-flex justify-content-around">
-        <div class="pl-3">Detalles del Parámetro</div>
+        <div class="pl-3">Detalles del parámetro</div>
       </b-row>
 
       <button type="button" class="close" aria-label="Close" @click="close()">
@@ -11,22 +11,38 @@
       </button>
     </template>
 
-    <div class="p-3">
-      <p v-if="this.Nombre == null">No existen detalles del parámetro!!</p>
+    <div>
+      <p v-if="this.Nombre == null">No existen detalles del parámetro</p>
       <ul v-else>          
       </ul>
-      <b-row class="pb-2">
-        <b-col class="col-6">
+      <b-row>
+        <b-col class="col-12">
           <div>
-            Nombre Parametro: <span>{{nombreParametro}}</span>
+         <span style="font-weight:bold; padding-right:20px"> Nombre: </span>   <span>{{nombreParametro}}</span>
           </div>
+          <hr/>
           <div>
-            Metodologia(s) Asignada(s):
-            <ul>
-              <li v-for="metodologia in listaMetodologias" :key="metodologia.id_parametro">
+            <b-row>
+              <b-col class="col-4 d-flex justify-content-between align-items-center">
+                <div class="pb-2" style="font-weight:bold; "> Metodología(s) asignada(s):</div> 
+              </b-col>
+              <b-col class="col-8">
+                <b-list-group   style="width:80%">
+              <b-list-group-item class="d-flex justify-content-between align-items-center p-2" v-for="metodologia in listaMetodologias" :key="metodologia.id_metodologia">
                 {{ metodologia.nombre_metodologia }}
-              </li>
-            </ul>
+                <b-popover placement="topleft" :target="'button-' +metodologia.id_metodologia" title="Descripción metodología" triggers="focus">
+                                        {{ metodologia.detalle_metodologia }}
+                                    </b-popover>
+                                    <b-button class="boton-ojo-metodo" :id="'button-'+metodologia.id_metodologia">
+                                        <b-icon scale="0.9" icon="eye-fill" style="color:gray"></b-icon>
+                                    </b-button>
+
+              </b-list-group-item>
+            </b-list-group>
+</b-col>
+            </b-row>
+        
+           
           </div>                                
         </b-col>            
       </b-row>
