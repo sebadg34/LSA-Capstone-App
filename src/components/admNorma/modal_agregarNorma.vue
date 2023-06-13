@@ -21,7 +21,7 @@
 
             <b-col cols="4">
                 <b-form-group label="Seleccione una Matriz">
-                    <b-form-select v-model="matrizSeleccionada" placeholder="Seleccione una Matriz">
+                    <b-form-select v-model="matrizSeleccionada" @change="matrizCambiada" placeholder="Seleccione una Matriz">
                         <option v-for="opcion in opcionesMatriz" :key="opcion.id_matriz" :value="opcion.id_matriz">{{
                 opcion.nombre_matriz }}</option>
                     </b-form-select>
@@ -276,16 +276,23 @@ export default {
 
     },
 
-    watch: {
-        matrizSeleccionada: function (value) {
-            if (this.matrizSeleccionada !== '' && value !== '') {
-                this.id_matriz = this.matrizSeleccionada
-                console.log(value)
-                this.cargarParametrosMatriz(value);
-            }
-        },
+  // watch: {
+  //     matrizSeleccionada: function (value) {
+  //         if (this.matrizSeleccionada !== '' && value !== '') {
+  //             if (this.id_matriz == '') {
+  //                 this.id_matriz = this.matrizSeleccionada
 
-    },
+  //                 console.log(value)
+  //                 this.cargarParametrosMatriz(value);
+  //             } else {
+  //                 this.confirmarCambioMatriz();
+
+  //             }
+
+  //         }
+  //     },
+
+  // },
 
     mounted() {
 
@@ -293,6 +300,58 @@ export default {
     },
 
     methods: {
+        matrizCambiada() {
+            if (this.id_matriz == '') {
+                this.id_matriz = this.matrizSeleccionada
+
+                
+                this.cargarParametrosMatriz(this.id_matriz);
+            } else {
+                this.confirmarCambioMatriz();
+
+            }
+        },
+        confirmarCambioMatriz() {
+            this.boxTwo = ''
+            this.$bvModal.msgBoxConfirm('Al cambiar la matríz, las tablas y sus parametros serán reiniciados', {
+                    title: 'Confirmar cambio',
+                    size: 'sm',
+                    buttonSize: 'sm',
+                    okVariant: 'danger',
+                    okTitle: 'Cambiar matríz',
+                    cancelTitle: 'Mantener matríz',
+                    footerClass: 'p-2',
+                    hideHeaderClose: false,
+                    centered: true
+                })
+                .then(value => {
+                    if (value) {
+
+                        this.reiniciarDatosParcial();
+                        this.id_matriz = this.matrizSeleccionada;
+                        this.cargarParametrosMatriz(this.id_matriz);
+
+                    } else {
+                        this.matrizSeleccionada = this.id_matriz;
+                    }   
+
+                })
+                .catch(err => {
+                    console.log(err)
+
+                })
+        },
+        // Reiniciar cuando se cambia la matriz
+        reiniciarDatosParcial() {
+            this.tablas_agregar = [];
+            this.parametrosMatriz = [];
+            this.opcionesTabla = [];
+            this.opcionesParametro = [];
+            this.tablaSeleccionada = "";
+            this.parametroSeleccionado = "";
+            this.parametroSeleccionado_agregar = "";
+
+        },
         reiniciarDatos() {
             this.nombre_norma = "";
             this.id_matriz = "";
@@ -336,7 +395,6 @@ export default {
                     }
                 }
                 this.tablas_agregar.push(tabla)
-                console.log("Tablas a agregar al sistema", this.tablas_agregar)
             } else {
                 this.alertaTablaDuplicada = true;
             }
@@ -353,7 +411,6 @@ export default {
 
         },
         agregarParametroTabla() {
-            console.log("parametro a agregar en tabla: ", this.parametroSeleccionado_agregar)
             const existeParametro = this.tablaSeleccionada.parametros.find(parametro => parametro.id_parametro == this.parametroSeleccionado_agregar.id_parametro)
             if (existeParametro == null) {
                 console.log("agregando parametro a tabla:", this.parametroSeleccionado_agregar)
@@ -401,7 +458,7 @@ export default {
                         appendToast: true
                     })
                     this.$emit('refrescar');
-                    this.$bvModal.hide('modal-Agregar-Norma')
+                    this.$bvModal.hide('modal-agregar-norma')
                 }
             })
         },
@@ -419,7 +476,7 @@ export default {
                             var parametroAgregar = {
                                 nombre_parametro: response.data[i].nombre_parametro,
                                 id_parametro: response.data[i].id_parametro,
-                              
+
                             }
 
                             this.parametrosMatriz.push({
