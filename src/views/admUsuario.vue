@@ -3,6 +3,7 @@
 
     <modal_agregarUsuario @refrescar="obtenerUsuarios" />
     <modal_estadoPersonal @refrescar="obtenerUsuarios" :user-data="this.modalEstadoData" />
+    <modal_passwordUsuario :user-data="this.modalPasswordData"/>
 
     <b-row align-h="start" style="padding-top:30px;">
         <b-col class="col-6">
@@ -93,8 +94,8 @@
                         <b-dropdown-item disabled @click="abrirEstadoPersonal(row.item)">
                             <b-icon icon="person-check" aria-hidden="true" class="mr-2"></b-icon>Cambiar estado
                         </b-dropdown-item>
-                        <b-dropdown-item disabled @click="abrirEstadoPersonal(row.item)">
-                            <b-icon icon="person-check" aria-hidden="true" class="mr-2"></b-icon>Cambiar contraseña
+                        <b-dropdown-item  @click="abrirPasswordPersonal(row.item)">
+                            <b-icon icon="shield-lock" aria-hidden="true" class="mr-2"></b-icon>Cambiar contraseña
                         </b-dropdown-item>
                     </b-dropdown>
 
@@ -110,6 +111,7 @@
 <script>
 // @ is an alias to /src
 import modal_agregarUsuario from '@/components/admUsuario/modal_agregarUsuario.vue'
+import modal_passwordUsuario from '@/components/admUsuario/modal_passwordUsuario.vue'
 //import modal_detallesPersonal from '@/components/admPersonal/modal_detallesPersonal.vue'
 //mport modal_editarPersonal from '@/components/admPersonal/modal_editarPersonal.vue'
 import modal_estadoPersonal from '@/components/admPersonal/modal_estadoPersonal.vue'
@@ -120,7 +122,8 @@ export default {
     name: 'admPersonal',
     components: {
         modal_agregarUsuario,
-        modal_estadoPersonal
+        modal_estadoPersonal,
+        modal_passwordUsuario
     },
     mounted() {
         this.obtenerUsuarios();
@@ -141,6 +144,7 @@ export default {
             loading: true,
             modalEditarData: {},
             modalDetallesData: {},
+            modalPasswordData: {},
             modalEstadoData: {},
             campos_tabla: [{
                 key: 'nombre',
@@ -196,13 +200,10 @@ export default {
 
             })
         },
-        abrirEditarPersonal(data) {
-            this.modalEditarData = data;
-            this.$bvModal.show('modal-editar-personal')
-        },
-        abrirDetallesPersonal(data) {
-            this.modalDetallesData = data;
-            this.$bvModal.show('modal-detalles-personal')
+        abrirPasswordPersonal(data) {
+            console.log(data)
+            this.modalPasswordData = data;
+            this.$bvModal.show('modal-password-usuario')
         },
         abrirEstadoPersonal(data) {
             this.modalEstadoData = data;

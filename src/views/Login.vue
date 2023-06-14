@@ -17,7 +17,9 @@
                 </template>
 
                 <b-row style="text-align:center;" class="text-center" align-h="center">
+                
                     <br>
+
                     <b-col sm="12" xs="12" lg="6">
                         <b-card header-class="lsa-blue" header-tag="header" header="Ingreso sistema administración LSA" text-variant="white">
                            

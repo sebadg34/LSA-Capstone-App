@@ -85,6 +85,23 @@ const cambiarPassword = async (data) => {
     }
 }
 
+const cambiarPasswordAdmin = async (data) => {
+    try {
+        await crearApi();
+        const response = await apiInstance.post("/cambiarPasswordAdmin", data);
+        if (response.status) {
+            console.log(response);
+            return response;
+        }
+        else {
+            console.log(response);
+            return;
+        }
+    } catch (error) {
+        console.log(error);
+        return;
+    }
+}
 const login = async (data) => {
     try {
         await crearApi();
@@ -157,7 +174,8 @@ export default {
     logout,
     isLoggedIn,
     obtenerUsuarios,
-    cambiarPassword
+    cambiarPassword,
+    cambiarPasswordAdmin
     
 
 };
