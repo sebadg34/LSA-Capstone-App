@@ -221,8 +221,23 @@ const agregarNorma = async (data) => {
          return;
      }
  };
-
-
+ 
+ const actualizarNorma = async (data) => {
+    try {
+        const response = await axios.put(apiUrl + "/normas/actualizarNorma/",data);
+        
+        console.log(response);
+        
+        if (response.status == 200) {
+            return response;
+        } else {
+            return;
+        }
+    } catch (error) {
+        console.log(error);
+        return;
+    }
+};
 
  const actualizarParametro = async (data) => {
     try {
@@ -302,6 +317,7 @@ const eliminar_Empleados_Asociados = async (nombre_metodologia, data) => {
 export default {
     obtenerMatrizParametro,
     agregarNorma,
+    actualizarNorma,
     obtenerDetallesNorma,
     obtenerNormas,
     agregarMetodología,

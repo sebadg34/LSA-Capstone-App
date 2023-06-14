@@ -563,7 +563,7 @@
               }
 
               console.log("DATA A ENVIAR", data);
-                ElementosService.agregarNorma().then((response) => {
+                ElementosService.actualizarNorma(data).then((response) => {
                     if (response.status == 200) {
                         this.reiniciarDatos();
                         this.$bvToast.toast(`Creación de norma exitosa`, {
