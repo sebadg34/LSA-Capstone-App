@@ -1,24 +1,34 @@
 <template>
     <validation-observer ref="form">
-    <b-modal centered id="modal-password-usuario" ref="modal" title="Cambo contraseña" size="sm"> 
+    <b-modal centered id="modal-password-usuario" ref="modal" title="Cambo contraseña" size="md"> 
 
             <template #modal-header="{ close }">
                 <!-- Emulate built in modal header close button action -->
+                <b-col>
+                <b-row class="d-flex justify-content-start">
+                    
 
-                <b-row class="d-flex justify-content-around">
-                    <div class="pl-3">Cambiar contraseña</div>
-
+                  
+                    <b-icon scale="1.25" icon="shield-lock-fill" class="pr-2 pl-2 mt-1"></b-icon>
+                    <div class="pl-3"> Cambiar contraseña</div>
+                
                 </b-row>
-
+            </b-col>
                 <button type="button" class="close" aria-label="Close" @click="close()">
                     <span aria-hidden="true" style="color:white">&times;</span>
                 </button>
             </template>
 
-            <b-row class="pb-2">
-                
+            <b-row class="d-flex justify-content-center">
+                <b-col class="col-12">
+                    <div><span style="font-weight:bold" class="pr-2">Usuario: </span> <span>{{nombre_completo}}</span></div>
+                        <div><span style="font-weight:bold" class="pr-2">Correo electrónico: </span> <span>{{correo}}</span></div>
+                        <hr/>
+                </b-col>
 
-                    <b-col class="col-12">
+                    <b-col class="col-8">
+                      
+                       
                     <ValidationProvider name="contraseña" rules="required|min:2|max:15|confirmed:password_nueva_confirmacion" v-slot="validationContext">
                         <label for="contraseña-nueva">Contraseña nueva:</label>
                         <b-form-input size="sm" type="password" class="mb-1" id="contraseña-nueva" :state="getValidationState(validationContext)"
@@ -72,7 +82,8 @@ export default {
                 this.reiniciarDatos();
                   console.log("detallesData actualizada",this.userData)
                 this.id_usuario = this.userData.id;
-
+                this.nombre_completo = this.userData.nombre + " "+ this.userData.apellido
+                this.correo = this.userData.email;
                   
 
 
@@ -89,7 +100,9 @@ export default {
            id_usuario: "",
            Cargando: false,
            password_nueva:"",
-            password_nueva_confirmacion:""
+           nombre_completo: "",
+            password_nueva_confirmacion:"",
+            correo: "",
         }
     },
     methods: {

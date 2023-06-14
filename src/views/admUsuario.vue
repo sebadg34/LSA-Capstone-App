@@ -148,19 +148,23 @@ export default {
             modalEstadoData: {},
             campos_tabla: [{
                 key: 'nombre',
-                label: 'Nombre'
+                label: 'Nombres',
+                sortable:true
             }, {
                 key: 'apellido',
-                label: 'Apellido'
+                label: 'Apellidos',
+                sortable:true
             }, {
                 key: 'email',
-                label: 'Correo'
+                label: 'Correo electrónico'
             }, {
                 key: 'cargo',
-                label: 'Cargo'
+                label: 'Cargo',
+                sortable:true
             }, {
                 key: 'estado',
-                label: 'Estado'
+                label: 'Estado',
+                sortable:true
             }, {
                 key: 'accion',
                 label: 'Acción'
