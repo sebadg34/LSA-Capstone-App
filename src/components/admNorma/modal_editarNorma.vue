@@ -533,8 +533,7 @@
                             tablas_param_metodo_agregar.push({
                                 nombre_tabla: this.tablas_agregar_data[k].nombre_tabla,
                                 id_parametro: this.tablas_agregar_data[k].parametros[i].id_parametro,
-                                id_metodologia: this.tablas_agregar_data[k].parametros[i].metodologias[j].id_metodologia,
-                                id_tabla: ""
+                                id_metodologia: this.tablas_agregar_data[k].parametros[i].metodologias[j].id_metodologia
                                 
                             })
                         }
