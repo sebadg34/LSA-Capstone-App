@@ -13,6 +13,8 @@
             <b-row>
                 <modal_agregarNorma @refrescar="obtenerNormas"/>
                 <modal_detallesNorma :norma-data="modalDetallesData"/>
+                <modal_editarNorma :norma-data="modalEditarData" @refrescar="obtenerNormas"/>
+
                 <b-button v-b-modal.modal-agregar-norma style="border-radius: 15px; font-weight: bold; font-size: 18px; " class="lsa-light-blue reactive-button">
                     Agregar Norma
                     <b-icon icon="journals"></b-icon>
@@ -70,6 +72,7 @@
 <script>
 import modal_agregarNorma from '@/components/admNorma/modal_agregarNorma.vue';
 import modal_detallesNorma from '@/components/admNorma/modal_detallesNorma.vue';
+import modal_editarNorma from '@/components/admNorma/modal_editarNorma.vue';
 import ElementosService from '@/helpers/api-services/Elementos.service';
 
 export default {
@@ -77,7 +80,8 @@ export default {
     components: {
 
         modal_agregarNorma,
-        modal_detallesNorma
+        modal_detallesNorma,
+        modal_editarNorma
 
     },
 
@@ -108,6 +112,7 @@ export default {
             normas_request: [],
             normas_formatted: [],
             modalDetallesData: {},
+            modalEditarData: {}
 
         }
 
@@ -127,8 +132,10 @@ export default {
 this.modalDetallesData = data;
             this.$bvModal.show('modal-detalles-norma');
         },
-        abrirEditarNorma(){
-
+        abrirEditarNorma(data){
+  console.log(data)
+this.modalEditarData = data;
+            this.$bvModal.show('modal-editar-norma');
         },
         obtenerNormas() {
             this.loading = true;

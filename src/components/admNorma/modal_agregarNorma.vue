@@ -263,24 +263,6 @@ export default {
 
     },
 
-    // watch: {
-    //     matrizSeleccionada: function (value) {
-    //         if (this.matrizSeleccionada !== '' && value !== '') {
-    //             if (this.id_matriz == '') {
-    //                 this.id_matriz = this.matrizSeleccionada
-
-    //                 console.log(value)
-    //                 this.cargarParametrosMatriz(value);
-    //             } else {
-    //                 this.confirmarCambioMatriz();
-
-    //             }
-
-    //         }
-    //     },
-
-    // },
-
     mounted() {
 
         this.obtenerMatriz();
@@ -355,6 +337,8 @@ export default {
             console.log("tabla a borrar: ", tabla)
             this.tablas_agregar = this.tablas_agregar.filter(oldTabla => oldTabla.nombre_tabla != tabla.nombre_tabla);
         },
+        // Agregar tablas ya existentes en la DB al modal
+       
         agregarTablaNorma() {
             const existeTabla = this.tablas_agregar.find(tabla => tabla.nombre_tabla == this.tablaSeleccionada.nombre_tabla);
 
@@ -381,6 +365,7 @@ export default {
                     }
                 }
                 this.tablas_agregar.push(tabla)
+                console.log("TABLAS AGREGADAS",this.tablas_agregar)
             } else {
                 this.alertaTablaDuplicada = true;
             }
