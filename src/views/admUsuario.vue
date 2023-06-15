@@ -91,7 +91,7 @@
                             <b-icon style="height: 80%; width: 80%; align-items: center;" icon="three-dots" variant="dark" aria-hidden="true"></b-icon>
 
                         </template>
-                        <b-dropdown-item disabled @click="abrirEstadoPersonal(row.item)">
+                        <b-dropdown-item  @click="abrirEstadoPersonal(row.item)">
                             <b-icon icon="person-check" aria-hidden="true" class="mr-2"></b-icon>Cambiar estado
                         </b-dropdown-item>
                         <b-dropdown-item  @click="abrirPasswordPersonal(row.item)">
