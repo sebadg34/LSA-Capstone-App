@@ -373,11 +373,11 @@ export default {
         },
         borrarMetodologiaTabla(metodologia) {
             console.log(metodologia)
-            var id = metodologia.value.id_metodologia;
+            var id = metodologia.id_metodologia;
 
             console.log(this.parametroSeleccionado)
 
-            this.parametroSeleccionado.metodologias = this.parametroSeleccionado.metodologias.filter(metodo => metodo.value.id_metodologia != id);
+            this.parametroSeleccionado.metodologias = this.parametroSeleccionado.metodologias.filter(metodo => metodo.id_metodologia != id);
             this.metodosKey++;
 
         },

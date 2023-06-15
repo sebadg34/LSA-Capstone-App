@@ -22,7 +22,7 @@
         <div class="pt-3" />
         <b-row>
             <div>
-                <span style="font-weight:bold; margin-right:20px"> Nombre matríz: </span> <span>{{this.nombre_matriz}}</span>
+                <span style="font-weight:bold; margin-right:20px"> Nombre matriz: </span> <span>{{this.nombre_matriz}}</span>
             </div>
         </b-row>
 

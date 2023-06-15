@@ -189,7 +189,6 @@ export default {
 
                         this.Nombre = ''
                         this.Id = ''
-                        this.opcionesMetodologia = []
                         this.metodologiaAsignada = ''
                         this.metodologiaSeleccionada = []
                         this.metodologia = []
