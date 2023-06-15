@@ -9,7 +9,7 @@
     </b-row>
     <modal_detallesMetodologia :detalles-data="this.modalDetallesData" />
     <modal_agregarMetodologia @metodologiaAgregada="MetodologiaAgregada" />
-    <modal_editarMetodologia :metodologia-data="this.modalEditarData" @metodologiaAgregada="MetodologiaAgregada" />
+    <modal_editarMetodologia :metodologia-data="this.modalEditarData" @metodologiaAgregada="MetodologiaAgregada" @refrescarPagina="refrescarPagina" />
 
     <div class="row justify-content-center" style="padding-top:30px; padding-bottom:10px; margin-left: 5px;">
         <div class="col-10">
@@ -171,6 +171,10 @@ export default {
 
         MetodologiaAgregada() {
             this.obtenerMetodologias();
+        },
+
+        refrescarPagina() {
+            window.location.reload();
         }
 
     }

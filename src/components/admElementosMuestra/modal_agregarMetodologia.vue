@@ -170,7 +170,6 @@ eliminarAnalistaSeleccionado(index) {
             this.Nombre = '',
             this.Descripción = '',           
             this.AnalistaAsignado = '',            
-            this.analistas = [],
             this.analistasSeleccionados = [],
             this.rutEmpleadosSeleccionados = [],
             this.empleados_agregar = [{rut_empleado: '',

@@ -196,6 +196,7 @@ export default {
                         })
 
                         this.$emit('metodologiaAgregada');
+                        this.$emit('refrescarPagina');
 
                             this.AnalistaAsignado = ''
                             this.analistas = []
