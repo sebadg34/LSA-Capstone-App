@@ -106,7 +106,7 @@ const login = async (data) => {
     try {
         await crearApi();
         const response = await apiInstance.post("/login", data);
-        if (response.status) {
+        if (response.status == 200) {
             console.log(response);
             setAuthToken(response.data.token);
             saveUserInfo(response.data.user);
@@ -115,13 +115,15 @@ const login = async (data) => {
             axios.defaults.headers.common['Authorization'] = 'Bearer ' + response.data.token;
             return response;
         }
-        else {
+        else if(response.status == 403){
             console.log(response);
+            return response;
+        }else{
             return;
         }
     } catch (error) {
         console.log(error);
-        return;
+        return error;
     }
 }
 

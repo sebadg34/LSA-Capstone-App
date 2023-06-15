@@ -93,7 +93,7 @@ export default {
                         console.log(response)
 
                         if (response != null) {
-                            if(response.status == 200){
+                            if(response.request.status == 200){
                                 var data = getUserInfo();
                           this.$root.$bvToast.toast(` Bienvenid@ ` + data.nombre + " "+ data.apellido, {
                                     title: 'Inicio de sesión',
@@ -103,6 +103,15 @@ export default {
                                     appendToast: true
                                 })
                             this.$router.push("/inicio");
+                            }else if(response.request.status == 403){
+                                this.$root.$bvToast.toast( response.response.data.message, {
+                                    title: 'Inicio de sesión suspendido',
+                                    toaster: 'b-toaster-top-center',
+                                    variant:"danger",
+                                    solid: true,
+                                    autoHideDelay: 10000,
+                                    appendToast: true
+                                })
                             }
                          
                         }else{
