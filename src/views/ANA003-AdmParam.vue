@@ -8,9 +8,9 @@
       </b-col>
     </b-row>
 
-    <modal_agregarParametro @parametroAgregado="parametroAgregado"/>
+    <modal_agregarParametro @refrescar="parametroAgregado"/>
     <modal_detallesParametro :detalles-data="this.modalDetallesData"/>
-    <modal_editarParametro :parametro-data="this.modalEditarData" @parametroAgregado="parametroAgregado"/>
+    <modal_editarParametro :parametro-data="this.modalEditarData" @refrescar="parametroAgregado"/>
 
     <div class="row justify-content-center" style="padding-top:30px; padding-bottom:10px; margin-left: 5px;">
       <div class="col-10">  

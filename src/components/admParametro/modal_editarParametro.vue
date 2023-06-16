@@ -1,61 +1,61 @@
 <template>
-<b-modal id="modal-Editar-Parametro" ref="modal" :title="`Agregar Parametro`" size="lg">
+<validation-observer ref="form">
+    <b-modal centered id="modal-Editar-Parametro" ref="modal" :title="`Agregar Parametro`" size="md">
 
-    <template #modal-header="{ close }">
-        <!-- Emulate built in modal header close button action -->
-        <b-row class="d-flex justify-content-around">
-            <div class="pl-3">Editar Parámetro</div>
+        <template #modal-header="{ close }">
+            <!-- Emulate built in modal header close button action -->
+            <b-row class="d-flex justify-content-around">
+                <div class="pl-3">Editar parámetro</div>
+            </b-row>
+            <button type="button" class="close" aria-label="Close" @click="close()">
+                <span aria-hidden="true" style="color:white">&times;</span>
+            </button>
+        </template>
+
+        <!-- ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// -->
+        <ValidationProvider name="nombre del parámetro" rules="required" v-slot="validationContext">
+            <label for="input-live">Nombre del parámetro:</label>
+            <b-form-input id="input-live" v-model="Nombre" :state="getValidationState(validationContext)" placeholder="Ingrese nombre del parámetro"></b-form-input>
+            <b-form-invalid-feedback>{{ validationContext.errors[0] }}</b-form-invalid-feedback>
+        </ValidationProvider>
+        <br />
+        <b-row>
+            <b-col>
+                <b-form-group label="Asignar una metodología">
+                    <b-form-select v-model="metodologiaAsignada" :options="opcionesMetodologia" placeholder="Seleccione un Analista" @change="agregarMetodologiaSeleccionada"></b-form-select>
+                </b-form-group>
+            </b-col>
         </b-row>
-        <button type="button" class="close" aria-label="Close" @click="close()">
-            <span aria-hidden="true" style="color:white">&times;</span>
-        </button>
-    </template>
+        <b-alert variant="danger" :show="sinMetodologia" dismissible @dismissed="sinMetodologia = false">
+            Falta metodología asignada para crear el parámetro.
+        </b-alert>
+        <hr />
+        <b-row v-if="metodologiaSeleccionada.length > 0" class="mt-3">
+            <b-col>
+                <b-form-group label="Metodologías Seleccionadas">
+                    <div v-for="(metodologia, index) in metodologiaSeleccionada" :key="index" class="d-flex align-items-center analista-item">
+                        <b-input readonly :value="metodologia.nombre_metodologia"></b-input>
+                        <b-button variant="danger" @click="eliminarMetodologiaSeleccionada(index)" class="ml-2">
+                            <b-icon-trash-fill></b-icon-trash-fill>
+                        </b-button>
+                    </div>
+                </b-form-group>
+            </b-col>
+        </b-row>
 
-    <!-- ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// -->
+        <b-alert variant="danger" :show="alertaDuplicado" dismissible @dismissed="alertaDuplicado = false">
+            La metodología ya fue agregada.
+        </b-alert>
 
-    <b-form-group label="Nombre del Parámetro">
-        <b-form-input v-model="Nombre"></b-form-input>
-    </b-form-group>
+        <!-- ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// -->
 
-    <b-row>
-        <b-col>
-            <b-form-group label="Asignar una metodología">
-                <b-form-select v-model="metodologiaAsignada" :options="opcionesMetodologia" placeholder="Seleccione un Analista" @change="agregarMetodologiaSeleccionada"></b-form-select>
-            </b-form-group>
-        </b-col>
-    </b-row>
-
-    <b-row v-if="metodologiaSeleccionada.length > 0" class="mt-3">
-        <b-col>
-            <b-form-group label="Metodologías Seleccionadas">
-                <div v-for="(metodologia, index) in metodologiaSeleccionada" :key="index" class="d-flex align-items-center analista-item">
-                    <b-input readonly :value="metodologia.nombre_metodologia"></b-input>
-                    <b-button variant="danger" @click="eliminarMetodologiaSeleccionada(index)" class="ml-2">
-                        <b-icon-trash-fill></b-icon-trash-fill>
-                    </b-button>
-                </div>
-            </b-form-group>
-        </b-col>
-    </b-row>
-
-    <b-alert variant="danger" :show="alertaDuplicado" dismissible @dismissed="alertaDuplicado = false">
-        La metodología ya fue agregada.
-    </b-alert>
-
-    <div class="d-flex justify-content-center">
-        <b-button @click="ActualizarParametro()" variant="primary" size="xl" class="reactive-button" style="font-weight:bold">
-            Agregar
-        </b-button>
-    </div>
-
-    <!-- ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// -->
-
-    <template #modal-footer="{ close }">
-        <b-button @click="close()" variant="primary" size="xl" class="float-right reactive-button" style="font-weight:bold">
-            Cerrar
-        </b-button>
-    </template>
-</b-modal>
+        <template #modal-footer>
+            <b-button @click="ActualizarParametro()" variant="primary" size="xl" class="reactive-button" style="font-weight:bold">
+                Editar y guardar parámetro
+            </b-button>
+        </template>
+    </b-modal>
+</validation-observer>
 </template>
 
 <script>
@@ -98,6 +98,7 @@ export default {
             metodologiaSeleccionada: [],
             alertaDuplicado: false,
             metodologia: [],
+            sinMetodologia: false,
 
         }
 
@@ -110,7 +111,13 @@ export default {
     },
 
     methods: {
-
+        getValidationState({
+            dirty,
+            validated,
+            valid = null
+        }) {
+            return dirty || validated ? valid : null;
+        },
         obtenerMetodologias() {
             console.log("Obteniendo Metodologias: ");
             ElementosService.obtenerMetodologias().then((response) => {
@@ -158,14 +165,17 @@ export default {
                 this.metodologias_eliminar.push({
                     id_metodologia: this.metodologiaSeleccionada[index].id_metodologia
                 });
-            }else
-            {   // En caso de borrar una metodologia nueva, revertir el agregar de este.
+            } else { // En caso de borrar una metodologia nueva, revertir el agregar de este.
                 this.metodologias_agregar = this.metodologias_agregar.filter(meto => meto.id_metodologia != this.metodologiaSeleccionada[index].id_metodologia)
             }
             this.metodologiaSeleccionada.splice(index, 1)
         },
         ActualizarParametro() {
-
+            this.$refs.form.validate().then(success => {
+                if (!success) {
+                    return;
+                } else {
+                      
             var data = {
                 id_parametro: this.Id,
                 nombre_parametro: this.Nombre,
@@ -173,30 +183,37 @@ export default {
                 metodologias_eliminar: this.metodologias_eliminar
 
             }
+
+            if (this.metodologiaSeleccionada.length == 0) {
+                this.sinMetodologia = true;
+
+                return;
+            }
             ElementosService.actualizarParametro(data).then((response) => {
                 console.log(response)
                 if (response != null) {
                     if (response.status == 200) {
-                        this.$bvToast.toast(`La actualización del parámetro ha sido exitosa!`, {
-                            title: 'Exito',
+                        this.$bvToast.toast(`La actualización del parámetro ha sido exitosa`, {
+                            title: 'Éxito',
                             toaster: 'b-toaster-top-center',
                             solid: true,
                             variant: "success",
                             appendToast: true
                         })
 
-                        this.$emit('parametroAgregado');
+                        this.$emit('refrescar');
 
-                        this.Nombre = ''
+                        
                         this.Id = ''
                         this.metodologiaAsignada = ''
                         this.metodologiaSeleccionada = []
                         this.metodologia = []
-
+                        this.metodologias_ya_en_sistema = []
+                        this.metodologias_eliminar = []
                         this.$refs.modal.hide()
                     }
                 } else {
-                    this.$bvToast.toast(`Error al actualizar el parámetro.!`, {
+                    this.$bvToast.toast(`Error al actualizar el parámetro.`, {
                         title: 'Error',
                         toaster: 'b-toaster-top-center',
                         solid: true,
@@ -205,6 +222,8 @@ export default {
                     })
                 }
             })
+                }});
+              
         },
 
     },
