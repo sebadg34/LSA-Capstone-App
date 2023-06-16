@@ -80,7 +80,8 @@ this.Confirming = false;
         enviarFormulario() {
             var data = {
                 "user_id": this.Id,
-                "estado" : !this.Estado
+                "estado" : !this.Estado,
+                "correo": this.Correo
             }
             console.log(data)
             usuarioService.cambiarEstadoAdmin(data).then((response) => {
@@ -121,6 +122,8 @@ this.Confirming = false;
                 this.Nombre = this.userData.nombre;
                 this.Apellido = this.userData.apellido;
                 this.Estado = this.userData.estado;
+                this.Correo = this.userData.email;
+
             }
         }
     },
@@ -135,7 +138,8 @@ this.Confirming = false;
             Nombre: "",
             Apellido: "",
             Rut: "",
-            Confirming: false
+            Confirming: false,
+            Correo: "",
 
         }
     },
