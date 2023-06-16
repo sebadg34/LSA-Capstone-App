@@ -83,6 +83,12 @@
                     <span v-if="row.item.estado == true" style="text-transform:uppercase; color:green; font-weight: bold;">HABILITADO</span>
                     <span v-else style="text-transform:uppercase; color:red; font-weight: bold;">DESHABILITADO</span>
                 </template>
+
+                <template #cell(tipo_empleado)="row">
+
+                    <span v-if="row.item.tipo_empleado == null" style="font-weight: bold;">SISTEMA</span>
+                    <span v-else >----</span>
+                </template>
                 <template #cell(accion)="row">
 
                     <b-dropdown right size="sm" variant="link" toggle-class="text-decoration-none" no-caret>
@@ -161,6 +167,10 @@ export default {
                 key: 'cargo',
                 label: 'Cargo',
                 sortable:true
+            },{
+                key:'tipo_empleado',
+                label:'Tipo empleado',
+                sortable: true
             }, {
                 key: 'estado',
                 label: 'Estado',
