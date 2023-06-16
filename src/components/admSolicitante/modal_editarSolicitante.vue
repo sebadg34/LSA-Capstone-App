@@ -50,7 +50,7 @@
                 <label for="input-live">Rut:</label>
                 <ValidationProvider name="rut" rules="required|rut" v-slot="validationContext">
 
-                    <b-form-input size="sm" id="rut-input" class="mb-1" v-model="Rut" :state="getValidationState(validationContext)" aria-describedby="rut-live-feedback"></b-form-input>
+                    <b-form-input size="sm" id="rut-input" disabled class="mb-1" v-model="Rut" :state="getValidationState(validationContext)" aria-describedby="rut-live-feedback"></b-form-input>
 
                     <b-form-invalid-feedback id="rut-live-feedback">{{
                         validationContext.errors[0] }}

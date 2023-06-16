@@ -1,13 +1,14 @@
 
 
-import axios from "axios";
-import config from '@/../public/config.json'
+import {
+    crearApi
+} from "../api-services/InstanciadorAxios";
 
-const apiUrl = config.BASE_URL_SIS_API;
 
 const ingresarSolicitante = async (data) => {
     try {  
-        const response = await axios.post(apiUrl + "/solicitantes/agregarSolicitante", data,
+        const instanciaApi = await crearApi();
+        const response = await instanciaApi.post("/solicitantes/agregarSolicitante", data,
             );
         console.log(response);
         return response;
@@ -18,7 +19,8 @@ const ingresarSolicitante = async (data) => {
 };
 const editarSolicitante = async (data) => {
     try {
-        const response = await axios.put(apiUrl + "/solicitantes/actualizarSolicitante/" +data.rut_solicitante, data, );
+        const instanciaApi = await crearApi();
+        const response = await instanciaApi.put("/solicitantes/actualizarSolicitante/" +data.rut_solicitante, data, );
             console.log(response);
         return response;
         
@@ -29,7 +31,8 @@ const editarSolicitante = async (data) => {
 };
 const obtenerDetallesSolicitante = async (data) => {
     try {
-        const response = await axios.get(apiUrl + "/solicitantes/" + data);
+        const instanciaApi = await crearApi();
+        const response = await instanciaApi.get("/solicitantes/" + data);
             console.log(response);
         if(response.status == 200){
             return response;
@@ -44,7 +47,8 @@ const obtenerDetallesSolicitante = async (data) => {
 };
 const agregarCotizacion = async (data) => {
     try {  
-        const response = await axios.post(apiUrl + "/solicitantes/agregarCotizacion", data,
+        const instanciaApi = await crearApi();
+        const response = await instanciaApi.post("/solicitantes/agregarCotizacion", data,
         {
             headers: {
                 'Content-Type': 'multipart/form-data'
@@ -60,8 +64,9 @@ const agregarCotizacion = async (data) => {
     }
 };
 const descargarCotizacion = async (data) => {
-    try {  
-        const response = await axios.post(apiUrl + "/solicitantes/descargarCotizacion", data,{
+    try { 
+        const instanciaApi = await crearApi(); 
+        const response = await instanciaApi.post("/solicitantes/descargarCotizacion", data,{
             responseType: 'blob',
         }
             );
@@ -74,7 +79,8 @@ const descargarCotizacion = async (data) => {
 };
 const eliminarCotizacion = async (data) => {
     try {  
-        const response = await axios.post(apiUrl + "/solicitantes/eliminarCotizacion/" + data.rut_solicitante, data
+        const instanciaApi = await crearApi();
+        const response = await instanciaApi.post("/solicitantes/eliminarCotizacion/" + data.rut_solicitante, data
             );
         console.log(response);
         return response;
@@ -85,13 +91,27 @@ const eliminarCotizacion = async (data) => {
 };
 const obtenerTodosSolicitantes = async () => {
     try {
-        const response = await axios.get(apiUrl + "/solicitantes");
+        const instanciaApi = await crearApi();
+        const response = await instanciaApi.get("/solicitantes");
             console.log(response);
         if(response.status == 200){
             return response;
         }else{
             return;
         }
+        
+    } catch (error) {
+        console.log(error);
+        return;
+    }
+};
+
+const cambiarEstadoSolicitante = async (data) => {
+    try {
+        const instanciaApi = await crearApi();
+        const response = await instanciaApi.post("/solicitantes/cambiarEstado", data);
+            console.log(response);
+        return response;
         
     } catch (error) {
         console.log(error);
@@ -105,6 +125,7 @@ export default {
     obtenerDetallesSolicitante,
     editarSolicitante,
     descargarCotizacion,
-    eliminarCotizacion
+    eliminarCotizacion,
+    cambiarEstadoSolicitante
 
 };

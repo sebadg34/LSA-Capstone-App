@@ -1,5 +1,5 @@
 <template>
-<b-modal centered id="modal-estado-personal" ref="modal" title="Agregar Personal" size="lg" :hide-footer="true" @hide="resetVariables" @close="resetVariables">
+<b-modal centered id="modal-estado-solicitante" ref="modal" title="Cambiar Estado" size="lg" :hide-footer="true" @hide="resetVariables" @close="resetVariables">
 
     <template #modal-header="{ close }">
         <!-- Emulate built in modal header close button action -->
@@ -43,11 +43,11 @@
                 <div v-if="this.Estado">
                     <span>Está a punto de cambiar el estado a <span style="color:red; font-weight: bold;">DESHABILITADO</span></span>
                 </div>
-                <div v-else>  <span>Está a punto de cambiar el estado a <span style="color:green; font-weight: bold;">HABILITADO</span></span></div>
+                <div v-else> <span>Está a punto de cambiar el estado a <span style="color:green; font-weight: bold;">HABILITADO</span></span></div>
                 <div>¿Desea continuar con el cambio de estado?</div>
                 <div style="padding: 10px" class="d-flex justify-content-around row">
-                    <b-button  class="lsa-light-blue reactive-button" style="font-weight:bold; width:45%" @click="enviarFormulario()">CAMBIAR</b-button>
-                    <b-button  class="lsa-orange reactive-button" style="font-weight:bold ;width:45%" @click="confirmarCambio(false)">Cancelar</b-button>
+                    <b-button class="lsa-light-blue reactive-button" style="font-weight:bold; width:45%" @click="enviarFormulario()">CAMBIAR</b-button>
+                    <b-button class="lsa-orange reactive-button" style="font-weight:bold ;width:45%" @click="confirmarCambio(false)">Cancelar</b-button>
                 </div>
             </b-col>
 
@@ -62,33 +62,31 @@
 </template>
 
 <script>
-import personalService from "@/helpers/api-services/Personal.service"
+import solicitanteService from "@/helpers/api-services/Solicitante.service"
 export default {
     methods: {
-        resetVariables(){
-this.Confirming = false;
+        resetVariables() {
+            this.Confirming = false;
         },
         confirmarCambio(value) {
             this.Confirming = value;
-            if(!value)
-            {
+            if (!value) {
                 this.$bvModal.hide('modal-estado-personal')
             }
-      
 
         },
         enviarFormulario() {
             var data = {
-                "rut_empleado": this.Rut,
-                "estado" : !this.Estado
+                "rut_solicitante": this.Rut,
+                "estado": !this.Estado
             }
             console.log(data)
-            personalService.cambiarEstadoPersonal(data).then((response) => {
+            solicitanteService.cambiarEstadoSolicitante(data).then((response) => {
                 this.Confirming = false;
                 console.log(response)
                 if (response != null) {
                     if (response.status == 200) {
-                        this.$bvToast.toast(`El estado de ` + this.Nombre + " "+ this.Apellido + " ha sido actualizado", {
+                        this.$bvToast.toast(`El estado de ` + this.Nombre + " " + this.Apellido + " ha sido actualizado", {
                             title: 'Exito',
                             toaster: 'b-toaster-top-center',
                             solid: true,
@@ -119,12 +117,12 @@ this.Confirming = false;
                 console.log("PROP CHANGED, UPDATE MODAL")
                 this.Estado = this.userData.estado
                 this.Nombre = this.userData.nombre
-                this.Apellido = this.userData.apellido
-                this.Rut = this.userData.rut_empleado
+                this.Apellido = this.userData.primer_apellido
+                this.Rut = this.userData.rut_solicitante
             }
         }
     },
-   
+
     props: {
         userData: Object
     },

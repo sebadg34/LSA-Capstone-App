@@ -40,7 +40,7 @@
                 </div>
 
                 <ValidationProvider name="fecha inicio" rules="required" v-slot="validationContext">
-                    <b-form-datepicker @input="revisarFecha" :min="minDate" @context="onContextInicio" :date-format-options="{ year: 'numeric', month: '2-digit', day: '2-digit' }" placeholder="seleccione fecha" :state="getValidationState(validationContext)" v-model="FechaInicio" id="datepicker-dateformat2" locale="es"></b-form-datepicker>
+                    <b-form-datepicker @input="revisarFecha" :min="hoy" @context="onContextInicio" :date-format-options="{ year: 'numeric', month: '2-digit', day: '2-digit' }" placeholder="seleccione fecha" :state="getValidationState(validationContext)" v-model="FechaInicio" id="datepicker-dateformat2" locale="es"></b-form-datepicker>
                     <b-form-invalid-feedback id="fecha-live-feedback">{{
                        validationContext.errors[0] }}
                     </b-form-invalid-feedback>
@@ -50,7 +50,7 @@
                 <div>Fecha término:
                 </div>
                 <ValidationProvider name="fecha termino" rules="required" v-slot="validationContext">
-                    <b-form-datepicker :min="FechaInicio=='' ? minDate : FechaInicio " @context="onContextTermino" :date-format-options="{ year: 'numeric', month: '2-digit', day: '2-digit' }" placeholder="seleccione fecha" :state="getValidationState(validationContext)" v-model="FechaTermino" id="datepicker-dateformat" locale="es"></b-form-datepicker>
+                    <b-form-datepicker :min="FechaInicio=='' ? hoy : fechaInicioMasUno " @context="onContextTermino" :date-format-options="{ year: 'numeric', month: '2-digit', day: '2-digit' }" placeholder="seleccione fecha" :state="getValidationState(validationContext)" v-model="FechaTermino" id="datepicker-dateformat" locale="es"></b-form-datepicker>
                     <b-form-invalid-feedback id="fecha-live-feedback">{{
                        validationContext.errors[0] }}
                     </b-form-invalid-feedback>
@@ -91,6 +91,17 @@ export default {
         }
     },
     computed: {
+        hoy(){
+            const todayDate = new Date()
+            todayDate.setDate(todayDate.getDate() + 1)
+            return todayDate;
+        },
+        fechaInicioMasUno(){
+          console.log("fecha inicio", this.FechaInicio)
+          const inicioMasUno = new Date(this.FechaInicio)
+          inicioMasUno.setDate( inicioMasUno.getDate()+2);
+            return new Date(inicioMasUno);
+        },
         diasVacacionesActuales() {
             if(this.FechaInicio != null && this.FechaTermino != null){
                 var d1 = new Date(this.FechaInicio);
@@ -134,14 +145,12 @@ export default {
         onContextInicio(ctx) {
 
             // Setear fecha a su version formateada de dd/mm/yyyy
-            console.log(ctx)
             this.FechaInicioFormatted = ctx.selectedFormatted
 
         },
         onContextTermino(ctx) {
 
             // Setear fecha a su version formateada de dd/mm/yyyy
-            console.log(ctx)
             this.FechaTerminoFormatted = ctx.selectedFormatted
 
         },
@@ -195,7 +204,6 @@ export default {
         }
     },
     data() {
-        const now = new Date()
         return {
             DiasDisponibles: 0,
             DiasTotablesAsignables: 0,
@@ -206,7 +214,6 @@ export default {
             FechaTermino: "",
             FechaInicioFormatted: "",
             FechaTerminoFormatted: "",
-            minDate: now,
         }
     },
 }

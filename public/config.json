@@ -1,6 +1,7 @@
 {
 
     "BASE_URL_SIS_API": "http://127.0.0.1:8000/api",
+    "BASE_URL": "http://127.0.0.1:8000",
     "BASE_URL_FILES": "",
     "NOMBRE_SISTEMA": "Sistema LSA",
     "APP_LOGIN_MODE": "DEFAULT"

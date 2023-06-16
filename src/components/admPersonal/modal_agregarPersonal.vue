@@ -1,12 +1,12 @@
 <template>
 <validation-observer ref="form">
-    <b-modal id="modal-personal" ref="modal" title="Agregar Personal" size="lg">
+    <b-modal id="modal-personal" ref="modal" title="Agregar personal" size="lg">
 
         <template #modal-header="{ close }">
             <!-- Emulate built in modal header close button action -->
 
             <b-row class="d-flex justify-content-around">
-                <div class="pl-3">Editar Personal</div>
+                <div class="pl-3">Agregar personal</div>
 
             </b-row>
 
@@ -17,20 +17,20 @@
 
         <b-row class="pb-2">
             <b-col class="col-6">
-                <label for="input-live">Rut:</label>
-                <ValidationProvider name="rut" rules="required|rut" v-slot="validationContext">
+                <label for="input-live">RUT:</label>
+                <ValidationProvider name="RUT" rules="required|rut|rutSinPuntoGuion" v-slot="validationContext">
 
-                    <b-form-input size="sm" id="rut-input" class="mb-1" v-model="Rut" :state="getValidationState(validationContext)" aria-describedby="rut-live-feedback"></b-form-input>
+                    <b-form-input placeholder="Ingrese RUT sin puntos ni guión." size="sm" id="rut-input" class="mb-1" v-model="Rut" :state="getValidationState(validationContext)" aria-describedby="rut-live-feedback"></b-form-input>
 
                     <b-form-invalid-feedback id="rut-live-feedback">{{
-                        validationContext.errors[0] }}
+                            validationContext.errors[0] }}
                     </b-form-invalid-feedback>
                 </ValidationProvider>
-                <ValidationProvider name="de apellidos" rules="required" v-slot="validationContext">
+                <ValidationProvider name="apellidos" rules="required|min:2" v-slot="validationContext">
                     <label for="input-live">Apellidos:</label>
                     <b-form-input size="sm" class="mb-1" id="apellido-input" v-model="Apellidos" :state="getValidationState(validationContext)" aria-describedby="input-live-help apellido-live-feedback" placeholder="" trim></b-form-input>
                     <b-form-invalid-feedback id="apellido-live-feedback">{{
-                        validationContext.errors[0] }}
+                            validationContext.errors[0] }}
                     </b-form-invalid-feedback>
                 </ValidationProvider>
 
@@ -40,14 +40,14 @@
                     <label for="input-live">Nombres:</label>
                     <b-form-input size="sm" class="mb-1" id="input-live" :state="getValidationState(validationContext)" v-model="Nombre" aria-describedby="input-live-help nombre-live-feedback" placeholder="" trim></b-form-input>
                     <b-form-invalid-feedback id="nombre-live-feedback">{{
-                        validationContext.errors[0] }}
+                            validationContext.errors[0] }}
                     </b-form-invalid-feedback>
                 </ValidationProvider>
                 <ValidationProvider name="correo" rules="required|email" v-slot="validationContext">
                     <label for="input-live">Correo:</label>
                     <b-form-input size="sm" class="mb-1" id="input-live" :state="getValidationState(validationContext)" v-model="Correo" aria-describedby="input-live-help correo-live-feedback" placeholder="" trim></b-form-input>
                     <b-form-invalid-feedback id="correo-live-feedback">{{
-                        validationContext.errors[0] }}
+                            validationContext.errors[0] }}
                     </b-form-invalid-feedback>
                 </ValidationProvider>
             </b-col>
@@ -56,8 +56,8 @@
 
         <b-row>
             <b-col class="col-6">
-                <label for="input-live">Telefono Movil:</label>
-                <ValidationProvider name="Nro. movil" rules="required|numeric|min:8|max:15" v-slot="validationContext">
+                <label for="input-live">Teléfono móvil:</label>
+                <ValidationProvider name="número móvil" rules="required|numeric|min:8|max:15" v-slot="validationContext">
                     <b-input-group size="sm" class="mb-1">
 
                         <b-input-group-prepend is-text>
@@ -65,13 +65,13 @@
                         </b-input-group-prepend>
                         <b-form-input id="input-live" v-model="Movil" aria-describedby="input-live-help movil-live-feedback" :state="getValidationState(validationContext)" placeholder=""></b-form-input>
                         <b-form-invalid-feedback id="movil-live-feedback">{{
-                        validationContext.errors[0] }}
+                                validationContext.errors[0] }}
                         </b-form-invalid-feedback>
                     </b-input-group>
 
                 </ValidationProvider>
-                <label for="input-live">Contacto Emergencia:</label>
-                <ValidationProvider name="Nro. emergencia" rules="required|numeric|min:8|max:15" v-slot="validationContext">
+                <label for="input-live">Contacto de emergencia:</label>
+                <ValidationProvider name="número de emergencia" rules="numeric|min:8|max:15" v-slot="validationContext">
                     <b-input-group size="sm" class="mb-1">
 
                         <b-input-group-prepend is-text>
@@ -79,7 +79,7 @@
                         </b-input-group-prepend>
                         <b-form-input id="input-live" v-model="Emergencia" aria-describedby="input-live-help emergencia-live-feedback" :state="getValidationState(validationContext)" placeholder=""></b-form-input>
                         <b-form-invalid-feedback id="emergencia-live-feedback">{{
-                        validationContext.errors[0] }}
+                                validationContext.errors[0] }}
                         </b-form-invalid-feedback>
                     </b-input-group>
                 </ValidationProvider>
@@ -89,37 +89,37 @@
                     <label for="input-live">Cargo:</label>
                     <b-form-select size="sm" aria-describedby="cargo-live-feedback" :state="getValidationState(validationContext)" class="mb-1" v-model="Cargo" :options="cargos"></b-form-select>
                     <b-form-invalid-feedback id="cargo-live-feedback">{{
-                        validationContext.errors[0] }}
+                            validationContext.errors[0] }}
                     </b-form-invalid-feedback>
                 </ValidationProvider>
-                <ValidationProvider name="tipo" rules="required" v-slot="validationContext">
-                    <label for="input-live">Tipo Trabajador:</label>
+                <ValidationProvider name="tipo de trabajador" rules="required" v-slot="validationContext">
+                    <label for="input-live">Tipo de trabajador:</label>
                     <b-form-select size="sm" aria-describedby="tipo-live-feedback" :state="getValidationState(validationContext)" class="mb-1" v-model="Tipo" :options="tipos"></b-form-select>
                     <b-form-invalid-feedback id="tipo-live-feedback">{{
-                        validationContext.errors[0] }}
+                            validationContext.errors[0] }}
                     </b-form-invalid-feedback>
                 </ValidationProvider>
             </b-col>
         </b-row>
 
         <template #modal-footer>
- <b-overlay :show="Cargando" rounded opacity="0.6" spinner-small spinner-variant="primary" class="d-inline-block">
-      
-            <b-button @click="enviarFormulario()" variant="primary" size="xl" class="float-right reactive-button" style="font-weight:bold">
-                Crear y Guardar
-            </b-button>
- </b-overlay>
+            <b-overlay :show="Cargando" rounded opacity="0.6" spinner-small spinner-variant="primary" class="d-inline-block">
+
+                <b-button @click="enviarFormulario()" variant="primary" size="xl" class="float-right reactive-button" style="font-weight:bold">
+                    Crear y guardar
+                </b-button>
+            </b-overlay>
         </template>
         <hr>
 
         <b-row>
             <b-col class="col-6">
                 <ValidationProvider name="archivo" rules="size:10000" v-slot="validationContext">
-                    Adjuntar Archivos:
+                    Adjuntar archivos:
                     <div>
-                        <b-form-file :state="getValidationState(validationContext)" placeholder="seleccione archivo(s) a subir" browse-text="Buscar" v-on:change="onChange" :multiple="true" v-model="Archivos" ref="file-input"></b-form-file>
+                        <b-form-file :state="getValidationState(validationContext)" placeholder="Seleccione archivo(s) a subir." browse-text="Buscar" v-on:change="onChange" :multiple="true" v-model="Archivos" ref="file-input"></b-form-file>
                         <b-form-invalid-feedback id="archivo-live-feedback">
-                            Los archivos deben ser menor a 10mb
+                            Los archivos deben ser menor a 10mb.
                         </b-form-invalid-feedback>
 
                     </div>
@@ -131,18 +131,16 @@
 
                 <b-list-group>
                     <b-list-group-item style="padding-top:4px; padding-bottom:4px" v-for="archivo in Archivos" :key="archivo.index">
-                     
 
-                        
                         <b-row class="d-flex justify-content-between align-items-center">
-                          
+
                             <span>{{ archivo ? archivo.name : '' }}</span>
 
                             <b-button variant="danger" @click="remove(archivo.index)" style="padding:1px; aspect-ratio: 1 / 1; height: 27px; width: 27px">
                                 <b-icon icon="x"></b-icon>
                             </b-button>
                         </b-row>
-                   
+
                     </b-list-group-item>
 
                 </b-list-group>
@@ -156,8 +154,12 @@
 
 <script>
 import personalService from "@/helpers/api-services/Personal.service"
-export default {
+import roleService from "@/helpers/api-services/Role.service"
 
+export default {
+    mounted() {
+        this.obtenerRoles();
+    },
     data() {
 
         return {
@@ -174,6 +176,7 @@ export default {
             Emergencia: "",
             Cargo: "",
             Tipo: "",
+            Roles: [],
             tipos: [{
                     value: 'Practicante',
                     text: 'Practicante'
@@ -196,7 +199,7 @@ export default {
                     text: 'Gerente'
                 },
                 {
-                    value: 'Jefe(a) de Laboratorio',
+                    value: 'Jefe(a) de laboratorio',
                     text: 'Jefe(a) de laboratorio'
                 },
                 {
@@ -218,7 +221,37 @@ export default {
             ],
         }
     },
+
     methods: {
+        reiniciarDatos() {
+            this.Archivos = null;
+            this.Archivos_enviar = "";
+            this.file = "";
+            this.files = "";
+            this.Nombre = "";
+            this.Rut = "";
+            this.Correo = "";
+            this.Apellidos = "";
+            this.Movil = "";
+            this.Emergencia = "";
+            this.Cargo = "";
+            this.Tipo = "";
+
+        },
+        obtenerIdRol(value) {
+            console.log("value a revisar rol",value);
+            return this.Roles.find(x => x.descripcion == value).id_rol;
+        },
+        obtenerRoles() {
+            roleService.obtenerRoles().then((response) => {
+                if (response != null) {
+                    if (response.data != null) {
+                        this.Roles = response.data;
+                        console.log(this.Roles);
+                    }
+                }
+            })
+        },
         remove(index) {
             this.Archivos.splice(index, 1)
         },
@@ -279,6 +312,7 @@ export default {
                     if (this.Archivos_enviar.length != 0) {
                         formData.documentos = this.Archivos_enviar;
                     }
+                    formData.id_rol = this.obtenerIdRol(formData.rol);
                     console.log("data a enviar", formData)
                     personalService.ingresarPersonal(formData).then((response) => {
                         this.Cargando = false;
@@ -294,7 +328,9 @@ export default {
                                 })
                                 this.$emit('refrescar');
                             }
-                            this.$bvModal.hide('modal-personal')
+                            this.$bvModal.hide('modal-personal');
+                            this.reiniciarDatos();
+                            this.$refs.form.reset();
                         } else {
                             this.$bvToast.toast(`Error al crear personal`, {
                                 title: 'Error',

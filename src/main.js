@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import App from './App.vue'
+import store from './store/store.js'
 import VuejsModal from 'vue-js-modal'
 
 
@@ -15,6 +16,7 @@ import 'bootstrap-vue/dist/bootstrap-vue.css'
 import '@/styles/main.scss';
 import * as rules from "vee-validate/dist/rules";
 import * as VeeValidate from "vee-validate";
+import vClickOutside from 'v-click-outside'
 import es from "vee-validate/dist/locale/es.json";
 import {
   ValidationProvider,
@@ -30,11 +32,24 @@ Object.keys(rules).forEach(rule => {
 });
 localize("es", es);
 
+const dictionary = {
+  
+  es: {
+    messages: {
+      required: "El campo {_field_} es obligatorio."
+    }
+  }
+};
+
+// Override and merge the dictionaries
+localize(dictionary);
+
 // Make BootstrapVue available throughout your project
 Vue.use(BootstrapVue)
 // Optionally install the BootstrapVue icon components plugin
 Vue.use(IconsPlugin)
 Vue.use(VuejsModal)
+Vue.use(vClickOutside);
 Vue.component('ValidationProvider', ValidationProvider);
 Vue.component("ValidationObserver", ValidationObserver);
 Vue.use(VeeValidate, {
@@ -48,7 +63,8 @@ Vue.use(VeeValidate, {
 
 new Vue({
   router,
-  render: h => h(App)
+  render: h => h(App),
+  store: store
 }).$mount('#app')
 
 

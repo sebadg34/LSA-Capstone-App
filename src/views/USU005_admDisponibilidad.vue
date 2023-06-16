@@ -19,18 +19,34 @@
             <b-row style="padding-top:30px; padding-bottom:10px">
                 <b-col class="col-6">
 
-                    <b-col class="col-6">
-                        <b-row>
-                            <b-button v-b-modal.modal-personal style="border-radius: 15px; font-weight: bold; font-size: 18px; " class="lsa-light-blue reactive-button">
-
-                                Agregar Personal
-                                <b-icon icon="person-plus-fill"></b-icon>
-                            </b-button>
-                        </b-row>
-                    </b-col>
+                   
 
                 </b-col>
+                <b-col class="col-6">
+                    <b-row>
 
+                        <b-form-group>
+
+                            <b-input-group>
+                                <b-input-group-prepend is-text>
+                                    <b-icon icon="search"></b-icon>
+                                </b-input-group-prepend>
+                                <b-form-input placeholder="Nombre usuario..." id="input-1" v-model="nombreFiltro">
+                                </b-form-input>
+                                <b-form-input placeholder="Rut usuario..." id="input-1" v-model="rutFiltro" trim></b-form-input>
+                                <b-form-select placeholder="Cargo" v-model="cargoFiltro" :options="cargoOpciones">
+                                </b-form-select>
+                                <b-button-group style="margin-left:10px">
+                                    <b-button class="reactive-button lsa-blue" @click="filtrarTabla">Filtrar</b-button>
+                                    <b-button class="reactive-button lsa-orange" @click="borrarFiltro">Quitar</b-button>
+                                </b-button-group>
+                            </b-input-group>
+
+                        </b-form-group>
+
+                    </b-row>
+                </b-col>
+<!--
                 <b-col lg="6" class="my-1">
                     <b-form-group label-cols-sm="3" label-align-sm="right" label-size="md" class="mb-0">
                         <b-input-group size="md">
@@ -46,11 +62,12 @@
                         </b-input-group>
                     </b-form-group>
                 </b-col>
+                -->
             </b-row>
         </b-col>
 
         <b-col class="col-10">
-            <b-table  show-empty :filter="filter" @filtered="onFiltered" :fields="campos_tabla" :items="personal" style="" :busy="loading" :per-page="perPage" :current-page="currentPage">
+            <b-table  show-empty :filter="filter" @filtered="onFiltered" :fields="campos_tabla" :items="personalFiltrado" style="" :busy="loading" :per-page="perPage" :current-page="currentPage">
 
                 <template #empty>
                     <div class="text-center lsa-light-blue-text my-2 row">
@@ -113,8 +130,19 @@
                     </b-dropdown>
 
                 </template>
+
+                <template #custom-foot>
+                    <b-tr>
+                        <b-th colspan="8" style="background-color:rgb(235, 235, 235); border-radius:0px 0px 20px 20px; padding:1px" v-if="filtrando">
+                            <div>
+                            <b-icon icon="filter" animation="fade" variant="secondary" scale="0.8"></b-icon>
+                            <div style="font-weight:bold; color:gray">  Resultados filtrados</div>
+                        </div>
+                        </b-th>
+                    </b-tr>
+                </template>
             </b-table>
-            <b-pagination v-model="currentPage" :total-rows="rows" :per-page="perPage" align="right"></b-pagination>
+            <b-pagination v-model="currentPage" :total-rows="totalRows" :per-page="perPage" align="right"></b-pagination>
         </b-col>
     </b-row>
 
@@ -148,8 +176,46 @@ export default {
         return {
             filter: null,
             filterOn: [],
+            nombreFiltro: "",
+            rutFiltro: "",
+            filtrando: false,
+            cargoFiltro: null,
+            cargoOpciones: [{
+                    value: null,
+                    text: 'Seleccione cargo',
+                    disabled: true
+                },
+                {
+                    value: null,
+                    text: '---'
+                },
+                {
+                    value: "gerente",
+                    text: 'Gerente'
+                },
+                {
+                    value: "Analista Químico",
+                    text: 'Analista Químico'
+                },{
+                    value: "Químico",
+                    text: 'Químico'
+                },{
+                    value: "Supervisor(a)",
+                    text: 'Supervisor(a)'
+                },{
+                    value: "Administrador(a) de Finanza",
+                    text: 'Administrador(a) de Finanza'
+                },{
+                    value: "Jefe(a) de laboratorio",
+                    text: 'Jefe(a) de laboratorio'
+                },{
+                    value: "Recepcionista",
+                    text: 'Recepcionista'
+                },
+            ],
             editarID: 0,
             currentPage: 1,
+            totalRows: "",
             perPage: 10,
             loading: true,
             modalEditarData: {},
@@ -161,10 +227,12 @@ export default {
                     label: 'Rut'
                 }, {
                     key: 'nombre',
-                    label: 'Nombre'
+                    label: 'Nombre',
+                sortable: true
                 }, {
                     key: 'apellido',
-                    label: 'Apellido'
+                    label: 'Apellido',
+                sortable: true
                 }, {
                     key: 'dias_vacaciones_disponibles',
                     label: 'Días de vacaciones disponible'
@@ -173,20 +241,57 @@ export default {
                     label: 'Periodo de vacaciones'
                 }, {
                     key: 'rol',
-                    label: 'Cargo'
+                    label: 'Cargo',
+                sortable: true
                 },
                 {
                     key: 'estado',
-                    label: 'Estado'
+                    label: 'Estado',
+                sortable: true
                 }, {
                     key: 'accion',
                     label: 'Acción'
                 }
             ],
             personal: [{}],
+            personalFiltrado: [],
         }
     },
     methods: {
+        borrarFiltro() {
+            this.nombreFiltro = "";
+            this.rutFiltro = "";
+            this.cargoFiltro = null;
+            this.filtrarTabla();
+        },
+        filtrarTabla() {
+            let nombre_filtro = this.nombreFiltro.toLowerCase();
+            let rut_filtro = this.rutFiltro;
+            let cargo_filtro = this.cargoFiltro;
+            //let cargo_filtro = this.cargoFiltro;
+            this.personalFiltrado = this.personal;
+            if (this.cargoFiltro != null) {
+                this.personalFiltrado = this.personalFiltrado.filter(personal => personal.rol.toLowerCase() == cargo_filtro.toLowerCase());
+            }
+            if (nombre_filtro != "" && rut_filtro != "") {
+                this.personalFiltrado = this.personal.filter(personal => personal.nombre.toLowerCase().includes(nombre_filtro) &&
+                    personal.rut_empleado.includes(rut_filtro));
+            } else if (nombre_filtro != "") {
+                this.personalFiltrado = this.personal.filter(personal => personal.nombre.toLowerCase().includes(nombre_filtro));
+            } else if (rut_filtro != "") {
+                this.personalFiltrado = this.personal.filter(personal => personal.rut_empleado.toLowerCase().includes(rut_filtro));
+            }
+
+
+            if (nombre_filtro == "" && rut_filtro == "" && cargo_filtro == null) {
+                this.personalFiltrado = this.personal;
+                this.filtrando = false;
+            }else{
+                this.filtrando = true;
+            }
+
+            this.onFiltered(this.personalFiltrado);
+        },
         // TODO: Cambiar idioma de funciones a español
         onFiltered(filteredItems) {
             this.totalRows = filteredItems.length
@@ -201,7 +306,10 @@ export default {
                 if (response != null) {
                     console.log(response)
                     this.personal = response.data
+                    this.personalFiltrado = this.personal
+                    this.onFiltered(this.personalFiltrado);
                     console.log(this.personal)
+
                     this.loading = false;
                 }
 

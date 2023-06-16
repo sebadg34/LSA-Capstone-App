@@ -1,11 +1,12 @@
-import axios from "axios";
-import config from '@/../public/config.json'
+import {
+    crearApi
+} from "../api-services/InstanciadorAxios";
 
-const apiUrl = config.BASE_URL_SIS_API;
 
 const editarFechas = async (data) => {
-    try {  
-        const response = await axios.put(apiUrl + "/personal/modificarFechasVacaciones/"+data.rut_empleado, data,
+    try { 
+        const instanciaApi = await crearApi(); 
+        const response = await instanciaApi.put("/personal/modificarFechasVacaciones/"+data.rut_empleado, data,
             );
         console.log(response);
         return response;
@@ -16,7 +17,8 @@ const editarFechas = async (data) => {
 };
 const editarDiasDisponibles = async (data) => {
     try {  
-        const response = await axios.put(apiUrl + "/personal/modificarDiasDisponibles/"+data.rut_empleado, data,
+        const instanciaApi = await crearApi();
+        const response = await instanciaApi.put("/personal/modificarDiasDisponibles/"+data.rut_empleado, data,
             );
         console.log(response);
         return response;

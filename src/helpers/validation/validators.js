@@ -12,7 +12,7 @@ extend('rut', value => {
     }
     value = value.replace("‐","-");
     if (!/^[0-9]+[-|‐]{1}[0-9kK]{1}$/.test( value ))
-        return 'Debe ingresar un rut valido';
+        return 'Debe ingresar un RUT válido.';
     var tmp     = value.split('-');
     var digv    = tmp[1];
     var rut     = tmp[0];
@@ -22,9 +22,17 @@ extend('rut', value => {
         return true;
     }else
     {
-      return 'Debe ingresar un rut valido';
+      return 'Debe ingresar un RUT válido.';
     }
 
+});
+
+extend('rutSinPuntoGuion', value => {
+if (value.match(/^[a-zA-Z0-9]+$/) !== null){
+  return true;
+}else{
+  return 'Debe ingresar el RUT sin puntos ni guión.'
+}
 });
 
 
@@ -39,7 +47,7 @@ extend('url', value => {
       url = new URL(value);
       
     } catch (_) {
-      return "Debe ingresar una dirección URL valida.";  
+      return "Debe ingresar una dirección URL válida.";  
     }
   
     return true;

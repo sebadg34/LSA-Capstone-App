@@ -1,6 +1,6 @@
 <template lang="">
 <validation-observer ref="form">
-    <b-modal id="modal-detalles-empresa" ref="modal" title="Agregar Empresa" size="lg">
+    <b-modal centered id="modal-detalles-empresa" ref="modal" title="Agregar Empresa" size="lg">
 
         <template #modal-header="{ close }">
             <!-- Emulate built in modal header close button action -->
@@ -45,31 +45,31 @@
             <br />
             <div></div>
             <b-list-group horizontal="md">
-    <b-list-group-item class="flex-fill" style="font-weight:bold">Ciudad</b-list-group-item>
-    <b-list-group-item class="flex-fill" style="font-weight:bold">Dirección</b-list-group-item>
-  </b-list-group>
-  <b-list-group>
-            <b-list-group-item style="padding-top:5px; padding-bottom:5px" v-for="(input,k) in direcciones" :key="k">
-              
-              
-                <b-row>
-                    <b-col class="col-6">
-                        <div>{{input.ciudad}}</div>
-                           
-            
-                    </b-col>
-                    <b-col class="col-6">
-                        <div>{{input.direccion}}</div>
-                            
-                    </b-col>
-                   
+                <b-list-group-item class="flex-fill" style="font-weight:bold">Ciudad</b-list-group-item>
+                <b-list-group-item class="flex-fill" style="font-weight:bold">Dirección</b-list-group-item>
+            </b-list-group>
 
-                </b-row>
-            
-              
-
+            <b-list-group-item v-if="cargandoDirecciones" style="margin:0px" class="text-center lsa-orange-text my-2">
+            <b-spinner class="align-middle"></b-spinner>
+            <strong> Cargando...</strong>
         </b-list-group-item>
-        </b-list-group>
+            <b-list-group>
+                <b-list-group-item style="padding-top:5px; padding-bottom:5px" v-for="(input,k) in direcciones" :key="k">
+
+                    <b-row>
+                        <b-col class="col-6">
+                            <div>{{input.ciudad}}</div>
+
+                        </b-col>
+                        <b-col class="col-6">
+                            <div>{{input.direccion}}</div>
+
+                        </b-col>
+
+                    </b-row>
+
+                </b-list-group-item>
+            </b-list-group>
         </div>
         <template #modal-footer="{ close }">
 
@@ -114,6 +114,7 @@ export default {
                 direccion: ''
             }],
             dataDirecciones: "",
+            cargandoDirecciones: false,
             Nombre: "",
             Nombre_abreviado: "",
             Correo: "",
@@ -125,6 +126,7 @@ export default {
     },
     methods: {
         obtenerDetalles() {
+            this.cargandoDirecciones = true;
             empresaService.obtenerDetallesEmpresa(this.Rut).then((response) => {
                 console.log(response)
                 if (response != null) {
@@ -139,6 +141,7 @@ export default {
                         })
                         // elimina primer valor vacio
                         this.direcciones.shift();
+                        this.cargandoDirecciones = false;
 
                     }
 
@@ -150,6 +153,7 @@ export default {
                         variant: "warning",
                         appendToast: true
                     })
+                    this.cargandoDirecciones = false;
                 }
             })
         },

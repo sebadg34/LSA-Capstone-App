@@ -1,13 +1,25 @@
-import axios from "axios";
-import config from '@/../public/config.json'
+import {
+    crearApi
+} from "../api-services/InstanciadorAxios";
 
-const apiUrl = config.BASE_URL_SIS_API;
+
+const existeEmpresa = async (data) => {
+    try {  
+        const instanciaApi = await crearApi();
+        const response = await instanciaApi.post("/empresas/existeEmpresa", data,
+            );
+        console.log(response);
+        return response;
+    } catch (error) {
+        return error.response;
+    }
+};
 
 const ingresarEmpresa = async (data) => {
     try {  
-        const response = await axios.post(apiUrl + "/empresas/agregarEmpresa", data,
+        const instanciaApi = await crearApi();
+        const response = await instanciaApi.post("/empresas/agregarEmpresa", data,
             );
-        console.log(response);
         return response;
     } catch (error) {
         console.log(error);
@@ -17,9 +29,9 @@ const ingresarEmpresa = async (data) => {
 
 const actualizarEmpresa = async (data) => {
     try {  
-        const response = await axios.put(apiUrl + "/empresas/actualizarEmpresa/"+data.rut_empresa, data,
+        const instanciaApi = await crearApi();
+        const response = await instanciaApi.put("/empresas/actualizarEmpresa/"+data.rut_empresa, data,
             );
-        console.log(response);
         return response;
     } catch (error) {
         console.log(error);
@@ -29,8 +41,8 @@ const actualizarEmpresa = async (data) => {
 
 const obtenerDetallesEmpresa = async (data) => {
     try {
-        const response = await axios.get(apiUrl + "/empresas/"+data);
-        console.log(response);
+        const instanciaApi = await crearApi();
+        const response = await instanciaApi.get("/empresas/"+data);
     if(response.status == 200){
         return response;
     }else{
@@ -43,8 +55,8 @@ const obtenerDetallesEmpresa = async (data) => {
 }
 const obtenerTodasEmpresa = async () => {
     try {
-        const response = await axios.get(apiUrl + "/empresas");
-            console.log(response);
+        const instanciaApi = await crearApi();
+        const response = await instanciaApi.get("/empresas");
         if(response.status == 200){
             return response;
         }else{
@@ -59,8 +71,8 @@ const obtenerTodasEmpresa = async () => {
 
 const obtenerTodasCiudad = async () => {
     try {
-        const response = await axios.get(apiUrl + "/ciudades");
-            console.log(response);
+        const instanciaApi = await crearApi();
+        const response = await instanciaApi.get("/ciudades");
         if(response.status == 200){
             return response;
         }else{
@@ -78,6 +90,7 @@ export default {
     obtenerTodasEmpresa,
     obtenerDetallesEmpresa,
     actualizarEmpresa,
-    obtenerTodasCiudad
+    obtenerTodasCiudad,
+    existeEmpresa
 
 };

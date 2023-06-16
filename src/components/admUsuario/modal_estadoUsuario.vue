@@ -1,5 +1,5 @@
 <template>
-<b-modal centered id="modal-estado-personal" ref="modal" title="Agregar Personal" size="lg" :hide-footer="true" @hide="resetVariables" @close="resetVariables">
+<b-modal centered id="modal-estado-usuario" ref="modal"  size="lg" :hide-footer="true" @hide="resetVariables" @close="resetVariables">
 
     <template #modal-header="{ close }">
         <!-- Emulate built in modal header close button action -->
@@ -62,7 +62,7 @@
 </template>
 
 <script>
-import personalService from "@/helpers/api-services/Personal.service"
+import usuarioService from "@/helpers/api-services/Auth.service"
 export default {
     methods: {
         resetVariables(){
@@ -79,11 +79,12 @@ this.Confirming = false;
         },
         enviarFormulario() {
             var data = {
-                "rut_empleado": this.Rut,
-                "estado" : !this.Estado
+                "user_id": this.Id,
+                "estado" : !this.Estado,
+                "correo": this.Correo
             }
             console.log(data)
-            personalService.cambiarEstadoPersonal(data).then((response) => {
+            usuarioService.cambiarEstadoAdmin(data).then((response) => {
                 this.Confirming = false;
                 console.log(response)
                 if (response != null) {
@@ -97,7 +98,7 @@ this.Confirming = false;
                         })
                         this.$emit('refrescar');
                     }
-                    this.$bvModal.hide('modal-estado-personal')
+                    this.$bvModal.hide('modal-estado-usuario')
                 } else {
                     this.$bvToast.toast(`Error al cambiar estado`, {
                         title: 'Error',
@@ -116,11 +117,13 @@ this.Confirming = false;
     watch: {
         userData: {
             handler() {
-                console.log("PROP CHANGED, UPDATE MODAL")
-                this.Estado = this.userData.estado
-                this.Nombre = this.userData.nombre
-                this.Apellido = this.userData.apellido
-                this.Rut = this.userData.rut_empleado
+                console.log("PROP CHANGED, UPDATE MODAL",this.userData)
+                this.Id = this.userData.id;
+                this.Nombre = this.userData.nombre;
+                this.Apellido = this.userData.apellido;
+                this.Estado = this.userData.estado;
+                this.Correo = this.userData.email;
+
             }
         }
     },
@@ -131,10 +134,12 @@ this.Confirming = false;
     data() {
         return {
             Estado: "",
+            Id: "",
             Nombre: "",
             Apellido: "",
             Rut: "",
-            Confirming: false
+            Confirming: false,
+            Correo: "",
 
         }
     },

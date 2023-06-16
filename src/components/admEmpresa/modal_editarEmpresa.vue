@@ -17,10 +17,10 @@
 
         <b-row class="pb-2">
             <b-col class="col-6">
-                <label for="input-live">Nombre:</label>
+                <label for="input-live">Nombre empresa:</label>
                 <ValidationProvider name="nombre" rules="required|min:2" v-slot="validationContext">
 
-                    <b-form-input size="sm"  class="mb-1" v-model="Nombre" :state="getValidationState(validationContext)" aria-describedby="rut-live-feedback" trim></b-form-input>
+                    <b-form-input size="sm" class="mb-1" v-model="Nombre" :state="getValidationState(validationContext)" aria-describedby="rut-live-feedback" trim></b-form-input>
 
                     <b-form-invalid-feedback id="nombre-live-feedback">{{
                         validationContext.errors[0] }}
@@ -51,7 +51,7 @@
                     </b-form-invalid-feedback>
                 </ValidationProvider>
                 <ValidationProvider name="razon" rules="required" v-slot="validationContext">
-                    <label for="input-live">Razón Social:</label>
+                    <label for="input-live">Razón social:</label>
                     <b-form-input size="sm" class="mb-1" id="input-live" :state="getValidationState(validationContext)" v-model="Razon_social" aria-describedby="input-live-help nombre-live-feedback" placeholder="" trim></b-form-input>
                     <b-form-invalid-feedback id="razon-live-feedback">{{
                         validationContext.errors[0] }}
@@ -72,24 +72,24 @@
             <br />
             <div></div>
             <div class="form-group" v-for="(input,k) in direcciones" :key="k">
-               
+
                 <b-row padding="0">
                     <b-col class="col-4">
                         <ValidationProvider :name="'ciudad' + k" rules="required" v-slot="validationContext">
-                        <b-form-input :state="getValidationState(validationContext)" :placeholder="'Ciudad '+(parseInt(k) +1)"  style="height:30px" type="text" class="form-control" v-model="input.ciudad"/>
-                
-                        <b-form-invalid-feedback id="ciudad-live-feedback">{{
+                            <b-form-input :state="getValidationState(validationContext)" :placeholder="'Ciudad '+(parseInt(k) +1)" style="height:30px" type="text" class="form-control" v-model="input.ciudad" />
+
+                            <b-form-invalid-feedback id="ciudad-live-feedback">{{
                         validationContext.errors[0] }}
-                    </b-form-invalid-feedback>
-                </ValidationProvider>
+                            </b-form-invalid-feedback>
+                        </ValidationProvider>
                     </b-col>
                     <b-col class="col-6">
                         <ValidationProvider :name="'direccion' + k" rules="required" v-slot="validationContext">
-                        <b-form-input :state="getValidationState(validationContext)"   :placeholder="'Dirección ' + (parseInt(k) +1)" style="height:30px" type="text" class="form-control" v-model="input.direccion"/>
-                        <b-form-invalid-feedback id="ciudad-live-feedback">{{
+                            <b-form-input :state="getValidationState(validationContext)" :placeholder="'Dirección ' + (parseInt(k) +1)" style="height:30px" type="text" class="form-control" v-model="input.direccion" />
+                            <b-form-invalid-feedback id="ciudad-live-feedback">{{
                         validationContext.errors[0] }}
-                    </b-form-invalid-feedback>
-                    </ValidationProvider>
+                            </b-form-invalid-feedback>
+                        </ValidationProvider>
                     </b-col>
                     <b-col class="col-2">
                         <b-button-group>
@@ -102,23 +102,23 @@
                         </b-button-group>
 
                     </b-col>
-                   
+
                 </b-row>
 
                 <span>
 
                 </span>
-           
+
             </div>
 
         </div>
         <template #modal-footer>
-<b-overlay :show="Cargando" rounded opacity="0.6" spinner-small spinner-variant="primary" class="d-inline-block">
-  
-            <b-button @click="enviarFormulario()" variant="primary" size="xl" class="float-right reactive-button" style="font-weight:bold">
-                Crear y Guardar
-            </b-button>
-</b-overlay>
+            <b-overlay :show="Cargando" rounded opacity="0.6" spinner-small spinner-variant="primary" class="d-inline-block">
+
+                <b-button @click="enviarFormulario()" variant="primary" size="xl" class="float-right reactive-button" style="font-weight:bold">
+                    Crear y Guardar
+                </b-button>
+            </b-overlay>
         </template>
 
     </b-modal>
@@ -152,11 +152,13 @@ export default {
 
         return {
             Cargando: false,
+            direcciones_eliminar: [],
             direcciones: [{
+                id: '',
                 ciudad: '',
                 direccion: ''
             }],
-            dataDirecciones:"",
+            dataDirecciones: "",
             Nombre: "",
             Nombre_abreviado: "",
             Correo: "",
@@ -167,51 +169,55 @@ export default {
         }
     },
     methods: {
-        obtenerDetalles(){
+        obtenerDetalles() {
             empresaService.obtenerDetallesEmpresa(this.Rut).then((response) => {
-                        console.log(response)
-                        if (response != null) {
-                            if (response.status == 200) {
-                               
-                               
-                                response.data.ciudades.forEach((ciudad) => {
-                                    console.log(ciudad)
-                                  this.direcciones.push({
-                ciudad: ciudad.nombre_ciudad,
-                direccion: ciudad.direccion
-            })
-                                })
-                                // elimina primer valor vacio
-                                this.direcciones.shift();
+                console.log(response)
+                if (response != null) {
+                    if (response.status == 200) {
 
-                            }
-
-
-
-
-
-
-
-                        } else {
-                            this.$bvToast.toast(`Error al obtener detalles empresa`, {
-                                title: 'Error',
-                                toaster: 'b-toaster-top-center',
-                                solid: true,
-                                variant: "warning",
-                                appendToast: true
+                        response.data.ciudades.forEach((ciudad) => {
+                            console.log(ciudad)
+                            this.direcciones.push({
+                                id: ciudad.id_ciudad,
+                                ciudad: ciudad.nombre_ciudad,
+                                direccion: ciudad.direccion
                             })
-                        }
+                        })
+                        // elimina primer valor vacio
+                        this.direcciones.shift();
+                        console.log('direcciones a editar',this.direcciones);
+                    }
+
+                } else {
+                    this.$bvToast.toast(`Error al obtener detalles empresa`, {
+                        title: 'Error',
+                        toaster: 'b-toaster-top-center',
+                        solid: true,
+                        variant: "warning",
+                        appendToast: true
                     })
+                }
+            })
         },
         add() {
             this.direcciones.push({
+                id: '',
                 ciudad: '',
                 direccion: ''
             })
             console.log(this.direcciones)
         },
 
+
         remove(index) {
+            if(this.direcciones[index].id != ""){
+                this.direcciones[index].ciudad = ""
+                this.direcciones[index].direccion = ""
+                // Se guarda registro de direcciones a eliminar en la BD
+                this.direcciones_eliminar.push(this.direcciones[index]);
+                console.log('direcciones a eliminar',this.direcciones_eliminar)
+            }
+        
             this.direcciones.splice(index, 1)
         },
         getValidationState({
@@ -229,23 +235,24 @@ export default {
                 } else {
                     this.Cargando = true;
                     var rutData = {
-                rut_empresa: this.Rut
+                        rut_empresa: this.Rut
                     }
                     this.dataDirecciones = this.direcciones.slice(0);
 
-                  this.dataDirecciones.unshift(rutData)
-                  
-                    console.log(this.dataDirecciones)
+                    this.dataDirecciones.unshift(rutData)
+
+                    this.dataDirecciones = this.dataDirecciones.concat(this.direcciones_eliminar);
+                    console.log('direcciones a enviar',this.dataDirecciones)
                     var data = {
                         'rut_empresa': this.Rut,
                         'nombre_empresa': this.Nombre,
                         'nombre_abreviado': this.Nombre_abreviado,
-                        'correo' : this.Correo,
+                        'correo': this.Correo,
                         'razon_social': this.Razon_social,
                         'giro': this.Giro,
-                        'direcciones': this.dataDirecciones
+                        'direcciones': this.dataDirecciones,
                     }
-                    
+
                     console.log("data a enviar", data)
                     empresaService.actualizarEmpresa(data).then((response) => {
                         console.log(response)
@@ -259,6 +266,7 @@ export default {
                                     variant: "success",
                                     appendToast: true
                                 })
+                                this.direcciones_eliminar = [];
                                 this.$emit('refrescar');
                             }
                             this.$bvModal.hide('modal-editar-empresa')
