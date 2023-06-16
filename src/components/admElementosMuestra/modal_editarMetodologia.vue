@@ -1,4 +1,5 @@
 <template>
+      <validation-observer ref="form">
 <b-modal id="modal-Editar-Metodologia" ref="modal" :title="`Editar Metodologia`" size="lg">
     <template #modal-header="{ close }">
         <b-row class="d-flex justify-content-around">
@@ -9,17 +10,22 @@
         </button>
     </template>
 
-    <b-form-group label="Nombre de la Metodología">
-        <b-form-input v-model="Nombre"></b-form-input>
-    </b-form-group>
+    <ValidationProvider name="nombre de la metodología" rules="required" v-slot="validationContext">
+      <label for="input-live">Nombre de la metodología:</label>
+      <b-form-input id="input-live" v-model="Nombre" :state="getValidationState(validationContext)" placeholder="Ingrese nombre de la metodología" ></b-form-input>
+      <b-form-invalid-feedback>{{ validationContext.errors[0] }}</b-form-invalid-feedback>
+    </ValidationProvider>
 
-    <b-form-group label="Descripción">
-        <b-form-textarea v-model="Descripción"></b-form-textarea>
-    </b-form-group>
+    <ValidationProvider name="descripción" rules="max:255" v-slot="validationContext">
+      <label for="input-live">Descripción:</label>
+      <b-form-textarea  rows="3"
+       id="input-live" v-model="Descripción" :state="getValidationState(validationContext)" placeholder="ingrese descripción (opcional)" ></b-form-textarea>
+      <b-form-invalid-feedback>{{ validationContext.errors[0] }}</b-form-invalid-feedback>
+    </ValidationProvider>  
 
     <b-row>
         <b-col>
-            <b-form-group label="Analista Asignado">
+            <b-form-group label="Analista asignado">
                 <b-form-select v-model="AnalistaAsignado" :options="opcionesAnalista" placeholder="Seleccione un Analista" @change="agregarAnalistaSeleccionado"></b-form-select>
             </b-form-group>
         </b-col>
@@ -27,7 +33,7 @@
 
     <b-row v-if="analistas_ya_seleccionados.length > 0" class="mt-3">
         <b-col>
-            <b-form-group label="Analistas Seleccionados">
+            <b-form-group label="Analistas seleccionados">
                 <div v-for="(analista, index) in analistas_ya_seleccionados" :key="index" class="d-flex align-items-center analista-item">
                     <b-input readonly :value="analista.nombre"></b-input>
                     <b-button variant="danger" @click="eliminarAnalistaSeleccionado(index)" class="ml-2">
@@ -42,18 +48,15 @@
         El analista ya fue agregado.
     </b-alert>
 
-    <div class="d-flex justify-content-center">
-        <b-button @click="ActualizarMetodologia()" variant="primary" size="xl" class="reactive-button" style="font-weight:bold">
-            Editar Metodología
-        </b-button>
-    </div>
+   
 
-    <template #modal-footer="{ close }">
-        <b-button @click="close()" variant="primary" size="xl" class="float-right reactive-button" style="font-weight:bold">
-            Cerrar
+    <template #modal-footer>
+  <b-button @click="ActualizarMetodologia()" variant="primary" size="xl" class="reactive-button" style="font-weight:bold">
+            Editar y guardar Metodología
         </b-button>
     </template>
 </b-modal>
+</validation-observer>
 </template>
 
 <script>
@@ -65,7 +68,7 @@ export default {
     watch: {
         metodologiaData: {
             handler() {
-
+                console.log("comienzo a editar!")
                 this.Nombre = this.metodologiaData.nombre_metodologia;
                 this.Id = this.metodologiaData.id_metodologia;
                 this.Descripción = this.metodologiaData.detalle_metodologia;
@@ -110,7 +113,9 @@ export default {
     },
 
     methods: {
-
+        getValidationState({ dirty, validated, valid = null }) {
+      return dirty || validated ? valid : null;
+    },
         obtenerAnalistas() {
             // TODO: Cambiar a obtenerTodosPersonal que sea Analista Quimico o Quimico
             PersonalService.obtenerTodosPersonal().then((response) => {
@@ -187,16 +192,16 @@ export default {
             ElementosService.actualizarMetodologia(data).then((response) => {
                 if (response != null) {
                     if (response.status == 200) {
-                        this.$bvToast.toast(`Se ha editado la metodología exitosamente!`, {
-                            title: 'Exito',
+                        this.$bvToast.toast(`La metodología ha sido editada exitosamente`, {
+                            title: 'Éxito',
                             toaster: 'b-toaster-top-center',
                             solid: true,
                             variant: "success",
                             appendToast: true
                         })
 
-                        this.$emit('metodologiaAgregada');
-                        this.$emit('refrescarPagina');
+                        
+                        this.$emit('refrescar');
 
                             this.AnalistaAsignado = ''
                             this.analistas = []
@@ -204,6 +209,7 @@ export default {
                             this.empleados = []
                             this.empleados_agregar = []
                             this.empleados_eliminar = [];
+                            this.analistas_ya_en_sistema = [];
                             this.$refs.modal.hide()
                     }
                 } else {

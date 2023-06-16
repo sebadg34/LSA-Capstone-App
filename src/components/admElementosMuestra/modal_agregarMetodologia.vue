@@ -3,36 +3,37 @@
   <b-modal id="modal-Agregar-Metodologia" ref="modal" :title="`Agregar Metodologia`" size="lg">
     <template #modal-header="{ close }">
       <b-row class="d-flex justify-content-around">
-        <div class="pl-3">Agregar Metodología</div>
+        <div class="pl-3">Agregar metodología</div>
       </b-row>
       <button type="button" class="close" aria-label="Close" @click="close()">
         <span aria-hidden="true" style="color:white">&times;</span>
       </button>
     </template>  
 
-    <ValidationProvider name="Nombre Metodologia" rules="required" v-slot="validationContext">
-      <label for="input-live">Nombre de la Metodología:</label>
-      <b-form-input id="input-live" v-model="Nombre" :state="getValidationState(validationContext)" placeholder="Nombre de la Metodología ..." ></b-form-input>
+    <ValidationProvider name="nombre de la metodología" rules="required" v-slot="validationContext">
+      <label for="input-live">Nombre de la metodología:</label>
+      <b-form-input id="input-live" v-model="Nombre" :state="getValidationState(validationContext)" placeholder="Ingrese nombre de la metodología" ></b-form-input>
       <b-form-invalid-feedback>{{ validationContext.errors[0] }}</b-form-invalid-feedback>
     </ValidationProvider>
-
-    <ValidationProvider name="Descripción" rules="required" v-slot="validationContext">
+    <br/>
+    <ValidationProvider name="descripción" rules="max:255" v-slot="validationContext">
       <label for="input-live">Descripción:</label>
-      <b-form-input id="input-live" v-model="Descripción" :state="getValidationState(validationContext)" placeholder="Descripción" ></b-form-input>
+      <b-form-textarea  rows="3"
+       id="input-live" v-model="Descripción" :state="getValidationState(validationContext)" placeholder="ingrese descripción (opcional)" ></b-form-textarea>
       <b-form-invalid-feedback>{{ validationContext.errors[0] }}</b-form-invalid-feedback>
     </ValidationProvider>    
-   
+   <br/>
     <b-row>
       <b-col>
-        <b-form-group label="Analista Asignado">
-          <b-form-select v-model="AnalistaAsignado" :options="opcionesAnalista" placeholder="Seleccione un Analista" @change="agregarAnalistaSeleccionado"></b-form-select>
+        <b-form-group label="Analista asignado">
+          <b-form-select v-model="AnalistaAsignado" :options="opcionesAnalista" placeholder="Seleccione un analista (opcional)" @change="agregarAnalistaSeleccionado"></b-form-select>
         </b-form-group>
       </b-col>
     </b-row>
 
 <b-row v-if="analistasSeleccionados.length > 0" class="mt-3">
   <b-col>
-    <b-form-group label="Analistas Seleccionados">
+    <b-form-group label="Analistas seleccionados">
       <div v-for="(analista, index) in analistasSeleccionados" :key="index" class="d-flex align-items-center analista-item">
         <b-input readonly :value="analista.nombre"></b-input>
         <b-button variant="danger" @click="eliminarAnalistaSeleccionado(index)" class="ml-2">
@@ -48,14 +49,12 @@
 </b-alert>
 
 <div class="d-flex justify-content-center">
-  <b-button @click="AgregarMetodologia()" variant="primary" size="xl" class="reactive-button" style="font-weight:bold">
-    Agregar
-  </b-button>
+ 
 </div>
 
-<template #modal-footer="{ close }">
-  <b-button @click="close()" variant="primary" size="xl" class="float-right reactive-button" style="font-weight:bold">
-    Cerrar
+<template #modal-footer>
+  <b-button @click="AgregarMetodologia()" variant="primary" size="xl" class="reactive-button" style="font-weight:bold">
+    Agregar metodología
   </b-button>
     </template>
   </b-modal>
@@ -165,7 +164,7 @@ eliminarAnalistaSeleccionado(index) {
               variant: "success",
               appendToast: true
             })    
-            this.$emit('metodologiaAgregada');   
+            this.$emit('refrescar');   
 
             this.Nombre = '',
             this.Descripción = '',           

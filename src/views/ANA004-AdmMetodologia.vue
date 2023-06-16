@@ -8,8 +8,8 @@
         </b-col>
     </b-row>
     <modal_detallesMetodologia :detalles-data="this.modalDetallesData" />
-    <modal_agregarMetodologia @metodologiaAgregada="MetodologiaAgregada" />
-    <modal_editarMetodologia :metodologia-data="this.modalEditarData" @metodologiaAgregada="MetodologiaAgregada" @refrescarPagina="refrescarPagina" />
+    <modal_agregarMetodologia @refrescar="MetodologiaAgregada" />
+    <modal_editarMetodologia :metodologia-data="this.modalEditarData" @refrescar="MetodologiaAgregada" />
 
     <div class="row justify-content-center" style="padding-top:30px; padding-bottom:10px; margin-left: 5px;">
         <div class="col-10">
