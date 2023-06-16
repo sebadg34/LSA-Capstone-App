@@ -15,14 +15,14 @@
       <b-form-input id="input-live" v-model="Nombre" :state="getValidationState(validationContext)" placeholder="Ingrese nombre de la metodología" ></b-form-input>
       <b-form-invalid-feedback>{{ validationContext.errors[0] }}</b-form-invalid-feedback>
     </ValidationProvider>
-
+<br/>
     <ValidationProvider name="descripción" rules="max:255" v-slot="validationContext">
       <label for="input-live">Descripción:</label>
       <b-form-textarea  rows="3"
        id="input-live" v-model="Descripción" :state="getValidationState(validationContext)" placeholder="ingrese descripción (opcional)" ></b-form-textarea>
       <b-form-invalid-feedback>{{ validationContext.errors[0] }}</b-form-invalid-feedback>
     </ValidationProvider>  
-
+    <br/>
     <b-row>
         <b-col>
             <b-form-group label="Analista asignado">
