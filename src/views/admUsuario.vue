@@ -2,7 +2,7 @@
 <div style="margin-bottom:50px">
 
     <modal_agregarUsuario @refrescar="obtenerUsuarios" />
-    <modal_estadoPersonal @refrescar="obtenerUsuarios" :user-data="this.modalEstadoData" />
+    <modal_estadoUsuario @refrescar="obtenerUsuarios" :user-data="this.modalEstadoData" />
     <modal_passwordUsuario :user-data="this.modalPasswordData"/>
 
     <b-row align-h="start" style="padding-top:30px;">
@@ -114,7 +114,7 @@ import modal_agregarUsuario from '@/components/admUsuario/modal_agregarUsuario.v
 import modal_passwordUsuario from '@/components/admUsuario/modal_passwordUsuario.vue'
 //import modal_detallesPersonal from '@/components/admPersonal/modal_detallesPersonal.vue'
 //mport modal_editarPersonal from '@/components/admPersonal/modal_editarPersonal.vue'
-import modal_estadoPersonal from '@/components/admPersonal/modal_estadoPersonal.vue'
+import modal_estadoUsuario from '@/components/admUsuario/modal_estadoUsuario.vue'
 
 import usuarioService from "@/helpers/api-services/Auth.service"
 import roleService from "@/helpers/api-services/Role.service"
@@ -122,7 +122,7 @@ export default {
     name: 'admPersonal',
     components: {
         modal_agregarUsuario,
-        modal_estadoPersonal,
+        modal_estadoUsuario,
         modal_passwordUsuario
     },
     mounted() {
@@ -211,7 +211,7 @@ export default {
         },
         abrirEstadoPersonal(data) {
             this.modalEstadoData = data;
-            this.$bvModal.show('modal-estado-personal')
+            this.$bvModal.show('modal-estado-usuario')
         }
 
     }
