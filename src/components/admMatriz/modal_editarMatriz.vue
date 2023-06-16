@@ -1,10 +1,11 @@
 <template>
-<b-modal id="modal-Editar-Matriz" ref="modal" :title="`Editar Matriz`" size="lg">
+     <validation-observer ref="form">
+<b-modal id="modal-Editar-Matriz" ref="modal" :title="`Editar matriz`" size="lg">
 
     <template #modal-header="{ close }">
         <!-- Emulate built in modal header close button action -->
         <b-row class="d-flex justify-content-around">
-            <div class="pl-3">Editar Matriz</div>
+            <div class="pl-3">Editar matriz</div>
         </b-row>
         <button type="button" class="close" aria-label="Close" @click="close()">
             <span aria-hidden="true" style="color:white">&times;</span>
@@ -13,10 +14,12 @@
 
     <!-- ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// -->
 
-    <b-form-group label="Nombre de Matriz">
-        <b-form-input v-model="Nombre"></b-form-input>
-    </b-form-group>
-
+    <ValidationProvider name="Nombre Matriz" rules="required" v-slot="validationContext">
+      <label for="input-live">Nombre de la matriz:</label>
+      <b-form-input id="input-live" v-model="Nombre" :state="getValidationState(validationContext)" placeholder="Ingrese nombre de la matriz..." ></b-form-input>
+      <b-form-invalid-feedback>{{ validationContext.errors[0] }}</b-form-invalid-feedback>
+    </ValidationProvider>
+<br/>
     <b-row>
 
         <b-col>
@@ -26,12 +29,15 @@
         </b-col>
 
         <b-col>
-            <b-form-group label="Seleccione una Metodología">
+            <b-form-group label="Seleccione una metodología">
                 <b-form-select v-model="metodologiaSeleccionada" :disabled="metodologiaDeshabilitada" :options="opcionesMetodologia" placeholder="Seleccione una metodología" @change="agregarObjetosSeleccionados"></b-form-select>
             </b-form-group>
         </b-col>
 
     </b-row>
+    <b-alert variant="danger" :show="sinParametro" dismissible @dismissed="sinParametro = false">
+          Falta parámetro asignado para crear la matriz.
+        </b-alert>
 
     <b-row v-if="objetosSeleccionados.length > 0" class="mt-3">
         <b-col>
@@ -51,19 +57,17 @@
         Los Parametros y Metodologias ya se encuentran agregados.
     </b-alert>
 
-    <div class="d-flex justify-content-center">
-        <b-button @click="actualizarMatriz()" variant="primary" size="xl" class="reactive-button" style="font-weight:bold">
-            Editar Matriz
-        </b-button>
-    </div>
+    
 
     <!-- ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// -->
-    <template #modal-footer="{ close }">
-        <b-button @click="close()" variant="primary" size="xl" class="float-right reactive-button" style="font-weight:bold">
-            Cerrar
+    <template #modal-footer>
+        <b-button @click="actualizarMatriz()" variant="primary" size="xl" class="reactive-button" style="font-weight:bold">
+            Editar y guardar matriz
         </b-button>
+       
     </template>
 </b-modal>
+</validation-observer>
 </template>
 
 <script>
@@ -88,6 +92,7 @@ export default {
             opcionesParametro: [],
             objetosSeleccionados: [],
             alertaDuplicado: false,
+            sinParametro: false,
             listaParametros: [],
             nombreMatriz: '',
             id: '',
@@ -283,9 +288,26 @@ export default {
             }
             this.objetosSeleccionados.splice(index, 1);
         },
-
+        getValidationState({ dirty, validated, valid = null }) {
+            return dirty || validated ? valid : null;
+        },
         actualizarMatriz() {
 
+            this.$refs.form.validate().then(success => {
+                if(!success ){
+                    if(this.objetosSeleccionados.length == 0){
+                        this.sinParametro = true;
+                    }else{
+                        this.sinParametro = false;
+                    }
+                    return;
+                }else{
+                    if(this.objetosSeleccionados.length == 0){
+                        this.sinParametro = true;
+                        return;
+                    }else{
+                        this.sinParametro = false;
+                    }
             var data = {
 
                 nombre_matriz: this.Nombre,
@@ -299,13 +321,13 @@ export default {
                 if (response != null) {
                     if (response.status == 200) {
                         this.$bvToast.toast(`Creación de la matriz exitosa`, {
-                            title: 'Exito',
+                            title: 'Éxito',
                             toaster: 'b-toaster-top-center',
                             solid: true,
                             variant: "success",
                             appendToast: true
                         })
-                        this.$emit('matrizAgregada');
+                        this.$emit('refrescar');
 
                         this.Nombre = '',
                         this.metodologiaSeleccionada = '',
@@ -325,6 +347,8 @@ export default {
                     })
                 }
             })
+                }})
+
         },
 
     },

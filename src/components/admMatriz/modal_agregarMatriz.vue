@@ -14,12 +14,13 @@
 
     <!-- ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// -->
 
-    <ValidationProvider name="Nombre Matriz" rules="required" v-slot="validationContext">
+    <ValidationProvider name="nombre matriz" rules="required" v-slot="validationContext">
       <label for="input-live">Nombre de la matriz:</label>
-      <b-form-input id="input-live" v-model="Nombre" :state="getValidationState(validationContext)" placeholder="Nombre de la Matriz ..." ></b-form-input>
+      <b-form-input id="input-live" v-model="Nombre" :state="getValidationState(validationContext)" placeholder="Ingrese nombre de la matriz..." ></b-form-input>
       <b-form-invalid-feedback>{{ validationContext.errors[0] }}</b-form-invalid-feedback>
     </ValidationProvider>
 
+    <br/>
     <b-row>
 
         <b-col>
@@ -35,7 +36,9 @@
         </b-col>
 
     </b-row>
-
+    <b-alert variant="danger" :show="sinParametro" dismissible @dismissed="sinParametro = false">
+          Falta parámetro asignado para crear la matriz.
+        </b-alert>
     <b-row v-if="objetosSeleccionados.length > 0" class="mt-3">
         <b-col>
             <b-form-group label="Parámetros Seleccionados:">
@@ -51,19 +54,14 @@
     </b-row>
 
     <b-alert variant="danger" :show="alertaDuplicado" dismissible @dismissed="alertaDuplicado = false">
-        Los Parametros y Metodologias ya se encuentran agregados.
+        Los Parametros y Metodologias ya se encuentran agregados
     </b-alert>
 
-    <div class="d-flex justify-content-center">
-        <b-button @click="AgregarMatriz()" variant="primary" size="xl" class="reactive-button" style="font-weight:bold">
-            Agregar Matriz
-        </b-button>
-    </div>
-
+    
     <!-- ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// -->
-    <template #modal-footer="{ close }">
-        <b-button @click="close()" variant="primary" size="xl" class="float-right reactive-button" style="font-weight:bold">
-            Cerrar
+    <template #modal-footer>
+        <b-button @click="AgregarMatriz()" variant="primary" size="xl" class="reactive-button" style="font-weight:bold">
+            Agregar matriz
         </b-button>
     </template>
 </b-modal>
@@ -85,6 +83,7 @@ export default {
             opcionesParametro: [], // dejar vacio cuando se implemente las opciones via backend.
             objetosSeleccionados: [],
             alertaDuplicado: false,
+            sinParametro: false,
             parametros_agregar: [{
                 id_parametro: '',
                 id_metodologia: '',
@@ -217,8 +216,20 @@ export default {
 
             this.$refs.form.validate().then(success => {
                 if(!success ){
+                    if(this.objetosSeleccionados.length == 0){
+                        this.sinParametro = true;
+                    }else{
+                        this.sinParametro = false;
+                    }
                     return;
                 }else{
+
+                    if(this.objetosSeleccionados.length == 0){
+                        this.sinParametro = true;
+                        return;
+                    }else{
+                        this.sinParametro = false;
+                    }
                     const matricesFiltradas = this.parametros_agregar.slice(1);
                     const data = {
                         nombre_matriz: this.Nombre,
@@ -234,17 +245,18 @@ export default {
                         if (response != null) {
                             if (response.status == 200) {
                                 this.$bvToast.toast(`Creación de la matriz exitosa`, {
-                                    title: 'Exito',
+                                    title: 'Éxito',
                                     toaster: 'b-toaster-top-center',
                                     solid: true,
                                     variant: "success",
                                     appendToast: true
                                 })
-                                this.$emit('matrizAgregada');
+                                this.$emit('refrescar');
 
                                 this.Nombre = '',
                                 this.metodologiaSeleccionada = '',
                                 this.parametroSeleccionado = '',
+                                this.sinParametro = false;
                                 this.objetosSeleccionados = [],
                                 this.parametros_agregar = [{
                                     id_parametro: '',

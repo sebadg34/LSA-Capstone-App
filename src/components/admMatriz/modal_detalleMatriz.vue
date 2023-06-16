@@ -2,7 +2,7 @@
 <b-modal id="modal-detalle-matriz" ref="modal" :title="`Detalles de la Matriz`" size="lg">
     <template #modal-header="{ close }">
         <b-row class="d-flex justify-content-around">
-            <div class="pl-3">Detalles de la matríz</div>
+            <div class="pl-3">Detalles de la matriz</div>
         </b-row>
 
         <button type="button" class="close" aria-label="Close" @click="close()">
@@ -14,7 +14,7 @@
         <b-row class="pb-2">
             <b-col class="col-12">
                 <div>
-                    <span style="font-weight:bold; padding-right:20px"> Nombre matríz: </span> <span>{{ Nombre }}</span>
+                    <span style="font-weight:bold; padding-right:20px"> Nombre matriz: </span> <span>{{ Nombre }}</span>
                 </div>
                 <hr />
                 <div class="pb-2">
