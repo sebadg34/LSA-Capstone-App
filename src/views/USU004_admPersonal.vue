@@ -9,7 +9,7 @@
     <b-row align-h="start" style="padding-top:30px;">
         <b-col class="col-6">
             <div style="font-size:2rem; font-weight: bold; color: var(--lsa-blue)">
-                Sistema administración de personal
+                Sistema de administración de personal
             </div>
         </b-col>
     </b-row>
@@ -18,20 +18,20 @@
 
         <b-col class="col-10">
             <b-row style="padding-top:30px; padding-bottom:10px">
-                <b-col class="col-6">
+                <b-col class="col-4">
 
                     <b-col class="col-6">
                         <b-row>
                             <b-button v-b-modal.modal-personal style="border-radius: 15px; font-weight: bold; font-size: 18px; " class="lsa-light-blue reactive-button">
 
-                                Agregar Personal
+                                Agregar personal
                                 <b-icon icon="person-plus-fill"></b-icon>
                             </b-button>
                         </b-row>
                     </b-col>
 
                 </b-col>
-                <b-col class="col-6">
+                <b-col class="col-8">
                     <b-row>
 
                         <b-form-group>
@@ -40,9 +40,9 @@
                                 <b-input-group-prepend is-text>
                                     <b-icon icon="search"></b-icon>
                                 </b-input-group-prepend>
-                                <b-form-input placeholder="Nombre usuario..." id="input-1" v-model="nombreFiltro">
+                                <b-form-input placeholder="Nombre del usuario..." id="input-1" v-model="nombreFiltro">
                                 </b-form-input>
-                                <b-form-input placeholder="Rut usuario..." id="input-1" v-model="rutFiltro" trim></b-form-input>
+                                <b-form-input placeholder="RUT del usuario..." id="input-1" v-model="rutFiltro" trim></b-form-input>
                                 <b-form-select placeholder="Cargo" v-model="cargoFiltro" :options="cargoOpciones">
                                 </b-form-select>
                                 <b-button-group style="margin-left:10px">
@@ -83,7 +83,7 @@
                     <div class="text-center lsa-light-blue-text my-2 row">
                         <div class="col">
 
-                            <div style=" color:gray"> No hay personal registrado para mostrar</div>
+                            <div style=" color:gray"> No hay personal registrado para mostrar.</div>
                         </div>
 
                     </div>
@@ -93,7 +93,7 @@
                     <div class="text-center lsa-light-blue-text my-2 row">
                         <div class="col">
                             <b-icon icon="search" animation="fade" variant="secondary"></b-icon>
-                            <div style="font-weight:bold; color:gray"> No hay resultados que coincidan con su búsqueda
+                            <div style="font-weight:bold; color:gray"> No hay resultados que coincidan con su búsqueda.
                             </div>
                         </div>
 
@@ -188,7 +188,7 @@ export default {
             cargoFiltro: null,
             cargoOpciones: [{
                     value: null,
-                    text: 'Seleccione cargo',
+                    text: 'Seleccione un cargo',
                     disabled: true
                 },
                 {
@@ -228,7 +228,7 @@ export default {
             modalEstadoData: {},
             campos_tabla: [{
                 key: 'rut_empleado',
-                label: 'Rut'
+                label: 'RUT'
             }, {
                 key: 'nombre',
                 label: 'Nombre',

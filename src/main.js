@@ -32,6 +32,18 @@ Object.keys(rules).forEach(rule => {
 });
 localize("es", es);
 
+const dictionary = {
+  
+  es: {
+    messages: {
+      required: "El campo {_field_} es obligatorio."
+    }
+  }
+};
+
+// Override and merge the dictionaries
+localize(dictionary);
+
 // Make BootstrapVue available throughout your project
 Vue.use(BootstrapVue)
 // Optionally install the BootstrapVue icon components plugin

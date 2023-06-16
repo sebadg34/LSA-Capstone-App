@@ -3,7 +3,7 @@
 
     <b-button v-on:click="menu_active=!menu_active" class="menuDropdownButton menu-button lsa-orange white-text ml-2 mr-2">
         <b-icon style="color:white" icon="menu-app" aria-hidden="true"></b-icon>
-        <span style="color:white" class="px-md-2 dropdown-desktop">Menu</span>
+        <span style="color:white" class="px-md-2 dropdown-desktop">Menú</span>
         <b-icon class="menuDropdownIcon" style="color:white" icon="caret-down-fill" aria-hidden="true"></b-icon>
     </b-button>
 
@@ -20,18 +20,18 @@
                         <div>
                             <b-icon class="lsa-orange-text" icon="people-fill"></b-icon>
                             <span class="px-md-2"></span>
-                            <span>Administrar Personal</span>
+                            <span>Administrar personal</span>
                         </div>
                         <b-icon icon="chevron-down" variant="dark"></b-icon>
                     </b-list-group-item>
                     <b-collapse accordion="my-accordion" id="collapse-1">
                         <b-list-group-item @click="navegarRuta('admPersonal')" class="cursorToHand menuButton">
                             <b-icon class="lsa-orange-text" icon="person-plus-fill"></b-icon>
-                            <span class="px-md-2"></span> Agregar Personal
+                            <span class="px-md-2"></span> Agregar personal
                         </b-list-group-item>
                         <b-list-group-item v-if="rol == 1 || rol == 2 || rol == 7 || rol == 0" @click="navegarRuta('admDisponibilidad')" class="cursorToHand menuButton">
                             <b-icon class="lsa-orange-text" icon="person-check-fill"></b-icon>
-                            <span class="px-md-2"></span> Disponibilidad Personal
+                            <span class="px-md-2"></span> Disponibilidad del personal
                         </b-list-group-item>
                     </b-collapse>
                     </template>
@@ -41,7 +41,7 @@
                         <div>
                             <b-icon class="lsa-orange-text" icon="eyedropper"></b-icon>
                             <span class="px-md-2"></span>
-                            <span>Administrar Laboratorio</span>
+                            <span>Administrar laboratorio</span>
                         </div>
                         <b-icon icon="chevron-down" variant="dark"></b-icon>
                     </b-list-group-item>
@@ -49,12 +49,12 @@
 
                         <b-list-group-item @click="navegarRuta('/')" class="cursorToHand menuButton">
                             <b-icon class="lsa-orange-text" icon="eyedropper"></b-icon>
-                            <span class="px-md-2"></span> Administrar Muestra
+                            <span class="px-md-2"></span> Administrar muestra
                         </b-list-group-item>
 
                         <b-list-group-item @click="navegarRuta('/')" class="cursorToHand menuButton">
                             <b-icon class="lsa-orange-text" icon="archive-fill"></b-icon>
-                            <span class="px-md-2"></span> Administrar Elementos
+                            <span class="px-md-2"></span> Administrar elementos
                         </b-list-group-item>
                     </b-collapse>
 
@@ -63,7 +63,7 @@
                         <div>
                             <b-icon class="lsa-orange-text" icon="briefcase-fill"></b-icon>
                             <span class="px-md-2"></span>
-                            <span>Administrar Cliente</span>
+                            <span>Administrar cliente</span>
                         </div>
                         <b-icon icon="chevron-down" variant="dark"></b-icon>
                     </b-list-group-item>
@@ -72,13 +72,13 @@
 
                         <b-list-group-item v-if="rol == 2 || rol == 6 || rol == 0" @click="navegarRuta('admSolicitante')" class="cursorToHand menuButton">
                             <b-icon class="lsa-orange-text" icon="people-fill"></b-icon>
-                            <span class="px-md-2"></span> Administrar Solicitante
+                            <span class="px-md-2"></span> Administrar solicitante
                         </b-list-group-item>
 
 
                         <b-list-group-item v-if="rol == 2 || rol == 6 || rol == 0" @click="navegarRuta('admEmpresa')" class="cursorToHand menuButton">
                             <b-icon class="lsa-orange-text" icon="building"></b-icon>
-                            <span class="px-md-2"></span> Administrar Empresa
+                            <span class="px-md-2"></span> Administrar empresa
                         </b-list-group-item>
                     </b-collapse>
                 </template>
@@ -96,7 +96,7 @@
                     <b-collapse accordion="my-accordion" id="collapse-4">
                         <b-list-group-item @click="navegarRuta('admUsuario')" class="cursorToHand menuButton">
                             <b-icon class="lsa-orange-text" icon="people-fill"></b-icon>
-                            <span class="px-md-2"></span> Registrar Usuarios
+                            <span class="px-md-2"></span> Registrar usuarios
                         </b-list-group-item>
                     </b-collapse>
                 </template>

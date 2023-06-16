@@ -1,12 +1,12 @@
 <template>
 <validation-observer ref="form">
-    <b-modal id="modal-personal" ref="modal" title="Agregar Personal" size="lg">
+    <b-modal id="modal-personal" ref="modal" title="Agregar personal" size="lg">
 
         <template #modal-header="{ close }">
             <!-- Emulate built in modal header close button action -->
 
             <b-row class="d-flex justify-content-around">
-                <div class="pl-3">Editar Personal</div>
+                <div class="pl-3">Agregar personal</div>
 
             </b-row>
 
@@ -17,16 +17,16 @@
 
         <b-row class="pb-2">
             <b-col class="col-6">
-                <label for="input-live">Rut:</label>
-                <ValidationProvider name="rut" rules="required|rut|rutSinPuntoGuion" v-slot="validationContext">
+                <label for="input-live">RUT:</label>
+                <ValidationProvider name="RUT" rules="required|rut|rutSinPuntoGuion" v-slot="validationContext">
 
-                    <b-form-input placeholder="ingrese rut sin puntos ni guión" size="sm" id="rut-input" class="mb-1" v-model="Rut" :state="getValidationState(validationContext)" aria-describedby="rut-live-feedback"></b-form-input>
+                    <b-form-input placeholder="Ingrese RUT sin puntos ni guión." size="sm" id="rut-input" class="mb-1" v-model="Rut" :state="getValidationState(validationContext)" aria-describedby="rut-live-feedback"></b-form-input>
 
                     <b-form-invalid-feedback id="rut-live-feedback">{{
                             validationContext.errors[0] }}
                     </b-form-invalid-feedback>
                 </ValidationProvider>
-                <ValidationProvider name="de apellidos" rules="required" v-slot="validationContext">
+                <ValidationProvider name="apellidos" rules="required|min:2" v-slot="validationContext">
                     <label for="input-live">Apellidos:</label>
                     <b-form-input size="sm" class="mb-1" id="apellido-input" v-model="Apellidos" :state="getValidationState(validationContext)" aria-describedby="input-live-help apellido-live-feedback" placeholder="" trim></b-form-input>
                     <b-form-invalid-feedback id="apellido-live-feedback">{{
@@ -56,8 +56,8 @@
 
         <b-row>
             <b-col class="col-6">
-                <label for="input-live">Telefono Movil:</label>
-                <ValidationProvider name="Nro. movil" rules="required|numeric|min:8|max:15" v-slot="validationContext">
+                <label for="input-live">Teléfono móvil:</label>
+                <ValidationProvider name="número móvil" rules="required|numeric|min:8|max:15" v-slot="validationContext">
                     <b-input-group size="sm" class="mb-1">
 
                         <b-input-group-prepend is-text>
@@ -70,8 +70,8 @@
                     </b-input-group>
 
                 </ValidationProvider>
-                <label for="input-live">Contacto Emergencia:</label>
-                <ValidationProvider name="Nro. emergencia" rules="required|numeric|min:8|max:15" v-slot="validationContext">
+                <label for="input-live">Contacto de emergencia:</label>
+                <ValidationProvider name="número de emergencia" rules="numeric|min:8|max:15" v-slot="validationContext">
                     <b-input-group size="sm" class="mb-1">
 
                         <b-input-group-prepend is-text>
@@ -92,8 +92,8 @@
                             validationContext.errors[0] }}
                     </b-form-invalid-feedback>
                 </ValidationProvider>
-                <ValidationProvider name="tipo" rules="required" v-slot="validationContext">
-                    <label for="input-live">Tipo Trabajador:</label>
+                <ValidationProvider name="tipo de trabajador" rules="required" v-slot="validationContext">
+                    <label for="input-live">Tipo de trabajador:</label>
                     <b-form-select size="sm" aria-describedby="tipo-live-feedback" :state="getValidationState(validationContext)" class="mb-1" v-model="Tipo" :options="tipos"></b-form-select>
                     <b-form-invalid-feedback id="tipo-live-feedback">{{
                             validationContext.errors[0] }}
@@ -106,7 +106,7 @@
             <b-overlay :show="Cargando" rounded opacity="0.6" spinner-small spinner-variant="primary" class="d-inline-block">
 
                 <b-button @click="enviarFormulario()" variant="primary" size="xl" class="float-right reactive-button" style="font-weight:bold">
-                    Crear y Guardar
+                    Crear y guardar
                 </b-button>
             </b-overlay>
         </template>
@@ -115,11 +115,11 @@
         <b-row>
             <b-col class="col-6">
                 <ValidationProvider name="archivo" rules="size:10000" v-slot="validationContext">
-                    Adjuntar Archivos:
+                    Adjuntar archivos:
                     <div>
-                        <b-form-file :state="getValidationState(validationContext)" placeholder="seleccione archivo(s) a subir" browse-text="Buscar" v-on:change="onChange" :multiple="true" v-model="Archivos" ref="file-input"></b-form-file>
+                        <b-form-file :state="getValidationState(validationContext)" placeholder="Seleccione archivo(s) a subir." browse-text="Buscar" v-on:change="onChange" :multiple="true" v-model="Archivos" ref="file-input"></b-form-file>
                         <b-form-invalid-feedback id="archivo-live-feedback">
-                            Los archivos deben ser menor a 10mb
+                            Los archivos deben ser menor a 10mb.
                         </b-form-invalid-feedback>
 
                     </div>
