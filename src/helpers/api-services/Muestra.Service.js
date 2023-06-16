@@ -79,8 +79,11 @@ const obtenerObservaciones = async (RUM) => {
 
  const actualizarMuestra = async (data) => {
     try {
+        console.log("DATA: ", data.RUM);
         const response = await axios.put(apiUrl + "/muestras/" + data.RUM + "/update", data);
+        
         console.log(response);
+        
         if (response.status == 200) {
             return response;
         } else {

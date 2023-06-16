@@ -13,12 +13,20 @@ import NotFound from '../views/vistaNoEncontrada.vue'
 import USU002_admEmpresa from '../views/USU002_admEmpresa'
 import USU003_admSolicitante from '../views/USU003_admSolicitante'
 import USU005_admDisponibilidad from '../views/USU005_admDisponibilidad'
+
+import ANA001 from '../views/ANA001-RelacionDatos'
+import ANA002 from '../views/ANA002-AdmMatriz'
+import ANA003 from '../views/ANA003-AdmParam'
+import ANA004 from '../views/ANA004-AdmMetodologia'
+import ANA005 from '../views/ANA005-AdmNorma'
+
 import USU001_vistaInicio from '../views/USU001_vistaInicio'
 import {isLoggedIn} from "@/helpers/api-services/Auth.service";
 import admUsuario from '../views/admUsuario.vue'
 import admPerfil from '../views/USU001_vistaPerfil.vue'
 import Restringido from '../views/vistaNoAutorizada.vue'
 import store from "@/store/store";
+
 
 
 // TODO: implementar manera mas segura de guarda info de usuario
@@ -52,6 +60,7 @@ const routes = [
     meta: {
       title: "Dashboard"
     }
+
   },
   {
     path: "*",
@@ -71,11 +80,6 @@ const routes = [
       allowAnonymous: true
     }
   },
-  //{
-  //  path: '/login',
-  //  name: 'login',
-  //  component: LoginView
-  //},
   {
     path: '/admPersonal',
     name: 'admPersonal',
@@ -181,7 +185,46 @@ const routes = [
     }
 
   },
- 
+
+  {
+
+    path: '/AdmElementos',
+    name: 'AdmElementos',
+    component: ANA001
+
+  },
+  {
+
+    path: '/AdmMatriz',
+    name: 'AdmMatriz',
+    component: ANA002
+
+  },
+
+  {
+
+    path: '/AdmParam',
+    name: 'AdmParam',
+    component: ANA003
+
+  },
+
+  {
+
+    path: '/AdmMetodologia',
+    name: 'AdmMetodologia',
+    component: ANA004
+
+  },
+
+  {
+
+    path: '/AdmNorma',
+    name: 'AdmNorma',
+    component: ANA005
+
+  },
+
 
   {
     path: '/about',

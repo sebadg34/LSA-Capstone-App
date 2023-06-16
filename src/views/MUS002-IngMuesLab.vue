@@ -15,6 +15,10 @@
                 <b-form-input id="RUM-input" v-model="RUM" disabled></b-form-input>
               </b-form-group>
 
+              <b-form-group id="recepcionistaRUT-group" class="my-form-group" label="RUT Recepcionista: " label-for="recepcionistaRUT-input">
+                <b-form-input id="recepcionistaRUT-input" v-model="recepcionistaRUT"></b-form-input>
+              </b-form-group>
+
               <b-form-group id="recepcionista-group" class="my-form-group" label="Recepcionista: " label-for="recepcionista-input">
                 <b-form-input id="recepcionista-input" v-model="recepcionista"></b-form-input>
               </b-form-group>             
@@ -201,6 +205,8 @@ export default {
       showAna: false,
       estado: '',
       Analista: '',
+      recepcionistaRUT: '',
+      empleados: [],
     }
   },
 
@@ -214,17 +220,37 @@ export default {
   });
 
   MuestraService.obtenerNombreEmpleados(this.RUM).then((response) => {    
-    console.log(response.data); 
+    console.log("Los datos obtenidos de la muestra son:", response.data); 
     if (response != null) {
-      const values = Object.values(response.data);
-    this.recepcionista = values[0];
+      this.empleados = response.data;
+      console.log("el empleado son: ", this.empleados)
+
+      const valorBuscado = this.recepcionistaRUT;
+      console.log("El valor buscado es:", valorBuscado) 
+      
+      let nombreEncontrado = null;
+      for (const empleadoId in this.empleados) {
+        if (empleadoId === valorBuscado) {
+          nombreEncontrado = this.empleados[empleadoId];
+          break; // Se encontró el nombre, se sale del bucle
+        }
+      }
+
+if (nombreEncontrado !== null) {
+  console.log("El nombre correspondiente al identificador", valorBuscado, "es:", nombreEncontrado);
+  this.recepcionista = nombreEncontrado
+} else {
+  console.log("No se encontró un empleado con el identificador", valorBuscado);
+}
+
+
     }
   });
 
   },
 
   methods: {
-    generarFechaHoraActual() {
+generarFechaHoraActual() {
   const now = new Date();
   const dia = now.getDate().toString().padStart(2, '0');
   const mes = (now.getMonth() + 1).toString().padStart(2, '0');
@@ -233,9 +259,7 @@ export default {
   this.Hrs = now.toLocaleTimeString();
 },
 
-
-
-  RellenarForm(response) {
+RellenarForm(response) {
 
     this.direccion = response.direccion_empresa
     this.transportistaRut = response.rut_transportista
@@ -252,9 +276,8 @@ export default {
     this.transportista = response.nombre_transportista
     this.prioridad = response.prioridad
     this.NMuestras = response.cantidad_muestras
-
-
-
+    this.recepcionistaRUT = response.rut_empleado
+    
   },
 
   enviarFormulario(){
@@ -262,7 +285,7 @@ export default {
     var data = {
       //DATOS GENERALES
                       RUM: this.RUM,
-                      //recepcionista: this.recepcionista,
+                      recepcionista: this.recepcionista,
                       nombre_empresa: this.solicitante, //OJITO CON ESTE
                       direccion_empresa: this.direccion,
                       nombre_solicitante: this.solicitante,
@@ -290,7 +313,7 @@ export default {
                     console.log("DATOS A ENVIAR:", data)
                     console.log("RUM A ENVIAR:" + this.RUM)
 
-                    MuestraService.actualizarMuestra(this.RUM, data).then((response) => {
+                    MuestraService.actualizarMuestra(data).then((response) => {
                       console.log("data enviada", response.data)  
                       console.log(response)
                         
@@ -320,13 +343,6 @@ export default {
 
   },
 
-
-
-
-
-
-
-
 },
   created(){
     this.RUM = this.$route.query.RUM;
@@ -334,6 +350,9 @@ export default {
       console.log(response)
       this.datos = response.data;
       this.RellenarForm(response.data);
+
+      const rutEmpleado = response.data.rut_empleado;
+      MuestraService.obtenerNombreEmpleados(rutEmpleado)
 
 
 
