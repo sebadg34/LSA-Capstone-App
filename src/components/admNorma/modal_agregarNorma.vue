@@ -252,7 +252,7 @@
                 </button>
             </template>
 
-            <b-form-group label="Nombre de la Tabla">
+            <b-form-group label="Nombre de la tabla">
                 <b-form-input v-model="nuevoNombreTabla"></b-form-input>
             </b-form-group>
             <template #modal-footer>

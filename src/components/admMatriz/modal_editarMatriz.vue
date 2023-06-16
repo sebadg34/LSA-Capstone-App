@@ -36,7 +36,7 @@
 
     </b-row>
     <b-alert variant="danger" :show="sinParametro" dismissible @dismissed="sinParametro = false">
-          Falta parámetro asignado para crear la matriz.
+          Falta parámetro asignado para editar la matriz.
         </b-alert>
 
     <b-row v-if="objetosSeleccionados.length > 0" class="mt-3">

@@ -19,7 +19,7 @@
                 <span style="font-weight:bold; margin-right:20px"> Nombre norma:</span> <span>{{this.nombre_norma}}</span>
             </div>
         </b-row>
-        <div class="pt-3" />
+        <div class="pt-3"/>
         <b-row>
             <div>
                 <span style="font-weight:bold; margin-right:20px"> Nombre matriz: </span> <span>{{this.nombre_matriz}}</span>
