@@ -34,7 +34,7 @@
 <b-row v-if="analistasSeleccionados.length > 0" class="mt-3">
   <b-col>
     <b-form-group label="Analistas seleccionados">
-      <div v-for="(analista, index) in analistasSeleccionados" :key="index" class="d-flex align-items-center analista-item">
+      <div v-for="(analista, index) in analistasSeleccionados" :key="index" class="d-flex align-items-center parametro-item">
         <b-input readonly :value="analista.nombre"></b-input>
         <b-button variant="danger" @click="eliminarAnalistaSeleccionado(index)" class="ml-2">
           <b-icon-trash-fill></b-icon-trash-fill>

@@ -83,15 +83,14 @@ export default {
   },
   mounted() {   
 
-  PersonalService.obtenerTodosPersonal().then((response) => {
-    console.log(response.data);
-    if (response != null) {
-      this.recepcionistas = response.data
-      this.opcionesRecepcionistas = this.recepcionistas.map((recepcionista) => recepcionista.nombre);
-      console.log("Los recepcionistas son: " , this.opcionesRecepcionistas);
-
-    }
-  })
+    PersonalService.obtenerTodosPersonal().then((response) => {
+  console.log(response.data);
+  if (response != null) {
+    this.recepcionistas = response.data
+    this.opcionesRecepcionistas = this.recepcionistas.map((recepcionista) => recepcionista.nombre + " " + recepcionista.apellido);
+    console.log("Los recepcionistas son:", this.opcionesRecepcionistas);
+  }
+}),
 
   EmpresaService.obtenerTodasEmpresa().then((response) => {
     console.log(response.data);

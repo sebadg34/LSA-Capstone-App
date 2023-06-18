@@ -47,7 +47,7 @@
           </div>
       </b-form>
     </div>
-    </div>
+    </div>muestra
   </validation-observer>
 </template>
 
@@ -59,11 +59,7 @@ import modal_datosMuestra from '@/components/recepcionMuestra/modal_datosMuestra
 import Modal_datosTransportista from '@/components/recepcionMuestra/modal_datosTransportista.vue';
 
 export default{ 
-  components: {
-    modal_datosRecepcion,
-    modal_datosMuestra,
-    Modal_datosTransportista
-},
+
   data() {
     return {
       recepcionista: '',
@@ -97,6 +93,7 @@ export default{
       hora: "",
       patente: "",
       estado: null,
+      opcionesRecepcionistas: [],
       
     };
   }, 
