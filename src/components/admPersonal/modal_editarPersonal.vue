@@ -108,7 +108,7 @@
                 <ValidationProvider name="archivo" rules="size:10000" v-slot="validationContext">
                     Adjuntar archivos:
                     <div>
-                        <b-form-file :state="getValidationState(validationContext)" placeholder="seleccione archivo(s) a subir" browse-text="Buscar" v-on:change="onChange" :multiple="true" v-model="Archivos" ref="file-input"></b-form-file>
+                        <b-form-file :state="getValidationState(validationContext)" placeholder="Seleccione el(los) archivo(s) a subir." browse-text="Buscar" v-on:change="onChange" :multiple="true" v-model="Archivos" ref="file-input"></b-form-file>
                         <b-form-invalid-feedback id="archivo-live-feedback">
                             Los archivos deben pesar menos de 10MB.
                         </b-form-invalid-feedback>
