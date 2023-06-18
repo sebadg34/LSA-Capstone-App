@@ -5,7 +5,7 @@
         <!-- Emulate built in modal header close button action -->
 
         <b-row class="d-flex justify-content-around">
-            <div class="pl-3">Cambiar Estado</div>
+            <div class="pl-3">Cambiar estado</div>
 
         </b-row>
 
