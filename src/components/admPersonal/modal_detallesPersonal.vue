@@ -4,7 +4,7 @@
         <!-- Emulate built in modal header close button action -->
 
         <b-row class="d-flex justify-content-around">
-            <div class="pl-3">Detalles personal</div>
+            <div class="pl-3">Detalles del personal</div>
 
         </b-row>
 
@@ -16,12 +16,12 @@
     <b-col>
         <b-row>
             <div>
-                Nombre Completo: <span>{{this.Nombre}} {{ this.Apellidos }}</span>
+                Nombre completo: <span>{{this.Nombre}} {{ this.Apellidos }}</span>
             </div>
         </b-row>
         <b-row>
             <div>
-                Rut: <span>{{this.Rut}}</span>
+                RUT: <span>{{this.Rut}}</span>
                 <div>
                     Correo: <span>{{this.Correo}}</span>
                 </div>
@@ -32,10 +32,10 @@
     <b-row>
         <b-col class="col-6">
             <div>
-                Teléfono Movil: <span>{{this.Movil}}</span>
+                Teléfono móvil: <span>{{this.Movil}}</span>
             </div>
             <div>
-                Teléfono Emergencia: <span>{{this.Emergencia}}</span>
+                Teléfono de emergencia: <span>{{this.Emergencia}}</span>
             </div>
         </b-col>
         <b-col class="col-6">
@@ -43,7 +43,7 @@
                 Cargo: <span>{{ this.Cargo }}</span>
             </div>
             <div>
-                Tipo Trabajador: <span>{{this.Tipo}}</span>
+                Tipo de trabajador: <span>{{this.Tipo}}</span>
             </div>
         </b-col>
     </b-row>
@@ -54,7 +54,7 @@
             <div class="text-center lsa-light-blue-text my-2 row">
                 <div class="col">
                     <b-icon icon="file-earmark-break" animation="fade" variant="secondary"></b-icon>
-                    <div style="font-weight:bold; color:gray">No hay documentos registrados por mostrar</div>
+                    <div style="font-weight:bold; color:gray">No hay documentos registrados para mostrar.</div>
                 </div>
 
             </div>
@@ -70,9 +70,9 @@
             <div class="col-12" style="background-color: white;height:50px; border-top:2px solid var(--ucn-light-gray); font-weight: bold;">
                 <b-list-group>
                     <b-list-group-item class="d-flex justify-content-between" style="padding-right:5px; padding-left:5px">
-                        <div>Fecha Subida</div>
-                        <div>Archivos Adjuntos</div>
-                        <div>Accion</div>
+                        <div>Fecha de subida</div>
+                        <div>Archivos adjuntos</div>
+                        <div>Acción</div>
                     </b-list-group-item>
 
                 </b-list-group>

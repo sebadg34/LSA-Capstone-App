@@ -20,7 +20,7 @@
                 <label for="input-live">RUT:</label>
                 <ValidationProvider name="RUT" rules="required|rut|rutSinPuntoGuion" v-slot="validationContext">
 
-                    <b-form-input placeholder="Ingrese RUT sin puntos ni guión." size="sm" id="rut-input" class="mb-1" v-model="Rut" :state="getValidationState(validationContext)" aria-describedby="rut-live-feedback"></b-form-input>
+                    <b-form-input placeholder="Ingrese el RUT sin puntos ni guión." size="sm" id="rut-input" class="mb-1" v-model="Rut" :state="getValidationState(validationContext)" aria-describedby="rut-live-feedback"></b-form-input>
 
                     <b-form-invalid-feedback id="rut-live-feedback">{{
                             validationContext.errors[0] }}
