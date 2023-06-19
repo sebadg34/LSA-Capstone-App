@@ -1,6 +1,6 @@
 <template>
     <validation-observer ref="form">
-        <modal_cantidadMuestra :n-muestras="nMuestras" @datosIngresados="capturarDatos"/>
+        <modal_cantidadMuestra :n-muestras="nMuestras" :parametrosSeleccionados="ParametrosSeleccionados" @datosIngresados="capturarDatos"/>
         <div>
             <b-card no-body>
                 <b-tabs v-model="tabIndex" small card>
@@ -100,10 +100,8 @@
                                 
                                     <ValidationProvider name="TipoMatriz" rules="required" v-slot="validationContext">
                                         <label class="mt-1" for="input-live">Tipo de Matriz:</label>
-                                        <b-form-select id="input-live" v-model="TipoMatriz" :options="opcionesMatriz" aria-describedby="input-live-help TipoMatriz-live-feedback" :state="getValidationState(validationContext)"></b-form-select>
-                                        <b-form-invalid-feedback id="TipoMatriz-live-feedback">{{
-                                            validationContext.errors[0] }}
-                                        </b-form-invalid-feedback>
+                                        <b-form-select id="input-live" v-model="TipoMatriz" :options="opcionesMatriz" aria-describedby="input-live-help TipoMatriz-live-feedback" :state="getValidationState(validationContext)" text-field="nombre_matriz" value-field="id_matriz" @change="obtenerNormasMatriz"></b-form-select>
+                                        <b-form-invalid-feedback id="TipoMatriz-live-feedback">{{ validationContext.errors[0] }}</b-form-invalid-feedback>
                                     </ValidationProvider>
                                 
                                     <ValidationProvider name="observaciones" rules="required" v-slot="validationContext">
@@ -155,20 +153,25 @@
                             <b-row>
                                 <b-col class="col-6">
                                     <b-form-group label="Seleccione una norma">
-                                        <b-form-select v-model="norma" :options="opcionesNorma" placeholder="Seleccione una Norma"></b-form-select>
+                                        <b-form-select v-model="norma" :options="opcionesNorma" text-field="nombre" value-field="id" @change="obtenerTablasNormas"></b-form-select>
                                     </b-form-group>
                                 </b-col>
 
                                 <b-col class="col-6">
                                     <b-form-group label="Seleccione una tabla">
-                                        <b-form-select v-model="tabla" :options="opcionesTabla" placeholder="Seleccione una Norma"></b-form-select>
+                                        <b-form-select v-model="tabla" :options="opcionesTabla" @change="actualizarParametrosTabla" ></b-form-select>
                                     </b-form-group>
                                 </b-col>
                             </b-row>
+
                             <b-row>
                                 <b-col class="col-6">
                                     <b-form-group label="Seleccione un parámetro">
-                                        <b-form-select v-model="ParametroSeleccionado" :options="opcionesParametro" placeholder="Seleccione un Parámetro" @change="agregarParametroSeleccionado"></b-form-select>
+                                        <b-form-select v-model="ParametroSeleccionado" :options="opcionesParametro" @change="agregarParametroSeleccionado">
+                                            <template v-slot:option="{ option }">
+                                              {{ option.nombre_parametro }}
+                                            </template>
+                                        </b-form-select>
                                     </b-form-group>
                                 </b-col>
                             </b-row>
@@ -177,7 +180,7 @@
                                 <b-col>
                                   <b-form-group label="Parametros seleccionados">
                                     <div v-for="(parametro, index) in ParametrosSeleccionados" :key="index" class="d-flex align-items-center analista-item">
-                                      <b-input readonly :value="parametro.nombre"></b-input>
+                                      <b-input readonly v-model="parametro.nombre_parametro"></b-input>
                                       <b-button variant="danger" @click="eliminarParametroSeleccionado(index)" class="ml-2">
                                         <b-icon-trash-fill></b-icon-trash-fill>
                                       </b-button>
@@ -185,6 +188,7 @@
                                   </b-form-group>
                                 </b-col>
                             </b-row>
+
                             <b-alert variant="danger" :show="alertaDuplicado" dismissible @dismissed="alertaDuplicado = false">
                                 El parámetro ya fue agregado.
                             </b-alert>                            
@@ -196,8 +200,7 @@
                                 <b-button @click="agregar()" variant="secondary" size="md">
                                     <b-icon class="mt-1" icon="plus-circle-fill"></b-icon>                                                
                                 </b-button>   
-                            </div>                           
-                                                     
+                            </div>                                                   
                         </b-card>
                     </b-tab>
                 </b-tabs>
@@ -210,8 +213,8 @@
               </b-button-group>          
               <div class="text-muted">Current Tab: {{ tabIndex }}</div>
               <b-button @click="enviarFormulario()" variant="primary" size="xl" class="reactive-button" style="font-weight:bold;">
-                                Recepcionar Muestra
-                            </b-button>  
+                Recepcionar Muestra
+              </b-button>  
             </div>
         </div>
     </validation-observer>
@@ -229,8 +232,7 @@
 
         components: {
             modal_cantidadMuestra   
-        },
-    
+        },    
 
         data() {
             return {
@@ -249,10 +251,7 @@
                 { value: 'Alta', text: 'Alta'}, 
                 { value: 'Urgente', text: 'Urgente'}],
                 TipoMatriz: null,
-                opcionesMatriz: [
-                { value: 'Agua', text: 'Agua'},
-                { value: 'Tierra', text: 'Tierra'}, 
-                { value: 'Mineral', text: 'Mineral'}],
+                opcionesMatriz: [],
                 opcionesRecepcionistas: [],
                 opcionesClientes: [],
                 opcionesParametro:[],
@@ -277,13 +276,16 @@
                 patente: "",
                 estado: null,
                 tabIndex: 0,
-                identificacion: ''            
+                identificacion: '',
+                parametrosTablaSeleccionada: [],                           
             };
         }, 
 
         mounted(){
 
             this.obtenerParametros(),
+
+            this.obtenerMatriz(),
             
             PersonalService.obtenerTodosPersonal().then((response) => {
                 console.log(response.data);
@@ -301,15 +303,14 @@
                 this.opcionesClientes = this.empresas.map((empresa) => empresa.nombre_empresa);
                 console.log("Los clientes son: ", this.opcionesClientes);
                 }
-            });
+            });            
         },
         
         watch: {
             recepcionista(newValue) {                
                 const recepcionistaSeleccionado = this.recepcionistas.find((recepcionista) => `${recepcionista.nombre} ${recepcionista.apellido}` === newValue);                
                 if (recepcionistaSeleccionado) {                    
-                    this.recepcionistaRUT = recepcionistaSeleccionado.rut_empleado;
-                    
+                    this.recepcionistaRUT = recepcionistaSeleccionado.rut_empleado;                    
                 }
             },
 
@@ -322,7 +323,6 @@
         },
 
         methods: {
-
             getValidationState({
                 dirty,
                 validated,
@@ -342,36 +342,47 @@
             },
 
             agregar(){
-                console.log("abirnedo modal")
+                console.log("abirnedo modal")               
                 this.$bvModal.show('modal-cantidad')
-            },
+            },            
 
             agregarParametroSeleccionado() {
                 if (this.ParametroSeleccionado) {
-                    const parametroExistente = this.ParametrosSeleccionados.find(
-                    (parametro) => parametro.nombre === this.AnalistaAsignado
-                    );
-                    if (parametroExistente) {
-                        this.alertaDuplicado = true;
-                    } else {
-                        const ParametroSeleccionado = this.analistas.find((analista) => analista.nombre === this.AnalistaAsignado);
-                        const metodologia = ParametroSeleccionado.nombre_metodologia;
-                        this.ParametrosSeleccionados.push({nombre: this.ParametroSeleccionado});
-                        console.log("esta es la metodologia: ", metodologia)
-                        this.ParametroSeleccionado = '';
-                        this.alertaDuplicado = false;
-                    }
+                  const parametroExistente = this.ParametrosSeleccionados.find(
+                    (parametro) => parametro === this.ParametroSeleccionado
+                  );
+                  if (parametroExistente) {
+                    this.alertaDuplicado = true;
+                  } else {
+                    this.ParametrosSeleccionados.push(this.ParametroSeleccionado);
+                    console.log("Esta es la metodología:", this.ParametroSeleccionado);
+                    this.ParametroSeleccionado = '';
+                    this.alertaDuplicado = false;
+                    console.log("estos son lso selececioandos: ", this.ParametrosSeleccionados)
+                  }
                 }
             },
 
-            obtenerParametros(){
-                ElementosService.obtenerParametros().then((response) => {
-                    if (response.data != null && response.status === 200){
-                        console.log(response.data)
-                    }                    
+            obtenerParametros() {
+              ElementosService.obtenerParametros()
+                .then((response) => {
+                  if (response.status === 200 && response.data != null) {
+                    this.opcionesParametro = response.data.map((parametro) => ({
+                      value: parametro,
+                      text: parametro.nombre_parametro
+                    }));
+                    console.log("Las opciones son:", this.opcionesParametro);
+                  }
                 })
+                .catch((error) => {
+                  console.error("Error al obtener los parámetros:", error);
+                });
             },
             
+            eliminarParametroSeleccionado(index) {
+                this.ParametrosSeleccionados.splice(index, 1);
+            },
+
             capturarDatos(datos) {      
                 this.parametros = datos.parametros;
                 this.identificacion = datos.identificacion;
@@ -379,13 +390,103 @@
                 console.log("datos:", this.identificacion)                
             },
 
-            enviarFormulario() {
+            obtenerMatriz() {
+                ElementosService.obtenerMatriz().then((response) => {
+                    if (response.data != null && response.status === 200) {
+                        console.log("Obteniendo Matrices: ", response.data);
+                        // Mapear los datos de las matrices a las opciones del select
+                        this.opcionesMatriz = response.data.map(matriz => ({
+                            id_matriz: matriz.id_matriz,
+                            nombre_matriz: matriz.nombre_matriz
+                        }));
+                    }
+                    console.log("opciones de la matriz: ", this.opcionesMatriz)
+                });
+            },
 
+            obtenerNormasMatriz() {
+                const idMatrizSeleccionada = this.TipoMatriz;
+                ElementosService.obtenerNormasMatriz(idMatrizSeleccionada).then((response) => {
+                    if (response.data != null && response.status === 200) {
+                        console.log("Obteniendo normas via matriz:", response.data);                        
+                        const normas = response.data.normas.map(norma => ({
+                          id: norma.id_norma,
+                          nombre: norma.nombre_norma
+                        }));                      
+                        this.opcionesNorma = normas;
+                        console.log("Las Normas son:", this.opcionesNorma);
+                    }
+                });
+            },
+
+            obtenerTablasNormas() {
+                const idNormaSeleccionada = this.norma;
+                ElementosService.obtenerTablasNorma(idNormaSeleccionada).then((response) => {
+                    if (response.data != null && response.status === 200) {
+                        console.log("Obteniendo tablas via norma:", response.data);
+
+                        // Almacena las tablas agrupadas por nombre
+                        const tablasAgrupadas = {};
+
+                        // agrupar las tablas por nombre
+                        response.data.forEach((tabla) => {
+                            const nombreTabla = tabla.nombre_tabla;
+                            const nombreParametro = tabla.nombre_parametro;
+
+                            // Verificar si la tabla ya está en el objeto tablasAgrupadas
+                            if (!tablasAgrupadas[nombreTabla]) {
+                              // Si la tabla no existe, crear un nuevo objeto con el nombre de la tabla
+                              tablasAgrupadas[nombreTabla] = {
+                                nombre_tabla: nombreTabla,
+                                id_tablas: [],
+                                parametros: [],
+                              };
+                            }
+
+                            // Agregar el id_tabla y el nombre_parametro a la tabla correspondiente en tablasAgrupadas
+                            tablasAgrupadas[nombreTabla].id_tablas.push(tabla.id_tabla);
+                            tablasAgrupadas[nombreTabla].parametros.push(nombreParametro);
+                        });
+                        // convertir  en un array
+                        const tablasProcesadas = Object.values(tablasAgrupadas);
+
+                        console.log("Tablas procesadas:", tablasProcesadas);
+
+                        // Asignar las tablas procesadas a opcionesTabla
+                        this.opcionesTabla = tablasProcesadas.map((tabla) => tabla.nombre_tabla);
+
+                        // Asignar tablasProcesadas a this.tablasProcesadas
+                        this.tablasProcesadas = tablasProcesadas;
+                    }
+                });
+            },
+
+            actualizarParametrosTabla() {
+              const tablaSeleccionada = this.tabla;
+            
+              // Buscar la tabla seleccionada en tablasProcesadas
+              const tablaProcesada = this.tablasProcesadas.find(tabla => tabla.nombre_tabla === tablaSeleccionada);
+            
+              if (tablaProcesada) {
+                this.parametrosTablaSeleccionada = tablaProcesada.parametros.map(parametro => ({ nombre_parametro: parametro }));
+                this.opcionesParametro = [];
+                this.ParametrosSeleccionados = [];
+                this.parametrosTablaSeleccionada.forEach(parametro => {
+                  this.opcionesParametro.push(parametro.nombre_parametro);
+                });
+              } else {
+                // Si la tabla seleccionada no se encuentra en tablasProcesadas, limpiar los parámetros
+                this.parametrosTablaSeleccionada = [];
+                this.opcionesParametro = [];
+              }
+              console.log("param", this.parametrosTablaSeleccionada);
+            },
+
+            enviarFormulario() {
                 this.$refs.form.validate().then(success => {
                     if (!success) {
                         return;
                     } else { 
-
                         var data = {
                             recepcionista: this.recepcionista,
                             nombre_empresa: this.solicitante,
@@ -407,7 +508,6 @@
                             fecha_ingreso: this.fecha,
                             hora_ingreso: this.hora,
                             identificacion: this.identificacion,
-
                         }
                             
                             console.log("data a enviar", data)
