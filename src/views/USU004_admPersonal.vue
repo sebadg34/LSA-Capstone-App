@@ -33,9 +33,9 @@
                 </b-col>
                 <b-col class="col-8">
                     <b-row>
-
+                        <b-col class="col-12">
                         <b-form-group>
-
+                        
                             <b-input-group>
                                 <b-input-group-prepend is-text>
                                     <b-icon icon="search"></b-icon>
@@ -52,7 +52,7 @@
                             </b-input-group>
 
                         </b-form-group>
-
+                    </b-col>
                     </b-row>
                 </b-col>
                 <!--

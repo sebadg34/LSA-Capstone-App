@@ -8,7 +8,7 @@
     <b-row align-h="start" style="padding-top:30px;">
         <b-col class="col-6">
             <div style="font-size:2rem; font-weight: bold; color: var(--lsa-blue)">
-                Sistema de disponibilidad de personal
+                Sistema de administración de disponibilidad del personal
             </div>
         </b-col>
     </b-row>
@@ -17,14 +17,11 @@
 
         <b-col class="col-10">
             <b-row style="padding-top:30px; padding-bottom:10px">
-                <b-col class="col-6">
-
-                   
-
+                <b-col class="col-4">
                 </b-col>
-                <b-col class="col-6">
+                <b-col class="col-8">
                     <b-row>
-
+                        <b-col class="col-12">
                         <b-form-group>
 
                             <b-input-group>
@@ -43,7 +40,7 @@
                             </b-input-group>
 
                         </b-form-group>
-
+                    </b-col>
                     </b-row>
                 </b-col>
 <!--

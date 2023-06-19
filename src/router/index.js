@@ -190,7 +190,11 @@ const routes = [
 
     path: '/AdmElementos',
     name: 'AdmElementos',
-    component: ANA001
+    component: ANA001,
+    meta: {
+      title: "LSA - Administración Elementos",
+      authorize: [1,2,6,0]
+    }
 
   },
   {
