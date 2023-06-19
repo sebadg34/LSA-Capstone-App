@@ -103,11 +103,20 @@ export default {
                                     appendToast: true
                                 })
                             this.$router.push("/inicio");
-                            }else if(response.request.status == 403){
+                            }else if(response.request.status == 403 ){
                                 this.$root.$bvToast.toast( response.response.data.message, {
                                     title: 'Inicio de sesión suspendido',
                                     toaster: 'b-toaster-top-center',
                                     variant:"danger",
+                                    solid: true,
+                                    autoHideDelay: 10000,
+                                    appendToast: true
+                                })
+                            }else{
+                                this.$root.$bvToast.toast( response.response.data.message, {
+                                    title: 'Error al iniciar sesión',
+                                    toaster: 'b-toaster-top-center',
+                                    variant:"warning",
                                     solid: true,
                                     autoHideDelay: 10000,
                                     appendToast: true

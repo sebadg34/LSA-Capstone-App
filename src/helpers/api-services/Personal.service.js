@@ -4,7 +4,17 @@ import {
     crearApi
 } from "../api-services/InstanciadorAxios";
 
-
+const existePersonal = async (data) => {
+    try {  
+        const instanciaApi = await crearApi();
+        const response = await instanciaApi.post("/empleados/existeEmpleado", data,
+            );
+        console.log(response);
+        return response;
+    } catch (error) {
+        return error.response;
+    }
+};
 
 const ingresarPersonal = async (data) => {
     try {  
@@ -134,6 +144,7 @@ const editarPersonal = async (data) => {
 };
 export default {
     ingresarPersonal,
+    existePersonal,
     obtenerTodosPersonal,
     cambiarEstadoPersonal,
     editarPersonal,

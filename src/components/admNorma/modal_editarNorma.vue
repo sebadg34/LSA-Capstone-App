@@ -1,164 +1,146 @@
 <template>
-    <b-modal id="modal-editar-norma" :title="`Agregar Metodologia`" size="xl">
-        <template #modal-header="{ close }">
-            <!-- Emulate built in modal header close button action -->
-            <b-row class="d-flex justify-content-around">
-                <div class="pl-3">Editar Norma</div>
-            </b-row>
-            <button type="button" class="close" aria-label="Close" @click="close()">
-                <span aria-hidden="true" style="color:white">&times;</span>
-            </button>
-        </template>
+<b-modal id="modal-editar-norma" :title="`Agregar Metodologia`" size="xl">
+    <template #modal-header="{ close }">
+        <!-- Emulate built in modal header close button action -->
+        <b-row class="d-flex justify-content-around">
+            <div class="pl-3">Editar Norma</div>
+        </b-row>
+        <button type="button" class="close" aria-label="Close" @click="close()">
+            <span aria-hidden="true" style="color:white">&times;</span>
+        </button>
+    </template>
 
-        <!-- ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// -->
-        <div>
-            <b-row>
-                <b-col cols="4">
-                    <b-form-group label="Nombre de la Norma">
-                        <b-form-input v-model="nombre_norma"></b-form-input>
-                    </b-form-group>
-                </b-col>
-
-                <b-col cols="4">
-                    <b-form-group label="Seleccione una Matriz">
-                        <b-form-select v-model="matrizSeleccionada" @change="matrizCambiada"
-                            placeholder="Seleccione una Matriz">
-                            <option v-for="opcion in opcionesMatriz" :key="opcion.id_matriz" :value="opcion.id_matriz">{{
-                                opcion.nombre_matriz }}</option>
-                        </b-form-select>
-                    </b-form-group>
-                </b-col>
-            </b-row>
-        </div>
-        <hr />
+    <!-- ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// -->
+    <div>
         <b-row>
             <b-col cols="4">
-                <b-form-group>
-                    <b-card no-body header="Tablas: ">
-                        <template #header>
-                            <b-col>
-                                <b-row class="d-flex justify-content-between align-items-center" style="height:30px">
-                                    <div style="font-weight:bold">Tabla:</div>
+                <b-form-group label="Nombre de la Norma">
+                    <b-form-input v-model="nombre_norma"></b-form-input>
+                </b-form-group>
+            </b-col>
 
-                                    <div>
-                                    <b-button :disabled="!tablaSeleccionada" class="reactive-button"
-                                            style="margin-right:10px;padding-left:5px; padding-right:5px; padding-top:1px; padding-bottom: 1px; height: 30px; font-weight: bold;"
-                                            @click="borrarTablaSeleccionada(tablaSeleccionada)" variant="danger">
-                                            <b-icon icon="trash-fill"></b-icon>
-                                        </b-button>
-                                    <b-button :disabled="!matrizSeleccionada" class="reactive-button"
-                                        style="padding:1px; aspect-ratio: 1 / 1; height: 30px; width: 30px"
-                                        @click="mostrarModalAgregarTabla()" variant="primary">
+            <b-col cols="4">
+                <b-form-group label="Seleccione una Matriz">
+                    <b-form-select v-model="matrizSeleccionada" @change="matrizCambiada" placeholder="Seleccione una Matriz">
+                        <option v-for="opcion in opcionesMatriz" :key="opcion.id_matriz" :value="opcion.id_matriz">{{
+                                opcion.nombre_matriz }}</option>
+                    </b-form-select>
+                </b-form-group>
+            </b-col>
+        </b-row>
+    </div>
+    <hr />
+    <b-row>
+        <b-col cols="4">
+            <b-form-group>
+                <b-card no-body header="Tablas: ">
+                    <template #header>
+                        <b-col>
+                            <b-row class="d-flex justify-content-between align-items-center" style="height:30px">
+                                <div style="font-weight:bold">Tabla:</div>
+
+                                <div>
+                                    <b-button :disabled="!tablaSeleccionada" class="reactive-button" style="margin-right:10px;padding-left:5px; padding-right:5px; padding-top:1px; padding-bottom: 1px; height: 30px; font-weight: bold;" @click="borrarTablaSeleccionada(tablaSeleccionada)" variant="danger">
+                                        <b-icon icon="trash-fill"></b-icon>
+                                    </b-button>
+                                    <b-button :disabled="!matrizSeleccionada" class="reactive-button" style="padding:1px; aspect-ratio: 1 / 1; height: 30px; width: 30px" @click="mostrarModalAgregarTabla()" variant="primary">
                                         <b-icon icon="plus-circle-fill"></b-icon>
                                     </b-button>
                                 </div>
-                                </b-row>
-                            </b-col>
-                        </template>
-                        <b-form-select class="form-control" name="opciones" :select-size="5" v-model="tablaSeleccionada"
-                            :options="opcionesTabla" @change="tablaSeleccionadaCambiada">
-
-                        </b-form-select>
-                    </b-card>
-                </b-form-group>
-            </b-col>
-
-            <b-col cols="4">
-                <b-form-group>
-                    <b-card no-body>
-
-                        <template #header>
-                            <b-row class="d-flex justify-content-around align-items-center" style="height:30px">
-                                <b-col class="col-4" style="padding:5px">
-                                    <div style="font-weight:bold">Parámetros:</div>
-
-                                </b-col>
-
-                                <b-col class="col-6" style="padding:0px">
-                                    <b-input-group size="md">
-                                        <b-form-select :disabled="!tablaSeleccionada " style="height: 30px; padding-top:2px; padding-bottom: 2px;"
-                                            v-model="parametroSeleccionado_agregar"
-                                            :options="parametrosMatriz"></b-form-select>
-                                        <b-input-group-append>
-                                            <b-button :disabled="!parametroSeleccionado_agregar"
-                                                @click="agregarParametroTabla" class="reactive-button"
-                                                style="padding:1px; aspect-ratio: 1 / 1; " variant="primary">
-                                                <b-icon icon="plus-circle-fill"></b-icon>
-                                            </b-button>
-                                        </b-input-group-append>
-                                    </b-input-group>
-                                </b-col>
-                                <b-col class="col-1" style="padding:0px">
-                                    <b-button :disabled="!parametroSeleccionado" class="reactive-button"
-                                        style="margin-right:10px;padding-left:5px; padding-right:5px; padding-top:1px; padding-bottom: 1px; height: 30px; font-weight: bold;"
-                                        @click="borrarParametroSeleccionado(parametroSeleccionado)" variant="danger">
-                                        <b-icon icon="trash-fill"></b-icon>
-                                    </b-button>
-
-                                </b-col>
                             </b-row>
+                        </b-col>
+                    </template>
+                    <b-form-select class="form-control" name="opciones" :select-size="5" v-model="tablaSeleccionada" :options="opcionesTabla" @change="tablaSeleccionadaCambiada">
 
-                        </template>
+                    </b-form-select>
+                </b-card>
+            </b-form-group>
+        </b-col>
 
-                        <b-form-select :options="tablaSeleccionada.parametros" class="form-control" name="opciones"
-                            :select-size="5" v-model="parametroSeleccionado"
-                            :disabled="tablaSeleccionada.parametros === ''">
+        <b-col cols="4">
+            <b-form-group>
+                <b-card no-body>
 
-                        </b-form-select>
-                    </b-card>
-                </b-form-group>
-            </b-col>
-            <b-col cols="4">
-                <b-form-group>
-                    <b-card no-body>
+                    <template #header>
+                        <b-row class="d-flex justify-content-around align-items-center" style="height:30px">
+                            <b-col class="col-4" style="padding:5px">
+                                <div style="font-weight:bold">Parámetros:</div>
 
-                        <template #header>
-                            <b-col>
-                                <b-row class="d-flex justify-content-start align-items-center" style="height:30px">
-                                    <div>Metodologías de: <span style="font-weight:bold"
-                                            v-if="parametroSeleccionado != null"> {{
+                            </b-col>
+
+                            <b-col class="col-6" style="padding:0px">
+                                <b-input-group size="md">
+                                    <b-form-select :disabled="!tablaSeleccionada " style="height: 30px; padding-top:2px; padding-bottom: 2px;" v-model="parametroSeleccionado_agregar" :options="parametrosMatriz"></b-form-select>
+                                    <b-input-group-append>
+                                        <b-button :disabled="!parametroSeleccionado_agregar" @click="agregarParametroTabla" class="reactive-button" style="padding:1px; aspect-ratio: 1 / 1; " variant="primary">
+                                            <b-icon icon="plus-circle-fill"></b-icon>
+                                        </b-button>
+                                    </b-input-group-append>
+                                </b-input-group>
+                            </b-col>
+                            <b-col class="col-1" style="padding:0px">
+                                <b-button :disabled="!parametroSeleccionado" class="reactive-button" style="margin-right:10px;padding-left:5px; padding-right:5px; padding-top:1px; padding-bottom: 1px; height: 30px; font-weight: bold;" @click="borrarParametroSeleccionado(parametroSeleccionado)" variant="danger">
+                                    <b-icon icon="trash-fill"></b-icon>
+                                </b-button>
+
+                            </b-col>
+                        </b-row>
+
+                    </template>
+
+                    <b-form-select :options="tablaSeleccionada.parametros" class="form-control" name="opciones" :select-size="5" v-model="parametroSeleccionado" :disabled="tablaSeleccionada.parametros === ''">
+
+                    </b-form-select>
+                </b-card>
+            </b-form-group>
+        </b-col>
+        <b-col cols="4">
+            <b-form-group>
+                <b-card no-body>
+
+                    <template #header>
+                        <b-col>
+                            <b-row class="d-flex justify-content-start align-items-center" style="height:30px">
+                                <div>Metodologías de: <span style="font-weight:bold" v-if="parametroSeleccionado != null"> {{
                                                 parametroSeleccionado.nombre_parametro }}</span></div>
 
-                                </b-row>
-                            </b-col>
-                        </template>
-                        <b-list-group :key="metodosKey">
-                            <b-list-group-item v-for="metodo in this.parametroSeleccionado.metodologias" :key="metodo.index"
-                                class="metodo-option d-flex justify-content-between">
-                                <span>{{ metodo.nombre_metodologia }}</span>
+                            </b-row>
+                        </b-col>
+                    </template>
+                    <b-list-group :key="metodosKey">
+                        <b-list-group-item v-for="metodo in this.parametroSeleccionado.metodologias" :key="metodo.index" class="metodo-option d-flex justify-content-between">
+                            <span>{{ metodo.nombre_metodologia }}</span>
 
-                                <div>
-                                    <b-popover placement="topleft"
-                                        :target="'button-' + metodo.id_metodologia + '-' + metodo.id_parametro"
-                                        title="Descripción metodología" triggers="focus">
-                                        {{ metodo.detalle_metodologia }}
-                                    </b-popover>
-                                    <b-button class="boton-ojo-metodo"
-                                        :id="'button-' + metodo.id_metodologia + '-' + metodo.id_parametro">
-                                        <b-icon scale="0.9" icon="eye-fill" style="color:gray"></b-icon>
-                                    </b-button>
-                                    <span class="p-2"></span>
-                                    <b-button @click="borrarMetodologiaTabla(metodo)"
-                                        v-if="parametroSeleccionado.metodologias.length > 1" variant="danger"
-                                        style="padding:1px; aspect-ratio: 1 / 1; height: 30px; width: 30px">
-                                        <b-icon scale="0.9" icon="x-circle-fill"></b-icon>
-                                    </b-button>
-                                </div>
+                            <div>
+                                <b-popover placement="topleft" :target="'button-' + metodo.id_metodologia + '-' + metodo.id_parametro" title="Descripción metodología" triggers="focus">
 
-                            </b-list-group-item>
+                                    <template v-if=" metodo.detalle_metodologia != null">{{ metodo.detalle_metodologia }}</template>
+                                    <template v-else>
+                                        <div>La metodología no cuenta con una descripción actualmente.</div>
+                                    </template>
+                                </b-popover>
+                                <b-button class="boton-ojo-metodo" :id="'button-' + metodo.id_metodologia + '-' + metodo.id_parametro">
+                                    <b-icon scale="0.9" icon="eye-fill" style="color:gray"></b-icon>
+                                </b-button>
+                                <span class="p-2"></span>
+                                <b-button @click="borrarMetodologiaTabla(metodo)" v-if="parametroSeleccionado.metodologias.length > 1" variant="danger" style="padding:1px; aspect-ratio: 1 / 1; height: 30px; width: 30px">
+                                    <b-icon scale="0.9" icon="x-circle-fill"></b-icon>
+                                </b-button>
+                            </div>
 
-                        </b-list-group>
+                        </b-list-group-item>
 
-                    </b-card>
-                </b-form-group>
-            </b-col>
-            <b-col>
-                <b-button :disabled="!tablaSeleccionada" @click="agregarTablaNorma" block class="lsa-light-blue"
-                    style="font-weight:bold">agregar tabla seleccionada a norma</b-button>
-            </b-col>
-        </b-row>
+                    </b-list-group>
 
-        <!--
+                </b-card>
+            </b-form-group>
+        </b-col>
+        <b-col>
+            <b-button :disabled="!tablaSeleccionada" @click="agregarTablaNorma" block class="lsa-light-blue" style="font-weight:bold">agregar tabla seleccionada a norma</b-button>
+        </b-col>
+    </b-row>
+
+    <!--
         <b-row v-if="parametrosSeleccionados.length > -1 && tablaSeleccionada !== ''" class="mt-3">
           <b-col>
             <b-form-group label="Parámetros Seleccionados:">
@@ -173,113 +155,104 @@
           </b-col>
         </b-row>
     -->
-        <br />
-        <div v-if="tablas_agregar" :key="tablasKey">
-            <b-card no-body header="Tablas de norma">
-                <b-list-group v-for="tabla in tablas_agregar" :key="tabla.index" horizontal="lg">
-                    <b-list-group-item style="width:35%" class=" d-flex justify-content-start align-items-center">
-                        <b-button @click="borrarTabla(tabla)" variant="danger"
-                            style="padding:1px; aspect-ratio: 1 / 1; height: 30px; width: 30px">
-                            <b-icon scale="0.9" icon="trash-fill"></b-icon>
-                        </b-button>
-                        <div class="pl-2 pr-2" style="font-weight:bold">
-                            {{ tabla.nombre_tabla }}
-                        </div>
-                    </b-list-group-item>
-                    <b-list-group-item style="width:65%" class="item-no-padding">
-                        <b-card no-body header="Parámetros: ">
+    <br />
+    <div v-if="tablas_agregar" :key="tablasKey">
+        <b-card no-body header="Tablas de norma">
+            <b-list-group v-for="tabla in tablas_agregar" :key="tabla.index" horizontal="lg">
+                <b-list-group-item style="width:35%" class=" d-flex justify-content-start align-items-center">
+                    <b-button @click="borrarTabla(tabla)" variant="danger" style="padding:1px; aspect-ratio: 1 / 1; height: 30px; width: 30px">
+                        <b-icon scale="0.9" icon="trash-fill"></b-icon>
+                    </b-button>
+                    <div class="pl-2 pr-2" style="font-weight:bold">
+                        {{ tabla.nombre_tabla }}
+                    </div>
+                </b-list-group-item>
+                <b-list-group-item style="width:65%" class="item-no-padding">
+                    <b-card no-body header="Parámetros: ">
 
-                            <b-list-group flush>
-                                <b-list-group-item v-for="parametro in tabla.parametros" :key="parametro.id_parametro">
-                                    <b-col>
-                                        <b-row class="d-flex justify-content-between align-items-center"
-                                            style="margin-bottom:10px">
-                                            <div>{{ parametro.nombre_parametro }}</div>
-                                            <b-button v-b-toggle="'colapse-' + parametro.id_parametro" pill
-                                                class="lsa-blue">detalles <b-icon icon="journals"
-                                                    aria-hidden="true"></b-icon>
-                                            </b-button>
-                                        </b-row>
-                                        <b-collapse :id="'colapse-' + parametro.id_parametro">
+                        <b-list-group flush>
+                            <b-list-group-item v-for="parametro in tabla.parametros" :key="parametro.id_parametro">
+                                <b-col>
+                                    <b-row class="d-flex justify-content-between align-items-center" style="margin-bottom:10px">
+                                        <div>{{ parametro.nombre_parametro }}</div>
+                                        <b-button v-b-toggle="'colapse-' + parametro.id_parametro" pill class="lsa-blue">detalles <b-icon icon="journals" aria-hidden="true"></b-icon>
+                                        </b-button>
+                                    </b-row>
+                                    <b-collapse :id="'colapse-' + parametro.id_parametro">
 
-                                            <b-card no-body header="Metodologías: ">
-                                                <b-list-group flush>
-                                                    <b-list-group-item v-for="metodologia in parametro.metodologias"
-                                                        :key="metodologia.nombre_metodologia">
-                                                        <b-col>
-                                                            <b-row
-                                                                class="d-flex justify-content-between align-items-center">
-                                                                <div>
-                                                                    {{ metodologia.nombre_metodologia }}
-                                                                </div>
-                                                                <b-popover placement="topleft"
-                                                                    :target="'button-' + metodologia.id_metodologia + '-' + parametro.id_parametro"
-                                                                    title="Descripción metodología" triggers="focus">
-                                                                    {{ metodologia.detalle_metodologia }}
-                                                                </b-popover>
-                                                                <b-button
-                                                                    :id="'button-' + metodologia.id_metodologia + '-' + parametro.id_parametro"
-                                                                    class="boton-ojo-metodo">
-                                                                    <b-icon scale="0.9" icon="eye-fill"
-                                                                        style="color:gray"></b-icon>
-                                                                </b-button>
-                                                            </b-row>
-                                                        </b-col>
-                                                    </b-list-group-item>
-                                                </b-list-group>
-                                            </b-card>
-                                        </b-collapse>
-                                    </b-col>
-                                </b-list-group-item>
-                            </b-list-group>
-                        </b-card>
-                    </b-list-group-item>
-                </b-list-group>
-            </b-card>
-        </div>
-        <hr />
-        <b-modal centered id="modal-agregar-tabla" ref="tabla" title="Agregar Tabla">
-            <template #modal-header="{ close }">
-                <!-- Emulate built in modal header close button action -->
-                <b-row class="d-flex justify-content-around">
-                    <div class="pl-3">Nueva tabla</div>
-                </b-row>
-                <button type="button" class="close" aria-label="Close" @click="close()">
-                    <span aria-hidden="true" style="color:white">&times;</span>
-                </button>
-            </template>
+                                        <b-card no-body header="Metodologías: ">
+                                            <b-list-group flush>
+                                                <b-list-group-item v-for="metodologia in parametro.metodologias" :key="metodologia.nombre_metodologia">
+                                                    <b-col>
+                                                        <b-row class="d-flex justify-content-between align-items-center">
+                                                            <div>
+                                                                {{ metodologia.nombre_metodologia }}
+                                                            </div>
+                                                            <b-popover placement="topleft" :target="'button-' + metodologia.id_metodologia + '-' + parametro.id_parametro" title="Descripción metodología" triggers="focus">
 
-            <b-form-group label="Nombre de la tabla">
-                <b-form-input v-model="nuevoNombreTabla"></b-form-input>
-            </b-form-group>
-            <template #modal-footer>
-                <b-col>
-                    <b-row class="d-flex justify-content-between">
-                        <b-button block :disabled="!nuevoNombreTabla" @click="agregarTabla()"
-                            variant="primary">Agregar</b-button>
+                                                                <template v-if=" metodologia.detalle_metodologia != null">{{ metodologia.detalle_metodologia }}</template>
+                                                                <template v-else>
+                                                                    <div>La metodología no cuenta con una descripción actualmente.</div>
+                                                                </template>
+                                                            </b-popover>
+                                                            <b-button :id="'button-' + metodologia.id_metodologia + '-' + parametro.id_parametro" class="boton-ojo-metodo">
+                                                                <b-icon scale="0.9" icon="eye-fill" style="color:gray"></b-icon>
+                                                            </b-button>
+                                                        </b-row>
+                                                    </b-col>
+                                                </b-list-group-item>
+                                            </b-list-group>
+                                        </b-card>
+                                    </b-collapse>
+                                </b-col>
+                            </b-list-group-item>
+                        </b-list-group>
+                    </b-card>
+                </b-list-group-item>
+            </b-list-group>
+        </b-card>
+    </div>
+    <hr />
+    <b-modal centered id="modal-agregar-tabla" ref="tabla" title="Agregar Tabla">
+        <template #modal-header="{ close }">
+            <!-- Emulate built in modal header close button action -->
+            <b-row class="d-flex justify-content-around">
+                <div class="pl-3">Nueva tabla</div>
+            </b-row>
+            <button type="button" class="close" aria-label="Close" @click="close()">
+                <span aria-hidden="true" style="color:white">&times;</span>
+            </button>
+        </template>
 
-                    </b-row>
-                </b-col>
-            </template>
-        </b-modal>
-
-        <b-alert variant="danger" :show="alertaDuplicado" dismissible @dismissed="alertaDuplicado = false">
-            Los parámetros ya se encuentran agregados a la tabla.
-        </b-alert>
-        <b-alert variant="danger" :show="alertaTablaDuplicada" dismissible @dismissed="alertaDuplicado = false">
-            La tabla ya se encuentra agregada a la norma.
-        </b-alert>
+        <b-form-group label="Nombre de la tabla">
+            <b-form-input v-model="nuevoNombreTabla"></b-form-input>
+        </b-form-group>
         <template #modal-footer>
-            <div class="d-flex justify-content-center">
-                <b-button @click="enviarFormulario()" variant="primary" size="xl" class="reactive-button"
-                    style="font-weight:bold; padding-top: 10px;">
-                    Editar norma
-                </b-button>
-            </div>
+            <b-col>
+                <b-row class="d-flex justify-content-between">
+                    <b-button block :disabled="!nuevoNombreTabla" @click="agregarTabla()" variant="primary">Agregar</b-button>
+
+                </b-row>
+            </b-col>
         </template>
     </b-modal>
+
+    <b-alert variant="danger" :show="alertaDuplicado" dismissible @dismissed="alertaDuplicado = false">
+        Los parámetros ya se encuentran agregados a la tabla.
+    </b-alert>
+    <b-alert variant="danger" :show="alertaTablaDuplicada" dismissible @dismissed="alertaDuplicado = false">
+        La tabla ya se encuentra agregada a la norma.
+    </b-alert>
+    <template #modal-footer>
+        <div class="d-flex justify-content-center">
+            <b-button @click="enviarFormulario()" variant="primary" size="xl" class="reactive-button" style="font-weight:bold; padding-top: 10px;">
+                Editar norma
+            </b-button>
+        </div>
+    </template>
+</b-modal>
 </template>
-    
+
 <script>
 import ElementosService from '@/helpers/api-services/Elementos.service';
 
@@ -442,16 +415,16 @@ export default {
         confirmarCambioMatriz() {
             this.boxTwo = ''
             this.$bvModal.msgBoxConfirm('Al cambiar la matríz, las tablas y sus parametros serán reiniciados', {
-                title: 'Confirmar cambio',
-                size: 'sm',
-                buttonSize: 'sm',
-                okVariant: 'danger',
-                okTitle: 'Cambiar matríz',
-                cancelTitle: 'Mantener matríz',
-                footerClass: 'p-2',
-                hideHeaderClose: false,
-                centered: true
-            })
+                    title: 'Confirmar cambio',
+                    size: 'sm',
+                    buttonSize: 'sm',
+                    okVariant: 'danger',
+                    okTitle: 'Cambiar matríz',
+                    cancelTitle: 'Mantener matríz',
+                    footerClass: 'p-2',
+                    hideHeaderClose: false,
+                    centered: true
+                })
                 .then(value => {
                     if (value) {
 
@@ -513,11 +486,7 @@ export default {
         },
         agregarTablaNorma() {
 
-
-
-
             const existeTabla = this.tablas_agregar.find(tabla => tabla.nombre_tabla == this.tablaSeleccionada.nombre_tabla);
-
 
             if (existeTabla == null) {
                 console.log("tabla a agregar", this.tablaSeleccionada);
@@ -751,8 +720,9 @@ export default {
     },
 }
 </script>
-    
-<style>.item-no-padding {
+
+<style>
+.item-no-padding {
     padding: 0px
 }
 
@@ -775,5 +745,5 @@ export default {
     height: auto;
     min-height: 38px;
     /* Ajusta este valor según tus necesidades */
-}</style>
-    
+}
+</style>

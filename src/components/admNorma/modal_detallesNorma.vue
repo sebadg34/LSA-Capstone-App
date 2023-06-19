@@ -64,7 +64,11 @@
                                 <span class="pl-2"> {{ metodologia.nombre_metodologia }}</span>
 
                                 <b-popover placement="topleft" :target="'button-' + tabla.id_tabla + '-' +metodologia.id_metodologia+'-'+parametro.id_parametro" title="Descripción metodología" triggers="focus">
-                                    {{ metodologia.detalle_metodologia }}
+                                   <template v-if=" metodologia.detalle_metodologia != null">{{ metodologia.detalle_metodologia }}</template>
+                                    <template v-else>
+                                        <div>La metodología no cuenta con una descripción actualmente.</div>
+                                    </template>
+                               
                                 </b-popover>
                                 <b-button class="boton-ojo-metodo" :id="'button-' + tabla.id_tabla + '-' +metodologia.id_metodologia+'-'+parametro.id_parametro">
                                     <b-icon scale="0.9" icon="eye-fill" style="color:gray"></b-icon>
@@ -109,7 +113,6 @@ export default {
     watch: {
         normaData: {
             handler() {
-                console.log("PROP CHANGED, UPDATE MODAL", this.normaData)
                 this.id_norma = this.normaData.id_norma;
                 this.nombre_norma = this.normaData.nombre_norma;
                 this.nombre_matriz = this.normaData.nombre_matriz;
@@ -128,7 +131,6 @@ export default {
             var data = {
                 id_norma: id
             }
-            console.log("obteniendo detalles de norma")
             ElementosService.obtenerDetallesNorma(data).then((response) => {
                 if (response != null) {
                     if (response.data != null && response.status == 200) {
@@ -145,7 +147,6 @@ export default {
 
                             var parametroExistente = this.parametros.find(para => para.id_parametro == response.data[i].id_parametro && para.id_tabla == response.data[i].id_tabla);
                             if (parametroExistente == null) {
-                                console.log("param nuevo, agregar a listado")
                                 this.parametros.push({
                                     id_tabla: response.data[i].id_tabla,
                                     nombre_tabla: response.data[i].nombre_tabla,
@@ -166,9 +167,7 @@ export default {
                             }
                             console.log(response.data[i])
                         }
-                        console.log("parametros cargados en: ", this.parametros)
                         for (var j = 0; j < this.tablas.length; j++) {
-                            console.log("evaluando tabla: ", this.tablas[j])
                             for (var k = 0; k < this.parametros.length; k++) {
                                 if (this.tablas[j].id_tabla == this.parametros[k].id_tabla) {
                                     this.tablas[j].parametros.push(this.parametros[k]);

@@ -52,10 +52,14 @@
                             <span class="px-md-2"></span> Administrar muestra
                         </b-list-group-item>
 
-                        <b-list-group-item @click="navegarRuta('/')" class="cursorToHand menuButton">
+                        <template v-if="rol == 0 || rol == 2 || rol == 6">
+                       
+                        <b-list-group-item @click="navegarRuta('/admelementos')" class="cursorToHand menuButton">
                             <b-icon class="lsa-orange-text" icon="archive-fill"></b-icon>
                             <span class="px-md-2"></span> Administrar elementos
                         </b-list-group-item>
+                    </template>
+
                     </b-collapse>
 
                     <template v-if="rol == 2 || rol == 6 || rol == 0">

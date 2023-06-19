@@ -5,6 +5,17 @@ import {
 } from "../api-services/InstanciadorAxios";
 
 
+const existeSolicitante = async (data) => {
+    try {  
+        const instanciaApi = await crearApi();
+        const response = await instanciaApi.post("/solicitantes/existeSolicitante", data,
+            );
+        console.log(response);
+        return response;
+    } catch (error) {
+        return error.response;
+    }
+};
 const ingresarSolicitante = async (data) => {
     try {  
         const instanciaApi = await crearApi();
@@ -120,6 +131,7 @@ const cambiarEstadoSolicitante = async (data) => {
 };
 export default {
     ingresarSolicitante,
+    existeSolicitante,
     obtenerTodosSolicitantes,
     agregarCotizacion,
     obtenerDetallesSolicitante,

@@ -28,10 +28,10 @@
                                 <b-input-group-prepend is-text>
                                     <b-icon icon="search"></b-icon>
                                 </b-input-group-prepend>
-                                <b-form-input placeholder="Nombre usuario..." id="input-1" v-model="nombreFiltro">
+                                <b-form-input placeholder="Nombre usuario..." id="nombre-filtro" v-model="nombreFiltro">
                                 </b-form-input>
-                                <b-form-input placeholder="Rut usuario..." id="input-1" v-model="rutFiltro" trim></b-form-input>
-                                <b-form-select placeholder="Cargo" v-model="cargoFiltro" :options="cargoOpciones">
+                                <b-form-input placeholder="Rut usuario..." id="rut-filtro" v-model="rutFiltro" trim></b-form-input>
+                                <b-form-select placeholder="Cargo" v-model="cargoFiltro" id="cargo-filtro" :options="cargoOpciones">
                                 </b-form-select>
                                 <b-button-group style="margin-left:10px">
                                     <b-button class="reactive-button lsa-blue" @click="filtrarTabla">Filtrar</b-button>
@@ -103,8 +103,8 @@
 
                 <template #cell(estado)="row">
 
-                    <span v-if="row.item.estado == true" style="text-transform:uppercase; color:green; font-weight: bold;">activo</span>
-                    <span v-else style="text-transform:uppercase; color:red; font-weight: bold;">inactivo</span>
+                    <span v-if="row.item.estado == true" style="text-transform:uppercase; color:green; font-weight: bold;">HABILIDADO</span>
+                    <span v-else style="text-transform:uppercase; color:red; font-weight: bold;">DESHABILITADO</span>
                 </template>
                 <template #cell(accion)="row">
 

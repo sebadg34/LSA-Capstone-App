@@ -41,9 +41,9 @@
                                 <b-input-group-prepend is-text>
                                     <b-icon icon="search"></b-icon>
                                 </b-input-group-prepend>
-                                <b-form-input placeholder="Nombre empresa..." id="input-1" v-model="nombreFiltro">
+                                <b-form-input placeholder="Nombre empresa..." id="nombre-filtro" v-model="nombreFiltro">
                                 </b-form-input>
-                                <b-form-input placeholder="Rut empresa..." id="input-1" v-model="rutFiltro" trim></b-form-input>
+                                <b-form-input placeholder="Rut empresa..." id="rut-filtro" v-model="rutFiltro" trim></b-form-input>
 
                                 <b-button-group style="margin-left:10px; margin-right:20px">
                                     <b-button class="reactive-button lsa-blue" @click="filtrarTabla">Filtrar</b-button>

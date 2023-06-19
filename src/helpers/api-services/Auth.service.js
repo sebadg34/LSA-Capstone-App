@@ -37,8 +37,9 @@ export function getAuthToken() {
 }
 
 export function getUserInfo() {
-  
-    return JSON.parse(jscookie.get('userInfo')) ;
+
+    return JSON.parse(jscookie.get('userInfo'));
+
   }
   export async function clearUserInfo() {
     jscookie.remove('userInfo');

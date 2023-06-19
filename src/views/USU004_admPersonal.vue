@@ -40,10 +40,10 @@
                                 <b-input-group-prepend is-text>
                                     <b-icon icon="search"></b-icon>
                                 </b-input-group-prepend>
-                                <b-form-input placeholder="Nombre del usuario..." id="input-1" v-model="nombreFiltro">
+                                <b-form-input placeholder="Nombre del usuario..." id="nombre-filtro" v-model="nombreFiltro">
                                 </b-form-input>
-                                <b-form-input placeholder="RUT del usuario..." id="input-1" v-model="rutFiltro" trim></b-form-input>
-                                <b-form-select placeholder="Cargo" v-model="cargoFiltro" :options="cargoOpciones">
+                                <b-form-input placeholder="RUT del usuario..." id="rut-filtro" v-model="rutFiltro" trim></b-form-input>
+                                <b-form-select placeholder="Cargo" v-model="cargoFiltro" id="cargo-filtro" :options="cargoOpciones">
                                 </b-form-select>
                                 <b-button-group style="margin-left:10px">
                                     <b-button class="reactive-button lsa-blue" @click="filtrarTabla">Filtrar</b-button>

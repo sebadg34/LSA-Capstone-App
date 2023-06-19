@@ -48,13 +48,17 @@
             </b-col>
             <b-col class="col-4">
                 <label for="input-live">Rut:</label>
+
                 <ValidationProvider name="rut" rules="required|rut|rutSinPuntoGuion" v-slot="validationContext">
+                    <!--Mostrar estado cargando solo si se esta revisando rut y no hay errores de validacion (rut valido)-->
+                    <b-overlay :show="Revisando_rut && validationContext.errors[0] == null" rounded opacity="0.6" spinner-small spinner-variant="primary">
+                        <b-form-input @blur.native="revisarRutSolicitante" size="sm" id="rut-input" class="mb-1" v-model="Rut" :state="getValidationState(validationContext)" aria-describedby="rut-live-feedback"></b-form-input>
 
-                    <b-form-input size="sm" id="rut-input" class="mb-1" v-model="Rut" :state="getValidationState(validationContext)" aria-describedby="rut-live-feedback"></b-form-input>
-
-                    <b-form-invalid-feedback id="rut-live-feedback">{{
+                        <b-form-invalid-feedback id="rut-live-feedback">{{
                         validationContext.errors[0] }}
-                    </b-form-invalid-feedback>
+                        </b-form-invalid-feedback>
+                    </b-overlay>
+                    <b-alert fade style="margin:2px; padding:2px;" class="text-center" :show="Rut_ocupado" variant="warning">El rut ya está registrado en el sistema</b-alert>
                 </ValidationProvider>
                 <label for="input-live">Telefono móvil:</label>
                 <ValidationProvider name="Nro. movil" rules="required|numeric|min:8|max:15" v-slot="validationContext">
@@ -174,6 +178,7 @@ export default {
             Movil_proveedores: "",
             Contacto_proveedores: "",
             Direccion_factura: "",
+            Rut_ocupado : false,
             Correo: "",
             Tipo: "",
             Ciudad: "",
@@ -182,6 +187,7 @@ export default {
             Nombre_empresa: "",
             Nombre_ciudad: "",
             Direccion_ciudad: "",
+            Revisando_rut: false,
             Empresas: [{}],
             Ciudades: [{
 
@@ -205,11 +211,43 @@ export default {
         this.cargarEmpresas();
     },
     methods: {
+        revisarRutSolicitante() {
+
+            var data = {
+                "rut_solicitante": this.Rut
+            }
+            if (this.Rut != "") {
+                this.Revisando_rut = true;
+                solicitanteService.existeSolicitante(data).then((response) => {
+
+                    if (response != null) {
+                        if (response.status == 200) {
+                            this.Rut_ocupado = true;
+                            this.Revisando_rut = false;
+
+                        } else {
+                            this.Rut_ocupado = false;
+                            this.Revisando_rut = false;
+                        }
+                    } else {
+                        this.Rut_ocupado = false;
+                        this.Revisando_rut = false;
+                    }
+
+                })
+            } else {
+                this.Rut_ocupado = false;
+                this.Revisando_rut = false;
+            }
+
+        },
         reiniciarDatos() {
             this.Nombre = "";
             this.Rut = "";
             this.Primer_apellido = "";
             this.Segundo_apellido = "";
+            this.Revisando_rut = false;
+            this.Rut_ocupado = false;
             this.Movil = "";
             this.Movil_proveedores = "";
             this.Contacto_proveedores = "";
@@ -245,6 +283,10 @@ export default {
                         console.log(response.data)
 
                         this.Empresas = response.data;
+                        this.Empresas.unshift({
+                            nombre_empresa: "--Particular--",
+                            rut_empresa: "-1"
+                        })
                         console.log(this.Empresas)
                     }
                 })
@@ -253,6 +295,9 @@ export default {
         },
         cargarDirecciones(rutEmpresa) {
             console.log(rutEmpresa)
+            if(rutEmpresa != "-1"){
+
+            
             this.Rut_empresa = rutEmpresa;
             empresaService.obtenerDetallesEmpresa(rutEmpresa).then((response => {
                 if (response.data != null) {
@@ -262,6 +307,7 @@ export default {
                     console.log('ciudades cargadas', this.Ciudades)
                 }
             }))
+        }
         },
         enviarFormulario() {
 

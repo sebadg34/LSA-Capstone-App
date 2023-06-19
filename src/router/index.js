@@ -193,7 +193,7 @@ const routes = [
     component: ANA001,
     meta: {
       title: "LSA - Administración Elementos",
-      authorize: [1,2,6,0]
+      authorize: [2,6,0]
     }
 
   },
@@ -201,7 +201,11 @@ const routes = [
 
     path: '/AdmMatriz',
     name: 'AdmMatriz',
-    component: ANA002
+    component: ANA002,
+    meta: {
+      title: "LSA - Administración Elementos",
+      authorize: [2,6,0]
+    }
 
   },
 
@@ -209,7 +213,11 @@ const routes = [
 
     path: '/AdmParam',
     name: 'AdmParam',
-    component: ANA003
+    component: ANA003,
+    meta: {
+      title: "LSA - Administración Elementos",
+      authorize: [2,6,0]
+    }
 
   },
 
@@ -217,7 +225,11 @@ const routes = [
 
     path: '/AdmMetodologia',
     name: 'AdmMetodologia',
-    component: ANA004
+    component: ANA004,
+    meta: {
+      title: "LSA - Administración Elementos",
+      authorize: [2,6,0]
+    }
 
   },
 
@@ -225,7 +237,11 @@ const routes = [
 
     path: '/AdmNorma',
     name: 'AdmNorma',
-    component: ANA005
+    component: ANA005,
+    meta: {
+      title: "LSA - Administración Elementos",
+      authorize: [2,6,0]
+    }
 
   },
 

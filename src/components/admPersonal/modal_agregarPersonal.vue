@@ -19,12 +19,14 @@
             <b-col class="col-6">
                 <label for="input-live">RUT:</label>
                 <ValidationProvider name="RUT" rules="required|rut|rutSinPuntoGuion" v-slot="validationContext">
-
-                    <b-form-input placeholder="Ingrese el RUT sin puntos ni guión." size="sm" id="rut-input" class="mb-1" v-model="Rut" :state="getValidationState(validationContext)" aria-describedby="rut-live-feedback"></b-form-input>
+                    <b-overlay :show="Revisando_rut && validationContext.errors[0] == null" rounded opacity="0.6" spinner-small spinner-variant="primary">
+                    <b-form-input  @blur.native="revisarRutPersonal" placeholder="Ingrese el RUT sin puntos ni guión." size="sm" id="rut-input" class="mb-1" v-model="Rut" :state="getValidationState(validationContext)" aria-describedby="rut-live-feedback"></b-form-input>
 
                     <b-form-invalid-feedback id="rut-live-feedback">{{
                             validationContext.errors[0] }}
                     </b-form-invalid-feedback>
+                    <b-alert fade style="margin:2px; padding:2px;" class="text-center" :show="Rut_ocupado" variant="warning">El rut ya está registrado en el sistema</b-alert>
+                </b-overlay>
                 </ValidationProvider>
                 <ValidationProvider name="apellidos" rules="required|min:2" v-slot="validationContext">
                     <label for="input-live">Apellidos:</label>
@@ -171,6 +173,8 @@ export default {
             Nombre: "",
             Rut: "",
             Correo: "",
+            Rut_ocupado: false,
+            Revisando_rut: false,
             Apellidos: "",
             Movil: "",
             Emergencia: "",
@@ -236,8 +240,40 @@ export default {
             this.Emergencia = "";
             this.Cargo = "";
             this.Tipo = "";
+            this.Rut_ocupado = false;
+            this.Revisando_rut = false;
 
         },
+        revisarRutPersonal() {
+
+var data = {
+    "rut_empleado": this.Rut
+}
+if (this.Rut != "") {
+    this.Revisando_rut = true;
+    personalService.existePersonal(data).then((response) => {
+
+        if (response != null) {
+            if (response.status == 200) {
+                this.Rut_ocupado = true;
+                this.Revisando_rut = false;
+
+            } else {
+                this.Rut_ocupado = false;
+                this.Revisando_rut = false;
+            }
+        } else {
+            this.Rut_ocupado = false;
+            this.Revisando_rut = false;
+        }
+
+    })
+} else {
+    this.Rut_ocupado = false;
+    this.Revisando_rut = false;
+}
+
+},
         obtenerIdRol(value) {
             console.log("value a revisar rol",value);
             return this.Roles.find(x => x.descripcion == value).id_rol;

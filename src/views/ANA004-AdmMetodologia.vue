@@ -10,9 +10,10 @@
     <modal_detallesMetodologia :detalles-data="this.modalDetallesData" />
     <modal_agregarMetodologia @refrescar="MetodologiaAgregada" />
     <modal_editarMetodologia :metodologia-data="this.modalEditarData" @refrescar="MetodologiaAgregada" />
-
-    <div class="row justify-content-center" style="padding-top:30px; padding-bottom:10px; margin-left: 5px;">
-        <div class="col-10">
+    <b-row class="justify-content-center">
+    <b-col class="col-10">
+    <b-row style="padding-top:30px; padding-bottom:10px;">
+        <div class="col-4">
             <b-row>
                 <b-button v-b-modal.modal-Agregar-Metodologia style="border-radius: 15px; font-weight: bold; font-size: 18px; " class="lsa-light-blue reactive-button">
                     Agregar Metodología
@@ -20,11 +21,33 @@
                 </b-button>
             </b-row>
         </div>
-    </div>
+        <b-col class="col-8">
+                <b-row class="d-flex justify-content-end">
+                    <b-col class="col-6">
+                        <b-form-group>
 
+                            <b-input-group>
+                                <b-input-group-prepend is-text>
+                                    <b-icon icon="search"></b-icon>
+                                </b-input-group-prepend>
+                                <b-form-input placeholder="Nombre de la metodología..." id="nombre-filtro" v-model="nombreFiltro">
+                                </b-form-input>
+                                <b-button-group style="margin-left:10px">
+                                    <b-button class="reactive-button lsa-blue" @click="filtrarTabla">Filtrar</b-button>
+                                    <b-button class="reactive-button lsa-orange" @click="borrarFiltro">Quitar</b-button>
+                                </b-button-group>
+                            </b-input-group>
+
+                        </b-form-group>
+                    </b-col>
+                </b-row>
+            </b-col>
+        </b-row>
+</b-col>
+</b-row>
     <div class="row justify-content-center">
         <div class="col-10">
-            <b-table show-empty :items="items" :busy="loading" :fields="fields" :per-page="perPage" :current-page="currentPage" responsive>
+            <b-table show-empty :items="metodologiasFiltradas" :busy="loading" :fields="fields" :per-page="perPage" :current-page="currentPage" responsive>
 
                 <template #empty>
                     <div class="text-center lsa-light-blue-text my-2 row">
@@ -55,6 +78,17 @@
                             <b-icon icon="pencil-square" aria-hidden="true" class="mr-2"></b-icon>Editar
                         </b-dropdown-item>
                     </b-dropdown>
+                </template>
+
+                <template #custom-foot>
+                    <b-tr>
+                        <b-th colspan="7" style="background-color:rgb(235, 235, 235); border-radius:0px 0px 20px 20px; padding:1px" v-if="filtrando">
+                            <div>
+                            <b-icon icon="filter" animation="fade" variant="secondary" scale="0.8"></b-icon>
+                            <div style="font-weight:bold; color:gray">  Resultados filtrados</div>
+                        </div>
+                        </b-th>
+                    </b-tr>
                 </template>
             </b-table>
             <b-pagination v-model="currentPage" :total-rows="rows" :per-page="perPage" align="right"></b-pagination>
@@ -104,21 +138,24 @@ export default {
                 },
             ],
 
-            items: [],
+            metodologias: [],
+            metodologiasFiltradas: [],
             modalEditarData: {},
             modalDetallesData: {},
             nombreE: '',
+            nombreFiltro: "",
             empleados: [],
             loading: false,
             currentPage: 1,
+            filtrando: false,
             perPage: 10,
         }
     },
 
     computed: {
-      rows() {
-        return this.items.length
-      }
+        rows() {
+            return this.metodologiasFiltradas.length
+        }
     },
 
     mounted() {
@@ -126,6 +163,22 @@ export default {
     },
 
     methods: {
+        borrarFiltro() {
+            this.nombreFiltro = "";
+            this.filtrarTabla();
+        },
+        filtrarTabla() {
+            let nombre_filtro = this.nombreFiltro.toLowerCase();
+            this.metodologiasFiltradas = this.metodologias;
+
+            if (nombre_filtro != "") {
+                this.metodologiasFiltradas = this.metodologias.filter(param => param.nombre_metodologia.toLowerCase().includes(nombre_filtro))
+                this.filtrando = true;
+            } else {
+                this.metodologiasFiltradas = this.metodologias;
+                this.filtrando = false;
+            }
+        },
         agregarAnalista() {
             this.$bvModal.show('modal-Agregar-Metodologia');
         },
@@ -151,7 +204,8 @@ export default {
                         return nuevoObjetoMetodologia;
                     });
                     console.log("Obteniendo Metodologías: ", metodologias);
-                    this.items = metodologias;
+                    this.metodologias = metodologias;
+                    this.metodologiasFiltradas = this.metodologias;
                     this.loading = false;
                 }
             });
