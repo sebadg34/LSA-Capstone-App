@@ -16,7 +16,7 @@
             <b-form-input v-model="row.item.identificacion" placeholder="Ingrese la identificación de la muestra"></b-form-input>
           </template>
           <template #cell(parametros)="row">
-            <template v-if="parametrosSeleccionados.length > 0">
+            <template v-if="objetosSeleccionados.length > 0">
               <b-form-select v-model="row.item.parametros" :options="parametrosOptions"> </b-form-select>             
             </template>
           </template>
@@ -46,7 +46,7 @@ export default {
       default: '',
     },
 
-    parametrosSeleccionados: {
+    objetosSeleccionados: {
       type: Array,    
     },
   },
@@ -70,14 +70,14 @@ export default {
         { key: 'identificacion', label: 'Identificación', thClass: 'text-center', tdClass: 'item-center' },
       ];
 
-      if (this.parametrosSeleccionados.length > 0) {
+      if (this.objetosSeleccionados.length > 0) {
         fields.push({ key: 'parametros', label: 'Parámetros', thClass: 'text-center', tdClass: 'item-center' });
       }
 
       return fields;
     },    
     opciones() {
-      return this.parametrosSeleccionados;
+      return this.objetosSeleccionados;
     },    
 
     mostrarMensaje() {
@@ -87,22 +87,29 @@ export default {
   
   methods: {
     guardarFormulario() {
-      const datosIngresados = this.tablaItems.map((item) => ({
-        identificacion: item.identificacion,
-        orden: item.orden,
-        parametros: item.parametros,
-      }));
-      console.log("dato a enviar: ", datosIngresados);
-      this.$emit('datosIngresados', datosIngresados);
-      this.$refs.modal.hide();
-    },
+      const datosIngresados = this.tablaItems.map((item) => {
+      const parametroSeleccionado = this.objetosSeleccionados.find(obj => obj.parametro === item.parametros);
+      const id_parametro = parametroSeleccionado ? parametroSeleccionado.id_parametro : null;
+    
+    return {
+      identificacion: item.identificacion,
+      orden: item.orden,
+      parametros: item.parametros,
+      id_parametro: id_parametro,
+    };
+  });
+
+  console.log("dato a enviar: ", datosIngresados);
+  this.$emit('datosIngresados', datosIngresados);
+  this.$refs.modal.hide();
+},
 
     handleModalShown() {
-      console.log('Modal mostrado');
-      console.log("parametrosSeleccionados:", this.parametrosSeleccionados);
-      this.parametrosOptions = this.parametrosSeleccionados.map(p => p.nombre_parametro)
-      console.log("options:", this.parametrosSeleccionados)
-    },    
+  console.log('Modal mostrado');
+  console.log("objetosSeleccionados:", this.objetosSeleccionados);
+  this.parametrosOptions = this.objetosSeleccionados.map(p => p.parametro)
+  console.log("parametrosOptions:", this.parametrosOptions);
+},    
   },  
 };
 </script>  

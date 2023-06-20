@@ -1,6 +1,6 @@
 <template>
     <validation-observer ref="form">
-        <modal_cantidadMuestra :n-muestras="nMuestras" :parametrosSeleccionados="ParametrosSeleccionados" @datosIngresados="capturarDatos"/>
+        <modal_cantidadMuestra :n-muestras="nMuestras" :objetosSeleccionados="objetosSeleccionados" @datosIngresados="capturarDatos"/>
         <div>
             <b-card no-body>
                 <b-tabs v-model="tabIndex" small card>
@@ -53,9 +53,7 @@
                                         <label for="input-live">N° de Muestras:</label>
                                         <div class="d-flex align-items-center">    
                                             <b-form-input id="nMuestras-input" v-model="nMuestras" :state="getValidationState(validationContext)" aria-describedby="nMuestras-live-feedback"></b-form-input>
-                                            <b-button @click="agregar()" variant="secondary" size="md">
-                                                <b-icon class="mt-1" icon="plus-circle-fill"></b-icon>                                                
-                                            </b-button>
+                                            
                                         </div>
                                         <b-form-invalid-feedback id="nMuestras-live-feedback">{{ validationContext.errors[0] }}</b-form-invalid-feedback>
                                     </ValidationProvider>
@@ -163,29 +161,40 @@
                                     </b-form-group>
                                 </b-col>
                             </b-row>
-
+                            
                             <b-row>
-                                <b-col class="col-6">
+
+                                <b-col>
                                     <b-form-group label="Seleccione un parámetro">
-                                        <b-form-select v-model="ParametroSeleccionado" :options="opcionesParametro" @change="agregarParametroSeleccionado">
-                                            <template v-slot:option="{ option }">
-                                              {{ option.nombre_parametro }}
-                                            </template>
-                                        </b-form-select>
+                                        
+                                        <div class="d-flex align-items-center">    
+                                            <b-form-select v-model="parametroSeleccionado" :options="opcionesParametro" placeholder="Seleccione un Parámetro" @change="agregarObjetosSeleccionados"></b-form-select>
+                                            <div>
+                                                <b-button v-b-modal.modal-Agregar-Opciones>+</b-button>                                                    
+                                            </div>
+                                        </div>
                                     </b-form-group>
                                 </b-col>
+
+                                <b-col>
+                                    <b-form-group label="Seleccione una metodología">
+                                        <b-form-select v-model="metodologiaSeleccionada" :options="opcionesMetodologia" placeholder="Seleccione una metodología" :disabled="metodologiaDeshabilitada" @change="agregarObjetosSeleccionados"></b-form-select>
+                                    </b-form-group>
+                                </b-col>
+
                             </b-row>
                             
-                            <b-row v-if="ParametrosSeleccionados.length > 0" class="mt-3">
+                            <b-row v-if="objetosSeleccionados.length > 0" class="mt-3">
                                 <b-col>
-                                  <b-form-group label="Parametros seleccionados">
-                                    <div v-for="(parametro, index) in ParametrosSeleccionados" :key="index" class="d-flex align-items-center analista-item">
-                                      <b-input readonly v-model="parametro.nombre_parametro"></b-input>
-                                      <b-button variant="danger" @click="eliminarParametroSeleccionado(index)" class="ml-2">
-                                        <b-icon-trash-fill></b-icon-trash-fill>
-                                      </b-button>
-                                    </div>
-                                  </b-form-group>
+                                    <b-form-group label="Parámetros Seleccionados:">
+                                        <div v-for="(objetos, index) in objetosSeleccionados" :key="index" class="d-flex align-items-center objetos-item mb-3">
+                                            <b-input readonly :value="objetos.parametro" class="mr-2"></b-input>
+                                            <b-input readonly :value="objetos.metodologia" class="mr-2"></b-input>
+                                            <b-button variant="danger" @click="eliminarObjetosSeleccionados(index)" class="ml-2">
+                                                <b-icon-trash-fill></b-icon-trash-fill>
+                                            </b-button>
+                                        </div>
+                                    </b-form-group>
                                 </b-col>
                             </b-row>
 
@@ -214,8 +223,41 @@
               <div class="text-muted">Current Tab: {{ tabIndex }}</div>
               <b-button @click="enviarFormulario()" variant="primary" size="xl" class="reactive-button" style="font-weight:bold;">
                 Recepcionar Muestra
-              </b-button>  
+              </b-button>
             </div>
+            <b-modal id="modal-Agregar-Opciones" ref="modal" :title="`Agregar parámetro a opciones`" size="lg">
+                <template #modal-header="{ close }">                
+                    <b-row class="d-flex justify-content-around">
+                        <div class="pl-3">Agregar Parámetros</div>
+                    </b-row>
+                    <button type="button" class="close" aria-label="Close" @click="close()">
+                        <span aria-hidden="true" style="color:white">&times;</span>
+                    </button>
+                </template>
+                <b-row>                
+                    <b-col>
+                        <b-form-group label="Seleccione un parámetro">
+                            <b-form-select v-model="parametroSeleccionado" :options="TodasopcionesParametro" placeholder="Seleccione un Parámetro" @change="agregarObjetosSeleccionados"></b-form-select>
+                        </b-form-group>
+                    </b-col>
+                
+                    <b-col>
+                        <b-form-group label="Seleccione una metodología">
+                            <b-form-select v-model="metodologiaSeleccionada" :options="opcionesMetodologia" placeholder="Seleccione una metodología" :disabled="metodologiaDeshabilitada" @change="agregarObjetosSeleccionados"></b-form-select>
+                        </b-form-group>
+                    </b-col>                
+                </b-row>
+
+                <b-alert variant="danger" :show="alertaDuplicado" dismissible @dismissed="alertaDuplicado = false">
+                    Los Parametros y Metodologias ya se encuentran agregados
+                </b-alert>
+                 <!-- //////////////////////////////////////////MODAL-FOOTER////////////////////////////////////////////////////////////////////////////////// -->
+                <template #modal-footer="{ close }">
+                    <b-button @click="close()" variant="primary" size="xl" class="float-right reactive-button" style="font-weight:bold">
+                        Cerrar
+                    </b-button>
+                </template>
+            </b-modal>
         </div>
     </validation-observer>
 </template>
@@ -240,6 +282,8 @@
                 recepcionistaRUT: '',
                 solicitante:'',
                 rut: '',
+                metodologiaSeleccionada: '',
+                objetosSeleccionados: [],
                 direccion: '',
                 muestreado:'',
                 opcionesMuestreado: [
@@ -259,9 +303,9 @@
                 opcionesNorma: [],
                 tabla: '',
                 opcionesTabla:[],
-                ParametroSeleccionado:'',
+                parametroSeleccionado:'',
                 ParametrosSeleccionados: [],
-                parametros: '',
+                parametros: [],
                 alertaDuplicado: false,
                 transportista:'',
                 Temperatura:'',
@@ -277,13 +321,29 @@
                 estado: null,
                 tabIndex: 0,
                 identificacion: '',
-                parametrosTablaSeleccionada: [],                           
+                TodasopcionesParametro: [],
+                submuestra_agregar: [{  
+                    identificacion: '',
+                    orden: '',
+                    id_parametroSubmuestra:'',
+                }],
+                parametrosTablaSeleccionada: [],
+                opcionesMetodologia: [], 
+                metodologiaDeshabilitada: true,
+                metodologias: [],
+                metodologiasData: [], 
+                parametros_agregar: [{
+                id_parametro: '',
+                id_metodologia: '',
+                
+                
+            }],                       
             };
         }, 
 
         mounted(){
 
-            this.obtenerParametros(),
+            this.obtenerParametro();
 
             this.obtenerMatriz(),
             
@@ -319,7 +379,16 @@
                 if (empresaSeleccionada) {
                     this.rut = empresaSeleccionada.rut_empresa;
                 }
+            },
+
+            parametroSeleccionado: function (newParametro) {
+            if (newParametro) {
+                this.actualizarMetodologias();
+                this.metodologiaDeshabilitada = false; // Habilita el input 
+            } else {
+                this.metodologiaDeshabilitada = true;
             }
+        },
         },
 
         methods: {
@@ -342,53 +411,142 @@
             },
 
             agregar(){
-                console.log("abirnedo modal")               
+                console.log("abirnedo modal")
+                this.submuestra_agregar = [{  
+                    identificacion : '',
+                    orden : '',
+                    id_parametroSubmuestra : '',
+                }],            
                 this.$bvModal.show('modal-cantidad')
             },            
 
-            agregarParametroSeleccionado() {
-                if (this.ParametroSeleccionado) {
-                  const parametroExistente = this.ParametrosSeleccionados.find(
-                    (parametro) => parametro === this.ParametroSeleccionado
-                  );
-                  if (parametroExistente) {
-                    this.alertaDuplicado = true;
-                  } else {
-                    this.ParametrosSeleccionados.push(this.ParametroSeleccionado);
-                    console.log("Esta es la metodología:", this.ParametroSeleccionado);
-                    this.ParametroSeleccionado = '';
-                    this.alertaDuplicado = false;
-                    console.log("estos son lso selececioandos: ", this.ParametrosSeleccionados)
-                  }
+            agregarObjetosSeleccionados() {
+                if (this.parametroSeleccionado && this.metodologiaSeleccionada) {
+                    const ParamExistente = this.objetosSeleccionados.find(objeto => objeto.parametro === this.parametroSeleccionado);
+                    const MetExistente = this.objetosSeleccionados.find(objeto => objeto.metodologia === this.metodologiaSeleccionada);
+
+                    if (ParamExistente && MetExistente) {
+                        this.alertaDuplicado = true;
+                        this.parametroSeleccionado = '';
+                        this.metodologiaSeleccionada = '';
+                    } else {
+                        const parametroData = this.metodologiasData.find(item => item.nombre_parametro === this.parametroSeleccionado);
+                        const metodologiaCompleta = parametroData.metodologias.find(metodologia => metodologia.nombre_metodologia === this.metodologiaSeleccionada);
+
+                        this.objetosSeleccionados.push({
+                            id_parametro: parametroData.id_parametro,
+                            parametro: this.parametroSeleccionado,
+                            metodologia: metodologiaCompleta.nombre_metodologia
+                        });
+                        this.parametros_agregar.push({
+                            id_parametro: parametroData.id_parametro,
+                            id_metodologia: metodologiaCompleta.id_metodologia,
+
+                        });
+                        console.log("las matrices ahn guardado lo siguiente: ", this.parametros_agregar)
+                        this.parametroSeleccionado = '';
+                        this.metodologiaSeleccionada = '';
+                        this.alertaDuplicado = false;
+                    }
                 }
             },
 
-            obtenerParametros() {
-              ElementosService.obtenerParametros()
-                .then((response) => {
-                  if (response.status === 200 && response.data != null) {
-                    this.opcionesParametro = response.data.map((parametro) => ({
-                      value: parametro,
-                      text: parametro.nombre_parametro
-                    }));
-                    console.log("Las opciones son:", this.opcionesParametro);
-                  }
-                })
-                .catch((error) => {
-                  console.error("Error al obtener los parámetros:", error);
-                });
-            },
-            
-            eliminarParametroSeleccionado(index) {
-                this.ParametrosSeleccionados.splice(index, 1);
-            },
+            obtenerParametro() {
+            ElementosService.obtenerParametros().then((response) => {
+                if (response.data != null && response.status === 200) {
+                    console.log("Obteniendo Parametros: ", response.data);
 
-            capturarDatos(datos) {      
-                this.parametros = datos.parametros;
-                this.identificacion = datos.identificacion;
-                this.orden = datos.orden;
-                console.log("datos:", this.identificacion)                
-            },
+                    // Almacenar los datos en metodologiasData
+                    this.metodologiasData = response.data.map(item => ({
+                        id_parametro: item.id_parametro,
+                        nombre_parametro: item.nombre_parametro,
+                        metodologias: item.metodologias.map(metodologia => ({
+                            id_metodologia: metodologia.id_metodologia,
+                            nombre_metodologia: metodologia.nombre_metodologia
+                        }))
+                    }));
+                    console.log("Metodologia Data: ", this.metodologiasData)
+
+                    this.opcionesParametro = response.data.map(item => item.nombre_parametro);
+                    this.TodasopcionesParametro = response.data.map(item => item.nombre_parametro);
+                    console.log("opcion", this.opcionesParametro)
+                }
+            });
+        },
+            
+        eliminarObjetosSeleccionados(index) {
+            this.objetosSeleccionados.splice(index, 1);
+        },
+
+        actualizarObjetosSeleccionados(index, parametro, metodologia) {
+            this.objetosSeleccionados[index].parametro = parametro;
+            this.objetosSeleccionados[index].metodologia = metodologia;
+        },
+
+        actualizarMetodologias() {
+            const parametro = this.parametroSeleccionado;
+
+            // Buscar el objeto correspondiente al parámetro seleccionado en metodologiasData
+            console.log("Metodologia Data 2: ", this.metodologiasData)
+            const parametroData = this.metodologiasData.find(item => item.nombre_parametro === parametro);
+
+            console.log("Parámetro seleccionado:", parametro);
+            console.log("Objeto del parámetro seleccionado:", parametroData);
+            console.log("Metodologías del parámetro seleccionado:", parametroData.metodologias);
+
+            this.metodologias = parametroData.metodologias
+            console.log("Metodologías den array:", this.metodologias);
+
+            this.opcionesMetodologia = this.metodologias.map(item => item.nombre_metodologia);
+            console.log("opciones Metodologia:", this.opcionesMetodologia);
+
+            /*if (parametroData.metodologias.length > 0) {
+              // Obtener las metodologías asociadas al parámetro seleccionado
+              const metodologias = parametroData.metodologias[0].metodologias;
+
+              console.log("Metodologías asociadas al parámetro seleccionado:", metodologias);
+
+              // Obtener solo los nombres de las metodologías
+              this.opcionesMetodologia = metodologias.map(item => item.nombre_metodologia);
+            } else {
+              this.opcionesMetodologia = []; // No se encontraron metodologías para el parámetro seleccionado
+            }*/
+        },
+
+        capturarDatos(datos) {
+            console.log("datos capturados:", datos);
+
+            // Array para cada columna
+            const identificacionArray = [];
+            const ordenArray = [];
+            const parametrosArray = [];
+            const idparametros = [];
+
+            // Recorrer los datos y almacenarlos en las columnas correspondientes
+            datos.forEach((objeto) => {
+              identificacionArray.push(objeto.identificacion);
+              ordenArray.push(objeto.orden);
+              parametrosArray.push(objeto.parametros);
+              idparametros.push(objeto.id_parametro);
+            });
+
+            datos.forEach((objeto) => {
+                this.submuestra_agregar.push({
+                    dentificacion: objeto.identificacion,
+                    orden: objeto.orden,
+                    id_parametroSubmuestra: objeto.id_parametro
+                });
+            });
+            console.log("submuestra_agregar:", this.submuestra_agregar);
+        
+            // Asignar los arrays a las variables del componente
+            this.identificacion = identificacionArray;
+            this.orden = ordenArray;
+            this.parametros = parametrosArray;
+            this.id_parametro = idparametros;
+            console.log("identificacion:", this.identificacion);
+            console.log("idPARAM:", this.id_parametro);
+        },
 
             obtenerMatriz() {
                 ElementosService.obtenerMatriz().then((response) => {
@@ -442,7 +600,6 @@
                                 parametros: [],
                               };
                             }
-
                             // Agregar el id_tabla y el nombre_parametro a la tabla correspondiente en tablasAgrupadas
                             tablasAgrupadas[nombreTabla].id_tablas.push(tabla.id_tabla);
                             tablasAgrupadas[nombreTabla].parametros.push(nombreParametro);
@@ -469,8 +626,7 @@
             
               if (tablaProcesada) {
                 this.parametrosTablaSeleccionada = tablaProcesada.parametros.map(parametro => ({ nombre_parametro: parametro }));
-                this.opcionesParametro = [];
-                this.ParametrosSeleccionados = [];
+                this.opcionesParametro = [];                
                 this.parametrosTablaSeleccionada.forEach(parametro => {
                   this.opcionesParametro.push(parametro.nombre_parametro);
                 });
@@ -482,11 +638,19 @@
               console.log("param", this.parametrosTablaSeleccionada);
             },
 
+            agregarParametro(){
+
+                this.$bvModal.show('modal-Agregar-Opciones')
+
+            },
+
             enviarFormulario() {
                 this.$refs.form.validate().then(success => {
                     if (!success) {
                         return;
                     } else { 
+                        const matricesFiltradas = this.parametros_agregar.slice(1);
+                        const parametrosFiltrados = this. submuestra_agregar.slice(1);
                         var data = {
                             recepcionista: this.recepcionista,
                             nombre_empresa: this.solicitante,
@@ -508,6 +672,16 @@
                             fecha_ingreso: this.fecha,
                             hora_ingreso: this.hora,
                             identificacion: this.identificacion,
+                            orden: this.orden,
+                            id_parametroSubmuestra: this.id_parametro,
+                            parametros_submuestra: this.parametros,
+                            parametros_agregar: matricesFiltradas.map(matriz => ({
+                                id_parametro: matriz.id_parametro,
+                                id_metodologia: matriz.id_metodologia,
+                                norma: this.norma,
+                                tabla: this.tabla
+                            })),
+                            submuestra_agregar: parametrosFiltrados
                         }
                             
                             console.log("data a enviar", data)
@@ -539,7 +713,9 @@
                                     this.patente = '';
                                     this.transportistaRut = '';
                                     this.fono = '';
-                                    this.observaciones = '';                    
+                                    this.observaciones = '';
+                                    this.fecha = '';
+                                    this.hora = '';
 
                                 } else {
                                     this.$bvToast.toast(`Error al agregar muestra`, {
