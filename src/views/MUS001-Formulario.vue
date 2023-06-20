@@ -251,6 +251,10 @@
                 <b-alert variant="danger" :show="alertaDuplicado" dismissible @dismissed="alertaDuplicado = false">
                     Los Parametros y Metodologias ya se encuentran agregados
                 </b-alert>
+
+                <b-alert variant="success" :show="alertaExito" dismissible @dismissed="alertaExito = false">
+                    Parámetro y metodología agregada con éxito!
+                </b-alert> 
                  <!-- //////////////////////////////////////////MODAL-FOOTER////////////////////////////////////////////////////////////////////////////////// -->
                 <template #modal-footer="{ close }">
                     <b-button @click="close()" variant="primary" size="xl" class="float-right reactive-button" style="font-weight:bold">
@@ -307,6 +311,7 @@
                 ParametrosSeleccionados: [],
                 parametros: [],
                 alertaDuplicado: false,
+                alertaExito: false,
                 transportista:'',
                 Temperatura:'',
                 transportistaRut:'',
@@ -325,7 +330,8 @@
                 submuestra_agregar: [{  
                     identificacion: '',
                     orden: '',
-                    id_parametroSubmuestra:'',
+                    id_parametro:'',
+                    id_metodologia: '',
                 }],
                 parametrosTablaSeleccionada: [],
                 opcionesMetodologia: [], 
@@ -429,14 +435,17 @@
                         this.alertaDuplicado = true;
                         this.parametroSeleccionado = '';
                         this.metodologiaSeleccionada = '';
+                        this.alertaExito = false;
                     } else {
                         const parametroData = this.metodologiasData.find(item => item.nombre_parametro === this.parametroSeleccionado);
                         const metodologiaCompleta = parametroData.metodologias.find(metodologia => metodologia.nombre_metodologia === this.metodologiaSeleccionada);
-
+                        console.log("parametroData:",parametroData)
+                        console.log("metodologiaCompleta:",metodologiaCompleta)
                         this.objetosSeleccionados.push({
                             id_parametro: parametroData.id_parametro,
                             parametro: this.parametroSeleccionado,
-                            metodologia: metodologiaCompleta.nombre_metodologia
+                            metodologia: metodologiaCompleta.nombre_metodologia,
+                            id_metodologia: metodologiaCompleta.id_metodologia
                         });
                         this.parametros_agregar.push({
                             id_parametro: parametroData.id_parametro,
@@ -447,6 +456,7 @@
                         this.parametroSeleccionado = '';
                         this.metodologiaSeleccionada = '';
                         this.alertaDuplicado = false;
+                        this.alertaExito = true;
                     }
                 }
             },
@@ -521,6 +531,8 @@
             const ordenArray = [];
             const parametrosArray = [];
             const idparametros = [];
+            const idmetodologias = [];
+            const metodologiasArray = [];
 
             // Recorrer los datos y almacenarlos en las columnas correspondientes
             datos.forEach((objeto) => {
@@ -528,13 +540,16 @@
               ordenArray.push(objeto.orden);
               parametrosArray.push(objeto.parametros);
               idparametros.push(objeto.id_parametro);
+              idmetodologias.push(objeto.id_metodologia);
+              metodologiasArray.push(objeto.metodologias);
             });
 
             datos.forEach((objeto) => {
                 this.submuestra_agregar.push({
-                    dentificacion: objeto.identificacion,
+                    identificacion: objeto.identificacion,
                     orden: objeto.orden,
-                    id_parametroSubmuestra: objeto.id_parametro
+                    id_parametro: objeto.id_parametro,
+                    id_metodologia: objeto.id_metodologia
                 });
             });
             console.log("submuestra_agregar:", this.submuestra_agregar);
@@ -544,8 +559,10 @@
             this.orden = ordenArray;
             this.parametros = parametrosArray;
             this.id_parametro = idparametros;
+            this.id_metodologia = idmetodologias;
             console.log("identificacion:", this.identificacion);
             console.log("idPARAM:", this.id_parametro);
+            console.log("idMET:", this.id_metodologia);
         },
 
             obtenerMatriz() {
@@ -670,17 +687,15 @@
                             estado: 'Recepcionado',
                             observaciones: this.observaciones,
                             fecha_ingreso: this.fecha,
-                            hora_ingreso: this.hora,
-                            identificacion: this.identificacion,
-                            orden: this.orden,
-                            id_parametroSubmuestra: this.id_parametro,
-                            parametros_submuestra: this.parametros,
+                            hora_ingreso: this.hora,                          
+                            id_parametroSubmuestra: this.id_parametro,                            
                             parametros_agregar: matricesFiltradas.map(matriz => ({
                                 id_parametro: matriz.id_parametro,
                                 id_metodologia: matriz.id_metodologia,
-                                norma: this.norma,
-                                tabla: this.tabla
+                                
                             })),
+                            norma: this.norma,
+                            tabla: this.tabla,
                             submuestra_agregar: parametrosFiltrados
                         }
                             

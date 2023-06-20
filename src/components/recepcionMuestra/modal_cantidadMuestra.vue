@@ -20,6 +20,11 @@
               <b-form-select v-model="row.item.parametros" :options="parametrosOptions"> </b-form-select>             
             </template>
           </template>
+          <template #cell(metodologias)="row">
+            <template v-if="objetosSeleccionados.length > 0">
+              <b-form-select v-model="row.item.metodologias" :options="metodologiasOptions"> </b-form-select>             
+            </template>
+          </template>
         </b-table>
       </div>  
   
@@ -35,6 +40,7 @@ export default {
   data() {
     return {
       parametrosOptions: [],
+      metodologiasOptions: [],
       identificacion: '',
       orden: '',
     };
@@ -72,6 +78,7 @@ export default {
 
       if (this.objetosSeleccionados.length > 0) {
         fields.push({ key: 'parametros', label: 'Parámetros', thClass: 'text-center', tdClass: 'item-center' });
+        fields.push({ key: 'metodologias', label: 'Metodologías', thClass: 'text-center', tdClass: 'item-center'});
       }
 
       return fields;
@@ -89,13 +96,16 @@ export default {
     guardarFormulario() {
       const datosIngresados = this.tablaItems.map((item) => {
       const parametroSeleccionado = this.objetosSeleccionados.find(obj => obj.parametro === item.parametros);
+      const metodologiaSeleccionada = this.objetosSeleccionados.find(obj => obj.metodologia === item.metodologias);
       const id_parametro = parametroSeleccionado ? parametroSeleccionado.id_parametro : null;
+      const id_metodologia = metodologiaSeleccionada ? metodologiaSeleccionada.id_metodologia : null;
     
     return {
       identificacion: item.identificacion,
       orden: item.orden,
       parametros: item.parametros,
       id_parametro: id_parametro,
+      id_metodologia: id_metodologia
     };
   });
 
@@ -104,12 +114,15 @@ export default {
   this.$refs.modal.hide();
 },
 
-    handleModalShown() {
+handleModalShown() {
   console.log('Modal mostrado');
   console.log("objetosSeleccionados:", this.objetosSeleccionados);
-  this.parametrosOptions = this.objetosSeleccionados.map(p => p.parametro)
+  const parametrosSet = new Set(this.objetosSeleccionados.map(p => p.parametro));
+  const metodologiasSet = new Set(this.objetosSeleccionados.map(m => m.metodologia));
+  this.parametrosOptions = [...parametrosSet];
+  this.metodologiasOptions = [...metodologiasSet];
   console.log("parametrosOptions:", this.parametrosOptions);
-},    
+},   
   },  
 };
 </script>  
