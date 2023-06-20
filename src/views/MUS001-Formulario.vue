@@ -328,7 +328,7 @@
                 identificacion: '',
                 TodasopcionesParametro: [],
                 submuestra_agregar: [{  
-                    identificacion: '',
+                    identificador: '',
                     orden: '',
                     id_parametro:'',
                     id_metodologia: '',
@@ -546,7 +546,7 @@
 
             datos.forEach((objeto) => {
                 this.submuestra_agregar.push({
-                    identificacion: objeto.identificacion,
+                    identificador: objeto.identificacion,
                     orden: objeto.orden,
                     id_parametro: objeto.id_parametro,
                     id_metodologia: objeto.id_metodologia

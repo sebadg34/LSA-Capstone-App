@@ -1,5 +1,5 @@
 <template>
-    <b-modal id="modal-cantidad" ref="modal" title="Cantidad de submuestras" size="lg" @shown="handleModalShown">
+    <b-modal id="modal-cantidad" ref="modal" title="Cantidad de submuestras" size="xl" @shown="handleModalShown">
       <template #modal-header="{ close }">
         <!-- Emulate built-in modal header close button action -->
         <b-row class="d-flex justify-content-around">
@@ -12,6 +12,9 @@
   
       <div>
         <b-table :items="tablaItems" :fields="tablaFields">
+          <template #cell(orden)="row">
+            <b-form-input v-model="row.item.orden" type="number" min="1"></b-form-input>
+          </template>
           <template #cell(identificacion)="row">
             <b-form-input v-model="row.item.identificacion" placeholder="Ingrese la identificación de la muestra"></b-form-input>
           </template>
@@ -42,7 +45,7 @@ export default {
       parametrosOptions: [],
       metodologiasOptions: [],
       identificacion: '',
-      orden: '',
+      orden: 0,
     };
   },
 
@@ -64,7 +67,8 @@ export default {
         items.push({
           orden: i,
           identificacion: '',
-          parametros: '',
+          parametros: this.parametrosOptions[0] || '',
+          metodologias: this.metodologiasOptions[0] || ''
         });
       }
       return items;
@@ -72,7 +76,7 @@ export default {
 
     tablaFields() {
       const fields = [
-        { key: 'orden', label: 'Orden', thClass: 'text-center', tdClass: 'text-center' },
+        { key: 'orden', label: 'Orden', thClass: 'text-center', tdClass: 'text-center', editable: true },
         { key: 'identificacion', label: 'Identificación', thClass: 'text-center', tdClass: 'item-center' },
       ];
 
