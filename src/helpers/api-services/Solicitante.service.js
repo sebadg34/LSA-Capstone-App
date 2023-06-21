@@ -56,6 +56,22 @@ const obtenerDetallesSolicitante = async (data) => {
         return;
     }
 };
+const obtenerDetallesCompletosSolicitante = async (data) => {
+    try {
+        const instanciaApi = await crearApi();
+        const response = await instanciaApi.get("/solicitantes/detalles/" + data);
+            console.log(response);
+        if(response.status == 200){
+            return response;
+        }else{
+            return;
+        }
+        
+    } catch (error) {
+        console.log(error);
+        return;
+    }
+};
 const agregarCotizacion = async (data) => {
     try {  
         const instanciaApi = await crearApi();
@@ -130,6 +146,7 @@ const cambiarEstadoSolicitante = async (data) => {
     }
 };
 export default {
+    obtenerDetallesCompletosSolicitante,
     ingresarSolicitante,
     existeSolicitante,
     obtenerTodosSolicitantes,

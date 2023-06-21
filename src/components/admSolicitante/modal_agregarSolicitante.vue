@@ -60,7 +60,7 @@
                     </b-overlay>
                     <b-alert fade style="margin:2px; padding:2px;" class="text-center" :show="Rut_ocupado" variant="warning">El rut ya está registrado en el sistema</b-alert>
                 </ValidationProvider>
-                <label for="input-live">Telefono móvil:</label>
+                <label for="input-live">Teléfono móvil:</label>
                 <ValidationProvider name="Nro. movil" rules="required|numeric|min:8|max:15" v-slot="validationContext">
                     <b-input-group size="sm" class="mb-1">
 
@@ -121,26 +121,25 @@
 
         <b-row>
             <b-col class="col-4">
-                <ValidationProvider name="empresa" rules="required" v-slot="validationContext">
-                    <label for="input-live">Empresa:</label>
-                    <b-form-select @change="cargarDirecciones" aria-describedby="cargo-live-feedback" :state="getValidationState(validationContext)" class="mb-1" value-field="rut_empresa" text-field="nombre_empresa" v-model="Empresa" :options="Empresas"></b-form-select>
-                    <b-form-invalid-feedback id="cargo-live-feedback">{{
-                        validationContext.errors[0] }}
-                    </b-form-invalid-feedback>
-                </ValidationProvider>
-            </b-col>
-            <b-col class="col-4">
-                <ValidationProvider name="ciudad" rules="required" v-slot="validationContext">
-                    <label for="input-live">Ciudad empresa:</label>
-                    <b-form-select @change="cargarDataCiudad" :disabled="Empresa ? false : true" aria-describedby="cargo-live-feedback" :state="getValidationState(validationContext)" class="mb-1" v-model="Ciudad" value-field="id_ciudad" text-field="nombre_ciudad" :options="Ciudades">
+                <label for="input-live">Empresa:</label>
+                <b-form-select @change="cargarDirecciones" aria-describedby="cargo-live-feedback" class="mb-1" text-field="nombre_empresa" v-model="EmpresaSeleccionada" :options="Empresas"></b-form-select>
 
-                    </b-form-select>
-                    <b-form-invalid-feedback id="cargo-live-feedback">{{
-                        validationContext.errors[0] }}
-                    </b-form-invalid-feedback>
-                </ValidationProvider>
             </b-col>
             <b-col class="col-4">
+
+                <label for="input-live">Ciudad empresa:</label>
+                <b-form-select :disabled="EmpresaSeleccionada ? false : true" aria-describedby="cargo-live-feedback" class="mb-1" v-model="CiudadSeleccionada" text-field="nombre_ciudad" :options="Ciudades">
+
+                </b-form-select>
+
+            </b-col>
+            <b-col class="col-1 d-flex align-items-end" style="padding:0px">
+                <b-button variant="success" class="reactive-button" @click="agregarEmpresaSeleccionada()" style="padding:1px; margin-bottom:5px; aspect-ratio: 1 / 1; height: 35px; width: 35px">
+                    <b-icon icon=" plus-circle-fill"></b-icon>
+                </b-button>
+
+            </b-col>
+            <b-col class="col-3">
                 <ValidationProvider name="cargo" rules="required" v-slot="validationContext">
                     <label for="input-live">Tipo cliente:</label>
                     <b-form-select aria-describedby="cargo-live-feedback" :state="getValidationState(validationContext)" class="mb-1" v-model="Tipo" :options="tipos"></b-form-select>
@@ -150,6 +149,25 @@
                 </ValidationProvider>
             </b-col>
         </b-row>
+        <hr />
+        <b-alert variant="danger" :show="alertaDuplicado" dismissible @dismissed="alertaDuplicado = false">
+            La empresa y ciudad de esta ya están seleccionadas.
+        </b-alert>
+        <div>
+            <b-row v-if="Empresas_seleccionadas.length > 0" class="mt-3">
+                <b-col>
+                    <b-form-group label="Empresas Seleccionadas:">
+                        <div v-for="(objetos, index) in Empresas_seleccionadas" :key="index" class="d-flex align-items-center objetos-item mb-3">
+                            <b-input readonly :value="objetos.nombre_empresa" class="mr-2"></b-input>
+                            <b-input readonly :value="objetos.nombre_ciudad" class="mr-2"></b-input>
+                            <b-button variant="danger" @click="eliminarObjetosSeleccionados(index)" class="ml-2">
+                                <b-icon-trash-fill></b-icon-trash-fill>
+                            </b-button>
+                        </div>
+                    </b-form-group>
+                </b-col>
+            </b-row>
+        </div>
         <template #modal-footer>
 
             <b-button @click="enviarFormulario()" variant="primary" size="xl" class="float-right reactive-button" style="font-weight:bold">
@@ -174,24 +192,25 @@ export default {
             Rut: "",
             Primer_apellido: "",
             Segundo_apellido: "",
+            Empresas_seleccionadas: [],
             Movil: "",
             Movil_proveedores: "",
             Contacto_proveedores: "",
             Direccion_factura: "",
-            Rut_ocupado : false,
+            Rut_ocupado: false,
+            alertaDuplicado: false,
             Correo: "",
             Tipo: "",
-            Ciudad: "",
+            CiudadSeleccionada: "",
             Rut_empresa: "",
-            Empresa: null,
+            EmpresaSeleccionada: null,
             Nombre_empresa: "",
             Nombre_ciudad: "",
             Direccion_ciudad: "",
             Revisando_rut: false,
-            Empresas: [{}],
-            Ciudades: [{
+            Empresas: [],
 
-            }],
+            Ciudades: [],
             tipos: [{
                     value: 'Convenio',
                     text: 'Convenio'
@@ -211,6 +230,37 @@ export default {
         this.cargarEmpresas();
     },
     methods: {
+        eliminarObjetosSeleccionados(index){
+            
+            this.Empresas_seleccionadas.splice(index, 1);
+            
+
+        },
+        agregarEmpresaSeleccionada() {
+            console.log("empresa a agregar", this.EmpresaSeleccionada);
+            console.log("Ciudad de empresa a agregar", this.CiudadSeleccionada);
+            //'rut_empresa': this.Rut_empresa,
+            //    'nombre_ciudad': this.Nombre_ciudad,
+            //    'direccion_ciudad': this.Direccion_ciudad,
+            const empresaExistente = this.Empresas_seleccionadas.find(emp => emp.rut_empresa == this.EmpresaSeleccionada.rut_empresa && emp.nombre_ciudad == this.CiudadSeleccionada.nombre_ciudad);
+
+            if (empresaExistente) {
+                this.alertaDuplicado = true;
+                return;
+            }
+
+            if (this.EmpresaSeleccionada != "" && this.CiudadSeleccionada != "") {
+                this.Empresas_seleccionadas.push({
+                    rut_empresa: this.EmpresaSeleccionada.rut_empresa,
+                    id_ciudad: this.CiudadSeleccionada.id_ciudad,
+                    nombre_empresa: this.EmpresaSeleccionada.nombre_empresa,
+                    nombre_ciudad: this.CiudadSeleccionada.nombre_ciudad,
+                })
+            }
+
+            console.log("Empresas agregadas seleccionadas", this.Empresas_seleccionadas)
+
+        },
         revisarRutSolicitante() {
 
             var data = {
@@ -260,7 +310,7 @@ export default {
             this.Nombre_empresa = "";
             this.Nombre_ciudad = "";
             this.Direccion_ciudad = "";
-            this.Ciudades = [{}];
+            this.Ciudades = [];
 
         },
         getValidationState({
@@ -282,32 +332,37 @@ export default {
                     if (response.data != null) {
                         console.log(response.data)
 
-                        this.Empresas = response.data;
-                        this.Empresas.unshift({
-                            nombre_empresa: "--Particular--",
-                            rut_empresa: "-1"
-                        })
+                        for (var i = 0; i < response.data.length; i++) {
+                            this.Empresas.push({
+                                value: response.data[i],
+                                nombre_empresa: response.data[i].nombre_empresa
+                            })
+                        }
                         console.log(this.Empresas)
                     }
                 })
 
             )
         },
-        cargarDirecciones(rutEmpresa) {
-            console.log(rutEmpresa)
-            if(rutEmpresa != "-1"){
+        cargarDirecciones(empresa) {
+            this.Ciudades = [];
+            this.CiudadSeleccionada = "";
+            console.log(empresa)
 
-            
-            this.Rut_empresa = rutEmpresa;
-            empresaService.obtenerDetallesEmpresa(rutEmpresa).then((response => {
+            var Rut_empresa = empresa.rut_empresa;
+            empresaService.obtenerDetallesEmpresa(Rut_empresa).then((response => {
                 if (response.data != null) {
                     this.Nombre_empresa = response.data.nombre_empresa;
-
-                    this.Ciudades = response.data.ciudades;
+                    for (var i = 0; i < response.data.ciudades.length; i++) {
+                        this.Ciudades.push({
+                            value: response.data.ciudades[i],
+                            nombre_ciudad: response.data.ciudades[i].nombre_ciudad
+                        })
+                    }
                     console.log('ciudades cargadas', this.Ciudades)
                 }
             }))
-        }
+
         },
         enviarFormulario() {
 
@@ -317,6 +372,14 @@ export default {
                 } else {
                     console.log('Ciudad seleccionada', this.Nombre_ciudad)
                     console.log('direccion ciudad seleccionada', this.Direccion_ciudad)
+                    var empresas_agregar = [];
+                    for (var i = 0; i < this.Empresas_seleccionadas.length; i++){
+                        empresas_agregar.push({
+                            id_ciudad: this.Empresas_seleccionadas[i].id_ciudad,
+                            rut_empresa: this.Empresas_seleccionadas[i].rut_empresa
+                        })
+                    }
+
                     var data = {
                         "rut_solicitante": this.Rut,
                         "nombre": this.Nombre,
@@ -329,13 +392,7 @@ export default {
                         "fono_contacto_proveedores": this.Movil_proveedores,
                         "direccion_envio_factura": this.Direccion_factura,
                         "tipo_cliente": this.Tipo,
-                        'rut_empresa': this.Rut_empresa,
-                        'nombre_ciudad': this.Nombre_ciudad,
-                        'direccion_ciudad': this.Direccion_ciudad,
-
-                        //"fecha_inicio_vacaciones": "01-01-2000",
-                        // "fecha_termino_vacaciones": "01-01-2099",
-                        //"//dias_administrativos": "1"
+                        'empresas_agregar': empresas_agregar
                     }
                     console.log("data a enviar", data)
                     solicitanteService.ingresarSolicitante(data).then((response) => {

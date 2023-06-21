@@ -327,8 +327,9 @@ export default {
                     console.log(response)
 
                     this.solicitante = response.data
-
-                    this.obtenerEmpresa();
+                    this.solicitanteFiltrado = this.solicitante;
+                    this.loading = false;
+                   // this.obtenerEmpresa();
 
                 }
 

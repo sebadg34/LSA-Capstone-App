@@ -192,7 +192,7 @@ export default {
             this.Archivos = ""
         },
         obtenerArchivos(){
-solicitanteService.obtenerDetallesSolicitante(this.userData.rut_solicitante).then((response)=>{
+solicitanteService.obtenerDetallesCompletosSolicitante(this.userData.rut_solicitante).then((response)=>{
     console.log(response)
     if(response.request.status == 200){
         console.log("detalles de solicitante",response.data)

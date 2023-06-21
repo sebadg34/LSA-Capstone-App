@@ -112,7 +112,6 @@ export default {
     watch: {
         matrizData: {
             handler() {
-                console.log("editando matriz!")
                 console.log(this.matrizData)
 
                 this.id = this.matrizData.id_matriz;
@@ -145,21 +144,19 @@ export default {
 
             ElementosService.obtenerDetallesMatriz(data).then((response) => {
                 if (response.status === 200) {
-                    console.log("obteniendo detalles de la matriz:", response.data);
                     const id_matriz = response.data[0].id_matriz;
 
                     const nombre_matriz = response.data[0].nombre_matriz;
                     const parametros = response.data
 
 
-                    console.log("Parametros obtenidos:", nombre_matriz);
-                    console.log("Parametros obtenidos:", parametros);
+                    
                     this.Nombre = nombre_matriz;
 
                     this.id_matriz = id_matriz;
                     this.listaParametros = parametros;
 
-                    console.log("Parametros:", this.listaParametros);
+                    
                     // cargo parametros ya en el sistema al modal editar
                     for (var i = 0; i < parametros.length; i++) {
                         this.parametros_ya_en_sistema.push({
@@ -169,8 +166,7 @@ export default {
                             nombre_metodologia: parametros[i].nombre_metodologia,
                             });
                         }
-                    console.log("parametros ya en sistema", this.parametros_ya_en_sistema)
-
+                    
                     for (var v = 0; v < this.parametros_ya_en_sistema.length; v++) {
                         this.objetosSeleccionados.push({
                             parametro: this.parametros_ya_en_sistema[v].nombre_parametro,
@@ -240,7 +236,6 @@ export default {
         obtenerParametro() {
             ElementosService.obtenerParametros().then((response) => {
                 if (response.data != null && response.status === 200) {
-                    console.log("Obteniendo Parametros: ", response.data);
                     var parametrosObtenidos = response.data;
 
                     // Almacenar los datos en metodologiasData
@@ -252,8 +247,6 @@ export default {
                             nombre_metodologia: metodologia.nombre_metodologia
                         }))
                     }));
-
-                    console.log("Metodologia Data: ", this.metodologiasData)
 
                     for (var i = 0; i < parametrosObtenidos.length; i++) {
                         this.opcionesParametro.push({
@@ -278,10 +271,8 @@ export default {
                     id_parametro: yaEnSistema.id_parametro,
                     id_metodologia: yaEnSistema.id_metodologia
                 })
-                console.log("ya en sistema, agregar para que se borre en la DB", this.parametros_eliminar)
+              
             } else {
-
-                console.log("parametro nuevo, borralo para que no se agregue por equivocacion")
                 this.parametros_agregar = this.parametros_agregar.filter(param => param.id_metodologia != this.objetosSeleccionados[index].id_metodologia &&
                     param.id_parametro != this.objetosSeleccionados[index].id_parametro)
                     console.log(this.parametros_agregar)

@@ -159,7 +159,7 @@ const routes = [
 
   },
   {
-    path: '/AdministrarMuestra',
+    path: '/admmuestra',
     name: 'AdminMuestra',
     component: MUS004,
     meta: {
