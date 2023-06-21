@@ -195,6 +195,7 @@ export default {
                 this.Empresas_agregar = [];
                 this.Empresas_eliminar = [];
                 this.Empresas_antiguas = [];
+                this.Empresas_seleccionadas = [];
                 this.cargaInicialEmpresaCiudad(this.Rut);
 
             }
@@ -226,8 +227,6 @@ export default {
             CargandoCiudad: false,
             CiudadSeleccionada: "",
             EmpresaSeleccionada: "",
-            Nombre_ciudad: "",
-            Direccion_ciudad: "",
             Empresas: [{}],
             Ciudades: [{
 

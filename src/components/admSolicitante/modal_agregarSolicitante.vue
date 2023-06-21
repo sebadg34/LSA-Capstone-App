@@ -375,8 +375,9 @@ export default {
                     var empresas_agregar = [];
                     for (var i = 0; i < this.Empresas_seleccionadas.length; i++){
                         empresas_agregar.push({
-                            id_ciudad: this.Empresas_seleccionadas[i].id_ciudad,
-                            rut_empresa: this.Empresas_seleccionadas[i].rut_empresa
+                            rut_empresa: this.Empresas_seleccionadas[i].rut_empresa,
+                            id_ciudad: this.Empresas_seleccionadas[i].id_ciudad
+                          
                         })
                     }
 

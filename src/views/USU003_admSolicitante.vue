@@ -117,6 +117,12 @@
                     <span>{{ row.item.primer_apellido + " " + row.item.segundo_apellido }}</span>
 
                 </template>
+                <template #cell(empresas)="row">
+
+                    <b-list-group>
+                        <b-list-group-item style="padding:2px" v-for="empresa in row.item.empresas_unicas" :key="empresa.rut_empresa">{{ empresa.nombre_empresa }}</b-list-group-item>
+                    </b-list-group>
+                </template>
                 <!--
 
                     <template #cell(estado)="row">
@@ -210,20 +216,16 @@ export default {
             modalEstadoData: {},
             modalCotizacionData: {},
             campos_tabla: [{
-                    key: 'nombre_empresa',
-                    label: 'Empresa',
-                sortable: true
-                }, {
-                    key: 'nombre_ciudad',
-                    label: 'Ciudad empresa',
-                sortable: true
+                    key: 'empresas',
+                    label: 'Empresas',
+                    sortable: true
                 }, {
                     key: 'rut_solicitante',
                     label: 'Rut'
                 }, {
                     key: 'nombre',
                     label: 'Nombre',
-                sortable: true
+                    sortable: true
                 }, {
                     key: 'apellidos',
                     label: 'Apellidos'
@@ -239,11 +241,11 @@ export default {
                 {
                     key: 'tipo_cliente',
                     label: 'Tipo cliente',
-                sortable: true
+                    sortable: true
                 }, {
                     key: 'estado',
                     label: 'Estado',
-                sortable: true
+                    sortable: true
                 },
                 {
                     key: 'accion',
@@ -271,8 +273,8 @@ export default {
                 this.solicitanteFiltrado = this.solicitanteFiltrado.filter(solicitante => solicitante.nombre.toLowerCase().includes(nombre_filtro));
             }
             if (empresa_filtro != "") {
-               
-                this.solicitanteFiltrado = this.solicitanteFiltrado.filter(solicitante => solicitante.nombre_empresa.toLowerCase().includes(empresa_filtro));
+
+                this.solicitanteFiltrado = this.solicitanteFiltrado.filter(solicitante => solicitante.empresas_unicas.find(emp => emp.nombre_empresa.toLowerCase().includes(empresa_filtro)));
             }
             if (rut_filtro != "") {
                 this.solicitanteFiltrado = this.solicitanteFiltrado.filter(solicitante => solicitante.rut_solicitante.toLowerCase().includes(rut_filtro));
@@ -325,11 +327,24 @@ export default {
             solicitanteService.obtenerTodosSolicitantes().then((response) => {
                 if (response != null) {
                     console.log(response)
+                  
 
+                    for(var i = 0; i < response.data.length; i++){
+                        var empresas_unicas = [];
+                       for(var j = 0; j < response.data[i].empresas.length; j++){
+                        const empresaRepetida = empresas_unicas.find(emp => emp.rut_empresa == response.data[i].empresas[j].rut_empresa);
+                        if(empresaRepetida == null){
+                            empresas_unicas.push(response.data[i].empresas[j]);
+                        }
+
+                       }
+                       response.data[i].empresas_unicas = empresas_unicas;
+                    }
+                  
                     this.solicitante = response.data
                     this.solicitanteFiltrado = this.solicitante;
                     this.loading = false;
-                   // this.obtenerEmpresa();
+                    // this.obtenerEmpresa();
 
                 }
 

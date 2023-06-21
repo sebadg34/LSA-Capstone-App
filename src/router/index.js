@@ -13,7 +13,8 @@ import NotFound from '../views/vistaNoEncontrada.vue'
 import USU002_admEmpresa from '../views/USU002_admEmpresa'
 import USU003_admSolicitante from '../views/USU003_admSolicitante'
 import USU005_admDisponibilidad from '../views/USU005_admDisponibilidad'
-
+import admMuestraQuimico from '../views/admmuestra-quimico/admMuestra-quimico'
+import admMuestraGerente from '../views/admmuestra-gerente/admMuestra-gerente'
 import ANA001 from '../views/ANA001-RelacionDatos'
 import ANA002 from '../views/ANA002-AdmMatriz'
 import ANA003 from '../views/ANA003-AdmParam'
@@ -21,7 +22,7 @@ import ANA004 from '../views/ANA004-AdmMetodologia'
 import ANA005 from '../views/ANA005-AdmNorma'
 
 import USU001_vistaInicio from '../views/USU001_vistaInicio'
-import {isLoggedIn} from "@/helpers/api-services/Auth.service";
+import { isLoggedIn } from "@/helpers/api-services/Auth.service";
 import admUsuario from '../views/admUsuario.vue'
 import admPerfil from '../views/USU001_vistaPerfil.vue'
 import Restringido from '../views/vistaNoAutorizada.vue'
@@ -50,7 +51,7 @@ const routes = [
     component: admPerfil,
     meta: {
       title: "Perfil Usuario",
-      
+
     }
   },
   {
@@ -86,10 +87,10 @@ const routes = [
     component: USU004_admPersonal,
     meta: {
       title: "LSA - Administración Personal",
-      authorize: [1,2,6,0]
+      authorize: [1, 2, 6, 0]
     }
 
-  } ,{
+  }, {
     path: '/admUsuario',
     name: 'admUsuario',
     component: admUsuario,
@@ -105,7 +106,7 @@ const routes = [
     component: USU005_admDisponibilidad,
     meta: {
       title: "LSA - Administración Disponibilidad",
-      authorize: [7,1,2,0]
+      authorize: [7, 1, 2, 0]
     }
 
   },
@@ -115,7 +116,7 @@ const routes = [
     component: USU002_admEmpresa,
     meta: {
       title: "LSA - Administración Empresa",
-      authorize: [2,6,0]
+      authorize: [2, 6, 0]
     }
 
   },
@@ -125,8 +126,8 @@ const routes = [
     component: USU003_admSolicitante,
     meta: {
       title: "LSA - Administración Solicitante",
-      authorize: [2,6,0]
-      
+      authorize: [2, 6, 0]
+
     }
 
   },
@@ -138,7 +139,7 @@ const routes = [
       title: "LSA"
     }
 
-  },  
+  },
   {
     path: '/IngMuesLab',
     name: 'IngresoLab',
@@ -165,11 +166,27 @@ const routes = [
     meta: {
       title: "LSA - Administración Muestra"
     }
+  }, 
+  {
+    path: '/laboratorio/admmuestra',
+    name: 'AdminMuestraLab',
+    component: admMuestraQuimico,
+    meta: {
+      title: "LSA - Administración Muestra"
+    }
+  }, 
+  {
+    path: '/gerente/admmuestra',
+    name: 'AdminMuestraGerente',
+    component: admMuestraGerente,
+    meta: {
+      title: "LSA - Administración Muestra"
+    }
   },
   {
 
     path: '/Gerente',
-    name:'vistaGerente',
+    name: 'vistaGerente',
     component: MUS006,
     meta: {
       title: "ADM - No autorizado"
@@ -193,7 +210,7 @@ const routes = [
     component: ANA001,
     meta: {
       title: "LSA - Administración Elementos",
-      authorize: [2,6,0]
+      authorize: [2, 6, 0]
     }
 
   },
@@ -204,7 +221,7 @@ const routes = [
     component: ANA002,
     meta: {
       title: "LSA - Administración Elementos",
-      authorize: [2,6,0]
+      authorize: [2, 6, 0]
     }
 
   },
@@ -216,7 +233,7 @@ const routes = [
     component: ANA003,
     meta: {
       title: "LSA - Administración Elementos",
-      authorize: [2,6,0]
+      authorize: [2, 6, 0]
     }
 
   },
@@ -228,7 +245,7 @@ const routes = [
     component: ANA004,
     meta: {
       title: "LSA - Administración Elementos",
-      authorize: [2,6,0]
+      authorize: [2, 6, 0]
     }
 
   },
@@ -240,7 +257,7 @@ const routes = [
     component: ANA005,
     meta: {
       title: "LSA - Administración Elementos",
-      authorize: [2,6,0]
+      authorize: [2, 6, 0]
     }
 
   },
@@ -269,15 +286,15 @@ const router = new VueRouter({
 router.beforeEach((to, from, next) => {
 
   // Recuperar datos del usuario al Store en caso de recargar
-  if( isLoggedIn() && store.getters.rol == null){
-    store.commit('setRol',JSON.parse(jscookie.get('userInfo')).role);
+  if (isLoggedIn() && store.getters.rol == null) {
+    store.commit('setRol', JSON.parse(jscookie.get('userInfo')).role);
   }
 
-const {authorize} = to.meta;
-var currentUser ="";
-if(jscookie.get('userInfo') != null){
-  currentUser = JSON.parse(jscookie.get('userInfo'));
-}
+  const { authorize } = to.meta;
+  var currentUser = "";
+  if (jscookie.get('userInfo') != null) {
+    currentUser = JSON.parse(jscookie.get('userInfo'));
+  }
 
 
   if (to.name == "login" && isLoggedIn()) {
@@ -287,22 +304,21 @@ if(jscookie.get('userInfo') != null){
     //clearAuthToken();
     next({ name: "login" })
   }
-  else
-  {
-    if(authorize){
+  else {
+    if (authorize) {
 
       // Checkear si la ruta se restringe por rol
       //if(authorize.length && !authorize.includes(currentUser.role)){
-      if(authorize.length && !authorize.includes(currentUser.role)){
+      if (authorize.length && !authorize.includes(currentUser.role)) {
         // rol no autorizado
-        next({name: "Restringido"})
-      }else{
+        next({ name: "Restringido" })
+      } else {
         next();
       }
     }
     next();
   }
-  
+
 })
 
 export default router
