@@ -10,7 +10,8 @@
                                 <b-col class="col-6">                                    
                                     <ValidationProvider name="Rut Recepcionista" rules="required|rut" v-slot="validationContext">
                                       <label for="Rut Recepcionista-input">Rut:</label>
-                                      <b-form-input id="Rut Recepcionista-input" readonly class="mb-1" v-model="recepcionistaRUT" :state="getValidationState(validationContext)"></b-form-input>
+                                      <b-form-input id="Rut Recepcionista-input" readonly v-model="recepcionistaRUT" :state="getValidationState(validationContext)"></b-form-input>
+                                      
                                       <b-form-invalid-feedback>{{ validationContext.errors[0] }}</b-form-invalid-feedback>
                                     </ValidationProvider>
                                     
@@ -23,10 +24,21 @@
 
                                 <b-col class="col-6">
                                     <ValidationProvider name="rut" rules="required|rut" v-slot="validationContext">
-                                      <label for="input-live">Rut Cliente:</label>
-                                      <b-form-input class="mb-1" id="input-live" readonly v-model="rut" :state="getValidationState(validationContext)"></b-form-input>
+                                      <label for="input-live">Rut Cliente:</label>                                      
+                                      <div class="d-flex align-items-center">    
+                                        <b-form-input id="input-live" v-model="rut" :state="getValidationState(validationContext)"></b-form-input>
+                                            <div>
+                                                <b-button @click="buscarYagregar()">
+                                                    <b-icon class="mt-1" icon="search"></b-icon>                                                 
+                                                </b-button>                                                                                                   
+                                            </div>
+                                      </div>
                                       <b-form-invalid-feedback>{{ validationContext.errors[0] }}</b-form-invalid-feedback>
-                                    </ValidationProvider>
+                                    </ValidationProvider>                                    
+
+                                    <b-alert :show="dismissCountDown" dismissible fade variant="danger" @dismiss-count-down="countDownChanged">
+                                        El Rut del solicitante NO existe en la base de datos! {{ dismissCountDown }} seconds...
+                                    </b-alert>
 
                                     <ValidationProvider name="solicitante" rules="required" v-slot="validationContext">
                                       <label for="input-live">Cliente:</label>
@@ -36,7 +48,7 @@
           
                                     <ValidationProvider name="Dirección Cliente" rules="required" v-slot="validationContext">
                                       <label for="input-live">Dirección Cliente:</label>
-                                      <b-form-input class="mb-1" id="input-live" v-model="direccion" :state="getValidationState(validationContext)"></b-form-input>
+                                      <b-form-input id="input-live" v-model="direccion" :state="getValidationState(validationContext)"></b-form-input>
                                       <b-form-invalid-feedback>{{ validationContext.errors[0] }}</b-form-invalid-feedback>
                                     </ValidationProvider> 
                                 </b-col>
@@ -318,6 +330,8 @@ import {
                 parametros: [],
                 alertaDuplicado: false,
                 alertaExito: false,
+                alertaExiste: false,
+                alertaNOexiste: false,
                 transportista:'',
                 Temperatura:'',
                 transportistaRut:'',
@@ -339,6 +353,8 @@ import {
                     id_parametro:'',
                     id_metodologia: '',
                 }],
+                dismissSecs: 2,
+                dismissCountDown: 0,
                 parametrosTablaSeleccionada: [],
                 opcionesMetodologia: [], 
                 metodologiaDeshabilitada: true,
@@ -347,7 +363,8 @@ import {
                 parametros_agregar: [{
                 id_parametro: '',
                 id_metodologia: '',
-                userData: ''
+                userData: '',
+                
                 
                 
             }],                       
@@ -372,19 +389,18 @@ import {
             
             PersonalService.obtenerTodosPersonal().then((response) => {
                 console.log(response.data);
-                if (response != null) {
-                    this.recepcionistas = response.data
-                    this.opcionesRecepcionistas = this.recepcionistas.map((recepcionista) => recepcionista.nombre + " " + recepcionista.apellido);
-                    console.log("Los recepcionistas son: " , this.opcionesRecepcionistas);
+                if (response != null && response.status === 200) {
+                    this.recepcionistas = response.data                    
+                    console.log("Los recepcionistas son: " , this.recepcionistas);
                  }
             }),
 
             EmpresaService.obtenerTodasEmpresa().then((response) => {
                 console.log(response.data);
                 if (response != null) {
-                this.empresas = response.data;
-                this.opcionesClientes = this.empresas.map((empresa) => empresa.nombre_empresa);
-                console.log("Los clientes son: ", this.opcionesClientes);
+                    this.empresas = response.data;
+                    this.opcionesClientes = this.empresas.map((empresa) => empresa.nombre_empresa);
+                    console.log("Los clientes son: ", this.opcionesClientes);
                 }
             });            
         },
@@ -423,7 +439,24 @@ import {
             })
             {
                 return dirty || validated ? valid : null;
-            },  
+            },
+
+            countDownChanged(dismissCountDown) {
+                this.dismissCountDown = dismissCountDown
+            },
+            
+            buscarYagregar() {
+                const rutCliente = this.rut;
+                const recepcionistaEncontrado = this.recepcionistas.find(recepcionista => recepcionista.rut_empleado === rutCliente);
+
+                if (recepcionistaEncontrado) {
+                  const mensaje = `El rut ${rutCliente} existe. Nombre: ${recepcionistaEncontrado.nombre}, Apellido: ${recepcionistaEncontrado.apellido}`;
+                  alert(mensaje);
+                } else {
+                  this.alertaNOexiste = true;
+                  this.dismissCountDown = this.dismissSecs
+                }
+            },
         
             generarFechaHoraActual() {
                 const now = new Date();
