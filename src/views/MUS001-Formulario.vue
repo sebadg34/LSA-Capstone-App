@@ -7,16 +7,16 @@
                     <b-tab title="Recepcionista">Datos del recepcionista
                         <b-card>
                             <b-row class="pb-2">
-                                <b-col class="col-6">
-                                    <label for="Rut Recepcionista-input">Rut:</label>
+                                <b-col class="col-6">                                    
                                     <ValidationProvider name="Rut Recepcionista" rules="required|rut" v-slot="validationContext">
+                                      <label for="Rut Recepcionista-input">Rut:</label>
                                       <b-form-input id="Rut Recepcionista-input" readonly class="mb-1" v-model="recepcionistaRUT" :state="getValidationState(validationContext)"></b-form-input>
                                       <b-form-invalid-feedback>{{ validationContext.errors[0] }}</b-form-invalid-feedback>
                                     </ValidationProvider>
-
-                                    <label for="input-live">Recepcionista:</label>
+                                    
                                     <ValidationProvider name="NombreRecepcionista" rules="required" v-slot="validationContext">
-                                      <b-form-select v-model="recepcionista" :state="getValidationState(validationContext)" :options="opcionesRecepcionistas" placeholder="Seleccione un recepcionista" ></b-form-select>
+                                      <label for="input-live">Recepcionista:</label>
+                                      <b-form-input v-model="recepcionista" readonly :state="getValidationState(validationContext)" placeholder="Seleccione un recepcionista" ></b-form-input>
                                       <b-form-invalid-feedback>{{ validationContext.errors[0] }}</b-form-invalid-feedback>
                                     </ValidationProvider>
                                 </b-col>
@@ -273,6 +273,12 @@
     import ElementosService from '@/helpers/api-services/Elementos.service';
     import PersonalService from '@/helpers/api-services/Personal.service';
     import EmpresaService from '@/helpers/api-services/Empresa.service';
+    import {
+    getUserInfo
+} from "@/helpers/api-services/Auth.service";
+import {
+    isLoggedIn
+} from "@/helpers/api-services/Auth.service";
 
     export default {
 
@@ -341,11 +347,22 @@
                 parametros_agregar: [{
                 id_parametro: '',
                 id_metodologia: '',
+                userData: ''
                 
                 
             }],                       
             };
         }, 
+        
+        async created() {
+            if (isLoggedIn()) {
+                console.log('checkenado user info');
+                this.userData = getUserInfo();
+                console.log('data user', this.userData);
+                this.recepcionista = `${this.userData.nombre} ${this.userData.apellido}`;
+                this.recepcionistaRUT = `${this.userData.rut_empleado}`;
+            }
+        },        
 
         mounted(){
 
@@ -373,12 +390,12 @@
         },
         
         watch: {
-            recepcionista(newValue) {                
+             /*recepcionista(newValue) {                
                 const recepcionistaSeleccionado = this.recepcionistas.find((recepcionista) => `${recepcionista.nombre} ${recepcionista.apellido}` === newValue);                
                 if (recepcionistaSeleccionado) {                    
                     this.recepcionistaRUT = recepcionistaSeleccionado.rut_empleado;                    
                 }
-            },
+            },*/
 
             solicitante(newValue) {                
                 const empresaSeleccionada = this.empresas.find((empresa) => empresa.nombre_empresa === newValue);
@@ -388,13 +405,14 @@
             },
 
             parametroSeleccionado: function (newParametro) {
-            if (newParametro) {
-                this.actualizarMetodologias();
-                this.metodologiaDeshabilitada = false; // Habilita el input 
-            } else {
-                this.metodologiaDeshabilitada = true;
-            }
-        },
+                if (newParametro) {
+                    this.actualizarMetodologias();
+                    this.metodologiaDeshabilitada = false; // Habilita el input 
+                }   
+                else {
+                    this.metodologiaDeshabilitada = true;
+                }
+            },
         },
 
         methods: {
@@ -486,12 +504,7 @@
             
         eliminarObjetosSeleccionados(index) {
             this.objetosSeleccionados.splice(index, 1);
-        },
-
-        actualizarObjetosSeleccionados(index, parametro, metodologia) {
-            this.objetosSeleccionados[index].parametro = parametro;
-            this.objetosSeleccionados[index].metodologia = metodologia;
-        },
+        },        
 
         actualizarMetodologias() {
             const parametro = this.parametroSeleccionado;
@@ -654,13 +667,7 @@
               }
               console.log("param", this.parametrosTablaSeleccionada);
             },
-
-            agregarParametro(){
-
-                this.$bvModal.show('modal-Agregar-Opciones')
-
-            },
-
+            
             enviarFormulario() {
                 this.$refs.form.validate().then(success => {
                     if (!success) {
