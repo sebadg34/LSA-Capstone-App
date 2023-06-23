@@ -23,8 +23,8 @@
                                 </b-col>
 
                                 <b-col class="col-6">
-                                    <ValidationProvider name="rut" rules="required|rut" v-slot="validationContext">
-                                      <label for="input-live">Rut Cliente:</label>                                      
+                                    <label for="input-live">Rut Cliente:</label>  
+                                    <ValidationProvider name="rut" rules="required|rut" v-slot="validationContext">                                      
                                       <div class="d-flex align-items-center">    
                                         <b-form-input id="input-live" v-model="rut" :state="getValidationState(validationContext)"></b-form-input>
                                             <div>
@@ -41,15 +41,17 @@
                                     </b-alert>
 
                                     <ValidationProvider name="solicitante" rules="required" v-slot="validationContext">
-                                      <label for="input-live">Cliente:</label>
-                                      <b-form-select v-model="solicitante" :state="getValidationState(validationContext)" :options="opcionesClientes" placeholder="Seleccione un Cliente" ></b-form-select>
-                                      <b-form-invalid-feedback>{{ validationContext.errors[0] }}</b-form-invalid-feedback>
+                                        <label for="input-live">Cliente:</label>
+                                        <b-form-select v-model="solicitante" :state="getValidationState(validationContext)" :options="opcionesClientes" value-field="rut_empresa" text-field = "nombre_empresa" @input="actualizarSelectedEmpresa"></b-form-select>
+                                        <b-form-invalid-feedback>{{ validationContext.errors[0] }}</b-form-invalid-feedback>
                                     </ValidationProvider> 
           
                                     <ValidationProvider name="Dirección Cliente" rules="required" v-slot="validationContext">
-                                      <label for="input-live">Dirección Cliente:</label>
-                                      <b-form-input id="input-live" v-model="direccion" :state="getValidationState(validationContext)"></b-form-input>
-                                      <b-form-invalid-feedback>{{ validationContext.errors[0] }}</b-form-invalid-feedback>
+                                        <label for="input-live">Dirección Cliente:</label>
+                                        <b-form-select id="input-live" v-model="direccion" :options="opcionesDireccion" :state="getValidationState(validationContext)"
+                                            text-field="direccionConCiudad" value-field="id_ciudad">
+                                        </b-form-select>
+                                        <b-form-invalid-feedback>{{ validationContext.errors[0] }}</b-form-invalid-feedback>
                                     </ValidationProvider> 
                                 </b-col>
                             </b-row>
@@ -237,7 +239,7 @@
                 Recepcionar Muestra
               </b-button>
             </div>
-            <b-modal id="modal-Agregar-Opciones" ref="modal" :title="`Agregar parámetro a opciones`" size="lg">
+            <b-modal id="modal-Agregar-Opciones" ref="modal" :title="`Agregar parámetro a opciones`" size="lg" @shown="onModalShown">
                 <template #modal-header="{ close }">                
                     <b-row class="d-flex justify-content-around">
                         <div class="pl-3">Agregar Parámetros</div>
@@ -284,13 +286,10 @@
     import modal_cantidadMuestra from '@/components/recepcionMuestra/modal_cantidadMuestra.vue';
     import ElementosService from '@/helpers/api-services/Elementos.service';
     import PersonalService from '@/helpers/api-services/Personal.service';
-    import EmpresaService from '@/helpers/api-services/Empresa.service';
-    import {
-    getUserInfo
-} from "@/helpers/api-services/Auth.service";
-import {
-    isLoggedIn
-} from "@/helpers/api-services/Auth.service";
+    //import EmpresaService from '@/helpers/api-services/Empresa.service';
+    import SolicitanteService from '@/helpers/api-services/Solicitante.service';
+    import {getUserInfo} from "@/helpers/api-services/Auth.service";
+    import {isLoggedIn} from "@/helpers/api-services/Auth.service";
 
     export default {
 
@@ -300,14 +299,19 @@ import {
 
         data() {
             return {
+                rutSolicitante: '',
                 recepcionista: '',
                 recepcionistaRUT: '',
+                nombre_empresa: '',
                 solicitante:'',
                 rut: '',
+                rut_empresa:'',
                 metodologiaSeleccionada: '',
                 objetosSeleccionados: [],
                 direccion: '',
+                direccion_empresa: '',
                 muestreado:'',
+                opcionesDireccion: [],
                 opcionesMuestreado: [
                 { value: 'UCN-LSA', text: 'UCN-LSA' },
                 { value: 'Cliente', text: 'Cliente' }],
@@ -353,7 +357,8 @@ import {
                     id_parametro:'',
                     id_metodologia: '',
                 }],
-                dismissSecs: 2,
+                userData: '',
+                dismissSecs: 2,            
                 dismissCountDown: 0,
                 parametrosTablaSeleccionada: [],
                 opcionesMetodologia: [], 
@@ -361,13 +366,14 @@ import {
                 metodologias: [],
                 metodologiasData: [], 
                 parametros_agregar: [{
-                id_parametro: '',
-                id_metodologia: '',
-                userData: '',
-                
-                
-                
-            }],                       
+                    id_parametro: '',
+                    id_metodologia: '',                                    
+                }],
+                selectedEmpresa: {
+                    id_ciudad: '',
+                    nombre_ciudad: '',
+                    direccion: ''
+                }                                       
             };
         }, 
         
@@ -393,16 +399,15 @@ import {
                     this.recepcionistas = response.data                    
                     console.log("Los recepcionistas son: " , this.recepcionistas);
                  }
-            }),
-
-            EmpresaService.obtenerTodasEmpresa().then((response) => {
+            });
+            /*EmpresaService.obtenerTodasEmpresa().then((response) => {
                 console.log(response.data);
                 if (response != null) {
                     this.empresas = response.data;
                     this.opcionesClientes = this.empresas.map((empresa) => empresa.nombre_empresa);
                     console.log("Los clientes son: ", this.opcionesClientes);
                 }
-            });            
+            });*/             
         },
         
         watch: {
@@ -413,12 +418,12 @@ import {
                 }
             },*/
 
-            solicitante(newValue) {                
+            /*solicitante(newValue) {                
                 const empresaSeleccionada = this.empresas.find((empresa) => empresa.nombre_empresa === newValue);
                 if (empresaSeleccionada) {
                     this.rut = empresaSeleccionada.rut_empresa;
                 }
-            },
+            },*/
 
             parametroSeleccionado: function (newParametro) {
                 if (newParametro) {
@@ -429,6 +434,18 @@ import {
                     this.metodologiaDeshabilitada = true;
                 }
             },
+
+            direccion(newValue) {
+                const direccionSeleccionada = this.opcionesDireccion.find(opcion => opcion.id_ciudad === newValue);
+                if (direccionSeleccionada) {
+                  const direccion = direccionSeleccionada.direccion;
+                  console.log("Dirección seleccionada:", direccion);
+                  // Realiza cualquier otra acción necesaria con la dirección seleccionada
+                  this.direccion_empresa = direccion;
+                } else {
+                  console.log("No se encontró la dirección seleccionada.");
+                }
+            },            
         },
 
         methods: {
@@ -440,21 +457,120 @@ import {
             {
                 return dirty || validated ? valid : null;
             },
+            onModalShown() {
+                this.alertaExito = false;
+                this.alertaDuplicado = false;
+            },
 
             countDownChanged(dismissCountDown) {
                 this.dismissCountDown = dismissCountDown
             },
             
             buscarYagregar() {
-                const rutCliente = this.rut;
-                const recepcionistaEncontrado = this.recepcionistas.find(recepcionista => recepcionista.rut_empleado === rutCliente);
+                SolicitanteService.obtenerTodosSolicitantes().then((response) => {                
+                    if (response.data != null && response.status === 200){
+                        this.solicitante = response.data;
+                    }
+                    const rutCliente = this.rut;               
+                    const solicitanteEncontrado = this.solicitante.find(s => s.rut_solicitante === rutCliente);
+                    if (solicitanteEncontrado) {                        
+                        this.rutSolicitante = solicitanteEncontrado.rut_solicitante;
+                        console.log('Rut solicitante encontrado:', this.rutSolicitante);
+                        this.detallesSolicitante();                 
+                    } else {
+                      this.alertaNOexiste = true;
+                      this.dismissCountDown = this.dismissSecs
+                    }
+                })                
+            },           
 
-                if (recepcionistaEncontrado) {
-                  const mensaje = `El rut ${rutCliente} existe. Nombre: ${recepcionistaEncontrado.nombre}, Apellido: ${recepcionistaEncontrado.apellido}`;
-                  alert(mensaje);
-                } else {
-                  this.alertaNOexiste = true;
-                  this.dismissCountDown = this.dismissSecs
+            detallesSolicitante(){
+                console.log("rut a obtener: ", this.rutSolicitante)
+                const data = {
+                rut_solicitante: this.rutSolicitante
+                
+                };
+                console.log("id a obtener: ", data)               
+                
+                SolicitanteService.obtenerDetallesSolicitante(data).then((response) => {
+                    console.log("ObteniendoDetalles", response.data);
+
+                    const empresas = response.data.detalles_empresas.map(detalle => ({
+                        rut_empresa: detalle.rut_empresa,
+                        nombre_empresa: detalle.nombre_empresa,
+                        nombre_ciudad: detalle.nombre_ciudad,
+                        id_ciudad: detalle.id_ciudad,
+                        direccion: detalle.direccion,                        
+                    }));
+                    
+
+                    const empresasAgrupadas = response.data.detalles_empresas.reduce((agrupadas, empresa) => {
+                        // Verificar si la empresa ya existe en el array agrupadas
+                        const empresaExistente = agrupadas.find(e => e.rut_empresa === empresa.rut_empresa || e.nombre_empresa === empresa.nombre_empresa);
+
+                        if (empresaExistente) {
+                          // La empresa ya existe, mezclar los datos
+                          if (!empresaExistente.id_ciudad.includes(empresa.id_ciudad)) {
+                            // Agregar el id_ciudad si no está presente en el array
+                            empresaExistente.id_ciudad.push(empresa.id_ciudad);
+                          }
+
+                          if (!empresaExistente.nombre_ciudad.includes(empresa.nombre_ciudad)) {
+                            // Agregar el nombre_ciudad si no está presente en el array
+                            empresaExistente.nombre_ciudad.push(empresa.nombre_ciudad);
+                          }
+
+                          if (!empresaExistente.direccion.includes(empresa.direccion)) {
+                            // Agregar la direccion si no está presente en el array
+                            empresaExistente.direccion.push(empresa.direccion);
+                          }
+                        } else {
+                          // La empresa no existe, agregarla al array agrupadas
+                          empresa.id_ciudad = [empresa.id_ciudad]; // Convertir id_ciudad en un array
+                          empresa.nombre_ciudad = [empresa.nombre_ciudad];
+                          empresa.direccion = [empresa.direccion]; 
+                          agrupadas.push(empresa);
+                        }
+                        return agrupadas;
+                    }, []);
+
+                    console.log("Empresas:", empresas);
+                    console.log("Empresas agrupadas:", empresasAgrupadas);
+                    
+                    this.opcionesClientes = empresasAgrupadas;
+                    console.log("opciones empresas", this.opcionesClientes);
+                                        
+                    // Seleccionar la primera empresa de la lista por defecto
+                    if (this.opcionesClientes.length > 0) {
+                      const primeraEmpresa = this.opcionesClientes[0];
+                      this.selectedEmpresa.id_ciudad = primeraEmpresa.id_ciudad[0];
+                      this.selectedEmpresa.nombre_ciudad = primeraEmpresa.nombre_ciudad[0];
+                      this.selectedEmpresa.direccion = primeraEmpresa.direccion[0];                      
+                    }
+                })
+            },
+
+            actualizarSelectedEmpresa() {
+                const empresaSeleccionada = this.opcionesClientes.find(empresa =>
+                  empresa.rut_empresa === this.solicitante
+                );
+                if (empresaSeleccionada) {
+                    this.selectedEmpresa.id_ciudad = empresaSeleccionada.id_ciudad;
+                    this.selectedEmpresa.nombre_ciudad = empresaSeleccionada.nombre_ciudad;
+                    this.selectedEmpresa.direccion = empresaSeleccionada.direccion;
+                    this.opcionesDireccion = empresaSeleccionada.id_ciudad.map((idCiudad, index) => ({
+                        id_ciudad: idCiudad,
+                        direccion: empresaSeleccionada.direccion[index],                        
+                        direccionConCiudad: `${empresaSeleccionada.nombre_ciudad[index]} / ${empresaSeleccionada.direccion[index]}`
+                }));                
+                const nombreEmpresaSeleccionada = empresaSeleccionada.nombre_empresa;
+                console.log("Nombre de la empresa seleccionada: ", nombreEmpresaSeleccionada);
+                this.nombre_empresa = nombreEmpresaSeleccionada;
+                console.log("Nombre_empresa: ", this.nombre_empresa);
+
+                const RUTEmpresaSeleccionada = empresaSeleccionada.rut_empresa;
+                console.log("RUT de la empresa seleccionada: ", RUTEmpresaSeleccionada);
+                this.rut_empresa = RUTEmpresaSeleccionada;                
                 }
             },
         
@@ -471,10 +587,11 @@ import {
                 console.log("abirnedo modal")
                 this.submuestra_agregar = [{  
                     identificacion : '',
-                    orden : '',
-                    id_parametroSubmuestra : '',
-                }],            
-                this.$bvModal.show('modal-cantidad')
+                    orden : '',                    
+                }],   
+                this.alertaExito = false;
+                this.alertaDuplicado = false;         
+                this.$bvModal.show('modal-cantidad')                
             },            
 
             agregarObjetosSeleccionados() {
@@ -501,7 +618,6 @@ import {
                         this.parametros_agregar.push({
                             id_parametro: parametroData.id_parametro,
                             id_metodologia: metodologiaCompleta.id_metodologia,
-
                         });
                         console.log("las matrices ahn guardado lo siguiente: ", this.parametros_agregar)
                         this.parametroSeleccionado = '';
@@ -513,103 +629,102 @@ import {
             },
 
             obtenerParametro() {
-            ElementosService.obtenerParametros().then((response) => {
-                if (response.data != null && response.status === 200) {
-                    console.log("Obteniendo Parametros: ", response.data);
+                ElementosService.obtenerParametros().then((response) => {
+                    if (response.data != null && response.status === 200) {
+                        console.log("Obteniendo Parametros: ", response.data);
 
-                    // Almacenar los datos en metodologiasData
-                    this.metodologiasData = response.data.map(item => ({
-                        id_parametro: item.id_parametro,
-                        nombre_parametro: item.nombre_parametro,
-                        metodologias: item.metodologias.map(metodologia => ({
-                            id_metodologia: metodologia.id_metodologia,
-                            nombre_metodologia: metodologia.nombre_metodologia
-                        }))
-                    }));
-                    console.log("Metodologia Data: ", this.metodologiasData)
-
-                    this.opcionesParametro = response.data.map(item => item.nombre_parametro);
-                    this.TodasopcionesParametro = response.data.map(item => item.nombre_parametro);
-                    console.log("opcion", this.opcionesParametro)
-                }
-            });
-        },
-            
-        eliminarObjetosSeleccionados(index) {
-            this.objetosSeleccionados.splice(index, 1);
-        },        
-
-        actualizarMetodologias() {
-            const parametro = this.parametroSeleccionado;
-
-            // Buscar el objeto correspondiente al parámetro seleccionado en metodologiasData
-            console.log("Metodologia Data 2: ", this.metodologiasData)
-            const parametroData = this.metodologiasData.find(item => item.nombre_parametro === parametro);
-
-            console.log("Parámetro seleccionado:", parametro);
-            console.log("Objeto del parámetro seleccionado:", parametroData);
-            console.log("Metodologías del parámetro seleccionado:", parametroData.metodologias);
-
-            this.metodologias = parametroData.metodologias
-            console.log("Metodologías den array:", this.metodologias);
-
-            this.opcionesMetodologia = this.metodologias.map(item => item.nombre_metodologia);
-            console.log("opciones Metodologia:", this.opcionesMetodologia);
-
-            /*if (parametroData.metodologias.length > 0) {
-              // Obtener las metodologías asociadas al parámetro seleccionado
-              const metodologias = parametroData.metodologias[0].metodologias;
-
-              console.log("Metodologías asociadas al parámetro seleccionado:", metodologias);
-
-              // Obtener solo los nombres de las metodologías
-              this.opcionesMetodologia = metodologias.map(item => item.nombre_metodologia);
-            } else {
-              this.opcionesMetodologia = []; // No se encontraron metodologías para el parámetro seleccionado
-            }*/
-        },
-
-        capturarDatos(datos) {
-            console.log("datos capturados:", datos);
-
-            // Array para cada columna
-            const identificacionArray = [];
-            const ordenArray = [];
-            const parametrosArray = [];
-            const idparametros = [];
-            const idmetodologias = [];
-            const metodologiasArray = [];
-
-            // Recorrer los datos y almacenarlos en las columnas correspondientes
-            datos.forEach((objeto) => {
-              identificacionArray.push(objeto.identificacion);
-              ordenArray.push(objeto.orden);
-              parametrosArray.push(objeto.parametros);
-              idparametros.push(objeto.id_parametro);
-              idmetodologias.push(objeto.id_metodologia);
-              metodologiasArray.push(objeto.metodologias);
-            });
-
-            datos.forEach((objeto) => {
-                this.submuestra_agregar.push({
-                    identificador: objeto.identificacion,
-                    orden: objeto.orden,
-                    id_parametro: objeto.id_parametro,
-                    id_metodologia: objeto.id_metodologia
+                        // Almacenar los datos en metodologiasData
+                        this.metodologiasData = response.data.map(item => ({
+                            id_parametro: item.id_parametro,
+                            nombre_parametro: item.nombre_parametro,
+                            metodologias: item.metodologias.map(metodologia => ({
+                                id_metodologia: metodologia.id_metodologia,
+                                nombre_metodologia: metodologia.nombre_metodologia
+                            }))
+                        }));
+                        console.log("Metodologia Data: ", this.metodologiasData)
+                        this.opcionesParametro = response.data.map(item => item.nombre_parametro);
+                        this.TodasopcionesParametro = response.data.map(item => item.nombre_parametro);
+                        console.log("opcion", this.opcionesParametro)
+                    }
                 });
-            });
-            console.log("submuestra_agregar:", this.submuestra_agregar);
-        
-            // Asignar los arrays a las variables del componente
-            this.identificacion = identificacionArray;
-            this.orden = ordenArray;
-            this.parametros = parametrosArray;
-            this.id_parametro = idparametros;
-            this.id_metodologia = idmetodologias;
-            console.log("identificacion:", this.identificacion);
-            console.log("idPARAM:", this.id_parametro);
-            console.log("idMET:", this.id_metodologia);
-        },
+            },
+            
+            eliminarObjetosSeleccionados(index) {
+                this.objetosSeleccionados.splice(index, 1);
+            },        
+
+            actualizarMetodologias() {
+                const parametro = this.parametroSeleccionado;
+
+                // Buscar el objeto correspondiente al parámetro seleccionado en metodologiasData
+                console.log("Metodologia Data 2: ", this.metodologiasData)
+                const parametroData = this.metodologiasData.find(item => item.nombre_parametro === parametro);
+
+                console.log("Parámetro seleccionado:", parametro);
+                console.log("Objeto del parámetro seleccionado:", parametroData);
+                console.log("Metodologías del parámetro seleccionado:", parametroData.metodologias);
+
+                this.metodologias = parametroData.metodologias
+                console.log("Metodologías den array:", this.metodologias);
+
+                this.opcionesMetodologia = this.metodologias.map(item => item.nombre_metodologia);
+                console.log("opciones Metodologia:", this.opcionesMetodologia);
+
+                /*if (parametroData.metodologias.length > 0) {
+                  // Obtener las metodologías asociadas al parámetro seleccionado
+                  const metodologias = parametroData.metodologias[0].metodologias;
+
+                  console.log("Metodologías asociadas al parámetro seleccionado:", metodologias);
+
+                  // Obtener solo los nombres de las metodologías
+                  this.opcionesMetodologia = metodologias.map(item => item.nombre_metodologia);
+                } else {
+                  this.opcionesMetodologia = []; // No se encontraron metodologías para el parámetro seleccionado
+                }*/
+            },
+
+            capturarDatos(datos) {
+                console.log("datos capturados:", datos);
+
+                // Array para cada columna
+                const identificacionArray = [];
+                const ordenArray = [];
+                const parametrosArray = [];
+                const idparametros = [];
+                const idmetodologias = [];
+                const metodologiasArray = [];
+
+                // Recorrer los datos y almacenarlos en las columnas correspondientes
+                datos.forEach((objeto) => {
+                    identificacionArray.push(objeto.identificacion);
+                    ordenArray.push(objeto.orden);
+                    parametrosArray.push(objeto.parametros);
+                    idparametros.push(objeto.id_parametro);
+                    idmetodologias.push(objeto.id_metodologia);
+                    metodologiasArray.push(objeto.metodologias);
+                });
+
+                datos.forEach((objeto) => {
+                    this.submuestra_agregar.push({
+                        identificador: objeto.identificacion,
+                        orden: objeto.orden,
+                        id_parametro: objeto.id_parametro,
+                        id_metodologia: objeto.id_metodologia
+                    });
+                });
+                console.log("submuestra_agregar:", this.submuestra_agregar);
+            
+                // Asignar los arrays a las variables del componente
+                this.identificacion = identificacionArray;
+                this.orden = ordenArray;
+                this.parametros = parametrosArray;
+                this.id_parametro = idparametros;
+                this.id_metodologia = idmetodologias;
+                console.log("identificacion:", this.identificacion);
+                console.log("idPARAM:", this.id_parametro);
+                console.log("idMET:", this.id_metodologia);
+            },
 
             obtenerMatriz() {
                 ElementosService.obtenerMatriz().then((response) => {
@@ -682,8 +797,7 @@ import {
             },
 
             actualizarParametrosTabla() {
-              const tablaSeleccionada = this.tabla;
-            
+              const tablaSeleccionada = this.tabla;            
               // Buscar la tabla seleccionada en tablasProcesadas
               const tablaProcesada = this.tablasProcesadas.find(tabla => tabla.nombre_tabla === tablaSeleccionada);
             
@@ -709,82 +823,79 @@ import {
                         const matricesFiltradas = this.parametros_agregar.slice(1);
                         const parametrosFiltrados = this. submuestra_agregar.slice(1);
                         var data = {
-                            recepcionista: this.recepcionista,
-                            nombre_empresa: this.solicitante,
-                            direccion_empresa: this.direccion,
-                            nombre_solicitante: this.solicitante,
-                            muestreado_por: this.muestreado,
-                            matriz: this.TipoMatriz,
+                            rut_empresa: this.rut_empresa,
+                            nombre_empresa: this.nombre_empresa,
+                            id_ciudad: this.direccion,
+                            direccion_empresa: this.direccion_empresa,
+                            rut_soliticitante: this.rut,
+                            muestreado_por: this.muestreado,                                                                                   
                             cantidad_muestras: this.nMuestras,
                             prioridad: this.prioridad,                      
                             temperatura_transporte: this.Temperatura,
                             fecha_entrega: this.fechaEntrega,
-                            nombre_transportista: this.transportista,
-                            patente_vehiculo: this.patente,
+                            fecha_ingreso: this.fecha,
+                            hora_ingreso: this.hora, 
                             rut_transportista: this.transportistaRut,
-                            rut_empleado: this.recepcionistaRUT,       
+                            nombre_transportista: this.transportista,
+                            patente_vehiculo: this.patente,                                 
                             telefono_transportista: this.fono,       
                             estado: 'Recepcionado',
-                            observaciones: this.observaciones,
-                            fecha_ingreso: this.fecha,
-                            hora_ingreso: this.hora,                          
-                            id_parametroSubmuestra: this.id_parametro,                            
+                            observaciones: this.observaciones,                                                       
                             parametros_agregar: matricesFiltradas.map(matriz => ({
                                 id_parametro: matriz.id_parametro,
-                                id_metodologia: matriz.id_metodologia,
-                                
+                                id_metodologia: matriz.id_metodologia,                                
                             })),
-                            norma: this.norma,
-                            tabla: this.tabla,
+                            id_matriz: this.TipoMatriz,
+                            id_norma: this.norma,
+                            id_tabla: this.tabla,
                             submuestra_agregar: parametrosFiltrados
-                        }
-                            
-                            console.log("data a enviar", data)
-                            MuestraService.ingresarMuestra(data).then((response) => {
-                                console.log(response)
-                                if (response != null) {
-                                    if (response.status == 200) {
-                                        this.$bvToast.toast(`Creación de la muestra exitosa`, {
-                                            title: 'Exito',
-                                            toaster: 'b-toaster-top-center',
-                                            solid: true,
-                                            variant: "success",
-                                            appendToast: true
-                                        })                                
-                                    }
-                                
-                                    this.recepcionista = '';
-                                    this.recepcionistaRUT = '';
-                                    this.solicitante = '';
-                                    this.rut = '';
-                                    this.direccion = '';
-                                    this.muestreado = '';
-                                    this.prioridad = null;
-                                    this.TipoMatriz = null;
-                                    this.nMuestras = null;
-                                    this.Temperatura = '';
-                                    this.fechaEntrega = '';
-                                    this.transportista = '';
-                                    this.patente = '';
-                                    this.transportistaRut = '';
-                                    this.fono = '';
-                                    this.observaciones = '';
-                                    this.fecha = '';
-                                    this.hora = '';
+                        } 
 
-                                } else {
-                                    this.$bvToast.toast(`Error al agregar muestra`, {
-                                        title: 'Error',
+                        console.log("data a enviar", data)
+                        MuestraService.ingresarMuestra(data).then((response) => {
+                            console.log(response)
+                            if (response != null) {
+                                if (response.status == 200) {
+                                    this.$bvToast.toast(`Creación de la muestra exitosa`, {
+                                        title: 'Exito',
                                         toaster: 'b-toaster-top-center',
                                         solid: true,
-                                        variant: "warning",
+                                        variant: "success",
                                         appendToast: true
-                                    })
+                                    })                                
                                 }
-                            })
+                            
+                                this.recepcionista = '';
+                                this.recepcionistaRUT = '';
+                                this.solicitante = '';
+                                this.rut = '';
+                                this.direccion = '';
+                                this.muestreado = '';
+                                this.prioridad = null;
+                                this.TipoMatriz = null;
+                                this.nMuestras = null;
+                                this.Temperatura = '';
+                                this.fechaEntrega = '';
+                                this.transportista = '';
+                                this.patente = '';
+                                this.transportistaRut = '';
+                                this.fono = '';
+                                this.observaciones = '';
+                                this.fecha = '';
+                                this.hora = '';
+                            } else {
+                                this.$bvToast.toast(`Error al agregar muestra`, {
+                                    title: 'Error',
+                                    toaster: 'b-toaster-top-center',
+                                    solid: true,
+                                    variant: "warning",
+                                    appendToast: true
+                                })
+                            }
+                        })
                     }
                 });
             },     
+        }
     }
-}
 </script>
