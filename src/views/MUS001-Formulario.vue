@@ -10,8 +10,7 @@
                                 <b-col class="col-6">                                    
                                     <ValidationProvider name="Rut Recepcionista" rules="required|rut" v-slot="validationContext">
                                       <label for="Rut Recepcionista-input">Rut:</label>
-                                      <b-form-input id="Rut Recepcionista-input" readonly v-model="recepcionistaRUT" :state="getValidationState(validationContext)"></b-form-input>
-                                      
+                                      <b-form-input id="Rut Recepcionista-input" readonly v-model="recepcionistaRUT" :state="getValidationState(validationContext)"></b-form-input>                                      
                                       <b-form-invalid-feedback>{{ validationContext.errors[0] }}</b-form-invalid-feedback>
                                     </ValidationProvider>
                                     
@@ -22,32 +21,32 @@
                                     </ValidationProvider>
                                 </b-col>
 
-                                <b-col class="col-6">
-                                    <label for="input-live">Rut Cliente:</label>  
-                                    <ValidationProvider name="rut" rules="required|rut" v-slot="validationContext">                                      
-                                      <div class="d-flex align-items-center">    
-                                        <b-form-input id="input-live" v-model="rut" :state="getValidationState(validationContext)"></b-form-input>
-                                            <div>
-                                                <b-button @click="buscarYagregar()">
-                                                    <b-icon class="mt-1" icon="search"></b-icon>                                                 
-                                                </b-button>                                                                                                   
-                                            </div>
-                                      </div>
-                                      <b-form-invalid-feedback>{{ validationContext.errors[0] }}</b-form-invalid-feedback>
+                                <b-col class="col-6">                                      
+                                    <ValidationProvider name="rut" rules="required|rut" v-slot="validationContext"> 
+                                        <label for="input-live">Rut solicitante:</label>                                     
+                                        <div class="d-flex align-items-center ">    
+                                            <b-form-input id="input-live" v-model="rut" :state="getValidationState(validationContext)"></b-form-input>
+                                                <div>
+                                                    <b-button @click="buscarYagregar()">
+                                                        <b-icon class="mt-1" icon="search"></b-icon>                                                 
+                                                    </b-button>                                                                                                   
+                                                </div>
+                                        </div>
+                                        <b-form-invalid-feedback>{{ validationContext.errors[0] }}</b-form-invalid-feedback>
                                     </ValidationProvider>                                    
 
                                     <b-alert :show="dismissCountDown" dismissible fade variant="danger" @dismiss-count-down="countDownChanged">
-                                        El Rut del solicitante NO existe en la base de datos! {{ dismissCountDown }} seconds...
+                                        El rut del solicitante no existe en la base de datos! 
                                     </b-alert>
 
                                     <ValidationProvider name="solicitante" rules="required" v-slot="validationContext">
-                                        <label for="input-live">Cliente:</label>
+                                        <label for="input-live">Nombre empresa:</label>
                                         <b-form-select v-model="solicitante" :state="getValidationState(validationContext)" :options="opcionesClientes" value-field="rut_empresa" text-field = "nombre_empresa" @input="actualizarSelectedEmpresa"></b-form-select>
                                         <b-form-invalid-feedback>{{ validationContext.errors[0] }}</b-form-invalid-feedback>
                                     </ValidationProvider> 
           
                                     <ValidationProvider name="Dirección Cliente" rules="required" v-slot="validationContext">
-                                        <label for="input-live">Dirección Cliente:</label>
+                                        <label  for="input-live">Dirección empresa:</label>
                                         <b-form-select id="input-live" v-model="direccion" :options="opcionesDireccion" :state="getValidationState(validationContext)"
                                             text-field="direccionConCiudad" value-field="id_ciudad">
                                         </b-form-select>
@@ -67,7 +66,11 @@
                                         <label for="input-live">N° de Muestras:</label>
                                         <div class="d-flex align-items-center">    
                                             <b-form-input id="nMuestras-input" v-model="nMuestras" :state="getValidationState(validationContext)" aria-describedby="nMuestras-live-feedback"></b-form-input>
-                                            
+                                            <div>                            
+                                                <b-button @click="agregar()" variant="secondary" size="md">
+                                                    <b-icon class="mt-1" icon="plus-circle-fill"></b-icon>                                                
+                                                </b-button>   
+                                            </div>
                                         </div>
                                         <b-form-invalid-feedback id="nMuestras-live-feedback">{{ validationContext.errors[0] }}</b-form-invalid-feedback>
                                     </ValidationProvider>
@@ -117,8 +120,7 @@
                                     </ValidationProvider>
                                 
                                     <label class="mt-3" for="input-live">Observaciones:</label>
-                                    <b-form-textarea id="input-live" v-model="observaciones" aria-describedby="input-live-help observaciones-live-feedback"></b-form-textarea>                                      
-                                                  
+                                    <b-form-textarea id="input-live" v-model="observaciones" aria-describedby="input-live-help observaciones-live-feedback"></b-form-textarea>                                                 
                                 </b-col>
                             </b-row>
                         </b-card>
