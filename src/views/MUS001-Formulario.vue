@@ -116,13 +116,9 @@
                                         <b-form-invalid-feedback id="TipoMatriz-live-feedback">{{ validationContext.errors[0] }}</b-form-invalid-feedback>
                                     </ValidationProvider>
                                 
-                                    <ValidationProvider name="observaciones" rules="required" v-slot="validationContext">
-                                        <label class="mt-3" for="input-live">Observaciones:</label>
-                                        <b-form-textarea id="input-live" v-model="observaciones" aria-describedby="input-live-help observaciones-live-feedback" :state="getValidationState(validationContext)"></b-form-textarea>
-                                        <b-form-invalid-feedback id="observaciones-live-feedback">{{
-                                            validationContext.errors[0] }}
-                                        </b-form-invalid-feedback>
-                                    </ValidationProvider>                
+                                    <label class="mt-3" for="input-live">Observaciones:</label>
+                                    <b-form-textarea id="input-live" v-model="observaciones" aria-describedby="input-live-help observaciones-live-feedback"></b-form-textarea>                                      
+                                                  
                                 </b-col>
                             </b-row>
                         </b-card>
@@ -171,7 +167,7 @@
 
                                 <b-col class="col-6">
                                     <b-form-group label="Seleccione una tabla">
-                                        <b-form-select v-model="tabla" :options="opcionesTabla" @change="actualizarParametrosTabla" ></b-form-select>
+                                        <b-form-select v-model="tabla" :options="opcionesTabla" value-field="id" @change="actualizarParametrosTabla" ></b-form-select>
                                     </b-form-group>
                                 </b-col>
                             </b-row>
@@ -373,7 +369,8 @@
                     id_ciudad: '',
                     nombre_ciudad: '',
                     direccion: ''
-                }                                       
+                },
+                id_tabla: '',                                      
             };
         }, 
         
@@ -432,6 +429,15 @@
                 }   
                 else {
                     this.metodologiaDeshabilitada = true;
+                }
+            },
+
+            tabla: function(nuevoValor) {
+                const tablaSeleccionada = this.tablasProcesadas.find(tabla => tabla.nombre_tabla === nuevoValor);
+                if (tablaSeleccionada) {
+                  const idTabla = tablaSeleccionada.id_tablas[0]; // Suponiendo que solo haya una id_tabla por cada nombre_tabla
+                  console.log("ID de tabla seleccionada:", idTabla);
+                  this.id_tabla = idTabla
                 }
             },
 
@@ -797,22 +803,20 @@
             },
 
             actualizarParametrosTabla() {
-              const tablaSeleccionada = this.tabla;            
-              // Buscar la tabla seleccionada en tablasProcesadas
-              const tablaProcesada = this.tablasProcesadas.find(tabla => tabla.nombre_tabla === tablaSeleccionada);
-            
-              if (tablaProcesada) {
-                this.parametrosTablaSeleccionada = tablaProcesada.parametros.map(parametro => ({ nombre_parametro: parametro }));
-                this.opcionesParametro = [];                
-                this.parametrosTablaSeleccionada.forEach(parametro => {
-                  this.opcionesParametro.push(parametro.nombre_parametro);
-                });
-              } else {
-                // Si la tabla seleccionada no se encuentra en tablasProcesadas, limpiar los parámetros
-                this.parametrosTablaSeleccionada = [];
-                this.opcionesParametro = [];
-              }
-              console.log("param", this.parametrosTablaSeleccionada);
+                const tablaSeleccionada = this.tabla;
+                // Buscar la tabla seleccionada en tablasProcesadas
+                const tablaProcesada = this.tablasProcesadas.find(tabla => tabla.nombre_tabla === tablaSeleccionada);
+
+                if (tablaProcesada) {
+                  const parametrosUnicos = Array.from(new Set(tablaProcesada.parametros)); // Eliminar duplicados
+                  this.parametrosTablaSeleccionada = parametrosUnicos.map(parametro => ({ nombre_parametro: parametro }));
+                  this.opcionesParametro = parametrosUnicos;
+                } else {
+                  // Si la tabla seleccionada no se encuentra en tablasProcesadas, limpiar los parámetros
+                  this.parametrosTablaSeleccionada = [];
+                  this.opcionesParametro = [];
+                }
+                console.log("param", this.parametrosTablaSeleccionada);
             },
             
             enviarFormulario() {
@@ -827,7 +831,7 @@
                             nombre_empresa: this.nombre_empresa,
                             id_ciudad: this.direccion,
                             direccion_empresa: this.direccion_empresa,
-                            rut_soliticitante: this.rut,
+                            rut_solicitante: this.rut,
                             muestreado_por: this.muestreado,                                                                                   
                             cantidad_muestras: this.nMuestras,
                             prioridad: this.prioridad,                      
@@ -847,7 +851,7 @@
                             })),
                             id_matriz: this.TipoMatriz,
                             id_norma: this.norma,
-                            id_tabla: this.tabla,
+                            id_tabla: this.id_tabla,
                             submuestra_agregar: parametrosFiltrados
                         } 
 
