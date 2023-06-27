@@ -74,6 +74,14 @@
                                         </div>
                                         <b-form-invalid-feedback id="nMuestras-live-feedback">{{ validationContext.errors[0] }}</b-form-invalid-feedback>
                                     </ValidationProvider>
+
+                                    <ValidationProvider name="Temperatura" rules="required" v-slot="validationContext">
+                                        <label for="input-live">Temperatura de la muestra:</label>
+                                        <b-form-input class="mb-1" id="input-live" v-model="Temperatura" aria-describedby="input-live-help Temperatura-live-feedback" :state="getValidationState(validationContext)" placeholder="Ingrese Temperatura de la muestra" trim></b-form-input>
+                                        <b-form-invalid-feedback id="Temperatura-live-feedback">{{
+                                            validationContext.errors[0] }}
+                                        </b-form-invalid-feedback>
+                                    </ValidationProvider>
                 
                                     <ValidationProvider name="fechaI" rules="required" v-slot="validationContext">
                                         <label class="mt-1" for="input-live">Fecha de Recepción:</label>                                          
@@ -98,7 +106,7 @@
                                     <div>                                    
                                         <label class="mt-3" for="input-live">Fecha de Entrega:</label>                                    
                                         <b-form-datepicker id="input-live" v-model="fechaEntrega" placeholder="Seleccione una fecha de entrega"></b-form-datepicker>
-                                    </div>
+                                    </div>                                    
                                 </b-col>
             
                                 <b-col class="col-6">
@@ -111,7 +119,7 @@
                                     </ValidationProvider>
 
                                     <ValidationProvider name="prioridad" rules="required" v-slot="validationContext">
-                                        <label class="mt-1" for="input-live">Prioridad:</label>                    
+                                        <label for="input-live">Prioridad:</label>                    
                                         <b-form-select id="input-live" v-model="prioridad" :options="opcionesPrioridad" aria-describedby="input-live-help prioridad-live-feedback" :state="getValidationState(validationContext)"></b-form-select>
                                         <b-form-invalid-feedback id="prioridad-live-feedback">{{
                                             validationContext.errors[0] }}
@@ -119,12 +127,12 @@
                                     </ValidationProvider>
                                 
                                     <ValidationProvider name="TipoMatriz" rules="required" v-slot="validationContext">
-                                        <label class="mt-1" for="input-live">Tipo de Matriz:</label>
+                                        <label class="mt-2" for="input-live">Tipo de Matriz:</label>
                                         <b-form-select id="input-live" v-model="TipoMatriz" :options="opcionesMatriz" aria-describedby="input-live-help TipoMatriz-live-feedback" :state="getValidationState(validationContext)" text-field="nombre_matriz" value-field="id_matriz" @change="obtenerNormasMatriz"></b-form-select>
                                         <b-form-invalid-feedback id="TipoMatriz-live-feedback">{{ validationContext.errors[0] }}</b-form-invalid-feedback>
-                                    </ValidationProvider>
-                                
-                                    <label class="mt-3" for="input-live">Observaciones:</label>
+                                    </ValidationProvider>                                    
+
+                                    <label class="mt-1" for="input-live">Observaciones:</label>
                                     <b-form-textarea id="input-live" v-model="observaciones" aria-describedby="input-live-help observaciones-live-feedback"></b-form-textarea>                                   
                                 </b-col>
                             </b-row>
@@ -143,9 +151,7 @@
                                                 +56 9
                                             </b-input-group-prepend>
                                             <b-form-input id="input-live" v-model="fono" aria-describedby="input-live-help fono-live-feedback"  placeholder=""></b-form-input>                                            
-                                        </b-input-group>                                   
-                                        <label for="input-live">Temperatura de la muestra:</label>
-                                        <b-form-input class="mb-1" id="input-live" v-model="Temperatura" aria-describedby="input-live-help Temperatura-live-feedback" placeholder="" trim></b-form-input>                                                          
+                                        </b-input-group>                                                                                                 
                                 </b-col>
 
                                 <b-col class="col-6">                                    
@@ -829,6 +835,7 @@
                         const parametrosFiltrados = this. submuestra_agregar.slice(1);
                         var data = {
                             rut_empresa: this.rut_empresa,
+                            rut_empleado: this.recepcionistaRUT,
                             nombre_empresa: this.nombre_empresa,
                             id_ciudad: this.direccion,
                             direccion_empresa: this.direccion_empresa,
@@ -839,7 +846,7 @@
                             temperatura_transporte: this.Temperatura,
                             fecha_entrega: this.fechaEntrega,
                             fecha_recepcion: this.fecha,
-                            hora_ingreso: this.hora, 
+                            hora_recepcion: this.hora, 
                             rut_transportista: this.transportistaRut,
                             nombre_transportista: this.transportista,
                             patente_vehiculo: this.patente,                                 
