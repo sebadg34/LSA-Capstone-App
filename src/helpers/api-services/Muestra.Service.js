@@ -5,7 +5,7 @@ const apiUrl = config.BASE_URL_SIS_API;
 
 const ingresarMuestra = async (data) => {
     try {  
-        const response = await axios.post(apiUrl + "/muestras/agregarMuestra", data,);
+        const response = await axios.post(apiUrl + "/recepcion-muestra", data,);
         console.log(response);
         return response;
     } catch (error) {

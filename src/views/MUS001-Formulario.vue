@@ -76,7 +76,7 @@
                                     </ValidationProvider>
                 
                                     <ValidationProvider name="fechaI" rules="required" v-slot="validationContext">
-                                        <label class="mt-1" for="input-live">Fecha de Ingreso:</label>                                          
+                                        <label class="mt-1" for="input-live">Fecha de Recepción:</label>                                          
                                         <b-form-input class="mb-1" id="input-live" readonly v-model="fecha" aria-describedby="input-live-help fechaI-live-feedback" :state="getValidationState(validationContext)" placeholder="Presione el boton para agregar fecha"></b-form-input>
                                         <b-form-invalid-feedback id="fechaI-live-feedback">{{
                                             validationContext.errors[0] }}
@@ -84,7 +84,7 @@
                                     </ValidationProvider>               
 
                                     <ValidationProvider name="horaI" rules="required" v-slot="validationContext">
-                                        <label for="input-live">Hora de Ingreso:</label>
+                                        <label for="input-live">Hora de Recepción:</label>
                                         <b-form-input class="mb-1" id="input-live" readonly :state="getValidationState(validationContext)" v-model="hora" aria-describedby="input-live-help horaI-live-feedback" placeholder="Presione el botón para agregar Hra." trim></b-form-input>
                                         <b-form-invalid-feedback id="horaI-live-feedback">{{
                                             validationContext.errors[0] }}
@@ -93,7 +93,12 @@
                 
                                     <div>
                                         <b-button class="sm" @click="generarFechaHoraActual()">Generar Fecha & Hora de Recepción</b-button>
-                                    </div>                                   
+                                    </div>
+                                    
+                                    <div>                                    
+                                        <label class="mt-3" for="input-live">Fecha de Entrega:</label>                                    
+                                        <b-form-datepicker id="input-live" v-model="fechaEntrega" placeholder="Seleccione una fecha de entrega"></b-form-datepicker>
+                                    </div>
                                 </b-col>
             
                                 <b-col class="col-6">
@@ -120,7 +125,7 @@
                                     </ValidationProvider>
                                 
                                     <label class="mt-3" for="input-live">Observaciones:</label>
-                                    <b-form-textarea id="input-live" v-model="observaciones" aria-describedby="input-live-help observaciones-live-feedback"></b-form-textarea>                                                 
+                                    <b-form-textarea id="input-live" v-model="observaciones" aria-describedby="input-live-help observaciones-live-feedback"></b-form-textarea>                                   
                                 </b-col>
                             </b-row>
                         </b-card>
@@ -148,11 +153,7 @@
                                     <b-form-input class="mb-1" id="input-live" v-model="transportista" aria-describedby="input-live-help transportista-live-feedback" placeholder="" trim></b-form-input>                                                                
                                 
                                     <label for="input-live">Patente:</label>
-                                    <b-form-input class="mb-1" id="input-live" v-model="patente" aria-describedby="input-live-help patente-live-feedback" placeholder="" trim></b-form-input>
-                                    
-                                    <b-form-group id="fechaE-group" label="Fecha de entrega:" class="my-form-group" label-for="fechaE-input">
-                                        <b-form-datepicker id="fechaE-input" v-model="fechaEntrega"></b-form-datepicker>
-                                    </b-form-group>
+                                    <b-form-input class="mb-1" id="input-live" v-model="patente" aria-describedby="input-live-help patente-live-feedback" placeholder="" trim></b-form-input>                                   
                                 </b-col>
                             </b-row>
                         </b-card>
@@ -175,7 +176,6 @@
                             </b-row>
                             
                             <b-row>
-
                                 <b-col>
                                     <b-form-group label="Seleccione un parámetro">
                                         
@@ -193,7 +193,6 @@
                                         <b-form-select v-model="metodologiaSeleccionada" :options="opcionesMetodologia" placeholder="Seleccione una metodología" :disabled="metodologiaDeshabilitada" @change="agregarObjetosSeleccionados"></b-form-select>
                                     </b-form-group>
                                 </b-col>
-
                             </b-row>
                             
                             <b-row v-if="objetosSeleccionados.length > 0" class="mt-3">
@@ -839,7 +838,7 @@
                             prioridad: this.prioridad,                      
                             temperatura_transporte: this.Temperatura,
                             fecha_entrega: this.fechaEntrega,
-                            fecha_ingreso: this.fecha,
+                            fecha_recepcion: this.fecha,
                             hora_ingreso: this.hora, 
                             rut_transportista: this.transportistaRut,
                             nombre_transportista: this.transportista,
