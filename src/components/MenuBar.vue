@@ -8,14 +8,14 @@
     </b-button>
 
     <transition name="menu-pop">
-            <div class="menu" v-show="menu_active">
+        <div class="menu" v-show="menu_active">
 
-                <b-list-group class="menu custom-light-shadowbox ml-2 mr-2" id="menu">
-                    <b-list-group-item @click="navegarRuta('inicio')" class="cursorToHand  homeButton">
-                        <b-icon icon="house-fill" aria-hidden="true"></b-icon><span class="px-md-2">Home</span>
-                    </b-list-group-item>
+            <b-list-group class="menu custom-light-shadowbox ml-2 mr-2" id="menu">
+                <b-list-group-item @click="navegarRuta('inicio')" class="cursorToHand  homeButton">
+                    <b-icon icon="house-fill" aria-hidden="true"></b-icon><span class="px-md-2">Home</span>
+                </b-list-group-item>
 
-                    <template v-if="rol == 1 || rol == 2 || rol == 6 || rol == 0">
+                <template v-if="rol == 1 || rol == 2 || rol == 6 || rol == 0">
                     <b-list-group-item id="dropdown-header-label" class="lsa-light-gray cursorToHand menuHeader d-flex justify-content-between" v-b-toggle="'collapse-1'">
                         <div>
                             <b-icon class="lsa-orange-text" icon="people-fill"></b-icon>
@@ -34,35 +34,65 @@
                             <span class="px-md-2"></span> Disponibilidad del personal
                         </b-list-group-item>
                     </b-collapse>
-                    </template>
+                </template>
 
+                <b-list-group-item id="dropdown-header-label" class="lsa-light-gray cursorToHand menuHeader d-flex justify-content-between" v-b-toggle="'collapse-2'">
+                    <div>
+                        <b-icon class="lsa-orange-text" icon="eyedropper"></b-icon>
+                        <span class="px-md-2"></span>
+                        <span>Administrar laboratorio</span>
+                    </div>
+                    <b-icon icon="chevron-down" variant="dark"></b-icon>
+                </b-list-group-item>
+                <b-collapse accordion="my-accordion" id="collapse-2">
 
-                    <b-list-group-item id="dropdown-header-label" class="lsa-light-gray cursorToHand menuHeader d-flex justify-content-between" v-b-toggle="'collapse-2'">
-                        <div>
-                            <b-icon class="lsa-orange-text" icon="eyedropper"></b-icon>
-                            <span class="px-md-2"></span>
-                            <span>Administrar laboratorio</span>
-                        </div>
-                        <b-icon icon="chevron-down" variant="dark"></b-icon>
+                    <b-list-group-item v-if="rol == 1 || rol == 0" @click="navegarRuta('AdminMuestraGerente')" class="cursorToHand menuButton">
+
+                        <div class="roleTag">Gerente</div>
+                        <div style="height:10px"></div>
+                        <b-icon class="lsa-orange-text" icon="eyedropper"></b-icon>
+                        <span class="px-md-2"></span> Administrar muestra
+
+                        <div style="height:10px"></div>
                     </b-list-group-item>
-                    <b-collapse accordion="my-accordion" id="collapse-2">
+                    <b-list-group-item v-if="rol == 7 || rol == 0" @click="navegarRuta('AdminMuestraFinanzas')" class="cursorToHand menuButton">
 
-                        <b-list-group-item @click="navegarRuta('/')" class="cursorToHand menuButton">
-                            <b-icon class="lsa-orange-text" icon="eyedropper"></b-icon>
-                            <span class="px-md-2"></span> Administrar muestra
-                        </b-list-group-item>
+                        <div class="roleTag">Finanzas</div>
+                        <div style="height:10px"></div>
+                        <b-icon class="lsa-orange-text" icon="eyedropper"></b-icon>
+                        <span class="px-md-2"></span> Administrar muestra
 
-                        <template v-if="rol == 0 || rol == 2 || rol == 6">
-                       
-                        <b-list-group-item @click="navegarRuta('/admelementos')" class="cursorToHand menuButton">
+                        <div style="height:10px"></div>
+                    </b-list-group-item>
+                    <b-list-group-item v-if="rol == 3 || rol == 4 || rol == 0" @click="navegarRuta('AdminMuestraLab')" class="cursorToHand menuButton">
+
+                        <div class="roleTag">Químicos</div>
+                        <div style="height:10px"></div>
+                        <b-icon class="lsa-orange-text" icon="eyedropper"></b-icon>
+                        <span class="px-md-2"></span> Administrar muestra
+
+                        <div style="height:10px"></div>
+                    </b-list-group-item>
+                    <b-list-group-item v-if="rol == 5 || rol == 0" @click="navegarRuta('AdminMuestraSolicitante')" class="cursorToHand menuButton">
+
+                        <div class="roleTag">Solicitante</div>
+                        <div style="height:10px"></div>
+                        <b-icon class="lsa-orange-text" icon="eyedropper"></b-icon>
+                        <span class="px-md-2"></span> Administrar muestra
+
+                        <div style="height:10px"></div>
+                    </b-list-group-item>
+                    <template v-if="rol == 0 || rol == 2 || rol == 6">
+
+                        <b-list-group-item @click="navegarRuta('admElementos')" class="cursorToHand menuButton">
                             <b-icon class="lsa-orange-text" icon="archive-fill"></b-icon>
                             <span class="px-md-2"></span> Administrar elementos
                         </b-list-group-item>
                     </template>
 
-                    </b-collapse>
+                </b-collapse>
 
-                    <template v-if="rol == 2 || rol == 6 || rol == 0">
+                <template v-if="rol == 2 || rol == 6 || rol == 0">
                     <b-list-group-item id="dropdown-header-label" class="lsa-light-gray cursorToHand menuHeader d-flex justify-content-between" v-b-toggle="'collapse-3'">
                         <div>
                             <b-icon class="lsa-orange-text" icon="briefcase-fill"></b-icon>
@@ -73,12 +103,10 @@
                     </b-list-group-item>
                     <b-collapse accordion="my-accordion" id="collapse-3">
 
-
                         <b-list-group-item v-if="rol == 2 || rol == 6 || rol == 0" @click="navegarRuta('admSolicitante')" class="cursorToHand menuButton">
                             <b-icon class="lsa-orange-text" icon="people-fill"></b-icon>
                             <span class="px-md-2"></span> Administrar solicitante
                         </b-list-group-item>
-
 
                         <b-list-group-item v-if="rol == 2 || rol == 6 || rol == 0" @click="navegarRuta('admEmpresa')" class="cursorToHand menuButton">
                             <b-icon class="lsa-orange-text" icon="building"></b-icon>
@@ -86,7 +114,6 @@
                         </b-list-group-item>
                     </b-collapse>
                 </template>
-
 
                 <template v-if="rol==0">
                     <b-list-group-item id="dropdown-header-label" class="lsa-light-gray cursorToHand menuHeader d-flex justify-content-between" v-b-toggle="'collapse-4'">
@@ -104,12 +131,10 @@
                         </b-list-group-item>
                     </b-collapse>
                 </template>
-                </b-list-group>
+            </b-list-group>
 
-            </div>
-      
+        </div>
 
-      
     </transition>
 
 </div>
@@ -151,7 +176,9 @@ export default {
     methods: {
         async navegarRuta(ruta) {
             if (await validarAcceso()) {
-                this.$router.push(ruta);
+                this.$router.push({
+                    name: ruta
+                });
             }
         },
         // eslint-disable-next-line no-unused-vars
@@ -172,6 +199,19 @@ export default {
 </script>
 
 <style scoped>
+.roleTag {
+    background-color: var(--lsa-light-blue);
+    color: white;
+    border-radius: 0px 0px 0px 5px;
+    position: absolute;
+    right: 0;
+    top: 0;
+    font-size: 0.8rem;
+    margin: 0px;
+    padding-left: 10px;
+    padding-right: 10px
+}
+
 .logoutButton {
     background-color: var(--lsa-orange) !important;
     color: white;
@@ -190,12 +230,14 @@ export default {
     color: white;
     border-radius: 20px;
 }
-.menuHeader{
-    padding-left:10px;
-    padding-right:10px;
+
+.menuHeader {
+    padding-left: 10px;
+    padding-right: 10px;
     font-weight: bold;
     font-size: 15px;
 }
+
 .menuHeader:hover {
     background-color: rgb(220, 234, 255) !important;
 
@@ -217,8 +259,8 @@ export default {
 .menuButton {
     background-color: white;
     z-index: 22;
-    padding-left:10px;
-    padding-right:10px;
+    padding-left: 10px;
+    padding-right: 10px;
     font-weight: bold;
     justify-content: space-between !important;
 }

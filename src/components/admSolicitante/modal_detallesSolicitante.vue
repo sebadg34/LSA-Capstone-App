@@ -51,30 +51,36 @@
         </b-row>
 
         <hr />
-                <div>Empresas asociadas:</div>
-                <br />
-                <b-list-group horizontal style="font-weight: bold;">
-                    <b-list-group-item style="width:30%" class="d-flex align-items-center justify-content-center">
-                    Empresas
-                </b-list-group-item>
-                <b-list-group-item style="width:70%" class="d-flex align-items-center justify-content-center">
-                    Ciudades de empresa
-                </b-list-group-item>
-                </b-list-group>
-               
-                <b-list-group >
-                    <b-list-group-item style="padding:0px; width:100%" v-for="empresa in Empresas" :key="empresa.rut_empresa">
-                        <b-list-group horizontal>
-                            <b-list-group-item class="d-flex align-items-center justify-content-center" style="width:30%">{{ empresa.nombre_empresa }}</b-list-group-item>
-                            <b-list-group-item style="padding:0px;width:70%">
-                                <b-list-group>
-                                    <b-list-group-item v-for="ciudad in empresa.ciudades" :key="ciudad.id_ciudad">
-                                    {{ ciudad.nombre_ciudad }} - {{ ciudad.direccion }}</b-list-group-item>
-                                </b-list-group>
-                            </b-list-group-item>
+        <div>Empresas asociadas:</div>
+        <br />
+        <b-list-group horizontal style="font-weight: bold;">
+            <b-list-group-item style="width:30%" class="d-flex align-items-center justify-content-center">
+                Empresas
+            </b-list-group-item>
+            <b-list-group-item style="width:70%" class="d-flex align-items-center justify-content-center">
+                Ciudades de empresa
+            </b-list-group-item>
+        </b-list-group>
+
+        <b-list-group>
+            <b-list-group-item v-if="loading" class="d-flex align-items-center justify-content-center lsa-orange-text" style="height:100px">
+                        <div>
+                            <b-spinner class="align-middle"></b-spinner>
+                            <strong> Cargando...</strong>
+                        </div>
+                    </b-list-group-item>
+            <b-list-group-item style="padding:0px; width:100%" v-for="empresa in Empresas" :key="empresa.rut_empresa">
+                <b-list-group horizontal>
+                    <b-list-group-item class="d-flex align-items-center justify-content-center" style="width:30%">{{ empresa.nombre_empresa }}</b-list-group-item>
+                    <b-list-group-item style="padding:0px;width:70%">
+                        <b-list-group>
+                            <b-list-group-item v-for="ciudad in empresa.ciudades" :key="ciudad.id_ciudad">
+                                {{ ciudad.nombre_ciudad }} - {{ ciudad.direccion }}</b-list-group-item>
                         </b-list-group>
                     </b-list-group-item>
                 </b-list-group>
+            </b-list-group-item>
+        </b-list-group>
         <template #modal-footer="{ close }">
 
             <b-button @click="close()" variant="primary" size="xl" class="float-right reactive-button" style="font-weight:bold">
@@ -94,7 +100,7 @@ export default {
         userData: {
             handler() {
                 console.log("PROP CHANGED", this.userData)
-
+                this.Empresas = []
                 this.Rut = this.userData.rut_solicitante
                 this.Nombre = this.userData.nombre
                 this.Primer_apellido = this.userData.primer_apellido
@@ -131,6 +137,7 @@ export default {
             Contacto_factura: "",
             Fono_proveedores: "",
             Empresas: [],
+            loading: false,
 
             tipos: [{
                     value: 'Practicante',
@@ -179,7 +186,9 @@ export default {
     methods: {
 
         obtenerDetalles(rut) {
+            this.loading = true;
             solicitanteService.obtenerDetallesSolicitante(rut).then((response) => {
+                
                 console.log(response)
                 if (response.request.status == 200) {
                     console.log("detalles de solicitante", response.data)
@@ -206,6 +215,7 @@ export default {
                         }
 
                     }
+                    this.loading = false;
                     console.log("empresas a desplegar", this.Empresas)
                 }
             })

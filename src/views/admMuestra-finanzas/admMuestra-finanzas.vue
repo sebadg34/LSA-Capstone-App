@@ -1,7 +1,7 @@
 <template>
 <div>
 
-    <ModalObservaciones :muestra-data="this.observacionesData"/>
+    <ModalObservaciones :muestra-data="this.observacionesData" />
     <ModalDetalleMuestra :detalles-data="this.detallesData" />
     <!-- Inicio tabla -->
 
@@ -83,9 +83,9 @@
                         <strong> Cargando...</strong>
                     </div>
                 </template>
-             
+
                 <template #cell(solicitante)="row">
-                    
+
                     <span>{{row.item.solicitante[0].nombre + " " + row.item.solicitante[0].primer_apellido}}</span>
                 </template>
                 <template #cell(matriz)="row">
@@ -101,25 +101,25 @@
                 </template>
 
                 <template #cell(accion)="row">
-  
-  <b-dropdown right size="sm" variant="link" toggle-class="text-decoration-none" no-caret>
-      <template #button-content>
-          <b-icon style="height: 80%; width: 80%; align-items: center;" icon="three-dots" variant="dark" aria-hidden="true"></b-icon>
-      </template>
 
-      <b-dropdown-item @click="abrirDetallesMuestra(row.item)">
-<b-icon icon="file-earmark-medical" aria-hidden="true" class="mr-2"></b-icon>Ver detalles
+                    <b-dropdown right size="sm" variant="link" toggle-class="text-decoration-none" no-caret>
+                        <template #button-content>
+                            <b-icon style="height: 80%; width: 80%; align-items: center;" icon="three-dots" variant="dark" aria-hidden="true"></b-icon>
+                        </template>
 
-</b-dropdown-item>
-<b-dropdown-item @click="MostrarObservaciones(row.item)">
-<b-icon icon="check2-square" aria-hidden="true" class="mr-2"></b-icon>Observaciones
-</b-dropdown-item>
-<b-dropdown-item @click="abrirEditarPersonal(row.item)">
-<b-icon icon="file-earmark-arrow-down" aria-hidden="true" class="mr-2"></b-icon>Descargar informe
-</b-dropdown-item>
+                        <b-dropdown-item @click="abrirDetallesMuestra(row.item)">
+                            <b-icon icon="file-earmark-medical" aria-hidden="true" class="mr-2"></b-icon>Ver detalles
 
-  </b-dropdown>
-</template>
+                        </b-dropdown-item>
+                        <b-dropdown-item @click="MostrarObservaciones(row.item)">
+                            <b-icon icon="check2-square" aria-hidden="true" class="mr-2"></b-icon>Observaciones
+                        </b-dropdown-item>
+                        <b-dropdown-item disabled @click="abrirEditarPersonal(row.item)">
+                            <b-icon icon="file-earmark-arrow-down" aria-hidden="true" class="mr-2"></b-icon>Administrar orden de compra
+                        </b-dropdown-item>
+
+                    </b-dropdown>
+                </template>
 
                 <template #custom-foot>
                     <b-tr>
@@ -142,10 +142,10 @@
 </template>
 
 <script>
-import ModalObservaciones from '@/components/admMuestras-gerente/modal_observacionesMuestra-gerente.vue';
-import MuestraGerenteService from '@/helpers/api-services/Muestra-gerente.service';
+import ModalObservaciones from '@/components/admMuestras-finanzas/modal_observacionesMuestra-finanzas.vue';
+import MuestraFinanzasService from '@/helpers/api-services/Muestra-finanzas.service';
 
-import ModalDetalleMuestra from '@/components/admMuestras-gerente/modal_detallesMuestra-gerente.vue';
+import ModalDetalleMuestra from '@/components/admMuestras-finanzas/modal_detallesMuestra-finanzas.vue';
 import moment from 'moment';
 export default {
     data() {
@@ -279,7 +279,7 @@ export default {
         borrarFiltro() {
             this.estadoFiltro = null;
             this.prioridadFiltro = null;
-            
+
             this.rumFiltro = "";
             this.filtrarTabla();
         },
@@ -291,7 +291,7 @@ export default {
             if (estado_filtro != null) {
                 this.muestrasFiltradas = this.muestrasFiltradas.filter(muestra => muestra.estado == estado_filtro);
             }
-            if(prioridad_filtro != null){
+            if (prioridad_filtro != null) {
                 this.muestrasFiltradas = this.muestrasFiltradas.filter(muestra => muestra.prioridad.toLowerCase().includes(prioridad_filtro.toLowerCase()));
             }
             if (this.rumFiltro) {
@@ -309,10 +309,10 @@ export default {
         obtenerMuestras() {
             this.loading = true;
             console.log("Obteniendo Muestras: ")
-            MuestraGerenteService.obtenerMuestras().then((response) => {
+            MuestraFinanzasService.obtenerMuestras().then((response) => {
                 if (response.data != null && response.status === 200) {
                     this.muestras = response.data
-                    for(var i = 0; i < this.muestras.length; i++){
+                    for (var i = 0; i < this.muestras.length; i++) {
                         this.muestras[i].fecha_entrega = moment(this.muestras[i].fecha_entrega).format('DD/MM/YYYY');
 
                     }
@@ -379,38 +379,16 @@ export default {
             this.showModal = false
         },
 
-        
-
-
         MostrarObservaciones(data) {
             console.log(data)
             this.observacionesData = data;
-this.$bvModal.show('modal-observaciones-gerente');
-},
+            this.$bvModal.show('modal-observaciones-finanzas');
+        },
 
         abrirDetallesMuestra(data) {
             console.log(data)
             this.detallesData = data;
-            this.$bvModal.show('modal-detalle-muestra-gerente');
-        },
-
-        Analista(row) {
-            this.RUM = row.item.RUM;
-            console.log('El Rum es: ' + this.RUM)
-            this.$bvModal.show('modal-analista-designado');
-        },
-
-        Descargar() {
-            // Aquí pones la lógica para mostrar los detalles de la muestra seleccionada
-            window.location.href = "https://www.youtube.com";
-        },
-
-        Ingresar() {
-            // Aquí pones la lógica para mostrar los detalles de la muestra seleccionada
-            window.location.href = "https://www.youtube.com";
-        },
-        AdministrarCartas() {
-            window.location.href = "https://www.youtube.com";
+            this.$bvModal.show('modal-detalle-muestra-finanzas');
         },
 
     },

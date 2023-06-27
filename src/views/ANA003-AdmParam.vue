@@ -143,6 +143,7 @@ export default {
             modalDetallesData: {},
             modalEditarData: {},
             currentPage: 1,
+            filtrando: false,
             perPage: 10,
 
         }

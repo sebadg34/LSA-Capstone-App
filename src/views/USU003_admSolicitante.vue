@@ -119,10 +119,23 @@
                 </template>
                 <template #cell(empresas)="row">
 
-                    <b-list-group>
-                        <b-list-group-item style="padding:2px" v-for="empresa in row.item.empresas_unicas" :key="empresa.rut_empresa">{{ empresa.nombre_empresa }}</b-list-group-item>
+                    <b-list-group v-if="row.item.empresas_unicas.length > 0">
+                        <b-list-group-item v-if="row.item.empresas_unicas.length > 1" v-b-toggle="row.item.rut_solicitante" style="padding:2px; border: none; border-bottom: solid 1px #dbdbdb; ">{{ row.item.empresas_unicas[0].nombre_empresa }}
+                            <b-icon style="position:absolute; right:0px; top:25%; color: #949494" icon="caret-down-fill"></b-icon>
+                        </b-list-group-item>
+                        <b-list-group-item v-else style="padding:2px; border: none; border-bottom: solid 1px #dbdbdb; ">{{ row.item.empresas_unicas[0].nombre_empresa }}
+
+                        </b-list-group-item>
+
+                        <div v-if="row.item.empresas_unicas.length > 1">
+                            <b-collapse :id="row.item.rut_solicitante">
+                                <b-list-group-item style="padding:2px;  border: none; border-bottom: solid 1px #dbdbdb;" v-for="index in row.item.empresas_unicas.length-1" :key="index">{{ row.item.empresas_unicas[index].nombre_empresa }}</b-list-group-item>
+                            </b-collapse>
+                        </div>
+
                     </b-list-group>
                 </template>
+
                 <!--
 
                     <template #cell(estado)="row">
@@ -325,22 +338,21 @@ export default {
         obtenerSolicitante() {
             this.loading = true;
             solicitanteService.obtenerTodosSolicitantes().then((response) => {
-                if (response != null) {
+                if (response != null && response.data != null) {
                     console.log(response)
-                  
 
-                    for(var i = 0; i < response.data.length; i++){
+                    for (var i = 0; i < response.data.length; i++) {
                         var empresas_unicas = [];
-                       for(var j = 0; j < response.data[i].empresas.length; j++){
-                        const empresaRepetida = empresas_unicas.find(emp => emp.rut_empresa == response.data[i].empresas[j].rut_empresa);
-                        if(empresaRepetida == null){
-                            empresas_unicas.push(response.data[i].empresas[j]);
-                        }
+                        for (var j = 0; j < response.data[i].empresas.length; j++) {
+                            const empresaRepetida = empresas_unicas.find(emp => emp.rut_empresa == response.data[i].empresas[j].rut_empresa);
+                            if (empresaRepetida == null) {
+                                empresas_unicas.push(response.data[i].empresas[j]);
+                            }
 
-                       }
-                       response.data[i].empresas_unicas = empresas_unicas;
+                        }
+                        response.data[i].empresas_unicas = empresas_unicas;
                     }
-                  
+
                     this.solicitante = response.data
                     this.solicitanteFiltrado = this.solicitante;
                     this.loading = false;

@@ -13,8 +13,10 @@ import NotFound from '../views/vistaNoEncontrada.vue'
 import USU002_admEmpresa from '../views/USU002_admEmpresa'
 import USU003_admSolicitante from '../views/USU003_admSolicitante'
 import USU005_admDisponibilidad from '../views/USU005_admDisponibilidad'
-import admMuestraQuimico from '../views/admmuestra-quimico/admMuestra-quimico'
-import admMuestraGerente from '../views/admmuestra-gerente/admMuestra-gerente'
+import admMuestraQuimico from '../views/admMuestra-quimico/admMuestra-quimico'
+import admMuestraGerente from '../views/admMuestra-gerente/admMuestra-gerente'
+import admMuestraFinanzas from '../views/admMuestra-finanzas/admMuestra-finanzas'
+import admMuestraSolicitante from '../views/admMuestra-solicitante/admMuestra-solicitante'
 import ANA001 from '../views/ANA001-RelacionDatos'
 import ANA002 from '../views/ANA002-AdmMatriz'
 import ANA003 from '../views/ANA003-AdmParam'
@@ -176,9 +178,25 @@ const routes = [
     }
   }, 
   {
+    path: '/finanzas/admmuestra',
+    name: 'AdminMuestraFinanzas',
+    component: admMuestraFinanzas,
+    meta: {
+      title: "LSA - Administración Muestra"
+    }
+  }, 
+  {
     path: '/gerente/admmuestra',
     name: 'AdminMuestraGerente',
     component: admMuestraGerente,
+    meta: {
+      title: "LSA - Administración Muestra"
+    }
+  },
+  {
+    path: '/solicitante/admmuestra',
+    name: 'AdminMuestraSolicitante',
+    component: admMuestraSolicitante,
     meta: {
       title: "LSA - Administración Muestra"
     }
@@ -206,7 +224,7 @@ const routes = [
   {
 
     path: '/AdmElementos',
-    name: 'AdmElementos',
+    name: 'admElementos',
     component: ANA001,
     meta: {
       title: "LSA - Administración Elementos",

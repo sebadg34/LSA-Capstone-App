@@ -1,12 +1,15 @@
-import axios from "axios";
-import config from '@/../public/config.json'
+import {
+    crearApi
+} from "../api-services/InstanciadorAxios";
 
-const apiUrl = config.BASE_URL_SIS_API;
+
+
 
 const agregarMetodología = async (data) => {
     try {  
-        const response = await axios.post(apiUrl + "/metodologias/agregarMetodologia", data,);
-        console.log(response);
+        const instanciaApi = await crearApi();
+        const response = await instanciaApi.post("/metodologias/agregarMetodologia", data,);
+       
         return response;
     } catch (error) {
         console.log(error);
@@ -16,8 +19,9 @@ const agregarMetodología = async (data) => {
 
 const agregarParametro = async (data) => {
     try {  
-        const response = await axios.post(apiUrl + "/parametros/agregarParametro", data,);
-        console.log(response);
+        const instanciaApi = await crearApi();
+        const response = await instanciaApi.post("/parametros/agregarParametro", data,);
+       
         return response;
     } catch (error) {
         console.log(error);
@@ -27,8 +31,9 @@ const agregarParametro = async (data) => {
 
 const obtenerMetodologias= async () => {
     try {
-         const response = await axios.get(apiUrl + "/metodologias");
-             console.log(response);
+        const instanciaApi = await crearApi();
+        const response = await instanciaApi.get("/metodologias");
+           
          if(response.status == 200){
              return response;
          }else{
@@ -44,8 +49,9 @@ const obtenerMetodologias= async () => {
 
  const agregarMatriz = async (data) => {
     try {  
-        const response = await axios.post(apiUrl + "/matrices/agregarMatriz", data,);
-        console.log(response);
+        const instanciaApi = await crearApi();
+        const response = await instanciaApi.post("/matrices/agregarMatriz", data,);
+      
         return response;
     } catch (error) {
         console.log(error);
@@ -55,8 +61,9 @@ const obtenerMetodologias= async () => {
 
 const agregarNorma = async (data) => {
     try {  
-        const response = await axios.post(apiUrl + "/normas/agregarNorma", data,);
-        console.log(response);
+        const instanciaApi = await crearApi();
+        const response = await instanciaApi.post("/normas/agregarNorma", data,);
+        
         return response;
     } catch (error) {
         console.log(error);
@@ -65,8 +72,9 @@ const agregarNorma = async (data) => {
 };
  const obtenerParametros= async () => {
     try {
-         const response = await axios.get(apiUrl + "/parametros");
-             console.log(response);
+        const instanciaApi = await crearApi();
+        const response = await instanciaApi.get("/parametros");
+             
          if(response.status == 200){
              return response;
          }else{
@@ -81,8 +89,9 @@ const agregarNorma = async (data) => {
 
  const obtenerMatriz= async () => {
     try {
-         const response = await axios.get(apiUrl + "/matrices");
-             console.log(response);
+        const instanciaApi = await crearApi();
+        const response = await instanciaApi.get("/matrices");
+            
          if(response.status == 200){
              return response;
          }else{
@@ -96,8 +105,9 @@ const agregarNorma = async (data) => {
  };
  const obtenerMatrizParametro= async () => {
     try {
-         const response = await axios.get(apiUrl + "/matrices-parametros");
-             console.log(response);
+        const instanciaApi = await crearApi();
+        const response = await instanciaApi.get("/matrices-parametros");
+             
          if(response.status == 200){
              return response;
          }else{
@@ -111,8 +121,9 @@ const agregarNorma = async (data) => {
  };
  const obtenerNormas= async () => {
     try {
-         const response = await axios.get(apiUrl + "/normas");
-             console.log(response);
+        const instanciaApi = await crearApi();
+        const response = await instanciaApi.get("/normas");
+            
          if(response.status == 200){
              return response;
          }else{
@@ -127,8 +138,9 @@ const agregarNorma = async (data) => {
 
  const obtenerRelacion = async () => {
     try {
-         const response = await axios.get(apiUrl + "/visualizarDatos");
-             console.log(response);
+        const instanciaApi = await crearApi();
+        const response = await instanciaApi.get("/visualizarDatos");
+           
          if(response.status == 200){
              return response;
          }else{
@@ -145,8 +157,9 @@ const agregarNorma = async (data) => {
 
  const obtenerDetallesNorma = async (data) => {
     try {
-         const response = await axios.get(apiUrl + "/normas/detallesNorma/" + data.id_norma);
-         console.log(response);
+        const instanciaApi = await crearApi();
+        const response = await instanciaApi.get("/normas/detallesNorma/" + data.id_norma);
+        
          if(response.status == 200){
              return response;
          } else {
@@ -160,8 +173,9 @@ const agregarNorma = async (data) => {
  };
  const obtenerDetallesMetodologia = async (data) => {
     try {
-         const response = await axios.get(apiUrl + "/metodologias/" + data.id_metodologia);
-         console.log(response);
+        const instanciaApi = await crearApi();
+        const response = await instanciaApi.get("/metodologias/" + data.id_metodologia);
+         
          if(response.status == 200){
              return response;
          } else {
@@ -176,8 +190,9 @@ const agregarNorma = async (data) => {
 
  const obtenerDetallesParametro = async (data) => {
     try {
-         const response = await axios.get(apiUrl + "/parametros/" + data.id_parametro);
-         console.log(response);
+          const instanciaApi = await crearApi();
+        const response = await instanciaApi.get("/parametros/" + data.id_parametro);
+         
          if(response.status == 200){
              return response;
          } else {
@@ -192,8 +207,9 @@ const agregarNorma = async (data) => {
 
  const obtenerDetallesMatriz = async (data) => {
     try {
-         const response = await axios.get(apiUrl + "/matrices/detallesMatriz/" + data.id_matriz);
-         console.log(response);
+          const instanciaApi = await crearApi();
+        const response = await instanciaApi.get("/matrices/detallesMatriz/" + data.id_matriz);
+       
          if(response.status == 200){
              return response;
          } else {
@@ -208,8 +224,9 @@ const agregarNorma = async (data) => {
 
  const obtenerDetallesElementos = async (data) => {
     try {
-         const response = await axios.get(apiUrl + "/visualizarDatos/detalles/" + data.id_matriz);
-         console.log(response);
+          const instanciaApi = await crearApi();
+        const response = await instanciaApi.get("/visualizarDatos/detalles/" + data.id_matriz);
+         
          if(response.status == 200){
              return response;
          } else {
@@ -224,7 +241,8 @@ const agregarNorma = async (data) => {
  
  const actualizarNorma = async (data) => {
     try {
-        const response = await axios.put(apiUrl + "/normas/actualizarNorma/",data);
+         const instanciaApi = await crearApi();
+        const response = await instanciaApi.put("/normas/actualizarNorma/",data);
         
         console.log(response);
         
@@ -241,7 +259,8 @@ const agregarNorma = async (data) => {
 
  const actualizarParametro = async (data) => {
     try {
-        const response = await axios.put(apiUrl + "/parametros/actualizarParametro/",data);
+         const instanciaApi = await crearApi();
+        const response = await instanciaApi.put("/parametros/actualizarParametro/",data);
         
         console.log(response);
         
@@ -258,8 +277,9 @@ const agregarNorma = async (data) => {
 
  const actualizarMetodologia = async (data) => {
     try {
-        console.log("DATA: ", data.nombre_metodologia);
-        const response = await axios.put(apiUrl + "/metodologias/actualizarMetodologia/",data);
+        
+         const instanciaApi = await crearApi();
+        const response = await instanciaApi.put("/metodologias/actualizarMetodologia/",data);
         
         console.log(response);
         
@@ -275,8 +295,9 @@ const agregarNorma = async (data) => {
 };
 const actualizarMatriz = async (data) => {
     try {
-        console.log("DATA: ", data.nombre_metodologia);
-        const response = await axios.put(apiUrl + "/matrices/actualizarMatriz/",data);
+        
+         const instanciaApi = await crearApi();
+        const response = await instanciaApi.put("/matrices/actualizarMatriz/",data);
         
         console.log(response);
         
@@ -292,8 +313,9 @@ const actualizarMatriz = async (data) => {
 };
 const agregar_Empleados_Asociados = async (nombre_metodologia, data) => {
     try {  
-        const response = await axios.post(apiUrl + "/metodologias/"+ nombre_metodologia + "/eliminarEmpleados" , data.nombre_metodologia,);
-        console.log(response);
+         const instanciaApi = await crearApi();
+        const response = await instanciaApi.post("/metodologias/"+ nombre_metodologia + "/eliminarEmpleados" , data.nombre_metodologia,);
+       
         return response;
     } catch (error) {
         console.log(error);
@@ -303,9 +325,10 @@ const agregar_Empleados_Asociados = async (nombre_metodologia, data) => {
 
 const eliminar_Empleados_Asociados = async (nombre_metodologia, data) => {
     try {  
-        const response = await axios.delete(apiUrl + "/metodologias/" + nombre_metodologia + "/eliminarEmpleados", {data: data}
+         const instanciaApi = await crearApi();
+        const response = await instanciaApi.delete("/metodologias/" + nombre_metodologia + "/eliminarEmpleados", {data: data}
             );
-        console.log(response);
+      
         return response;
     } catch (error) {
         console.log(error);

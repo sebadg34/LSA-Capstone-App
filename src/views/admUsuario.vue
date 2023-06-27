@@ -3,7 +3,7 @@
 
     <modal_agregarUsuario @refrescar="obtenerUsuarios" />
     <modal_estadoUsuario @refrescar="obtenerUsuarios" :user-data="this.modalEstadoData" />
-    <modal_passwordUsuario :user-data="this.modalPasswordData"/>
+    <modal_passwordUsuario :user-data="this.modalPasswordData" />
 
     <b-row align-h="start" style="padding-top:30px;">
         <b-col class="col-6">
@@ -84,10 +84,8 @@
                     <span v-else style="text-transform:uppercase; color:red; font-weight: bold;">DESHABILITADO</span>
                 </template>
 
-                <template #cell(tipo_empleado)="row">
-
-                    <span v-if="row.item.tipo_empleado == null" style="font-weight: bold;">SISTEMA</span>
-                    <span v-else >----</span>
+                <template #cell(tipo_usuario)="row">
+                    <span style="font-weight: bold;"> {{ row.item.tipo_usuario.toUpperCase() }}</span>
                 </template>
                 <template #cell(accion)="row">
 
@@ -97,10 +95,10 @@
                             <b-icon style="height: 80%; width: 80%; align-items: center;" icon="three-dots" variant="dark" aria-hidden="true"></b-icon>
 
                         </template>
-                        <b-dropdown-item  @click="abrirEstadoPersonal(row.item)">
+                        <b-dropdown-item @click="abrirEstadoPersonal(row.item)">
                             <b-icon icon="person-check" aria-hidden="true" class="mr-2"></b-icon>Cambiar estado
                         </b-dropdown-item>
-                        <b-dropdown-item  @click="abrirPasswordPersonal(row.item)">
+                        <b-dropdown-item @click="abrirPasswordPersonal(row.item)">
                             <b-icon icon="shield-lock" aria-hidden="true" class="mr-2"></b-icon>Cambiar contraseña
                         </b-dropdown-item>
                     </b-dropdown>
@@ -155,26 +153,26 @@ export default {
             campos_tabla: [{
                 key: 'nombre',
                 label: 'Nombres',
-                sortable:true
+                sortable: true
             }, {
                 key: 'apellido',
                 label: 'Apellidos',
-                sortable:true
+                sortable: true
             }, {
                 key: 'email',
                 label: 'Correo electrónico'
             }, {
                 key: 'cargo',
                 label: 'Cargo',
-                sortable:true
-            },{
-                key:'tipo_empleado',
-                label:'Tipo empleado',
+                sortable: true
+            }, {
+                key: 'tipo_usuario',
+                label: 'Tipo usuario',
                 sortable: true
             }, {
                 key: 'estado',
                 label: 'Estado',
-                sortable:true
+                sortable: true
             }, {
                 key: 'accion',
                 label: 'Acción'
@@ -195,12 +193,17 @@ export default {
                         this.roles = response.data;
                         for (var i = 0; i < this.usuario.length; i++) {
                             this.usuario[i].cargo = this.roles.find(x => x.id_rol == this.usuario[i].role).descripcion;
+                            if (this.usuario[i].empleado != null) {
+                                this.usuario[i].tipo_usuario = "empleado";
+                            } else if (this.usuario[i].solicitante != null) {
+                                this.usuario[i].tipo_usuario = "solicitante";
+                            } else {
+                                this.usuario[i].tipo_usuario = "sistema";
+                            }
                         }
-
                     }
                     this.loading = false;
                 }
-
             })
         },
         obtenerUsuarios() {
@@ -215,7 +218,6 @@ export default {
             })
         },
         abrirPasswordPersonal(data) {
-            console.log(data)
             this.modalPasswordData = data;
             this.$bvModal.show('modal-password-usuario')
         },
