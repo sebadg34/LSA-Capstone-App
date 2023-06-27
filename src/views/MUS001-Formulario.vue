@@ -860,7 +860,7 @@
                             id_matriz: this.TipoMatriz,
                             id_norma: this.norma,
                             id_tabla: this.id_tabla,
-                            submuestra_agregar: parametrosFiltrados
+                            submuestras_agregar: parametrosFiltrados
                         } 
 
                         console.log("data a enviar", data)
