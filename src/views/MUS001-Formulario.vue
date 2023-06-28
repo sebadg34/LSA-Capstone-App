@@ -132,7 +132,7 @@
                                     
                                     <label for="input-live">Telefono Movil:</label>                                    
                                     <div id="app">
-                                        <b-input-group v-for="(telefono, index) in telefonos" :key="index" class="mb-1">
+                                        <b-input-group v-for="(telefono, index) in telefonos_agregar" :key="index" class="mb-1">
                                           <b-input-group-prepend is-text>
                                             +56 9
                                           </b-input-group-prepend>
@@ -345,7 +345,7 @@
                 estado: null,
                 tabIndex: 0,
                 identificacion: '',
-                telefonos: [{ telefono_transportista: '' }],                
+                telefonos_agregar: [{ telefono_transportista: '' }],                
                 TodasopcionesParametro: [],
                 submuestra_agregar: [{  
                     identificador: '',
@@ -471,7 +471,7 @@
             },
 
             addInput() {
-                this.telefonos.push({ telefono_transportista: '' }); // Agregar un nuevo objeto con valor vacío
+                this.telefonos_agregar.push({ telefono_transportista: '' }); // Agregar un nuevo objeto con valor vacío
             },
               
             onModalShown() {
@@ -854,7 +854,7 @@
                             rut_transportista: this.transportistaRut,
                             nombre_transportista: this.transportista,
                             patente_vehiculo: this.patente,                                 
-                            telefonos: this.telefonos,       
+                            telefonos_agregar: this.telefonos_agregar,       
                             estado: 'Recepcionado',
                             observaciones: this.observaciones,                                                       
                             parametros_agregar: matricesFiltradas.map(matriz => ({
