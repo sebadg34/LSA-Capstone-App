@@ -388,7 +388,7 @@
                 this.userData = getUserInfo();
                 console.log('data user', this.userData);
                 this.recepcionista = `${this.userData.nombre} ${this.userData.apellido}`;
-                this.recepcionistaRUT = `${this.userData.rut_empleado}`;
+                this.recepcionistaRUT = `${this.userData.rut}`;
             }
         },        
 
