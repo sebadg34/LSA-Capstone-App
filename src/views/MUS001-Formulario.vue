@@ -384,7 +384,7 @@
                 this.userData = getUserInfo();
                 console.log('data user', this.userData);
                 this.recepcionista = `${this.userData.nombre} ${this.userData.apellido}`;
-                this.recepcionistaRUT = `${this.userData.rut_empleado}`;
+                this.recepcionistaRUT = `${this.userData.rut}`;
             }
         },        
 
@@ -509,23 +509,19 @@
             detallesSolicitante(){
                 console.log("rut a obtener: ", this.rutSolicitante)
                 const data = {
-                rut_solicitante: this.rutSolicitante
-                
+                rut_solicitante: this.rutSolicitante                
                 };
-                console.log("id a obtener: ", data)               
-                
+
+                console.log("id a obtener: ", data) 
                 SolicitanteService.obtenerDetallesSolicitante(data).then((response) => {
                     console.log("ObteniendoDetalles", response.data);
-
                     const empresas = response.data.detalles_empresas.map(detalle => ({
                         rut_empresa: detalle.rut_empresa,
                         nombre_empresa: detalle.nombre_empresa,
                         nombre_ciudad: detalle.nombre_ciudad,
                         id_ciudad: detalle.id_ciudad,
                         direccion: detalle.direccion,                        
-                    }));
-                    
-
+                    })); 
                     const empresasAgrupadas = response.data.detalles_empresas.reduce((agrupadas, empresa) => {
                         // Verificar si la empresa ya existe en el array agrupadas
                         const empresaExistente = agrupadas.find(e => e.rut_empresa === empresa.rut_empresa || e.nombre_empresa === empresa.nombre_empresa);
@@ -596,14 +592,14 @@
                 }
             },
         
-            generarFechaHoraActual() {
+             /*generarFechaHoraActual() {
                 const now = new Date();
                 const dia = now.getDate().toString().padStart(2, '0');
                 const mes = (now.getMonth() + 1).toString().padStart(2, '0');
                 const anio = now.getFullYear().toString();
                 this.fecha = `${dia}/${mes}/${anio}`;
                 this.hora = now.toLocaleTimeString();
-            },
+            },*/
 
             agregar(){
                 console.log("abirnedo modal")
@@ -865,8 +861,7 @@
                             parametros_agregar: matricesFiltradas.map(matriz => ({
                                 id_parametro: matriz.id_parametro,
                                 id_metodologia: matriz.id_metodologia,                                
-                            })),
-                            
+                            })),                            
                             id_matriz: this.TipoMatriz,
                             id_norma: this.norma,
                             id_tabla: this.id_tabla,
