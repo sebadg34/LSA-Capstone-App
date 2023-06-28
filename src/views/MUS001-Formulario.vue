@@ -77,7 +77,7 @@
                 
                                     <ValidationProvider name="fechaI" rules="required" v-slot="validationContext">
                                         <label class="mt-1" for="input-live">Fecha de muestreo:</label>                                        
-                                        <b-form-datepicker id="input-live" v-model="fecha" aria-describedby="input-live-help fechaI-live-feedback" :state="getValidationState(validationContext)" :min="currentDate" placeholder="Seleccione fecha de muestreo"></b-form-datepicker>
+                                        <b-form-datepicker id="input-live" v-model="fecha" aria-describedby="input-live-help fechaI-live-feedback" :state="getValidationState(validationContext)" placeholder="Seleccione fecha de muestreo"></b-form-datepicker>
                                         <b-form-invalid-feedback id="fechaI-live-feedback">{{validationContext.errors[0] }}
                                         </b-form-invalid-feedback>                    
                                     </ValidationProvider>               
