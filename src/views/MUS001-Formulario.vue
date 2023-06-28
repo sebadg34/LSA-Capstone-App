@@ -74,34 +74,22 @@
                                         </div>
                                         <b-form-invalid-feedback id="nMuestras-live-feedback">{{ validationContext.errors[0] }}</b-form-invalid-feedback>
                                     </ValidationProvider>
-
-                                    <ValidationProvider name="Temperatura" rules="required" v-slot="validationContext">
-                                        <label for="input-live">Temperatura de la muestra:</label>
-                                        <b-form-input class="mb-1" id="input-live" v-model="Temperatura" aria-describedby="input-live-help Temperatura-live-feedback" :state="getValidationState(validationContext)" placeholder="Ingrese Temperatura de la muestra" trim></b-form-input>
-                                        <b-form-invalid-feedback id="Temperatura-live-feedback">{{
-                                            validationContext.errors[0] }}
-                                        </b-form-invalid-feedback>
-                                    </ValidationProvider>
                 
                                     <ValidationProvider name="fechaI" rules="required" v-slot="validationContext">
                                         <label class="mt-1" for="input-live">Fecha de Recepción:</label>                                          
-                                        <b-form-input class="mb-1" id="input-live" readonly v-model="fecha" aria-describedby="input-live-help fechaI-live-feedback" :state="getValidationState(validationContext)" placeholder="Presione el boton para agregar fecha"></b-form-input>
+                                        <b-form-input class="mb-1" id="input-live" v-model="fecha" aria-describedby="input-live-help fechaI-live-feedback" :state="getValidationState(validationContext)" placeholder="Presione el boton para agregar fecha"></b-form-input>
                                         <b-form-invalid-feedback id="fechaI-live-feedback">{{
                                             validationContext.errors[0] }}
                                         </b-form-invalid-feedback>                    
                                     </ValidationProvider>               
 
                                     <ValidationProvider name="horaI" rules="required" v-slot="validationContext">
-                                        <label for="input-live">Hora de Recepción:</label>
-                                        <b-form-input class="mb-1" id="input-live" readonly :state="getValidationState(validationContext)" v-model="hora" aria-describedby="input-live-help horaI-live-feedback" placeholder="Presione el botón para agregar Hra." trim></b-form-input>
+                                        <label for="input-time">Hora de recepción:</label>
+                                        <b-form-timepicker id="input-time" v-model="hora" :state="getValidationState(validationContext)" aria-describedby="input-live-help horaI-live-feedback" placeholder="Seleccione una hora"></b-form-timepicker> 
                                         <b-form-invalid-feedback id="horaI-live-feedback">{{
                                             validationContext.errors[0] }}
                                         </b-form-invalid-feedback>
-                                    </ValidationProvider>  
-                
-                                    <div>
-                                        <b-button class="sm" @click="generarFechaHoraActual()">Generar Fecha & Hora de Recepción</b-button>
-                                    </div>
+                                    </ValidationProvider>                            
                                     
                                     <div>                                    
                                         <label class="mt-3" for="input-live">Fecha de Entrega:</label>                                    
@@ -120,7 +108,7 @@
 
                                     <ValidationProvider name="prioridad" rules="required" v-slot="validationContext">
                                         <label for="input-live">Prioridad:</label>                    
-                                        <b-form-select id="input-live" v-model="prioridad" :options="opcionesPrioridad" aria-describedby="input-live-help prioridad-live-feedback" :state="getValidationState(validationContext)"></b-form-select>
+                                        <b-form-select class="mt-1" id="input-live" v-model="prioridad" :options="opcionesPrioridad" aria-describedby="input-live-help prioridad-live-feedback" :state="getValidationState(validationContext)"></b-form-select>
                                         <b-form-invalid-feedback id="prioridad-live-feedback">{{
                                             validationContext.errors[0] }}
                                         </b-form-invalid-feedback>
@@ -144,14 +132,23 @@
                             <b-row class="pb-2">
                                 <b-col class="col-6">              
                                     <label for="input-live">Rut:</label>                                    
-                                        <b-form-input id="transportistaRut-input" class="mb-1" v-model="transportistaRut" aria-describedby="transportistaRut-live-feedback"></b-form-input>                              
+                                    <b-form-input id="transportistaRut-input" class="mb-1" v-model="transportistaRut" aria-describedby="transportistaRut-live-feedback"></b-form-input>                              
+                                    
                                     <label for="input-live">Telefono Movil:</label>                                    
-                                        <b-input-group class="mb-1">
-                                            <b-input-group-prepend is-text>
-                                                +56 9
-                                            </b-input-group-prepend>
-                                            <b-form-input id="input-live" v-model="fono" aria-describedby="input-live-help fono-live-feedback"  placeholder=""></b-form-input>                                            
-                                        </b-input-group>                                                                                                 
+                                    <div id="app">
+                                        <b-input-group v-for="(telefono, index) in telefonos" :key="index" class="mb-1">
+                                          <b-input-group-prepend is-text>
+                                            +56 9
+                                          </b-input-group-prepend>
+                                          <b-form-input v-model="telefono.telefono_transportista" aria-describedby="input-live-help fono-live-feedback" placeholder=""></b-form-input>
+                                          <div>
+                                            <b-button @click="addInput">+</b-button>
+                                          </div>
+                                        </b-input-group>  
+                                    </div>                                        
+                                    
+                                        <label for="input-live">Temperatura de transporte:</label>                                    
+                                        <b-form-input class="mb-1" id="input-live" v-model="Temperatura" aria-describedby="input-live-help Temperatura-live-feedback" placeholder="Ingrese Temperatura de la muestra" trim></b-form-input>                                                                                                                                                                          
                                 </b-col>
 
                                 <b-col class="col-6">                                    
@@ -186,7 +183,7 @@
                                     <b-form-group label="Seleccione un parámetro">
                                         
                                         <div class="d-flex align-items-center">    
-                                            <b-form-select v-model="parametroSeleccionado" :options="opcionesParametro" placeholder="Seleccione un Parámetro" @change="agregarObjetosSeleccionados"></b-form-select>
+                                            <b-form-select v-model="parametroSeleccionado" :options="opcionesParametro" placeholder="Seleccione un Parámetro" :disabled="parametroDeshabilitado" @change="agregarObjetosSeleccionados"></b-form-select>
                                             <div>
                                                 <b-button v-b-modal.modal-Agregar-Opciones>+</b-button>                                                    
                                             </div>
@@ -353,6 +350,7 @@
                 estado: null,
                 tabIndex: 0,
                 identificacion: '',
+                telefonos: [{ telefono_transportista: '' }],                
                 TodasopcionesParametro: [],
                 submuestra_agregar: [{  
                     identificador: '',
@@ -366,6 +364,7 @@
                 parametrosTablaSeleccionada: [],
                 opcionesMetodologia: [], 
                 metodologiaDeshabilitada: true,
+                parametroDeshabilitado: true,
                 metodologias: [],
                 metodologiasData: [], 
                 parametros_agregar: [{
@@ -445,6 +444,9 @@
                   const idTabla = tablaSeleccionada.id_tablas[0]; // Suponiendo que solo haya una id_tabla por cada nombre_tabla
                   console.log("ID de tabla seleccionada:", idTabla);
                   this.id_tabla = idTabla
+                  this.parametroDeshabilitado = false;
+                } else {
+                    this.parametroDeshabilitado = true;
                 }
             },
 
@@ -470,6 +472,10 @@
             {
                 return dirty || validated ? valid : null;
             },
+            addInput() {
+                this.telefonos.push({ telefono_transportista: '' }); // Agregar un nuevo objeto con valor vacío
+            },
+    
             onModalShown() {
                 this.alertaExito = false;
                 this.alertaDuplicado = false;
@@ -850,13 +856,14 @@
                             rut_transportista: this.transportistaRut,
                             nombre_transportista: this.transportista,
                             patente_vehiculo: this.patente,                                 
-                            telefono_transportista: this.fono,       
+                            telefono_transportista: this.telefonos,       
                             estado: 'Recepcionado',
                             observaciones: this.observaciones,                                                       
                             parametros_agregar: matricesFiltradas.map(matriz => ({
                                 id_parametro: matriz.id_parametro,
                                 id_metodologia: matriz.id_metodologia,                                
                             })),
+                            
                             id_matriz: this.TipoMatriz,
                             id_norma: this.norma,
                             id_tabla: this.id_tabla,

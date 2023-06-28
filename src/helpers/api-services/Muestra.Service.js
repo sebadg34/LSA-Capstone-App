@@ -13,7 +13,8 @@ const ingresarMuestra = async (data) => {
         return;
     }
 };
- const obtenerMuestras = async () => {
+
+const obtenerMuestras = async () => {
    try {
         const response = await axios.get(apiUrl + "/muestras");
             console.log(response);
@@ -96,7 +97,7 @@ const obtenerObservaciones = async (RUM) => {
 };
 
 
- const completarMuestra = async (RUM) => {
+const completarMuestra = async (RUM) => {
     try {
         const response = await axios.put(apiUrl + "/muestras/" + RUM + "/completar");
         console.log(response);
@@ -142,7 +143,7 @@ const calcularDiasTranscurridos = async (RUM) => {
     }
   };
 
-  const obtenerNombreEmpleados = async () => {
+const obtenerNombreEmpleados = async () => {
     try {
          const response = await axios.get(apiUrl + '/nombres-empleados');
              console.log(response);
