@@ -141,10 +141,14 @@
                                           </b-input-group-prepend>
                                           <b-form-input v-model="telefono.telefono_transportista" aria-describedby="input-live-help fono-live-feedback" placeholder=""></b-form-input>
                                           <div>
-                                            <b-button @click="addInput" v-if="index === telefonos_agregar.length - 1" class="ml-2">+</b-button>
-                                            <b-button @click="removeInput(index)" variant="danger" v-if="index > 0" class="ml-2" z><b-icon-trash-fill></b-icon-trash-fill></b-button>
+                                            <b-button @click="addInput" v-if="index === telefonos_agregar.length - 1">+</b-button>
+                                            <b-button @click="removeInput(index)" variant="danger" v-if="index > 0" class="ml-2"><b-icon-trash-fill></b-icon-trash-fill></b-button>
                                           </div>
-                                        </b-input-group>
+                                        </b-input-group>                                    
+                                        <div v-if="telefonos_agregar.length === 0">
+                                          No se han agregado teléfonos.
+                                          <b-button @click="addInput">+</b-button>
+                                        </div>
                                     </div>                                           
                                 </b-col>
 
@@ -346,7 +350,7 @@
                 estado: null,
                 tabIndex: 0,
                 identificacion: '',
-                telefonos_agregar: [{ telefono_transportista: '' }],                
+                telefonos_agregar: [],                
                 TodasopcionesParametro: [],
                 submuestra_agregar: [{  
                     identificador: '',
@@ -384,7 +388,7 @@
                 this.userData = getUserInfo();
                 console.log('data user', this.userData);
                 this.recepcionista = `${this.userData.nombre} ${this.userData.apellido}`;
-                this.recepcionistaRUT = `${this.userData.rut}`;
+                this.recepcionistaRUT = `${this.userData.rut_empleado}`;
             }
         },        
 
