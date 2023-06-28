@@ -134,6 +134,7 @@
                         </div>
 
                     </b-list-group>
+                    <div v-else>particular</div>
                 </template>
 
                 <!--

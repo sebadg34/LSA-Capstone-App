@@ -15,6 +15,17 @@ const existePersonal = async (data) => {
         return error.response;
     }
 };
+const existeCorreoPersonal = async (data) => {
+    try {  
+        const instanciaApi = await crearApi();
+        const response = await instanciaApi.post("/empleados/existeCorreo", data,
+            );
+        console.log(response);
+        return response;
+    } catch (error) {
+        return error.response;
+    }
+};
 
 const ingresarPersonal = async (data) => {
     try {  
@@ -145,6 +156,7 @@ const editarPersonal = async (data) => {
 export default {
     ingresarPersonal,
     existePersonal,
+    existeCorreoPersonal,
     obtenerTodosPersonal,
     cambiarEstadoPersonal,
     editarPersonal,

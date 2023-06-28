@@ -38,7 +38,7 @@
                     <div>Fecha emisión:
                     </div>
                     <ValidationProvider name="fecha" rules="required" v-slot="validationContext">
-                    <b-form-datepicker  :min="minDate" @context="onContext" :date-format-options="{ year: 'numeric', month: '2-digit', day: '2-digit' }" placeholder="seleccione fecha" :state="getValidationState(validationContext)" v-model="Fecha" id="datepicker-dateformat2" locale="es"></b-form-datepicker>
+                    <b-form-datepicker  :min="minDate" :max="maxDate" @context="onContext" :date-format-options="{ year: 'numeric', month: '2-digit', day: '2-digit' }" placeholder="seleccione fecha" :state="getValidationState(validationContext)" v-model="Fecha" id="datepicker-dateformat2" locale="es"></b-form-datepicker>
                     <b-form-invalid-feedback id="fecha-live-feedback">{{
                        validationContext.errors[0] }}
             </b-form-invalid-feedback>
@@ -91,12 +91,15 @@ export default {
     },
     data() {
         const now = new Date()
+        const max = new Date()
+        max.setMonth(max.getMonth()+6);
         return {
             busy: false,
             Archivo: null,
             Fecha: "",
             FechaFormatted: "",
-            minDate: now
+            minDate: now,
+            maxDate: max,
             
         }
     },

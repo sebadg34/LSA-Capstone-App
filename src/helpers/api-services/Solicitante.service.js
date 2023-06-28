@@ -16,6 +16,17 @@ const existeSolicitante = async (data) => {
         return error.response;
     }
 };
+const existeCorreoSolicitante = async (data) => {
+    try {  
+        const instanciaApi = await crearApi();
+        const response = await instanciaApi.post("/solicitantes/existeCorreo", data,
+            );
+        console.log(response);
+        return response;
+    } catch (error) {
+        return error.response;
+    }
+};
 const ingresarSolicitante = async (data) => {
     try {  
         const instanciaApi = await crearApi();
@@ -149,6 +160,7 @@ export default {
     obtenerDetallesCompletosSolicitante,
     ingresarSolicitante,
     existeSolicitante,
+    existeCorreoSolicitante,
     obtenerTodosSolicitantes,
     agregarCotizacion,
     obtenerDetallesSolicitante,

@@ -20,13 +20,13 @@
                 <label for="input-live">RUT:</label>
                 <ValidationProvider name="RUT" rules="required|rut|rutSinPuntoGuion" v-slot="validationContext">
                     <b-overlay :show="Revisando_rut && validationContext.errors[0] == null" rounded opacity="0.6" spinner-small spinner-variant="primary">
-                    <b-form-input  @blur.native="revisarRutPersonal" placeholder="Ingrese el RUT sin puntos ni guión." size="sm" id="rut-input" class="mb-1" v-model="Rut" :state="getValidationState(validationContext)" aria-describedby="rut-live-feedback"></b-form-input>
+                        <b-form-input @blur.native="revisarRutPersonal" placeholder="Ingrese el RUT sin puntos ni guión." size="sm" id="rut-input" class="mb-1" v-model="Rut" :state="getValidationState(validationContext)" aria-describedby="rut-live-feedback"></b-form-input>
 
-                    <b-form-invalid-feedback id="rut-live-feedback">{{
+                        <b-form-invalid-feedback id="rut-live-feedback">{{
                             validationContext.errors[0] }}
-                    </b-form-invalid-feedback>
-                    <b-alert fade style="margin:2px; padding:2px;" class="text-center" :show="Rut_ocupado" variant="warning">El rut ya está registrado en el sistema</b-alert>
-                </b-overlay>
+                        </b-form-invalid-feedback>
+                        <b-alert fade style="margin:2px; padding:2px;" class="text-center" :show="Rut_ocupado" variant="warning">El rut ya está registrado en el sistema</b-alert>
+                    </b-overlay>
                 </ValidationProvider>
                 <ValidationProvider name="apellidos" rules="required|min:2" v-slot="validationContext">
                     <label for="input-live">Apellidos:</label>
@@ -45,12 +45,16 @@
                             validationContext.errors[0] }}
                     </b-form-invalid-feedback>
                 </ValidationProvider>
+                <label for="input-live">Correo:</label>
                 <ValidationProvider name="correo" rules="required|email" v-slot="validationContext">
-                    <label for="input-live">Correo:</label>
-                    <b-form-input size="sm" class="mb-1" id="input-live" :state="getValidationState(validationContext)" v-model="Correo" aria-describedby="input-live-help correo-live-feedback" placeholder="" trim></b-form-input>
-                    <b-form-invalid-feedback id="correo-live-feedback">{{
+                    <b-overlay :show="Revisando_correo && validationContext.errors[0] == null" rounded opacity="0.6" spinner-small spinner-variant="primary">
+
+                        <b-form-input @blur.native="revisarCorreoPersonal" size="sm" class="mb-1" id="input-live" :state="getValidationState(validationContext)" v-model="Correo" aria-describedby="input-live-help correo-live-feedback" placeholder="" trim></b-form-input>
+                        <b-form-invalid-feedback id="correo-live-feedback">{{
                             validationContext.errors[0] }}
-                    </b-form-invalid-feedback>
+                        </b-form-invalid-feedback>
+                        <b-alert fade style="margin:2px; padding:2px;" class="text-center" :show="Correo_ocupado" variant="warning">El correo ya está registrado en el sistema</b-alert>
+                    </b-overlay>
                 </ValidationProvider>
             </b-col>
         </b-row>
@@ -175,6 +179,8 @@ export default {
             Correo: "",
             Rut_ocupado: false,
             Revisando_rut: false,
+            Correo_ocupado: false,
+            Revisando_correo: false,
             Apellidos: "",
             Movil: "",
             Emergencia: "",
@@ -242,40 +248,72 @@ export default {
             this.Tipo = "";
             this.Rut_ocupado = false;
             this.Revisando_rut = false;
+            this.Correo_ocupado = false;
+            this.Revisando_rut = false;
 
         },
         revisarRutPersonal() {
 
-var data = {
-    "rut_empleado": this.Rut
-}
-if (this.Rut != "") {
-    this.Revisando_rut = true;
-    personalService.existePersonal(data).then((response) => {
+            var data = {
+                "rut_empleado": this.Rut
+            }
+            if (this.Rut != "") {
+                this.Revisando_rut = true;
+                personalService.existePersonal(data).then((response) => {
 
-        if (response != null) {
-            if (response.status == 200) {
-                this.Rut_ocupado = true;
-                this.Revisando_rut = false;
+                    if (response != null) {
+                        if (response.status == 200) {
+                            this.Rut_ocupado = true;
+                            this.Revisando_rut = false;
 
+                        } else {
+                            this.Rut_ocupado = false;
+                            this.Revisando_rut = false;
+                        }
+                    } else {
+                        this.Rut_ocupado = false;
+                        this.Revisando_rut = false;
+                    }
+
+                })
             } else {
                 this.Rut_ocupado = false;
                 this.Revisando_rut = false;
             }
-        } else {
-            this.Rut_ocupado = false;
-            this.Revisando_rut = false;
-        }
 
-    })
-} else {
-    this.Rut_ocupado = false;
-    this.Revisando_rut = false;
-}
+        },
+        revisarCorreoPersonal() {
 
-},
+            var data = {
+                "correo": this.Correo
+            }
+            if (this.Correo != "") {
+                this.Revisando_correo = true;
+                personalService.existeCorreoPersonal(data).then((response) => {
+
+                    if (response != null) {
+                        if (response.status == 200) {
+                            this.Correo_ocupado = true;
+                            this.Revisando_correo = false;
+
+                        } else {
+                            this.Correo_ocupado = false;
+                            this.Revisando_correo = false;
+                        }
+                    } else {
+                        this.Correo_ocupado = false;
+                        this.Revisando_correo = false;
+                    }
+
+                })
+            } else {
+                this.Correo_ocupado = false;
+                this.Revisando_correo = false;
+            }
+
+        },
         obtenerIdRol(value) {
-            console.log("value a revisar rol",value);
+            console.log("value a revisar rol", value);
             return this.Roles.find(x => x.descripcion == value).id_rol;
         },
         obtenerRoles() {

@@ -174,7 +174,7 @@ export default {
     },
     computed: {
         rows() {
-            return this.personal.length
+            return this.personalFiltrado.length
         }
     },
     data() {

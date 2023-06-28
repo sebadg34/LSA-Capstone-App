@@ -74,12 +74,16 @@
                     </b-input-group>
 
                 </ValidationProvider>
+                <label for="input-live">Correo electrónico:</label>
                 <ValidationProvider name="correo" rules="required|email" v-slot="validationContext">
-                    <label for="input-live">Correo electrónico:</label>
-                    <b-form-input size="sm" class="mb-1" id="input-live" :state="getValidationState(validationContext)" v-model="Correo" aria-describedby="input-live-help correo-live-feedback" placeholder="" trim></b-form-input>
-                    <b-form-invalid-feedback id="correo-live-feedback">{{
+
+                    <b-overlay :show="Revisando_correo && validationContext.errors[0] == null" rounded opacity="0.6" spinner-small spinner-variant="primary">
+                        <b-form-input @blur.native="revisarCorreoSolicitante" size="sm" class="mb-1" id="input-live" :state="getValidationState(validationContext)" v-model="Correo" aria-describedby="input-live-help correo-live-feedback" placeholder="" trim></b-form-input>
+                        <b-form-invalid-feedback id="correo-live-feedback">{{
                         validationContext.errors[0] }}
-                    </b-form-invalid-feedback>
+                        </b-form-invalid-feedback>
+                        <b-alert fade style="margin:2px; padding:2px;" class="text-center" :show="Correo_ocupado" variant="warning">El correo ya está registrado en el sistema</b-alert>
+                    </b-overlay>
                 </ValidationProvider>
             </b-col>
             <b-col class="col-4">
@@ -120,29 +124,31 @@
         <hr>
 
         <b-row>
+
             <b-col class="col-4">
                 <label for="input-live">Empresa:</label>
-                <b-form-select @change="cargarDirecciones" aria-describedby="cargo-live-feedback" class="mb-1" text-field="nombre_empresa" v-model="EmpresaSeleccionada" :options="Empresas"></b-form-select>
+                <b-form-select :disabled="esParticular" @change="cargarDirecciones" aria-describedby="cargo-live-feedback" class="mb-1" text-field="nombre_empresa" v-model="EmpresaSeleccionada" :options="Empresas"></b-form-select>
 
             </b-col>
             <b-col class="col-4">
 
                 <label for="input-live">Ciudad empresa:</label>
-                <b-form-select :disabled="EmpresaSeleccionada ? false : true" aria-describedby="cargo-live-feedback" class="mb-1" v-model="CiudadSeleccionada" text-field="nombre_ciudad" :options="Ciudades">
+                <b-form-select :disabled="EmpresaSeleccionada && !esParticular ? false : true" aria-describedby="cargo-live-feedback" class="mb-1" v-model="CiudadSeleccionada" text-field="nombre_ciudad" :options="Ciudades">
 
                 </b-form-select>
 
             </b-col>
             <b-col class="col-1 d-flex align-items-end" style="padding:0px">
-                <b-button variant="success" class="reactive-button" @click="agregarEmpresaSeleccionada()" style="padding:1px; margin-bottom:5px; aspect-ratio: 1 / 1; height: 35px; width: 35px">
+                <b-button :disabled="esParticular" variant="success" class="reactive-button" @click="agregarEmpresaSeleccionada()" style="padding:1px; margin-bottom:5px; aspect-ratio: 1 / 1; height: 35px; width: 35px">
                     <b-icon icon=" plus-circle-fill"></b-icon>
                 </b-button>
 
             </b-col>
+
             <b-col class="col-3">
                 <ValidationProvider name="cargo" rules="required" v-slot="validationContext">
                     <label for="input-live">Tipo cliente:</label>
-                    <b-form-select aria-describedby="cargo-live-feedback" :state="getValidationState(validationContext)" class="mb-1" v-model="Tipo" :options="tipos"></b-form-select>
+                    <b-form-select @change="tipoCambiado" aria-describedby="cargo-live-feedback" :state="getValidationState(validationContext)" class="mb-1" v-model="Tipo" :options="tipos"></b-form-select>
                     <b-form-invalid-feedback id="cargo-live-feedback">{{
                         validationContext.errors[0] }}
                     </b-form-invalid-feedback>
@@ -184,7 +190,9 @@
 import solicitanteService from "@/helpers/api-services/Solicitante.service"
 import empresaService from "@/helpers/api-services/Empresa.service"
 export default {
+    computed: {
 
+    },
     data() {
 
         return {
@@ -198,6 +206,9 @@ export default {
             Contacto_proveedores: "",
             Direccion_factura: "",
             Rut_ocupado: false,
+            Revisando_rut: false,
+            Correo_ocupado: false,
+            Revisando_correo: false,
             alertaDuplicado: false,
             Correo: "",
             Tipo: "",
@@ -207,7 +218,8 @@ export default {
             Nombre_empresa: "",
             Nombre_ciudad: "",
             Direccion_ciudad: "",
-            Revisando_rut: false,
+            esParticular: false,
+
             Empresas: [],
 
             Ciudades: [],
@@ -230,10 +242,18 @@ export default {
         this.cargarEmpresas();
     },
     methods: {
-        eliminarObjetosSeleccionados(index){
-            
+        tipoCambiado(value) {
+            if (value == "Particular") {
+                this.esParticular = true;
+                this.Empresas_seleccionadas = [];
+            } else {
+                this.esParticular = false;
+                return false;
+            }
+        },
+        eliminarObjetosSeleccionados(index) {
+
             this.Empresas_seleccionadas.splice(index, 1);
-            
 
         },
         agregarEmpresaSeleccionada() {
@@ -288,6 +308,36 @@ export default {
             } else {
                 this.Rut_ocupado = false;
                 this.Revisando_rut = false;
+            }
+
+        },
+        revisarCorreoSolicitante() {
+
+            var data = {
+                "correo": this.Correo
+            }
+            if (this.Correo != "") {
+                this.Revisando_correo = true;
+                solicitanteService.existeCorreoSolicitante(data).then((response) => {
+
+                    if (response != null) {
+                        if (response.status == 200) {
+                            this.Correo_ocupado = true;
+                            this.Revisando_correo = false;
+
+                        } else {
+                            this.Correo_ocupado = false;
+                            this.Revisando_correo = false;
+                        }
+                    } else {
+                        this.Correo_ocupado = false;
+                        this.Revisando_correo = false;
+                    }
+
+                })
+            } else {
+                this.Correo_ocupado = false;
+                this.Revisando_correo = false;
             }
 
         },
@@ -373,11 +423,11 @@ export default {
                     console.log('Ciudad seleccionada', this.Nombre_ciudad)
                     console.log('direccion ciudad seleccionada', this.Direccion_ciudad)
                     var empresas_agregar = [];
-                    for (var i = 0; i < this.Empresas_seleccionadas.length; i++){
+                    for (var i = 0; i < this.Empresas_seleccionadas.length; i++) {
                         empresas_agregar.push({
                             rut_empresa: this.Empresas_seleccionadas[i].rut_empresa,
                             id_ciudad: this.Empresas_seleccionadas[i].id_ciudad
-                          
+
                         })
                     }
 

@@ -16,7 +16,17 @@ const existeEmpresa = async (data) => {
         return error.response;
     }
 };
-
+const existeCorreoEmpresa = async (data) => {
+    try {  
+        const instanciaApi = await crearApi();
+        const response = await instanciaApi.post("/empresas/existeCorreo", data,
+            );
+        console.log(response);
+        return response;
+    } catch (error) {
+        return error.response;
+    }
+};
 const ingresarEmpresa = async (data) => {
     try {  
         const instanciaApi = await crearApi();
@@ -88,6 +98,7 @@ const obtenerTodasCiudad = async () => {
 };
 
 export default {
+    existeCorreoEmpresa,
     ingresarEmpresa,
     obtenerTodasEmpresa,
     obtenerDetallesEmpresa,
