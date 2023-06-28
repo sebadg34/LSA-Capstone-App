@@ -27,7 +27,7 @@
                                         <div class="d-flex align-items-center ">    
                                             <b-form-input id="input-live" v-model="rut" :state="getValidationState(validationContext)"></b-form-input>
                                                 <div>
-                                                    <b-button @click="buscarYagregar()">
+                                                    <b-button class="ml-2" @click="buscarYagregar()">
                                                         <b-icon icon="search"></b-icon>                                                 
                                                     </b-button>                                                                                                   
                                                 </div>
@@ -67,7 +67,7 @@
                                         <div class="d-flex align-items-center">    
                                             <b-form-input id="nMuestras-input" v-model="nMuestras" :state="getValidationState(validationContext)" aria-describedby="nMuestras-live-feedback"></b-form-input>
                                             <div>                            
-                                                <b-button @click="agregar()" variant="secondary" size="md">
+                                                <b-button class="ml-2" @click="agregar()" variant="secondary" size="md">
                                                     <b-icon class="mt-1" icon="plus-circle-fill"></b-icon>                                                
                                                 </b-button>   
                                             </div>
@@ -130,6 +130,9 @@
                                     <label for="input-live">Rut:</label>                                    
                                     <b-form-input id="transportistaRut-input" class="mb-1" v-model="transportistaRut" aria-describedby="transportistaRut-live-feedback"></b-form-input>                              
                                     
+                                    <label for="input-live">Temperatura de transporte:</label>                                    
+                                    <b-form-input class="mb-1" id="input-live" v-model="Temperatura" aria-describedby="input-live-help Temperatura-live-feedback" placeholder="Ingrese Temperatura de la muestra" trim></b-form-input>                                                                                                                                                                      
+
                                     <label for="input-live">Telefono Movil:</label>                                    
                                     <div id="app">
                                         <b-input-group v-for="(telefono, index) in telefonos_agregar" :key="index" class="mb-1">
@@ -138,13 +141,11 @@
                                           </b-input-group-prepend>
                                           <b-form-input v-model="telefono.telefono_transportista" aria-describedby="input-live-help fono-live-feedback" placeholder=""></b-form-input>
                                           <div>
-                                            <b-button @click="addInput">+</b-button>
+                                            <b-button @click="addInput" v-if="index === telefonos_agregar.length - 1" class="ml-2">+</b-button>
+                                            <b-button @click="removeInput(index)" variant="danger" v-if="index > 0" class="ml-2" z><b-icon-trash-fill></b-icon-trash-fill></b-button>
                                           </div>
-                                        </b-input-group>  
-                                    </div>                                        
-                                    
-                                        <label for="input-live">Temperatura de transporte:</label>                                    
-                                        <b-form-input class="mb-1" id="input-live" v-model="Temperatura" aria-describedby="input-live-help Temperatura-live-feedback" placeholder="Ingrese Temperatura de la muestra" trim></b-form-input>                                                                                                                                                                          
+                                        </b-input-group>
+                                    </div>                                           
                                 </b-col>
 
                                 <b-col class="col-6">                                    
@@ -180,7 +181,7 @@
                                         <div class="d-flex align-items-center">    
                                             <b-form-select v-model="parametroSeleccionado" :options="opcionesParametro" placeholder="Seleccione un Parámetro" :disabled="parametroDeshabilitado" @change="agregarObjetosSeleccionados"></b-form-select>
                                             <div>
-                                                <b-button v-b-modal.modal-Agregar-Opciones>+</b-button>                                                    
+                                                <b-button class="ml-2" v-b-modal.modal-Agregar-Opciones>+</b-button>                                                    
                                             </div>
                                         </div>
                                     </b-form-group>
@@ -474,6 +475,10 @@
                 this.telefonos_agregar.push({ telefono_transportista: '' }); // Agregar un nuevo objeto con valor vacío
             },
               
+            removeInput(index) {
+                this.telefonos_agregar.splice(index, 1); // Eliminar el input del array "telefonos"
+            },
+
             onModalShown() {
                 this.alertaExito = false;
                 this.alertaDuplicado = false;
