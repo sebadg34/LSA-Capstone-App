@@ -1,5 +1,10 @@
 import axios from "axios";
 import config from '@/../public/config.json'
+import {
+    crearApi
+} from "../api-services/InstanciadorAxios";
+
+
 
 const apiUrl = config.BASE_URL_SIS_API;
 
@@ -159,6 +164,23 @@ const obtenerNombreEmpleados = async () => {
      }
  };
 
+ const obtenerDetallesSolicitante = async (data) => {
+    try {
+        const instanciaApi = await crearApi();
+        const response = await instanciaApi.get("/solicitantes/" + data.rut_solicitante);
+            console.log(response);
+        if(response.status == 200){
+            return response;
+        }else{
+            return;
+        }
+        
+    } catch (error) {
+        console.log(error);
+        return;
+    }
+};
+
 
   
  
@@ -172,7 +194,8 @@ export default {
     rehacerMuestra,
     calcularDiasTranscurridos,
     obtenerNombreEmpleados,
-    actualizarMuestra
+    actualizarMuestra,
+    obtenerDetallesSolicitante
 
 
 };

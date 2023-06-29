@@ -518,7 +518,7 @@
                 };
 
                 console.log("id a obtener: ", data) 
-                SolicitanteService.obtenerDetallesSolicitante(data).then((response) => {
+                MuestraService.obtenerDetallesSolicitante(data).then((response) => {
                     console.log("ObteniendoDetalles", response.data);
                     const empresas = response.data.detalles_empresas.map(detalle => ({
                         rut_empresa: detalle.rut_empresa,

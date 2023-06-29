@@ -32,7 +32,7 @@ const editarSolicitante = async (data) => {
 const obtenerDetallesSolicitante = async (data) => {
     try {
         const instanciaApi = await crearApi();
-        const response = await instanciaApi.get("/solicitantes/" + data.rut_solicitante);
+        const response = await instanciaApi.get("/solicitantes/" + data);
             console.log(response);
         if(response.status == 200){
             return response;
