@@ -1,6 +1,6 @@
 <template>
     <validation-observer ref="form">
-        <modal_cantidadMuestra :n-muestras="nMuestras" :objetosSeleccionados="objetosSeleccionados" @datosIngresados="capturarDatos"/>
+        <modal_cantidadMuestra :n-muestras="nMuestras" :objetosSeleccionados="objetosSeleccionados" @datosIngresados="capturarDatos" :identificaciones="identificacion"/>
         <div>
             <b-card no-body>
                 <b-tabs v-model="tabIndex" small card>
@@ -135,21 +135,21 @@
 
                                     <label for="input-live">Telefono Movil:</label>                                    
                                     <div id="app">
-                                        <b-input-group v-for="(telefono, index) in telefonos_agregar" :key="index" class="mb-1">
-                                          <b-input-group-prepend is-text>
-                                            +56 9
-                                          </b-input-group-prepend>
-                                          <b-form-input v-model="telefono.telefono_transportista" aria-describedby="input-live-help fono-live-feedback" placeholder=""></b-form-input>
-                                          <div>
-                                            <b-button @click="addInput" v-if="index === telefonos_agregar.length - 1">+</b-button>
-                                            <b-button @click="removeInput(index)" variant="danger" v-if="index > 0" class="ml-2"><b-icon-trash-fill></b-icon-trash-fill></b-button>
-                                          </div>
-                                        </b-input-group>                                    
-                                        <div v-if="telefonos_agregar.length === 0">
-                                          No se han agregado teléfonos.
-                                          <b-button @click="addInput">+</b-button>
+                                      <b-input-group v-for="(telefono, index) in telefonos_agregar" :key="index" class="mb-1">
+                                        <b-input-group-prepend is-text>
+                                          +56 9
+                                        </b-input-group-prepend>
+                                        <b-form-input v-model="telefono.telefono_transportista" aria-describedby="input-live-help fono-live-feedback" placeholder=""></b-form-input>
+                                        <div>
+                                          <b-button @click="addInput" v-if="index === telefonos_agregar.length - 1">+</b-button>
+                                          <b-button @click="removeInput(index)" variant="danger" class="ml-2"><b-icon-trash-fill></b-icon-trash-fill></b-button>
                                         </div>
-                                    </div>                                           
+                                      </b-input-group>                                    
+                                      <div v-if="telefonos_agregar.length === 0">
+                                        No se han agregado teléfonos.
+                                        <b-button @click="addInput">+</b-button>
+                                      </div>
+                                    </div>                                         
                                 </b-col>
 
                                 <b-col class="col-6">                                    
@@ -290,6 +290,7 @@
     import SolicitanteService from '@/helpers/api-services/Solicitante.service';
     import {getUserInfo} from "@/helpers/api-services/Auth.service";
     import {isLoggedIn} from "@/helpers/api-services/Auth.service";
+    
 
     export default {
 
@@ -349,7 +350,7 @@
                 patente: "",
                 estado: null,
                 tabIndex: 0,
-                identificacion: '',
+                identificacion: [],
                 telefonos_agregar: [],                
                 TodasopcionesParametro: [],
                 submuestra_agregar: [{  
@@ -841,7 +842,7 @@
                         return;
                     } else { 
                         const matricesFiltradas = this.parametros_agregar.slice(1);
-                        const parametrosFiltrados = this. submuestra_agregar.slice(1);
+                        const parametrosFiltrados = this.submuestra_agregar.slice(1);
                         var data = {
                             rut_empresa: this.rut_empresa,
                             rut_empleado: this.recepcionistaRUT,
