@@ -239,6 +239,40 @@ const agregarNorma = async (data) => {
      }
  };
  
+ const obtenerNormasMatriz = async (data) => {
+    console.log("elemtntos tres",data)
+    try {
+         const response = await axios.get(apiUrl + "/normas-matrices/" + data);
+         console.log(response);
+         if(response.status == 200){
+             return response;
+         } else {
+             return;
+         }
+         
+     } catch (error) {
+         console.log(error);
+         return;
+     }
+ };
+
+ const obtenerTablasNorma = async (data) => {
+    console.log("idnorma",data)
+    try {
+         const response = await axios.get(apiUrl + "/normas/detallesNorma/" + data);
+         console.log(response);
+         if(response.status == 200){
+             return response;
+         } else {
+             return;
+         }
+         
+     } catch (error) {
+         console.log(error);
+         return;
+     }
+ };
+ 
  const actualizarNorma = async (data) => {
     try {
          const instanciaApi = await crearApi();
@@ -359,5 +393,7 @@ export default {
     obtenerRelacion,
     obtenerDetallesElementos,
     actualizarMatriz,
+    obtenerNormasMatriz,
+    obtenerTablasNorma
 
 }

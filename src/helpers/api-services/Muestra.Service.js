@@ -1,11 +1,16 @@
 import axios from "axios";
 import config from '@/../public/config.json'
+import {
+    crearApi
+} from "../api-services/InstanciadorAxios";
+
+
 
 const apiUrl = config.BASE_URL_SIS_API;
 
 const ingresarMuestra = async (data) => {
     try {  
-        const response = await axios.post(apiUrl + "/muestras", data,);
+        const response = await axios.post(apiUrl + "/recepcion-muestra", data,);
         console.log(response);
         return response;
     } catch (error) {
@@ -13,7 +18,8 @@ const ingresarMuestra = async (data) => {
         return;
     }
 };
- const obtenerMuestras = async () => {
+
+const obtenerMuestras = async () => {
    try {
         const response = await axios.get(apiUrl + "/muestras");
             console.log(response);
@@ -96,7 +102,7 @@ const obtenerObservaciones = async (RUM) => {
 };
 
 
- const completarMuestra = async (RUM) => {
+const completarMuestra = async (RUM) => {
     try {
         const response = await axios.put(apiUrl + "/muestras/" + RUM + "/completar");
         console.log(response);
@@ -142,7 +148,7 @@ const calcularDiasTranscurridos = async (RUM) => {
     }
   };
 
-  const obtenerNombreEmpleados = async () => {
+const obtenerNombreEmpleados = async () => {
     try {
          const response = await axios.get(apiUrl + '/nombres-empleados');
              console.log(response);
@@ -158,6 +164,23 @@ const calcularDiasTranscurridos = async (RUM) => {
      }
  };
 
+ const obtenerDetallesSolicitante = async (data) => {
+    try {
+        const instanciaApi = await crearApi();
+        const response = await instanciaApi.get("/solicitantes/" + data.rut_solicitante);
+            console.log(response);
+        if(response.status == 200){
+            return response;
+        }else{
+            return;
+        }
+        
+    } catch (error) {
+        console.log(error);
+        return;
+    }
+};
+
 
   
  
@@ -171,7 +194,8 @@ export default {
     rehacerMuestra,
     calcularDiasTranscurridos,
     obtenerNombreEmpleados,
-    actualizarMuestra
+    actualizarMuestra,
+    obtenerDetallesSolicitante
 
 
 };
