@@ -37,12 +37,12 @@
                 <label for="input-live">Correo electrónico:</label>
                 <ValidationProvider name="correo" rules="required" v-slot="validationContext">
                     <b-overlay :show="Revisando_correo && validationContext.errors[0] == null" rounded opacity="0.6" spinner-small spinner-variant="primary">
-                    <b-form-input @blur.native="revisarCorreoEmpresa" size="sm" class="mb-1" id="input-live" :state="getValidationState(validationContext)" v-model="Correo" aria-describedby="input-live-help nombre-live-feedback" placeholder="" trim></b-form-input>
-                    <b-form-invalid-feedback id="correo-live-feedback">{{
+                        <b-form-input @blur.native="revisarCorreoEmpresa" size="sm" class="mb-1" id="input-live" :state="getValidationState(validationContext)" v-model="Correo" aria-describedby="input-live-help nombre-live-feedback" placeholder="" trim></b-form-input>
+                        <b-form-invalid-feedback id="correo-live-feedback">{{
                         validationContext.errors[0] }}
-                    </b-form-invalid-feedback>
-                    <b-alert fade style="margin:2px; padding:2px;" class="text-center" :show="Correo_ocupado" variant="warning">El correo ya está registrado en el sistema</b-alert>
-                </b-overlay>
+                        </b-form-invalid-feedback>
+                        <b-alert fade style="margin:2px; padding:2px;" class="text-center" :show="Correo_ocupado" variant="warning">El correo ya está registrado en el sistema</b-alert>
+                    </b-overlay>
                 </ValidationProvider>
             </b-col>
             <b-col class="col-6">
@@ -170,7 +170,7 @@ export default {
             }];
             this.dataDirecciones = "";
             this.Nombre = "";
-            this.Nombre_abreviado ="";
+            this.Nombre_abreviado = "";
             this.Correo = "";
             this.Rut = "";
             this.Rut_ocupado = false;
@@ -179,7 +179,6 @@ export default {
             this.Revisando_rut = false;
             this.Razon_social = "";
             this.Giro = "";
-
 
         },
         revisarRutEmpresa() {
@@ -190,7 +189,6 @@ export default {
             if (this.Rut != "") {
                 this.Revisando_rut = true;
                 empresaService.existeEmpresa(data).then((response) => {
-
                     if (response != null) {
                         if (response.status == 200) {
                             this.Rut_ocupado = true;
@@ -204,7 +202,6 @@ export default {
                         this.Rut_ocupado = false;
                         this.Revisando_rut = false;
                     }
-
                 })
             } else {
                 this.Rut_ocupado = false;
@@ -213,35 +210,31 @@ export default {
 
         },
         revisarCorreoEmpresa() {
-
-var data = {
-    "correo": this.Correo
-}
-if (this.Correo != "") {
-    this.Revisando_correo = true;
-    empresaService.existeCorreoEmpresa(data).then((response) => {
-
-        if (response != null) {
-            if (response.status == 200) {
-                this.Correo_ocupado = true;
-                this.Revisando_correo = false;
-
+            var data = {
+                "correo": this.Correo
+            }
+            if (this.Correo != "") {
+                this.Revisando_correo = true;
+                empresaService.existeCorreoEmpresa(data).then((response) => {
+                    if (response != null) {
+                        if (response.status == 200) {
+                            this.Correo_ocupado = true;
+                            this.Revisando_correo = false;
+                        } else {
+                            this.Correo_ocupado = false;
+                            this.Revisando_correo = false;
+                        }
+                    } else {
+                        this.Correo_ocupado = false;
+                        this.Revisando_correo = false;
+                    }
+                })
             } else {
                 this.Correo_ocupado = false;
                 this.Revisando_correo = false;
             }
-        } else {
-            this.Correo_ocupado = false;
-            this.Revisando_correo = false;
-        }
 
-    })
-} else {
-    this.Correo_ocupado = false;
-    this.Revisando_correo = false;
-}
-
-},
+        },
         add() {
             this.direcciones.push({
                 ciudad: '',
