@@ -134,8 +134,8 @@ const routes = [
 
   },
   {
-    path: '/Form',
-    name: 'formulario',
+    path: '/recepcion/muestra',
+    name: 'ingresoMuestra',
     component: MUS001,
     meta: {
       title: "LSA"
