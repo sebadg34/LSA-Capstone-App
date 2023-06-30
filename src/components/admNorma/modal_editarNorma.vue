@@ -158,7 +158,7 @@
     <br />
     <div v-if="tablas_agregar" :key="tablasKey">
         <b-card no-body header="Tablas de norma">
-            <b-list-group v-for="tabla in tablas_agregar" :key="tabla.index" horizontal="lg">
+            <b-list-group v-for="(tabla, tablaindex) in tablas_agregar" :item="tabla" :key="tablaindex" horizontal="lg">
                 <b-list-group-item style="width:35%" class=" d-flex justify-content-start align-items-center">
                     <b-button @click="borrarTabla(tabla)" variant="danger" style="padding:1px; aspect-ratio: 1 / 1; height: 30px; width: 30px">
                         <b-icon scale="0.9" icon="trash-fill"></b-icon>
@@ -175,10 +175,10 @@
                                 <b-col>
                                     <b-row class="d-flex justify-content-between align-items-center" style="margin-bottom:10px">
                                         <div>{{ parametro.nombre_parametro }}</div>
-                                        <b-button v-b-toggle="'colapse-' + parametro.id_parametro" pill class="lsa-blue">detalles <b-icon icon="journals" aria-hidden="true"></b-icon>
+                                        <b-button v-b-toggle="'colapse-' + parametro.id_parametro  + '-' + tablaindex" pill class="lsa-blue">detalles <b-icon icon="journals" aria-hidden="true"></b-icon>
                                         </b-button>
                                     </b-row>
-                                    <b-collapse :id="'colapse-' + parametro.id_parametro">
+                                    <b-collapse :id="'colapse-' + parametro.id_parametro + '-' + tablaindex">
 
                                         <b-card no-body header="Metodologías: ">
                                             <b-list-group flush>

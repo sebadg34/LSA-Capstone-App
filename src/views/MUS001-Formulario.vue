@@ -7,10 +7,15 @@
       
         <b-card no-body>
            
-            <b-row class="d-flex justify-content-center">
+            <b-row>
               
-                <b-col class="col-10">
-                    <b-tabs v-model="tabIndex" small card>
+                <b-col class="col-12">
+                    <b-tabs no-fade v-model="tabIndex" align="center" card >
+                        <b-row  class="d-flex justify-content-center">
+
+                   
+                        <b-col class="col-6">
+
                         <b-tab title="Recepcionista">
                             <div style="height:50px"></div>
                             Datos del recepcionista
@@ -236,6 +241,9 @@
                                 </div>
                             </b-card>
                         </b-tab>
+
+                    </b-col>
+                </b-row>
                     </b-tabs>
                 </b-col>
             </b-row>
@@ -247,7 +255,7 @@
                 <b-button @click="tabIndex--">Atrás</b-button>
                 <b-button @click="tabIndex++">Siguiente</b-button>
             </b-button-group>
-            <div class="text-muted">Current Tab: {{ tabIndex }}</div>
+           <hr/>
             <b-button @click="enviarFormulario()" variant="primary" size="xl" class="reactive-button" style="font-weight:bold;">
                 Recepcionar Muestra
             </b-button>

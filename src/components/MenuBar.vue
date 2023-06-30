@@ -53,7 +53,7 @@
 <b-icon class="lsa-orange-text" icon="eyedropper"></b-icon>
 <span class="px-md-2"></span> Recepcionar muestra
 
-<div style="height:10px"></div>
+
 </b-list-group-item>
 
                     <b-list-group-item v-if="rol == 1 || rol == 0" @click="navegarRuta('AdminMuestraGerente')" class="cursorToHand menuButton">
