@@ -126,7 +126,7 @@
   
 <script>
 import MuestraService from '@/helpers/api-services/Muestra-solicitante.service';
-import ModalDetalleMuestra from '@/components/admMuestras/modal_detallesMuestra.vue';
+import ModalDetalleMuestra from '@/components/admMuestras-solicitante/modal_detallesMuestra-solicitante.vue';
 
 import modal_encuestaSolicitante from '@/components/admMuestras-solicitante/modal_encuestaSolicitante.vue'
 export default {
@@ -136,6 +136,7 @@ export default {
             RUM: '',
             obtenerObservaciones: this.obtenerObservaciones,
             modalData: {},
+            detallesData: {},
             modalEncuestaData: [],
             observaciones: '',
             currentPage: 1,
@@ -143,6 +144,8 @@ export default {
             estadoFiltro: null,
             rumFiltro: "",
             filtrando: false,
+            loading:false,
+            
             muestrasFiltradas: [],
             muestras: [],
             fields: [{
@@ -150,7 +153,7 @@ export default {
                     label: 'RUM'
                 },
                 {
-                    key: 'matriz',
+                    key: 'nombre_matriz',
                     label: 'Matriz'
                 },
 
@@ -159,17 +162,18 @@ export default {
                     label: 'Fecha entrega'
                 },
                 {
-                    key: 'numero_cotización',
-                    label: 'Número de cotizacion'
-                },
-                {
-                    key: 'estado',
-                    label: 'Estado'
+                    key: 'numero_cotizacion',
+                    label: 'Número de cotización'
                 },
                 {
                     key: 'valor',
                     label: 'Valor neto'
                 },
+                {
+                    key: 'estado',
+                    label: 'Estado'
+                },
+                
                 {
                     key: 'accion',
                     label: 'Acción'
@@ -220,7 +224,6 @@ export default {
                 }
             ],
             prioridad: '',
-            detallesData: {}
         }
     },
     computed: {
@@ -260,9 +263,31 @@ export default {
         },
         obtenerMuestras() {
             console.log("Obteniendo Muestras: ")
+            this.loading = true;
             MuestraService.obtenerMuestras().then((response) => {
                 if (response.data != null && response.status === 200) {
-                    this.muestras = response.data
+                    this.loading = false;
+                    console.log(response.data)
+
+                    const cotizaciones = response.data.cotizaciones;
+                    
+                    for(var i = 0; i < cotizaciones.length; i++){
+                        
+                        for(var j = 0; j <cotizaciones[i].muestras.length; j++){
+                            console.log(cotizaciones[i])
+                            this.muestras.push({
+                                RUM: cotizaciones[i].muestras[j].RUM,
+                                estado: cotizaciones[i].muestras[j].estado,
+                                fecha_entrega: cotizaciones[i].muestras[j].fecha_entrega,
+                                valor: cotizaciones[i].muestras[j].valor_neto,
+                                numero_cotizacion: cotizaciones[i].id_cotizacion,
+                                nombre_matriz: cotizaciones[i].muestras[j].matriz.nombre_matriz
+                            })
+                        }
+                    }
+                    
+
+                  
                     this.muestrasFiltradas = this.muestras
                 }
             })
@@ -284,50 +309,12 @@ export default {
             });
         },
 
-        MostrarFonos(row) {
-            this.RUM = row.item.RUM;
-            MuestraService.obtenerFonos(this.RUM).then((response) => {
-                console.log(response)
-            })
-        },
+        
 
-        IngresarMuestraLab(row) {
-            this.RUM = row.item.RUM;
-            console.log('el rum es: ' + this.RUM)
-            this.$router.push(`/IngMuesLab?RUM=${this.RUM}`);
-
-        },
-
-        MarcarAnalisis(row) {
-            this.RUM = row.item.RUM;
-            console.log('El Rum es: ' + this.RUM)
-            MuestraService.completarMuestra(this.RUM)
-
-        },
-
-        RehacerAnalisis(row) {
-            this.RUM = row.item.RUM;
-            console.log('El Rum es: ' + this.RUM)
-            this.$bvModal.show('modal-rehacer-analisis');
-        },
-
-        DetalleMuestra(row) {
-            this.RUM = row.item.RUM;
-            console.log('El Rum es: ' + this.RUM)
-            MuestraService.obtenerDatosMuestra(this.RUM).then((response) => {
-                console.log(response);
-                if (response.data != null) {
-                    console.log(response.data);
-                    this.detallesData = response.data
-                    this.$bvModal.show('modal-detalle-muestra');
-                }
-            });
-        },
-
-        Analista(row) {
-            this.RUM = row.item.RUM;
-            console.log('El Rum es: ' + this.RUM)
-            this.$bvModal.show('modal-analista-designado');
+        abrirDetallesMuestra(data) {
+            console.log(data)
+            this.detallesData = data;
+            this.$bvModal.show('modal-detalle-muestra-solicitante');
         },
 
         Descargar() {
