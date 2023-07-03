@@ -203,7 +203,7 @@
                                                         <ValidationProvider name="muestreado" rules="required"
                                                             v-slot="validationContext">
                                                             <label for="input-live">Muestreado por:</label>
-                                                            <b-form-select class="mt-1" id="input-live" v-model="muestreado"
+                                                            <b-form-select id="input-live" v-model="muestreado"
                                                                 :options="opcionesMuestreado"
                                                                 aria-describedby="input-live-help muestreado-live-feedback"
                                                                 :state="getValidationState(validationContext)"></b-form-select>
@@ -232,7 +232,7 @@
                                                                 aria-describedby="input-live-help TipoMatriz-live-feedback"
                                                                 :state="getValidationState(validationContext)"
                                                                 text-field="nombre_matriz" value-field="id_matriz"
-                                                                @change="obtenerNormasMatriz"></b-form-select>
+                                                            ></b-form-select>
                                                             <b-form-invalid-feedback id="TipoMatriz-live-feedback">{{
                                                                 validationContext.errors[0] }}</b-form-invalid-feedback>
                                                         </ValidationProvider>
@@ -253,8 +253,6 @@
                                         <template #title>
                                             <b-col class="col-12">
                                                 <b-row class="d-flex justify-content-between">
-
-
                                                     <b-icon v-if="!transportista_incompleto" icon="check-square"></b-icon>
                                                     <b-icon v-else-if="revisado" icon="exclamation-square"></b-icon>
                                                     <b-icon v-else icon="arrow-right-short"></b-icon>
@@ -353,7 +351,7 @@
                                                             <b-form-group label="Seleccione una norma">
                                                                 <b-form-select
                                                                     :state="getValidationState(validationContext)"
-                                                                    :disabled="!TipoMatriz" v-model="norma"
+                                                                    v-model="norma"
                                                                     :options="opcionesNorma" text-field="nombre"
                                                                     value-field="id"
                                                                     @change="obtenerTablasNormas"></b-form-select>
@@ -687,6 +685,8 @@ export default {
         this.obtenerParametro();
 
         this.obtenerMatriz(),
+
+        this.obtenerNormas(),
 
             PersonalService.obtenerTodosPersonal().then((response) => {
                 console.log(response.data);
@@ -1054,12 +1054,11 @@ export default {
             });
         },
 
-        obtenerNormasMatriz() {
-            const idMatrizSeleccionada = this.TipoMatriz;
-            ElementosService.obtenerNormasMatriz(idMatrizSeleccionada).then((response) => {
+        obtenerNormas() {            
+            ElementosService.obtenerNormas().then((response) => {
                 if (response.data != null && response.status === 200) {
-                    console.log("Obteniendo normas via matriz:", response.data);
-                    const normas = response.data.normas.map(norma => ({
+                    console.log("Obteniendo normas:", response.data);
+                    const normas = response.data.map(norma => ({
                         id: norma.id_norma,
                         nombre: norma.nombre_norma
                     }));
