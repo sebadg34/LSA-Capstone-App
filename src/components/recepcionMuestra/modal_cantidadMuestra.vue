@@ -18,15 +18,26 @@
         <template #cell(identificacion)="row">
           <b-form-input v-model="row.item.identificacion" placeholder="Ingrese la identificación de la muestra"></b-form-input>
         </template>
+        <template #cell(parametros_previos)="row">
+          <b-form-input readonly v-model="row.item.parametros_previos" placeholder="Parametro agregado anteriormente"></b-form-input>
+        </template>
         <template #cell(parametros)="row">
           <template v-if="objetosSeleccionados.length > 0">
             <b-form-select v-model="row.item.parametros" :options="parametrosOptions"> </b-form-select>             
+          </template>
+        </template>
+        <template #cell(metodologias_previas)="row">
+          <template v-if="objetosSeleccionados.length > 0">
+            <b-form-input readonly v-model="row.item.metodologias_previas" placeholder="Metodologia agregada anteriormente"> </b-form-input>             
           </template>
         </template>
         <template #cell(metodologias)="row">
           <template v-if="objetosSeleccionados.length > 0">
             <b-form-select v-model="row.item.metodologias" :options="metodologiasOptions"> </b-form-select>             
           </template>
+        </template>
+        <template #cell(accion)="row">
+          <b-button @click="eliminarFila(row.index)">Eliminar</b-button>
         </template>
       </b-table>
     </div>  
@@ -45,7 +56,11 @@
         metodologiasOptions: [],
         identificacion: '',
         orden: 0,
-        identificacionesArray: []
+        identificacionesArray: [],
+        parametrosArray: [],
+        metodologiasArray: [],
+        tablaItems: []
+        
       };
     },
 
@@ -60,16 +75,33 @@
       },
 
       identificaciones: {
-        type: Array,
+        type: Array
       },
+
+      parametros : {
+        type: Array
+      },
+
+      metodologias : {
+        type: Array
+      }
     },
 
     mounted() {
       this.$refs.modal.$on('show', () => {
         if (this.identificaciones.length > 0) {
-          this.identificacionesArray = JSON.parse(JSON.stringify(this.identificaciones));
+          this.identificacionesArray = JSON.parse(JSON.stringify(this.identificaciones));          
           console.log('Identificaciones recibidas:', this.identificacionesArray);          
         }
+        if (this.parametros.length > 0){
+          this.parametrosArray = this.parametros;
+          console.log("Nombres Parametro Recibidos:", this.parametrosArray)
+        }
+        if (this.metodologias.length > 0){
+          this.metodologiasArray = this.metodologias;
+          console.log("Nombres metodologia Recibidas:", this.metodologiasArray)
+        }
+        this.calcularTablaItems();
       });
     },
 
@@ -80,35 +112,31 @@
           const metodologiasSet = new Set(nuevosObjetosSeleccionados.map(m => m.metodologia));
           this.parametrosOptions = [...parametrosSet];
           this.metodologiasOptions = [...metodologiasSet];
+          console.log("objs selecc: ", this.objetosSeleccionados)
+          this.calcularTablaItems();
+          
         },
         immediate: true
+        
       }
+      
     },
 
-    computed: {
-      tablaItems() {
-        const items = [];
-        for (let i = 1; i <= parseInt(this.nMuestras); i++) {
-          const identificacion = this.identificacionesArray[i - 1] || '';
-          items.push({
-            orden: i,
-            identificacion,
-            parametros: this.parametrosOptions[0] || '',
-            metodologias: this.metodologiasOptions[0] || ''
-          });
-        }
-        return items;
-      },      
+    computed: {          
 
       tablaFields() {
         const fields = [
           { key: 'orden', label: 'Orden', thClass: 'text-center', tdClass: 'text-center', editable: true },
           { key: 'identificacion', label: 'Identificación', thClass: 'text-center', tdClass: 'item-center' },
+          
         ];
 
         if (this.objetosSeleccionados.length > 0) {
+          fields.push({ key: 'parametros_previos', label: 'Parámetros previos', thClass: 'text-center', tdClass: 'item-center' });
           fields.push({ key: 'parametros', label: 'Parámetros', thClass: 'text-center', tdClass: 'item-center' });
+          fields.push({ key: 'metodologias_previas', label: 'Metodologías previas', thClass: 'text-center', tdClass: 'item-center'});
           fields.push({ key: 'metodologias', label: 'Metodologías', thClass: 'text-center', tdClass: 'item-center'});
+          fields.push({ key: 'accion', label: 'Acción', thClass: 'text-center', tdClass: 'item-center'})
         }
         return fields;
       },
@@ -142,6 +170,28 @@
         console.log("dato a enviar: ", datosIngresados);
         this.$emit('datosIngresados', datosIngresados);
         this.$refs.modal.hide();
+      },
+      
+      calcularTablaItems() {
+        const items = [];
+        for (let i = 1; i <= parseInt(this.nMuestras); i++) {
+          const identificacion = this.identificacionesArray[i - 1] || '';
+          const metodologia = this.metodologiasArray[i - 1] || '';
+          const parametro = this.parametrosArray[i - 1] || '';
+          items.push({
+            orden: i,
+            identificacion,
+            parametros_previos: parametro,
+            parametros: this.parametrosOptions[0] || '',
+            metodologias_previas: metodologia,
+            metodologias: this.metodologiasOptions[0] || ''
+          });
+        }
+        this.tablaItems = items; // Actualizar la propiedad de datos con los elementos de la tabla
+      },
+
+      eliminarFila(index) {
+        this.tablaItems.splice(index, 1);       
       },
     },  
   };

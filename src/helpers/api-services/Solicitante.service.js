@@ -51,6 +51,20 @@ const editarSolicitante = async (data) => {
         return;
     }
 };
+
+const CotizacionSolicitante = async (data) => {
+    try {
+        const instanciaApi = await crearApi();
+        const response = await instanciaApi.get("/solicitantes/obtenerCotizaciones/" + data.rut_solicitante, );
+            console.log(response);
+        return response;
+        
+    } catch (error) {
+        console.log(error);
+        return;
+    }
+};
+
 const obtenerDetallesSolicitante = async (data) => {
     try {
         const instanciaApi = await crearApi();
@@ -167,6 +181,7 @@ export default {
     editarSolicitante,
     descargarCotizacion,
     eliminarCotizacion,
-    cambiarEstadoSolicitante
+    cambiarEstadoSolicitante,
+    CotizacionSolicitante
 
 };
