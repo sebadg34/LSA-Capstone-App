@@ -9,9 +9,9 @@
             <b-card no-body>
                 <div style="height:20px"></div>
                 <b-row class="d-flex justify-content-center">
-                    <b-col class="col-6">
+                    <b-col class="col-8">
                         <b-tabs active-nav-item-class="lsa-orange" no-fade v-model="tabIndex" pills card vertical
-                            style="height:550px">
+                            style="height:65vh">
                             <b-row class="d-flex justify-content-center">
                                 <b-col class="col-12">
 
@@ -239,7 +239,7 @@
 
                                                         <label class="mt-1" for="input-live">Observaciones:</label>
                                                         <b-form-textarea id="input-live" v-model="observaciones"
-                                                            aria-describedby="input-live-help observaciones-live-feedback"></b-form-textarea>
+                                                          rows="1"  aria-describedby="input-live-help observaciones-live-feedback"></b-form-textarea>
                                                     </b-col>
                                                 </b-row>
                                             </b-card>
@@ -289,7 +289,7 @@
                                                                 placeholder=""></b-form-input>
 
                                                             <b-input-group-append>
-                                                                <b-button size="sm" class="lsa-light-blue reactive-button"
+                                                                <b-button size="sm" class="lsa-green reactive-button"
                                                                     style="aspect-ratio:1; border: none" @click="addInput"
                                                                     v-if="index === telefonos_agregar.length - 1">
                                                                     <b-icon class="mt-1" icon="plus-circle-fill"></b-icon>
@@ -304,7 +304,7 @@
                                                         </b-input-group>
                                                         <div v-if="telefonos_agregar.length === 0">
                                                             No se han agregado teléfonos.
-                                                            <b-button size="sm" class="lsa-light-blue reactive-button"
+                                                            <b-button size="sm" class="lsa-green reactive-button"
                                                                 style="aspect-ratio:1; border: none" @click="addInput">
                                                                 <b-icon class="mt-1" icon="plus-circle-fill"></b-icon>
                                                             </b-button>

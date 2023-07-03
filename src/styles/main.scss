@@ -8,7 +8,12 @@
     --lsa-light-gray: #ebebeb;
     --lsa-gray: #414141;
   }
-
+.lsa-green{
+  background-color: var(--lsa-green) !important;
+}
+.lsa-light-green{
+  background-color: var(--lsa-light-green) !important;
+}
   .lsa-gray{
     background-color: var(--lsa-gray) !important;
   }
