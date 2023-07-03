@@ -38,11 +38,11 @@
               <b-col class="col-7" style="font-weight:bold;"> Norma: </b-col>
               <b-col class="col-5">{{ norma }}</b-col>
             </b-row>
-            <b-row style="border-bottom: 1px solid var(--lsa-light-gray); padding:3px">
-              <b-col class="col-7" style="font-weight:bold;"> Muestreado por: </b-col>
-              <b-col class="col-5">{{ muestreador }}</b-col>
-            </b-row>
            
+            <b-row v-if="this.tipo_pago != null" style="border-bottom: 1px solid var(--lsa-light-gray); padding:3px">
+              <b-col class="col-7" style="font-weight:bold;"> Tipo de pago: </b-col>
+              <b-col class="col-5">{{ tipo_pago }}</b-col>
+            </b-row>
 
           </b-col>
           <b-col class="col-6">
@@ -52,14 +52,14 @@
             </b-row>
 
             <b-row style="border-bottom: 1px solid var(--lsa-light-gray); padding:3px">
-              <b-col class="col-7" style="font-weight:bold;"> Tipo de pago: </b-col>
-              <b-col class="col-5">{{ tipo_pago }}</b-col>
+              <b-col class="col-7" style="font-weight:bold;"> Muestreado por: </b-col>
+              <b-col class="col-5">{{ muestreador }}</b-col>
             </b-row>
             <b-row style="border-bottom: 1px solid var(--lsa-light-gray); padding:3px">
               <b-col class="col-7" style="font-weight:bold;"> Número de cotización: </b-col>
               <b-col class="col-5">{{ numero_cotizacion }}</b-col>
             </b-row>
-            <b-row style="border-bottom: 1px solid var(--lsa-light-gray); padding:3px">
+            <b-row v-if="this.valor_neto != null" style="border-bottom: 1px solid var(--lsa-light-gray); padding:3px">
               <b-col class="col-7" style="font-weight:bold;"> Valor neto: </b-col>
               <b-col class="col-5">{{ valor_neto }}</b-col>
             </b-row>
