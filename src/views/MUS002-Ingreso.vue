@@ -155,7 +155,7 @@
 
                                         <ValidationProvider name="TipoMatriz" rules="required" v-slot="validationContext">
                                             <label for="input-live">Tipo de Matriz:</label>
-                                            <b-form-select class="mt-1" id="input-live" v-model="TipoMatriz" :options="opcionesMatriz" aria-describedby="input-live-help TipoMatriz-live-feedback" :state="getValidationState(validationContext)" text-field="nombre_matriz" value-field="id_matriz" @change="obtenerNormasMatriz"></b-form-select>
+                                            <b-form-select class="mt-1" id="input-live" v-model="TipoMatriz" :options="opcionesMatriz" aria-describedby="input-live-help TipoMatriz-live-feedback" :state="getValidationState(validationContext)" text-field="nombre_matriz" value-field="id_matriz"></b-form-select>
                                             <b-form-invalid-feedback id="TipoMatriz-live-feedback">{{validationContext.errors[0]}}</b-form-invalid-feedback>
                                         </ValidationProvider>
 
@@ -275,7 +275,7 @@
                                 <b-row>
                                     <b-col class="col-6">
                                         <b-form-group label="Seleccione una norma">
-                                            <b-form-select v-model="norma" :options="opcionesNorma" text-field="nombre" value-field="id" @change="obtenerTablasNormas"></b-form-select>
+                                            <b-form-select v-model="norma" :options="opcionesNorma" text-field="nombre_norma" value-field="id_norma" @change="obtenerTablasNormas"></b-form-select>
                                         </b-form-group>
                                     </b-col>
 
@@ -333,8 +333,8 @@
                                     <b-card title="Información ingresada previamente">
 
                                       <ul class="left-aligned-list">                                        
-                                        <li>Nombre Norma: {{ this.normaOG }}</li>
-                                        <li>Nombre Tabla: {{ this.tablaOG }}</li>                                        
+                                        <li>Nombre Norma: {{ this.nombreNormaOG }}</li>
+                                        <li>Nombre Tabla: {{ this.nombreTablaOG }}</li>                                        
                                       </ul>
                                     </b-card>
                                 </b-collapse>                            
@@ -654,7 +654,9 @@ export default {
         
         this.obtenerParametro();       
 
-        this.obtenerMatriz(),       
+        this.obtenerMatriz(), 
+        
+        this.obtenerNormas(),
 
             PersonalService.obtenerTodosPersonal().then((response) => {
                 console.log(response.data);
@@ -1140,17 +1142,22 @@ export default {
             });
         },
 
-        obtenerNormasMatriz() {
-            const idMatrizSeleccionada = this.TipoMatriz;
-            ElementosService.obtenerNormasMatriz(idMatrizSeleccionada).then((response) => {
+        obtenerNormas() {            
+            ElementosService.obtenerNormas().then((response) => {
                 if (response.data != null && response.status === 200) {
-                    console.log("Obteniendo normas via matriz:", response.data);
-                    const normas = response.data.normas.map(norma => ({
-                        id: norma.id_norma,
-                        nombre: norma.nombre_norma
+                    console.log("Obteniendo normas:", response.data);
+                    const normas = response.data.map(norma => ({
+                        id_norma: norma.id_norma,
+                        nombre_norma: norma.nombre_norma
                     }));
                     this.opcionesNorma = normas;
+
+                    const normaSeleccionada = this.opcionesNorma.find(norma => norma.id_norma === this.normaOG);
+                    if (normaSeleccionada) {
+                        this.nombreNormaOG = normaSeleccionada.nombre_norma;
+                    }
                     console.log("Las Normas son:", this.opcionesNorma);
+                    console.log("norma nombre: ", this.NormaOG)
                 }
             });
         },
@@ -1189,6 +1196,11 @@ export default {
 
                     // Asignar las tablas procesadas a opcionesTabla
                     this.opcionesTabla = tablasProcesadas.map((tabla) => tabla.nombre_tabla);
+
+                    const tablaSeleccionada = tablasProcesadas.find(tabla => tabla.id_tablas.includes(this.tablaOG));
+                    if (tablaSeleccionada) {
+                        this.nombreTablaOG = tablaSeleccionada.nombre_tabla;
+                    }
 
                     // Asignar tablasProcesadas a this.tablasProcesadas
                     this.tablasProcesadas = tablasProcesadas;
