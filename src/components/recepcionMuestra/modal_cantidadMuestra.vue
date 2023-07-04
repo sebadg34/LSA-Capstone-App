@@ -42,8 +42,11 @@
       </b-table>
     </div>  
 
-    <template #modal-footer>
+    <template #modal-footer="{ close }">
       <b-button @click="guardarFormulario()" variant="primary" size="xl" class="float-right reactive-button" style="font-weight:bold">Guardar</b-button>
+      <b-button @click="close()" variant="primary" size="xl" class="float-right reactive-button" style="font-weight:bold">
+                    Cerrar sin guardar
+                </b-button>
     </template>
   </b-modal>
 </template>  
