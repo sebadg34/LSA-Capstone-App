@@ -58,7 +58,10 @@
 </validation-observer>
 </template>
 
+
+
 <script>
+import MuestraService from '@/helpers/api-services/Muestra-solicitante.service';
 export default {
 
     watch: {
@@ -89,12 +92,34 @@ export default {
                     }
                     return;
                 } else {
-                    console.log(this.Valoracion);
-                    console.log(this.Observacion);
-                    console.log("validado, enviando!");
-
-                    this.Observacion = ""
-                    this.Valoracion = ""
+                    var data = {
+                        puntaje: this.Valoracion,
+                        observaciones: this.Observacion
+                    }
+                    MuestraService.responderEncuesta(data).then((response) => {
+                        if(response.status == 200){
+                            console.log("encuesta registrada");
+                            this.$bvToast.toast(`Encuesta enviada exitosamente`, {
+                                title: 'Exito',
+                                toaster: 'b-toaster-top-center',
+                                solid: true,
+                                variant: "success",
+                                appendToast: true
+                            })
+                            this.$emit('refrescar');
+                            this.$bvModal.hide('modal-cotizacion-solicitante');
+                            this.reiniciarDatos();
+                        }else{
+                            this.$bvToast.toast(`Error al enviar encuesta`, {
+                                title: 'Error',
+                                toaster: 'b-toaster-top-center',
+                                solid: true,
+                                variant: "warning",
+                                appendToast: true
+                            })
+                        }
+                    })
+                  console.log("enviando encuesta")
                 }
 
             });

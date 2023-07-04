@@ -166,10 +166,6 @@ export default {
                     label: 'Número de cotización'
                 },
                 {
-                    key: 'valor',
-                    label: 'Valor neto'
-                },
-                {
                     key: 'estado',
                     label: 'Estado'
                 },
@@ -279,9 +275,7 @@ export default {
                                 RUM: cotizaciones[i].muestras[j].RUM,
                                 estado: cotizaciones[i].muestras[j].estado,
                                 fecha_entrega: cotizaciones[i].muestras[j].fecha_entrega,
-                                valor: cotizaciones[i].muestras[j].valor_neto,
-                                numero_cotizacion: cotizaciones[i].id_cotizacion,
-                                nombre_matriz: cotizaciones[i].muestras[j].matriz.nombre_matriz
+                                numero_cotizacion: cotizaciones[i].id_cotizacion
                             })
                         }
                     }
