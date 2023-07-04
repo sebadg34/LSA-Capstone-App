@@ -1275,7 +1275,7 @@ export default {
                     }
 
                     console.log("data a enviar", data)
-                    MuestraService.ingresarMuestra(data).then((response) => {
+                    MuestraService.actualizarMuestra(data).then((response) => {
                         console.log(response)
                         if (response != null) {
                             if (response.status == 200) {
