@@ -132,8 +132,8 @@
                                         </ValidationProvider>
 
                                         <ValidationProvider name="Valor Neto" rules="required" v-slot="validationContext">
-                                            <label for="Valor Neto-input">Valor neto(UF):</label>
-                                            <b-form-input id="Valor Neto-input" v-model="valor_neto" :state="getValidationState(validationContext)"></b-form-input>
+                                            <label class="mt-1" for="Valor Neto-input">Valor neto(UF):</label>
+                                            <b-form-input  id="Valor Neto-input" v-model="valor_neto" :state="getValidationState(validationContext)"></b-form-input>
                                             <b-form-invalid-feedback>{{ validationContext.errors[0] }}</b-form-invalid-feedback>
                                         </ValidationProvider>
                                     </b-col>
@@ -154,22 +154,25 @@
                                         </ValidationProvider>
 
                                         <ValidationProvider name="TipoMatriz" rules="required" v-slot="validationContext">
-                                            <label class="mt-1" for="input-live">Tipo de Matriz:</label>
-                                            <b-form-select id="input-live" v-model="TipoMatriz" :options="opcionesMatriz" aria-describedby="input-live-help TipoMatriz-live-feedback" :state="getValidationState(validationContext)" text-field="nombre_matriz" value-field="id_matriz" @change="obtenerNormasMatriz"></b-form-select>
+                                            <label for="input-live">Tipo de Matriz:</label>
+                                            <b-form-select class="mt-1" id="input-live" v-model="TipoMatriz" :options="opcionesMatriz" aria-describedby="input-live-help TipoMatriz-live-feedback" :state="getValidationState(validationContext)" text-field="nombre_matriz" value-field="id_matriz" @change="obtenerNormasMatriz"></b-form-select>
                                             <b-form-invalid-feedback id="TipoMatriz-live-feedback">{{validationContext.errors[0]}}</b-form-invalid-feedback>
                                         </ValidationProvider>
 
-                                        <ValidationProvider name="Cotizacion" rules="required" v-slot="validationContext">
-                                            <label class="mt-1" for="input-live">Cotización:</label>
-                                            <b-form-select id="input-live" v-model="cotizacion" :options="opcionesCotizacion" aria-describedby="input-live-help Cotizacion-live-feedback" :state="getValidationState(validationContext)" text-field="nombre_original_documento" value-field="id_cotizacion"></b-form-select>
-                                            <b-form-invalid-feedback id="Cotizacion-live-feedback">{{validationContext.errors[0]}}</b-form-invalid-feedback>
+                                        <ValidationProvider name="Temperatura" rules="required" v-slot="validationContext">
+                                            <label for="input-live">Temperatura de transporte:</label>
+                                            <b-form-input class="mt-1" id="input-live" v-model="Temperatura" aria-describedby="input-live-help Temperatura-live-feedback" :state="getValidationState(validationContext)" placeholder="Ingrese Temperatura de la muestra" trim></b-form-input>
+                                            <b-form-invalid-feedback id="Temperatura-live-feedback">{{validationContext.errors[0]}}</b-form-invalid-feedback>
                                         </ValidationProvider>
+                                        
+                                            <label class="mt-1" for="input-live">Cotización:</label>
+                                            <b-form-select id="input-live" v-model="cotizacion" :options="opcionesCotizacion" text-field="nombre_original_documento" value-field="id_cotizacion"></b-form-select>
+                                            
 
-                                        <ValidationProvider name="Orden de Compra" rules="required" v-slot="validationContext">
+                                        
                                             <label class="mt-1" for="input-live">Orden de compra:</label>
-                                            <b-form-select id="input-live" v-model="id_orden_compra" :options="opcionesOrdenCompra" aria-describedby="input-live-help Orden de Compra-live-feedback" :state="getValidationState(validationContext)"></b-form-select>
-                                            <b-form-invalid-feedback id="Orden de Compra-live-feedback">{{validationContext.errors[0]}}</b-form-invalid-feedback>
-                                        </ValidationProvider>                                        
+                                            <b-form-select id="input-live" v-model="id_orden_compra" :options="opcionesOrdenCompra"></b-form-select>
+                                                                                   
 
                                         <label class="mt-1" for="input-live">Observaciones:</label>
                                         <b-form-textarea id="input-live" v-model="observaciones" aria-describedby="input-live-help observaciones-live-feedback"></b-form-textarea>
@@ -192,7 +195,7 @@
                                         <li>Fecha de Entrega: {{ this.fechaEntregaOG }}</li>
                                         <li>Muestreado por: {{ this.muestreadoOG }}</li>
                                         <li>Prioridad: {{ this.prioridadOG }}</li>
-                                        <li>Tipo de matriz: {{ this.TipoMatrizOG }}</li>
+                                        <li>Tipo de matriz: {{ this.nombreMatrizOG }}</li>
                                         <!-- Agrega más elementos de la lista según tus necesidades -->
                                       </ul>
                                     </b-card>
@@ -207,10 +210,7 @@
                                 <b-row class="pb-2">
                                     <b-col class="col-6">
                                         <label for="input-live">Rut:</label>
-                                        <b-form-input id="transportistaRut-input" class="mb-1" v-model="transportistaRut" aria-describedby="transportistaRut-live-feedback"></b-form-input>
-
-                                        <label for="input-live">Temperatura de transporte:</label>
-                                        <b-form-input class="mb-1" id="input-live" v-model="Temperatura" aria-describedby="input-live-help Temperatura-live-feedback" placeholder="Ingrese Temperatura de la muestra" trim></b-form-input>
+                                        <b-form-input id="transportistaRut-input" class="mb-1" v-model="transportistaRut" aria-describedby="transportistaRut-live-feedback"></b-form-input>                                        
 
                                         <label for="input-live">Telefono Movil:</label>
                                         <div id="app">
@@ -323,6 +323,24 @@
                                     El parámetro ya fue agregado.
                                 </b-alert>
                             </b-card>
+                            <template>
+                              <div>
+                                <div class="mb-3">
+                                  <b-button class="mt-3" v-b-toggle.my-collapse>Información previa</b-button>                                  
+                                </div>
+                            
+                                <b-collapse id="my-collapse">
+                                    <b-card title="Información ingresada previamente">
+
+                                      <ul class="left-aligned-list">                                        
+                                        <li>Nombre Norma: {{ this.normaOG }}</li>
+                                        <li>Nombre Tabla: {{ this.tablaOG }}</li>                                        
+                                      </ul>
+                                    </b-card>
+                                </b-collapse>                            
+                                
+                              </div>
+                            </template>
                         </b-tab>
                         <b-tab title="Asignar parámetros a muestras">Asignar parámetros a muestras
                             <b-card>
@@ -444,6 +462,11 @@ export default {
             telefonos_agregarOG : "",
             idParamOG : "",
             idMetOG : "",
+            normaOG: "",
+            tablaOG: "",
+            nombreMatrizOG: "",
+            nombreNormaOG: "",
+            nombreTablaOG: "",
             prevP : [],
             prevM : [],  
 
@@ -462,7 +485,7 @@ export default {
             direccion: '',
             direccion_empresa: '',
             muestreado: '',
-            cotizacion: null,
+            cotizacion: '',
             opcionesCotizacion: [],
             opcionesDireccion: [],
             opcionesMuestreado: [{
@@ -573,7 +596,8 @@ export default {
             submuestra_eliminar: [{
                 identificador: ''
             }],
-            currentDate: new Date().toISOString().split('T')[0]
+            currentDate: new Date().toISOString().split('T')[0],
+            subEliminar:[]
 
         };
     },
@@ -630,7 +654,7 @@ export default {
         
         this.obtenerParametro();       
 
-        this.obtenerMatriz(),
+        this.obtenerMatriz(),       
 
             PersonalService.obtenerTodosPersonal().then((response) => {
                 console.log(response.data);
@@ -713,11 +737,13 @@ export default {
         },
 
         removeInput(index) {
-            if(this.telefonos_agregar[index].telefono_transportista != ""){               
-                this.telefonos_eliminar.push(this.telefonos_agregar[index]);
-                console.log('Telefonos a eliminar',this.telefonos_eliminar)
-            }
-            this.telefonos_agregar.splice(index, 1); // Eliminar el input del array "telefonos"
+            const telefonoEliminado = this.telefonos_agregar[index].telefono_transportista;
+
+            if (telefonoEliminado !== "") {
+              this.telefonos_eliminar.push({ telefono_transportista: telefonoEliminado });
+            }           
+        
+            this.telefonos_agregar.splice(index, 1);
         },
 
         onModalShown() {
@@ -759,7 +785,7 @@ export default {
                 if (response.data != null && response.status === 200){
                     console.log("cotizaciones: ", response.data)
                     this.opcionesCotizacion = response.data.map(cotizacion => ({
-                        id_cotización: cotizacion.id_cotizacion,
+                        id_cotizacion: cotizacion.id_cotizacion,
                         nombre_original_documento: cotizacion.nombre_original_documento
                     }))
                     console.log("Opc. cotizaciones: ", this.opcionesCotizacion)
@@ -1030,6 +1056,7 @@ export default {
             console.log("submuestra_eliminar:", this.submuestra_eliminar);
         
             const subEliminar = this.submuestra_eliminar.slice(1);
+            this.subEliminar = subEliminar
         
             console.log("sub eliminadas filtradas: ", subEliminar);
             console.log("sub eliminadas largo: ", subEliminar.length);
@@ -1075,6 +1102,13 @@ export default {
                     id_metodologia: objeto.id_metodologia
                 });
             });
+            const sonIguales = JSON.stringify(datos) === JSON.stringify(this.submuestra_agregar);
+
+            if (sonIguales) {
+            this.submuestra_agregar = [];
+            } else {
+                this.submuestra_agregar = datos;
+            }  
             console.log("submuestra_agregar:", this.submuestra_agregar);
 
             // Asignar los arrays a las variables del componente
@@ -1097,6 +1131,10 @@ export default {
                         id_matriz: matriz.id_matriz,
                         nombre_matriz: matriz.nombre_matriz
                     }));
+                    const matrizSeleccionada = this.opcionesMatriz.find(matriz => matriz.id_matriz === this.TipoMatrizOG);
+                    if (matrizSeleccionada) {
+                        this.nombreMatrizOG = matrizSeleccionada.nombre_matriz;
+                    }
                 }
                 console.log("opciones de la matriz: ", this.opcionesMatriz)
             });
@@ -1198,7 +1236,9 @@ export default {
         this.patenteOG = response.patente_vehiculo
         this.telefonos_agregarOG = response.telefonos_transportistas
         this.idParamOG = response.submuestras.map((idP) => idP.id_parametro) 
-        this.idMetOG = response.submuestras.map((idM) => idM.id_metodologia)   
+        this.idMetOG = response.submuestras.map((idM) => idM.id_metodologia)
+        this.normaOG = response.id_norma
+        this.tablaOG = response.id_tabla 
 
 
             //TAB RECEPCIONISTA
@@ -1213,7 +1253,7 @@ export default {
         this.fechaEntrega = response.fecha_entrega
         //this.TipoMatriz = response.id_matriz
         this.muestreado = response.muestreado_por
-        //this.observaciones = response.observaciones.map((obs) => obs.observaciones);
+        this.observaciones = response.observaciones.map(obs => obs.observaciones).join("\n");
         this.prioridad = response.prioridad;
 
             //TAB TRANSPORTISTA
@@ -1268,10 +1308,12 @@ export default {
                         id_norma: this.norma,
                         id_tabla: this.id_tabla,
                         submuestras_agregar: parametrosFiltrados,
-                        submuestras_eliminar: this.submuestra_eliminar,
+                        submuestras_eliminar: this.subEliminar,
                         telefonos_eliminar: this.telefonos_eliminar,
                         parametros_eliminar: this.parametros_eliminar,
-                        id_cotizacion: this.cotizacion
+                        id_cotizacion: this.cotizacion,
+                        tipo_pago: this.tipo_pago,
+                        valor_neto: this.valor_neto
                     }
 
                     console.log("data a enviar", data)
