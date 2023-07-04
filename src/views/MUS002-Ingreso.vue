@@ -2,7 +2,7 @@
     <div>
      
 <validation-observer ref="form">
-    <modal_cantidadMuestra :n-muestras="nMuestras" :objetosSeleccionados="objetosSeleccionados" @datosIngresados="capturarDatos" :identificaciones="identificacion" :parametros="prevP" :metodologias="prevM" />
+    <modal_cantidadMuestra :n-muestras="nMuestras" :objetosSeleccionados="objetosSeleccionados" @datosIngresados="capturarDatos" @identificacionEliminada="identificadores" :identificaciones="identificacion" :parametros="prevP" :metodologias="prevM" />
     <div>
       
         <b-card no-body>
@@ -95,7 +95,7 @@
                                         <ValidationProvider name="nMuestras" rules="required|numeric" v-slot="validationContext">
                                             <label for="input-live">N° de Muestras:</label>
                                             <div class="d-flex align-items-center">
-                                                <b-form-input id="nMuestras-input" v-model="nMuestras" :state="getValidationState(validationContext)" type="number" aria-describedby="nMuestras-live-feedback"></b-form-input>
+                                                <b-form-input id="nMuestras-input" v-model="nMuestras" :state="getValidationState(validationContext)" type="number" min="0" aria-describedby="nMuestras-live-feedback"></b-form-input>
                                                 <div>
                                                     <b-button class="ml-2" @click="agregar()" variant="secondary" size="md">
                                                         <b-icon class="mt-1" icon="plus-circle-fill"></b-icon>
@@ -399,7 +399,7 @@
   text-align: left;
 }
 .left-aligned-list li {
-  margin-bottom: 10px; /* Ajusta el margen inferior según tus necesidades */
+  margin-bottom: 10px; /* Ajusta el margen inferior */
 }
 </style>
 
@@ -570,6 +570,9 @@ export default {
             parametros_ya_en_sistema: [],
             parametros_eliminar: [],
             telefonos_eliminar: [],
+            submuestra_eliminar: [{
+                identificador: ''
+            }],
             currentDate: new Date().toISOString().split('T')[0]
 
         };
@@ -686,8 +689,7 @@ export default {
             const direccionSeleccionada = this.opcionesDireccion.find(opcion => opcion.id_ciudad === newValue);
             if (direccionSeleccionada) {
                 const direccion = direccionSeleccionada.direccion;
-                console.log("Dirección seleccionada:", direccion);
-                // Realiza cualquier otra acción necesaria con la dirección seleccionada
+                console.log("Dirección seleccionada:", direccion);                
                 this.direccion_empresa = direccion;
             } else {
                 console.log("No se encontró la dirección seleccionada.");
@@ -1010,6 +1012,40 @@ export default {
             }*/
         },
 
+        identificadores(datos) {
+            console.log("identificador de submuestras capturados:", datos);
+
+            const identificacionEliminada = datos.map(objeto => objeto);
+            console.log("id:", identificacionEliminada);
+
+            const subEliminarAntes = this.submuestra_eliminar.length - 1;
+
+            identificacionEliminada.forEach(identificacion => {
+              // Verificar si la submuestra ya existe en submuestra_eliminar
+              const existe = this.submuestra_eliminar.some(submuestra => submuestra.identificador === identificacion);
+              if (!existe) {
+                this.submuestra_eliminar.push({ identificador: identificacion });
+              }
+            });
+            console.log("submuestra_eliminar:", this.submuestra_eliminar);
+        
+            const subEliminar = this.submuestra_eliminar.slice(1);
+        
+            console.log("sub eliminadas filtradas: ", subEliminar);
+            console.log("sub eliminadas largo: ", subEliminar.length);
+        
+            const subEliminarDespues = subEliminar.length;
+        
+            if (subEliminarDespues > subEliminarAntes) {
+              const cantidadCambios = subEliminarDespues - subEliminarAntes;
+              this.nMuestras -= cantidadCambios;
+              this.nMuestras = this.nMuestras.toString();
+            }
+        
+            console.log("cantidad muestras: ", this.nMuestras);
+        },
+
+
         capturarDatos(datos) {
             console.log("datos capturados:", datos);
 
@@ -1177,7 +1213,7 @@ export default {
         this.fechaEntrega = response.fecha_entrega
         //this.TipoMatriz = response.id_matriz
         this.muestreado = response.muestreado_por
-        this.observaciones = response.observaciones.map((obs) => obs.observaciones);
+        //this.observaciones = response.observaciones.map((obs) => obs.observaciones);
         this.prioridad = response.prioridad;
 
             //TAB TRANSPORTISTA
@@ -1231,7 +1267,11 @@ export default {
                         id_matriz: this.TipoMatriz,
                         id_norma: this.norma,
                         id_tabla: this.id_tabla,
-                        submuestras_agregar: parametrosFiltrados
+                        submuestras_agregar: parametrosFiltrados,
+                        submuestras_eliminar: this.submuestra_eliminar,
+                        telefonos_eliminar: this.telefonos_eliminar,
+                        parametros_eliminar: this.parametros_eliminar,
+                        id_cotizacion: this.cotizacion
                     }
 
                     console.log("data a enviar", data)

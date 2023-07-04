@@ -12,14 +12,12 @@
 
     <div>
       <b-table :items="tablaItems" :fields="tablaFields">
-        <template #cell(orden)="row">
-          <b-form-input v-model="row.item.orden" type="number" min="1"></b-form-input>
-        </template>
+        
         <template #cell(identificacion)="row">
           <b-form-input v-model="row.item.identificacion" placeholder="Ingrese la identificación de la muestra"></b-form-input>
         </template>
         <template #cell(parametros_previos)="row">
-          <b-form-input readonly v-model="row.item.parametros_previos" placeholder="Parametro agregado anteriormente"></b-form-input>
+          <b-form-input readonly v-model="row.item.parametros_previos" placeholder="No posee o nuevo."></b-form-input>
         </template>
         <template #cell(parametros)="row">
           <template v-if="objetosSeleccionados.length > 0">
@@ -28,7 +26,7 @@
         </template>
         <template #cell(metodologias_previas)="row">
           <template v-if="objetosSeleccionados.length > 0">
-            <b-form-input readonly v-model="row.item.metodologias_previas" placeholder="Metodologia agregada anteriormente"> </b-form-input>             
+            <b-form-input readonly v-model="row.item.metodologias_previas" placeholder="No posee o nueva."> </b-form-input>             
           </template>
         </template>
         <template #cell(metodologias)="row">
@@ -37,7 +35,9 @@
           </template>
         </template>
         <template #cell(accion)="row">
-          <b-button @click="eliminarFila(row.index)">Eliminar</b-button>
+          <b-button variant="danger" @click="eliminarFila(row.index)">
+            <b-icon-trash-fill></b-icon-trash-fill>
+          </b-button>
         </template>
       </b-table>
     </div>  
@@ -59,7 +59,9 @@
         identificacionesArray: [],
         parametrosArray: [],
         metodologiasArray: [],
-        tablaItems: []
+        tablaItems: [],
+        id_eliminado: []
+
         
       };
     },
@@ -113,7 +115,7 @@
           this.parametrosOptions = [...parametrosSet];
           this.metodologiasOptions = [...metodologiasSet];
           console.log("objs selecc: ", this.objetosSeleccionados)
-          this.calcularTablaItems();
+          this.calcularTablaItems();          
           
         },
         immediate: true
@@ -169,6 +171,9 @@
 
         console.log("dato a enviar: ", datosIngresados);
         this.$emit('datosIngresados', datosIngresados);
+        this.$emit('identificacionEliminada', this.id_eliminado)
+        
+
         this.$refs.modal.hide();
       },
       
@@ -176,14 +181,15 @@
         const items = [];
         for (let i = 1; i <= parseInt(this.nMuestras); i++) {
           const identificacion = this.identificacionesArray[i - 1] || '';
-          const metodologia = this.metodologiasArray[i - 1] || '';
-          const parametro = this.parametrosArray[i - 1] || '';
+          const parametroPrevio = this.parametrosArray[i - 1] || '';
+          const metodologiaPrevia = this.metodologiasArray[i - 1] || '';
+
           items.push({
             orden: i,
             identificacion,
-            parametros_previos: parametro,
+            parametros_previos: parametroPrevio,
             parametros: this.parametrosOptions[0] || '',
-            metodologias_previas: metodologia,
+            metodologias_previas: metodologiaPrevia,
             metodologias: this.metodologiasOptions[0] || ''
           });
         }
@@ -191,8 +197,24 @@
       },
 
       eliminarFila(index) {
-        this.tablaItems.splice(index, 1);       
-      },
+        const filaEliminada = this.tablaItems[index]; // Guardar la fila eliminada en una variable
+
+        // Eliminar la fila de la tabla
+        this.tablaItems.splice(index, 1);
+
+        // Eliminar los datos de parámetros previos y metodologías previas de la fila eliminada
+        filaEliminada.parametros_previos = '';
+        filaEliminada.metodologias_previas = '';
+
+        // Hacer lo que necesites con la identificación de la fila eliminada
+        const identificacionEliminada = filaEliminada.identificacion;
+        console.log('Identificación eliminada:', identificacionEliminada);
+
+        this.id_eliminado.push(identificacionEliminada);
+        console.log('Identificación a eliminar:', this.id_eliminado);
+      }
+
+
     },  
   };
 </script>  
