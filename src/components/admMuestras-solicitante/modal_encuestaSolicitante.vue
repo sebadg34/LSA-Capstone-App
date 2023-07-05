@@ -48,11 +48,11 @@
         </b-row>
 
         <template #modal-footer>
-
+            <b-overlay :show="Cargando"  opacity="0.6" spinner-small spinner-variant="primary" >
             <b-button @click="enviarFormulario" variant="primary" size="xl" class="float-right reactive-button" style="font-weight:bold">
                 Enviar encuesta
             </b-button>
-
+</b-overlay>
         </template>
     </b-modal>
 </validation-observer>
@@ -68,12 +68,15 @@ export default {
         encuestaData: {
             handler() {
                 console.log("PROP CHANGED, UPDATE MODAL", this.encuestaData)
-
+            this.Observacion = ""
+            this.Valoracion = ""
+            this.valoracion_faltante = false;
+            this.Cargando = false;
             }
         }
     },
     props: {
-        // encuestaData: Object
+        encuestaData: Object
     },
     methods: {
         getValidationState({
@@ -84,9 +87,10 @@ export default {
             return dirty || validated ? valid : null;
         },
         enviarFormulario() {
-
+this.Cargando = true;
             this.$refs.form.validate().then(success => {
                 if (!success) {
+                    this.Cargando = false;
                     if(this.Valoracion != null){
                         this.valoracion_faltante = true;
                     }
@@ -99,7 +103,7 @@ export default {
                     MuestraService.responderEncuesta(data).then((response) => {
                         if(response.status == 200){
                             console.log("encuesta registrada");
-                            this.$bvToast.toast(`Encuesta enviada exitosamente`, {
+                            this.$bvToast.toast(`Encuesta respondida exitosamente`, {
                                 title: 'Exito',
                                 toaster: 'b-toaster-top-center',
                                 solid: true,
@@ -107,9 +111,12 @@ export default {
                                 appendToast: true
                             })
                             this.$emit('refrescar');
-                            this.$bvModal.hide('modal-cotizacion-solicitante');
+
+                            this.$bvModal.hide('modal-encuesta-solicitante');
+                            this.Cargando = false;
                             this.reiniciarDatos();
                         }else{
+                            this.Cargando = false;
                             this.$bvToast.toast(`Error al enviar encuesta`, {
                                 title: 'Error',
                                 toaster: 'b-toaster-top-center',
@@ -132,6 +139,7 @@ export default {
             Observacion: "",
             Valoracion: "",
             valoracion_faltante: false,
+            Cargando: false
         }
     },
 }

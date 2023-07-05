@@ -167,7 +167,8 @@ export default {
             const detalles = response.data;
             console.log('detalles de muestra', response.data);
             this.numero_muestras = detalles.cantidad_muestras;
-            this.norma = detalles.norma;
+            this.norma = detalles.norma.nombre_norma;
+            this.matriz = detalles.matriz.nombre_matriz;
             this.valor_neto = detalles.valor_neto;
             this.tipo_pago = detalles.tipo_pago;
             this.muestreador = detalles.muestreado_por;
@@ -218,11 +219,12 @@ export default {
   watch: {
     detallesData: {
       handler() {
+        this.parametros = [];
         console.log("detallesData actualizada", this.detallesData)
 
         this.RUM = this.detallesData.RUM;
         this.matriz = this.detallesData.nombre_matriz;
-        this.numero_cotizacion = this.detallesData.numero_cotizacion;
+        this.numero_cotizacion = this.detallesData.id_cotizacion;
         this.obtenerDetalles(this.RUM);
       }
     }

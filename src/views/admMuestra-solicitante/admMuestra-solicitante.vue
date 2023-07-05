@@ -2,7 +2,7 @@
 <div>
 
     <ModalDetalleMuestra :detalles-data="this.detallesData" />
-    <modal_encuestaSolicitante />
+    <modal_encuestaSolicitante :encuesta-data="this.modalEncuestaData"/>
     <!-- Inicio tabla -->
 
     <b-row align-h="start" style="padding-top:30px;">
@@ -137,7 +137,7 @@ export default {
             obtenerObservaciones: this.obtenerObservaciones,
             modalData: {},
             detallesData: {},
-            modalEncuestaData: [],
+            modalEncuestaData: {},
             observaciones: '',
             currentPage: 1,
             perPage: 10,
@@ -162,7 +162,7 @@ export default {
                     label: 'Fecha entrega'
                 },
                 {
-                    key: 'numero_cotizacion',
+                    key: 'id_cotizacion',
                     label: 'Número de cotización'
                 },
                 {
@@ -264,24 +264,7 @@ export default {
                 if (response.data != null && response.status === 200) {
                     this.loading = false;
                     console.log(response.data)
-
-                    const cotizaciones = response.data.cotizaciones;
-                    
-                    for(var i = 0; i < cotizaciones.length; i++){
-                        
-                        for(var j = 0; j <cotizaciones[i].muestras.length; j++){
-                            console.log(cotizaciones[i])
-                            this.muestras.push({
-                                RUM: cotizaciones[i].muestras[j].RUM,
-                                estado: cotizaciones[i].muestras[j].estado,
-                                fecha_entrega: cotizaciones[i].muestras[j].fecha_entrega,
-                                numero_cotizacion: cotizaciones[i].id_cotizacion
-                            })
-                        }
-                    }
-                    
-
-                  
+                    this.muestras = response.data;
                     this.muestrasFiltradas = this.muestras
                 }
             })
