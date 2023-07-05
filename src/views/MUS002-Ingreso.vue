@@ -53,7 +53,10 @@
 
                                         <ValidationProvider name="solicitante" rules="required" v-slot="validationContext">
                                             <label for="input-live">Nombre empresa:</label>
-                                            <b-form-select v-model="solicitante" :state="getValidationState(validationContext)" :options="opcionesClientes" value-field="rut_empresa" text-field="nombre_empresa" @input="actualizarSelectedEmpresa"></b-form-select>
+                                            <b-form-select class="mt-1" id="input-live" v-model="solicitante" :state="getValidationState(validationContext)" value-field="rut_empresa" text-field="nombre_empresa" @input="actualizarSelectedEmpresa">  
+                                                <option v-for="opcion in opcionesClientes" :key="opcion.rut_empresa" :value="opcion.rut_empresa">
+                                                {{opcion.nombre_empresa }}</option>
+                                            </b-form-select>                                                                                        
                                             <b-form-invalid-feedback>{{ validationContext.errors[0] }}</b-form-invalid-feedback>
                                         </ValidationProvider>
 
@@ -155,9 +158,12 @@
 
                                         <ValidationProvider name="TipoMatriz" rules="required" v-slot="validationContext">
                                             <label for="input-live">Tipo de Matriz:</label>
-                                            <b-form-select class="mt-1" id="input-live" v-model="TipoMatriz" :options="opcionesMatriz" aria-describedby="input-live-help TipoMatriz-live-feedback" :state="getValidationState(validationContext)" text-field="nombre_matriz" value-field="id_matriz"></b-form-select>
+                                            <b-form-select class="mt-1" id="input-live" v-model="TipoMatriz" aria-describedby="input-live-help TipoMatriz-live-feedback" :state="getValidationState(validationContext)" text-field="nombre_matriz" value-field="id_matriz">  <option v-for="opcion in opcionesMatriz" :key="opcion.id_matriz" :value="opcion.id_matriz">{{
+                                                opcion.nombre_matriz }}</option></b-form-select>
                                             <b-form-invalid-feedback id="TipoMatriz-live-feedback">{{validationContext.errors[0]}}</b-form-invalid-feedback>
                                         </ValidationProvider>
+
+                                        
 
                                         <ValidationProvider name="Temperatura" rules="required" v-slot="validationContext">
                                             <label for="input-live">Temperatura de transporte:</label>
@@ -512,23 +518,23 @@ export default {
                 }
             ],
             opcionesPago: [{
-                    value: 'efectivo',
+                    value: 'Efectivo',
                     text: 'Efectivo'
                 },
                 {
-                    value: 'tarjeta de credito',
+                    value: 'Tarjeta de crédito',
                     text: 'Tarjeta de crédito'
                 },
                 {
-                    value: 'transferencia',
+                    value: 'Transferencia bancaria',
                     text: 'Transferencia bancaria'
                 },
                 {
-                    value: 'cheque',
+                    value: 'Cheque',
                     text: 'Cheque'
                 },
                 {
-                    value: 'otro',
+                    value: 'Otro',
                     text: 'Otro'
                 }
             ],
@@ -1264,7 +1270,7 @@ export default {
         this.fecha = response.fecha_muestreo
         this.hora = response.hora_muestreo
         this.fechaEntrega = response.fecha_entrega
-        //this.TipoMatriz = response.id_matriz
+        this.TipoMatriz = response.id_matriz
         this.muestreado = response.muestreado_por
         this.observaciones = response.observaciones.map(obs => obs.observaciones).join("\n");
         this.prioridad = response.prioridad;
