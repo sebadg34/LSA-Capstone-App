@@ -1342,6 +1342,7 @@ export default {
                                     variant: "success",
                                     appendToast: true
                                 })
+                                window.location.reload();
                             }                            
 
                         } else {
