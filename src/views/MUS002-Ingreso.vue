@@ -1,421 +1,448 @@
 <template>
-    <div>
-     
-<validation-observer ref="form">
-    <modal_cantidadMuestra :n-muestras="nMuestras" :objetosSeleccionados="objetosSeleccionados" @datosIngresados="capturarDatos" @identificacionEliminada="identificadores" :identificaciones="identificacion" :parametros="prevP" :metodologias="prevM" />
-    <div>
-      
-        <b-card no-body>
-           
-            <b-row>
-              
-                <b-col class="col-12">
-                    <b-tabs no-fade v-model="tabIndex" align="center" card >
-                        <b-row  class="d-flex justify-content-center">
-
-                   
-                        <b-col class="col-6">
-
-                        <b-tab title="Recepcionista">
-                            <div style="height:50px"></div>
-                            Datos del recepcionista
-                            <b-card>
-                                <b-row class="pb-2">
-                                    <b-col class="col-6">
-                                        <ValidationProvider name="Rut Recepcionista" rules="required|rut" v-slot="validationContext">
-                                            <label for="Rut Recepcionista-input">Rut:</label>
-                                            <b-form-input id="Rut Recepcionista-input" readonly v-model="recepcionistaRUT" :state="getValidationState(validationContext)"></b-form-input>
-                                            <b-form-invalid-feedback>{{ validationContext.errors[0] }}</b-form-invalid-feedback>
-                                        </ValidationProvider>
-
-                                        <ValidationProvider name="NombreRecepcionista" rules="required" v-slot="validationContext">
-                                            <label for="input-live">Recepcionista:</label>
-                                            <b-form-input v-model="recepcionista" readonly :state="getValidationState(validationContext)" placeholder="Seleccione un recepcionista"></b-form-input>
-                                            <b-form-invalid-feedback>{{ validationContext.errors[0] }}</b-form-invalid-feedback>
-                                        </ValidationProvider>
-                                    </b-col>
-
-                                    <b-col class="col-6">
-                                        <ValidationProvider name="rut" rules="required|rut" v-slot="validationContext">
-                                            <label for="input-live">Rut solicitante:</label>
-                                            <div class="d-flex align-items-center">
-                                              <b-form-input id="input-live" v-model="rut" :state="getValidationState(validationContext)" @input="buscarYagregar"></b-form-input>
+    <div>     
+        <validation-observer ref="form">
+            <modal_cantidadMuestra :n-muestras="nMuestras" :objetosSeleccionados="objetosSeleccionados" @datosIngresados="capturarDatos" @identificacionEliminada="identificadores" :identificaciones="identificacion" :parametros="prevP" :metodologias="prevM" />
+            <div>            
+                <b-card no-body>                
+                    <b-row>                    
+                        <b-col class="col-12">
+                            <b-tabs no-fade v-model="tabIndex" align="center" card >
+                                <b-row  class="d-flex justify-content-center">                       
+                                    <b-col class="col-6">                                
+                                        <b-tab title="Recepcionista">
+                                            <div style="height:50px"></div>
+                                            Datos del recepcionista
+                                            <b-card>
+                                                <b-row class="pb-2">
+                                                    <b-col class="col-6">
+                                                        <ValidationProvider name="Rut Recepcionista" rules="required|rut" v-slot="validationContext">
+                                                            <label for="Rut Recepcionista-input">Rut:</label>
+                                                            <b-form-input id="Rut Recepcionista-input" readonly v-model="recepcionistaRUT" :state="getValidationState(validationContext)"></b-form-input>
+                                                            <b-form-invalid-feedback>{{ validationContext.errors[0] }}</b-form-invalid-feedback>
+                                                        </ValidationProvider>
+                                                    
+                                                        <ValidationProvider name="NombreRecepcionista" rules="required" v-slot="validationContext">
+                                                            <label for="input-live">Recepcionista:</label>
+                                                            <b-form-input v-model="recepcionista" readonly :state="getValidationState(validationContext)" placeholder="Seleccione un recepcionista"></b-form-input>
+                                                            <b-form-invalid-feedback>{{ validationContext.errors[0] }}</b-form-invalid-feedback>
+                                                        </ValidationProvider>
+                                                    </b-col>
+                                                
+                                                    <b-col class="col-6">
+                                                        <ValidationProvider name="rut" rules="required|rut" v-slot="validationContext">
+                                                            <label for="input-live">Rut solicitante:</label>
+                                                            <div class="d-flex align-items-center">
+                                                              <b-form-input id="input-live" v-model="rut" :state="getValidationState(validationContext)" @input="buscarYagregar"></b-form-input>
+                                                              <div>
+                                                                <!-- Eliminamos el botón de búsqueda -->
+                                                              </div>
+                                                            </div>
+                                                            <b-form-invalid-feedback>{{ validationContext.errors[0] }}</b-form-invalid-feedback>
+                                                        </ValidationProvider>
+                                                    
+                                                        <b-alert :show="dismissCountDown" dismissible fade variant="danger" @dismiss-count-down="countDownChanged">
+                                                            El rut del solicitante no existe en la base de datos!
+                                                        </b-alert>
+                                                    
+                                                        <ValidationProvider name="solicitante" rules="required" v-slot="validationContext">
+                                                            <label for="input-live">Nombre empresa:</label>
+                                                            <b-form-select id="input-live" v-model="solicitante" :state="getValidationState(validationContext)" value-field="rut_empresa" text-field="nombre_empresa" @input="actualizarSelectedEmpresa">  
+                                                                <option v-for="opcion in opcionesClientes" :key="opcion.rut_empresa" :value="opcion.rut_empresa">
+                                                                {{opcion.nombre_empresa }}</option>
+                                                            </b-form-select>                                                                                        
+                                                            <b-form-invalid-feedback>{{ validationContext.errors[0] }}</b-form-invalid-feedback>
+                                                        </ValidationProvider>
+                                                    
+                                                        <ValidationProvider name="Dirección Cliente" rules="required" v-slot="validationContext">
+                                                            <label for="input-live">Dirección empresa:</label>
+                                                            <b-form-select id="input-live" v-model="direccion" :options="opcionesDireccion" :state="getValidationState(validationContext)" text-field="direccionConCiudad" value-field="id_ciudad">
+                                                            </b-form-select>
+                                                            <b-form-invalid-feedback>{{ validationContext.errors[0] }}</b-form-invalid-feedback>
+                                                        </ValidationProvider>
+                                                    </b-col>
+                                                </b-row>
+                                            </b-card>
+                                            <template>
                                               <div>
-                                                <!-- Eliminamos el botón de búsqueda -->
+                                                <div class="mb-3">
+                                                  <b-button class="mt-3" v-b-toggle.my-collapse>Información previa</b-button>                                  
+                                                </div>
+                                            
+                                                <b-collapse id="my-collapse">
+                                                    <b-card title="Información ingresada previamente">
+                                                      <ul class="left-aligned-list">                                        
+                                                        <li>RUT recepcionista: {{ this.recepcionistaOG }}</li>
+                                                        <li>RUT solicitante: {{ this.rutOG }}</li>
+                                                        <li>Nombre empresa: {{ this.nombre_empresa }}</li>
+                                                        <li>Direccion empresa: {{ this.direccionOG }}</li>                                        
+                                                      </ul>
+                                                    </b-card>
+                                                </b-collapse>                                            
                                               </div>
-                                            </div>
-                                            <b-form-invalid-feedback>{{ validationContext.errors[0] }}</b-form-invalid-feedback>
-                                        </ValidationProvider>
-
-                                        <b-alert :show="dismissCountDown" dismissible fade variant="danger" @dismiss-count-down="countDownChanged">
-                                            El rut del solicitante no existe en la base de datos!
-                                        </b-alert>
-
-                                        <ValidationProvider name="solicitante" rules="required" v-slot="validationContext">
-                                            <label for="input-live">Nombre empresa:</label>
-                                            <b-form-select class="mt-1" id="input-live" v-model="solicitante" :state="getValidationState(validationContext)" value-field="rut_empresa" text-field="nombre_empresa" @input="actualizarSelectedEmpresa">  
-                                                <option v-for="opcion in opcionesClientes" :key="opcion.rut_empresa" :value="opcion.rut_empresa">
-                                                {{opcion.nombre_empresa }}</option>
-                                            </b-form-select>                                                                                        
-                                            <b-form-invalid-feedback>{{ validationContext.errors[0] }}</b-form-invalid-feedback>
-                                        </ValidationProvider>
-
-                                        <ValidationProvider name="Dirección Cliente" rules="required" v-slot="validationContext">
-                                            <label for="input-live">Dirección empresa:</label>
-                                            <b-form-select id="input-live" v-model="direccion" :options="opcionesDireccion" :state="getValidationState(validationContext)" text-field="direccionConCiudad" value-field="id_ciudad">
-                                            </b-form-select>
-                                            <b-form-invalid-feedback>{{ validationContext.errors[0] }}</b-form-invalid-feedback>
-                                        </ValidationProvider>
-                                    </b-col>
-                                </b-row>
-                            </b-card>
-                            <template>
-                              <div>
-                                <div class="mb-3">
-                                  <b-button class="mt-3" v-b-toggle.my-collapse>Información previa</b-button>                                  
-                                </div>
-                            
-                                <b-collapse id="my-collapse">
-                                    <b-card title="Información ingresada previamente">
-                                      <ul class="left-aligned-list">                                        
-                                        <li>RUT recepcionista: {{ this.recepcionistaOG }}</li>
-                                        <li>RUT solicitante: {{ this.rutOG }}</li>
-                                        <li>Nombre empresa: {{ this.nombre_empresa }}</li>
-                                        <li>Direccion empresa: {{ this.direccionOG }}</li>                                        
-                                      </ul>
-                                    </b-card>
-                                </b-collapse>              
-                                
-                              </div>
-                            </template>
-                        </b-tab>
-
-                        <b-tab title="Muestra">
-                            Datos de la muestra
-                            <b-card>
-                                <b-row class="pb-2">
-                                    <b-col class="col-6">
-                                        <ValidationProvider name="nMuestras" rules="required|numeric" v-slot="validationContext">
-                                            <label for="input-live">N° de Muestras:</label>
-                                            <div class="d-flex align-items-center">
-                                                <b-form-input id="nMuestras-input" v-model="nMuestras" :state="getValidationState(validationContext)" type="number" min="0" aria-describedby="nMuestras-live-feedback"></b-form-input>
+                                            </template>
+                                        </b-tab>
+                                    
+                                        <b-tab title="Muestra">
+                                            Datos de la muestra
+                                            <b-card>
+                                                <b-row class="pb-2">
+                                                    <b-col class="col-6">
+                                                        <ValidationProvider name="nMuestras" rules="required|numeric" v-slot="validationContext">
+                                                            <label for="input-live">N° de Muestras:</label>
+                                                            <div class="d-flex align-items-center">
+                                                                <b-form-input id="nMuestras-input" v-model="nMuestras" :state="getValidationState(validationContext)" type="number" min="0" aria-describedby="nMuestras-live-feedback"></b-form-input>
+                                                                <div>
+                                                                    <b-button class="ml-2" @click="agregar()" variant="secondary" size="md">
+                                                                        <b-icon class="mt-1" icon="plus-circle-fill"></b-icon>
+                                                                    </b-button>
+                                                                </div>
+                                                            </div>
+                                                            <b-form-invalid-feedback id="nMuestras-live-feedback">{{ validationContext.errors[0] }}</b-form-invalid-feedback>
+                                                        </ValidationProvider>
+                                                    
+                                                    
+                                                        <ValidationProvider name="fechaI" rules="required" v-slot="validationContext">
+                                                            <label class="mt-1" for="input-live">Fecha de muestreo:</label>
+                                                            <b-form-datepicker id="input-live" v-model="fecha" aria-describedby="input-live-help fechaI-live-feedback" :state="getValidationState(validationContext)" placeholder="Seleccione fecha de muestreo"></b-form-datepicker>
+                                                            <b-form-invalid-feedback id="fechaI-live-feedback">{{validationContext.errors[0] }}
+                                                            </b-form-invalid-feedback>
+                                                        </ValidationProvider>
+                                                    
+                                                        <ValidationProvider name="horaI" rules="required" v-slot="validationContext">
+                                                            <label class="mt-1" for="input-time">Hora de muestreo:</label>
+                                                            <b-form-timepicker id="input-time" v-model="hora" :state="getValidationState(validationContext)" aria-describedby="input-live-help horaI-live-feedback" placeholder="Ingrese hora"></b-form-timepicker>
+                                                            <b-form-invalid-feedback id="horaI-live-feedback">{{validationContext.errors[0] }}
+                                                            </b-form-invalid-feedback>
+                                                        </ValidationProvider>
+                                                    
+                                                        <div>
+                                                            <label class="mt-1" for="input-live">Fecha de Entrega:</label>
+                                                            <b-form-datepicker id="input-live" v-model="fechaEntrega" placeholder="Seleccione una fecha de entrega" :min="currentDate"></b-form-datepicker>
+                                                        </div>
+                                                    
+                                                        <ValidationProvider name="TipoPago" rules="required" v-slot="validationContext">
+                                                            <label class="mt-1" for="input-live">Forma de pago:</label>
+                                                            <b-form-select id="input-live" v-model="tipo_pago" :options="opcionesPago" aria-describedby="input-live-help TipoPago-live-feedback" :state="getValidationState(validationContext)"></b-form-select>
+                                                            <b-form-invalid-feedback id="TipoPago-live-feedback">{{validationContext.errors[0]}}</b-form-invalid-feedback>
+                                                        </ValidationProvider>
+                                                    
+                                                        <ValidationProvider name="Valor Neto" rules="required" v-slot="validationContext">
+                                                            <label class="mt-1" for="Valor Neto-input">Valor neto(UF):</label>
+                                                            <b-form-input  id="Valor Neto-input" v-model="valor_neto" :state="getValidationState(validationContext)"></b-form-input>
+                                                            <b-form-invalid-feedback>{{ validationContext.errors[0] }}</b-form-invalid-feedback>
+                                                        </ValidationProvider>
+                                                    </b-col>
+                                                
+                                                    <b-col class="col-6">
+                                                        <ValidationProvider name="muestreado" rules="required" v-slot="validationContext">
+                                                            <label for="input-live">Muestreado por:</label>
+                                                            <b-form-select class="mt-1" id="input-live" v-model="muestreado" :options="opcionesMuestreado" aria-describedby="input-live-help muestreado-live-feedback" :state="getValidationState(validationContext)"></b-form-select>
+                                                            <b-form-invalid-feedback id="muestreado-live-feedback">{{validationContext.errors[0]}}
+                                                            </b-form-invalid-feedback>
+                                                        </ValidationProvider>
+                                                    
+                                                        <ValidationProvider name="prioridad" rules="required" v-slot="validationContext">
+                                                            <label for="input-live">Prioridad:</label>
+                                                            <b-form-select class="mt-1" id="input-live" v-model="prioridad" :options="opcionesPrioridad" aria-describedby="input-live-help prioridad-live-feedback" :state="getValidationState(validationContext)"></b-form-select>
+                                                            <b-form-invalid-feedback id="prioridad-live-feedback">{{validationContext.errors[0]}}
+                                                            </b-form-invalid-feedback>
+                                                        </ValidationProvider>
+                                                    
+                                                        <ValidationProvider name="TipoMatriz" rules="required" v-slot="validationContext">
+                                                            <label for="input-live">Tipo de Matriz:</label>
+                                                            <b-form-select class="mt-1" id="input-live" v-model="TipoMatriz" aria-describedby="input-live-help TipoMatriz-live-feedback" :state="getValidationState(validationContext)" text-field="nombre_matriz" value-field="id_matriz">  <option v-for="opcion in opcionesMatriz" :key="opcion.id_matriz" :value="opcion.id_matriz">{{
+                                                                opcion.nombre_matriz }}</option></b-form-select>
+                                                            <b-form-invalid-feedback id="TipoMatriz-live-feedback">{{validationContext.errors[0]}}</b-form-invalid-feedback>
+                                                        </ValidationProvider>                                                  
+                                                    
+                                                        <ValidationProvider name="Temperatura" rules="required" v-slot="validationContext">
+                                                            <label for="input-live">Temperatura de transporte:</label>
+                                                            <b-form-input class="mt-1" id="input-live" v-model="Temperatura" aria-describedby="input-live-help Temperatura-live-feedback" :state="getValidationState(validationContext)" placeholder="Ingrese Temperatura de la muestra" trim></b-form-input>
+                                                            <b-form-invalid-feedback id="Temperatura-live-feedback">{{validationContext.errors[0]}}</b-form-invalid-feedback>
+                                                        </ValidationProvider>
+                                                    
+                                                            <label class="mt-1" for="input-live">Cotización:</label>
+                                                            <b-form-select id="input-live" v-model="cotizacion" :options="opcionesCotizacion" text-field="nombre_original_documento" value-field="id_cotizacion"></b-form-select>                                                                                                                                                                 
+                                                    
+                                                        <label class="mt-1" for="input-live">Observaciones:</label>
+                                                        <b-form-textarea id="input-live" v-model="observaciones" aria-describedby="input-live-help observaciones-live-feedback"></b-form-textarea>
+                                                    </b-col>
+                                                </b-row>
+                                            </b-card>
+                                            <template>
+                                              <div>
+                                                <div class="mb-3">
+                                                  <b-button class="mt-3" v-b-toggle.my-collapse>Información previa</b-button>                                  
+                                                </div>
+                                            
+                                                <b-collapse id="my-collapse">
+                                                    <b-card title="Información ingresada previamente">
+                                                    
+                                                      <ul class="left-aligned-list">                                        
+                                                        <li>N° de Muestras: {{ this.nMuestrasOG }}</li>
+                                                        <li>Fecha de muestreo: {{ this.fechaOG }}</li>
+                                                        <li>Hora de muestreo: {{ this.horaOG }}</li>
+                                                        <li>Fecha de Entrega: {{ this.fechaEntregaOG }}</li>
+                                                        <li>Muestreado por: {{ this.muestreadoOG }}</li>
+                                                        <li>Prioridad: {{ this.prioridadOG }}</li>
+                                                        <li>Tipo de matriz: {{ this.nombreMatrizOG }}</li>                                                        
+                                                      </ul>
+                                                    </b-card>
+                                                </b-collapse>                                           
+                                              </div>
+                                            </template>
+                                        </b-tab>
+                                    
+                                        <b-tab title="Transportista">Datos del Transportista
+                                            <b-card>
+                                                <b-row class="pb-2">
+                                                    <b-col class="col-6">
+                                                        <label for="input-live">Rut:</label>
+                                                        <b-form-input id="transportistaRut-input" class="mb-1" v-model="transportistaRut" aria-describedby="transportistaRut-live-feedback"></b-form-input>                                        
+                                                    
+                                                        <label for="input-live">Telefono Movil:</label>
+                                                        <div id="app">
+                                                            <b-input-group v-for="(telefono, index) in telefonos_agregar" :key="index" class="mb-1">
+                                                                <b-input-group-prepend is-text>
+                                                                    +56 9
+                                                                </b-input-group-prepend>
+                                                                <b-form-input v-model="telefono.telefono_transportista" aria-describedby="input-live-help fono-live-feedback" placeholder=""></b-form-input>
+                                                                <div>
+                                                                    <b-button @click="addInput" v-if="index === telefonos_agregar.length - 1">+</b-button>
+                                                                    <b-button @click="removeInput(index)" variant="danger" class="ml-2">
+                                                                        <b-icon-trash-fill></b-icon-trash-fill>
+                                                                    </b-button>
+                                                                </div>
+                                                            </b-input-group>
+                                                            <div v-if="telefonos_agregar.length === 0">
+                                                                No se han agregado teléfonos.
+                                                                <b-button @click="addInput">+</b-button>
+                                                            </div>
+                                                        </div>
+                                                    </b-col>
+                                                
+                                                    <b-col class="col-6">
+                                                        <label for="input-live">Nombre y apellido:</label>
+                                                        <b-form-input class="mb-1" id="input-live" v-model="transportista" aria-describedby="input-live-help transportista-live-feedback" placeholder="" trim></b-form-input>
+                                                    
+                                                        <label for="input-live">Patente:</label>
+                                                        <b-form-input class="mb-1" id="input-live" v-model="patente" aria-describedby="input-live-help patente-live-feedback" placeholder="" trim></b-form-input>
+                                                    </b-col>
+                                                </b-row>
+                                            </b-card>
+                                            <template>
                                                 <div>
-                                                    <b-button class="ml-2" @click="agregar()" variant="secondary" size="md">
+                                                  <div class="mb-3">
+                                                    <b-button class="mt-3" v-b-toggle.my-collapse>Información previa</b-button>                                  
+                                                  </div>
+                                              
+                                                  <b-collapse id="my-collapse">
+                                                    <b-card title="Información ingresada previamente">
+                                                      <ul class="left-aligned-list">
+                                                        <li>Rut: {{ this.transportistaRutOG }}</li>
+                                                        <li>Temperatura de transporte: {{ this.TemperaturaOG }}</li>
+                                                        <li>Nombre del transportista: {{ this.transportistaOG }}</li>
+                                                        <li>Patente: {{ this.patenteOG }}</li>
+                                                        <li>
+                                                          Teléfono(s):
+                                                          <ul>
+                                                            <li v-for="(telefono, index) in telefonos_agregarOG" :key="index">{{ telefono.telefono_transportista }}</li>
+                                                          </ul>
+                                                        </li>
+                                                      </ul>
+                                                    </b-card>
+                                                  </b-collapse>
+                                                </div>
+                                            </template>                                       
+                                        </b-tab>
+                                    
+                                        <b-tab title="Parámetros">Parámetros
+                                            <b-card>
+                                                <b-row>
+                                                    <b-col class="col-6">
+                                                        <b-form-group label="Seleccione una norma">
+                                                            <b-form-select v-model="norma" :options="opcionesNorma" text-field="nombre_norma" value-field="id_norma" @change="obtenerTablasNormas"></b-form-select>
+                                                        </b-form-group>
+                                                    </b-col>
+                                                
+                                                    <b-col class="col-6">
+                                                        <b-form-group label="Seleccione una tabla">
+                                                            <b-form-select v-model="tabla" :options="opcionesTabla" value-field="id" @change="actualizarParametrosTabla"></b-form-select>
+                                                        </b-form-group>
+                                                    </b-col>
+                                                </b-row>
+                                            
+                                                <b-row>
+                                                    <b-col>
+                                                        <b-form-group label="Seleccione un parámetro">
+                                                            <div class="d-flex align-items-center">
+                                                                <b-form-select v-model="parametroSeleccionado" :options="opcionesParametro" placeholder="Seleccione un Parámetro" :disabled="parametroDeshabilitado" @change="agregarObjetosSeleccionados"></b-form-select>
+                                                                <div>
+                                                                    <b-button class="ml-2" v-b-modal.modal-Agregar-Opciones>+</b-button>
+                                                                </div>
+                                                            </div>
+                                                        </b-form-group>
+                                                    </b-col>
+                                                
+                                                    <b-col>
+                                                        <b-form-group label="Seleccione una metodología">
+                                                            <b-form-select v-model="metodologiaSeleccionada" :options="opcionesMetodologia" placeholder="Seleccione una metodología" :disabled="metodologiaDeshabilitada" @change="agregarObjetosSeleccionados"></b-form-select>
+                                                        </b-form-group>
+                                                    </b-col>
+                                                </b-row>
+                                            
+                                                <b-row v-if="objetosSeleccionados.length > 0" class="mt-3">
+                                                    <b-col>
+                                                        <b-form-group label="Parámetros Seleccionados:">
+                                                            <div v-for="(objetos, index) in objetosSeleccionados" :key="index" class="d-flex align-items-center objetos-item mb-3">
+                                                                <b-input readonly :value="objetos.parametro" class="mr-2"></b-input>
+                                                                <b-input readonly :value="objetos.metodologia" class="mr-2"></b-input>
+                                                                <b-button variant="danger" @click="eliminarObjetosSeleccionados(index)" class="ml-2">
+                                                                    <b-icon-trash-fill></b-icon-trash-fill>
+                                                                </b-button>
+                                                            </div>
+                                                        </b-form-group>
+                                                    </b-col>
+                                                </b-row>
+                                            
+                                                <b-alert variant="danger" :show="alertaDuplicado" dismissible @dismissed="alertaDuplicado = false">
+                                                    El parámetro ya fue agregado.
+                                                </b-alert>
+                                            </b-card>
+                                            <template>
+                                              <div>
+                                                <div class="mb-3">
+                                                  <b-button class="mt-3" v-b-toggle.my-collapse>Información previa</b-button>                                  
+                                                </div>
+                                            
+                                                <b-collapse id="my-collapse">
+                                                    <b-card title="Información ingresada previamente">
+                                                    
+                                                      <ul class="left-aligned-list">                                        
+                                                        <li>Nombre Norma: {{ this.nombreNormaOG }}</li>
+                                                        <li>Nombre Tabla: {{ this.nombreTablaOG }}</li>                                        
+                                                      </ul>
+                                                    </b-card>
+                                                </b-collapse>                            
+                                            
+                                              </div>
+                                            </template>
+                                        </b-tab>
+                                        <b-tab title="Asignar parámetros a muestras">Asignar parámetros a muestras
+                                            <b-card>
+                                                <div class="mt-5">
+                                                    <b-button @click="agregar()" variant="secondary" size="md">
                                                         <b-icon class="mt-1" icon="plus-circle-fill"></b-icon>
                                                     </b-button>
                                                 </div>
-                                            </div>
-                                            <b-form-invalid-feedback id="nMuestras-live-feedback">{{ validationContext.errors[0] }}</b-form-invalid-feedback>
-                                        </ValidationProvider>
-
-
-                                        <ValidationProvider name="fechaI" rules="required" v-slot="validationContext">
-                                            <label class="mt-1" for="input-live">Fecha de muestreo:</label>
-                                            <b-form-datepicker id="input-live" v-model="fecha" aria-describedby="input-live-help fechaI-live-feedback" :state="getValidationState(validationContext)" placeholder="Seleccione fecha de muestreo"></b-form-datepicker>
-                                            <b-form-invalid-feedback id="fechaI-live-feedback">{{validationContext.errors[0] }}
-                                            </b-form-invalid-feedback>
-                                        </ValidationProvider>
-
-                                        <ValidationProvider name="horaI" rules="required" v-slot="validationContext">
-                                            <label class="mt-1" for="input-time">Hora de muestreo:</label>
-                                            <b-form-timepicker id="input-time" v-model="hora" :state="getValidationState(validationContext)" aria-describedby="input-live-help horaI-live-feedback" placeholder="Ingrese hora"></b-form-timepicker>
-                                            <b-form-invalid-feedback id="horaI-live-feedback">{{validationContext.errors[0] }}
-                                            </b-form-invalid-feedback>
-                                        </ValidationProvider>
-
-                                        <div>
-                                            <label class="mt-1" for="input-live">Fecha de Entrega:</label>
-                                            <b-form-datepicker id="input-live" v-model="fechaEntrega" placeholder="Seleccione una fecha de entrega" :min="currentDate"></b-form-datepicker>
-                                        </div>
-
-                                        <ValidationProvider name="TipoPago" rules="required" v-slot="validationContext">
-                                            <label class="mt-1" for="input-live">Forma de pago:</label>
-                                            <b-form-select id="input-live" v-model="tipo_pago" :options="opcionesPago" aria-describedby="input-live-help TipoPago-live-feedback" :state="getValidationState(validationContext)"></b-form-select>
-                                            <b-form-invalid-feedback id="TipoPago-live-feedback">{{validationContext.errors[0]}}</b-form-invalid-feedback>
-                                        </ValidationProvider>
-
-                                        <ValidationProvider name="Valor Neto" rules="required" v-slot="validationContext">
-                                            <label class="mt-1" for="Valor Neto-input">Valor neto(UF):</label>
-                                            <b-form-input  id="Valor Neto-input" v-model="valor_neto" :state="getValidationState(validationContext)"></b-form-input>
-                                            <b-form-invalid-feedback>{{ validationContext.errors[0] }}</b-form-invalid-feedback>
-                                        </ValidationProvider>
-                                    </b-col>
-
-                                    <b-col class="col-6">
-                                        <ValidationProvider name="muestreado" rules="required" v-slot="validationContext">
-                                            <label for="input-live">Muestreado por:</label>
-                                            <b-form-select class="mt-1" id="input-live" v-model="muestreado" :options="opcionesMuestreado" aria-describedby="input-live-help muestreado-live-feedback" :state="getValidationState(validationContext)"></b-form-select>
-                                            <b-form-invalid-feedback id="muestreado-live-feedback">{{validationContext.errors[0]}}
-                                            </b-form-invalid-feedback>
-                                        </ValidationProvider>
-
-                                        <ValidationProvider name="prioridad" rules="required" v-slot="validationContext">
-                                            <label for="input-live">Prioridad:</label>
-                                            <b-form-select class="mt-1" id="input-live" v-model="prioridad" :options="opcionesPrioridad" aria-describedby="input-live-help prioridad-live-feedback" :state="getValidationState(validationContext)"></b-form-select>
-                                            <b-form-invalid-feedback id="prioridad-live-feedback">{{validationContext.errors[0]}}
-                                            </b-form-invalid-feedback>
-                                        </ValidationProvider>
-
-                                        <ValidationProvider name="TipoMatriz" rules="required" v-slot="validationContext">
-                                            <label for="input-live">Tipo de Matriz:</label>
-                                            <b-form-select class="mt-1" id="input-live" v-model="TipoMatriz" aria-describedby="input-live-help TipoMatriz-live-feedback" :state="getValidationState(validationContext)" text-field="nombre_matriz" value-field="id_matriz">  <option v-for="opcion in opcionesMatriz" :key="opcion.id_matriz" :value="opcion.id_matriz">{{
-                                                opcion.nombre_matriz }}</option></b-form-select>
-                                            <b-form-invalid-feedback id="TipoMatriz-live-feedback">{{validationContext.errors[0]}}</b-form-invalid-feedback>
-                                        </ValidationProvider>
-
-                                        
-
-                                        <ValidationProvider name="Temperatura" rules="required" v-slot="validationContext">
-                                            <label for="input-live">Temperatura de transporte:</label>
-                                            <b-form-input class="mt-1" id="input-live" v-model="Temperatura" aria-describedby="input-live-help Temperatura-live-feedback" :state="getValidationState(validationContext)" placeholder="Ingrese Temperatura de la muestra" trim></b-form-input>
-                                            <b-form-invalid-feedback id="Temperatura-live-feedback">{{validationContext.errors[0]}}</b-form-invalid-feedback>
-                                        </ValidationProvider>
-                                        
-                                            <label class="mt-1" for="input-live">Cotización:</label>
-                                            <b-form-select id="input-live" v-model="cotizacion" :options="opcionesCotizacion" text-field="nombre_original_documento" value-field="id_cotizacion"></b-form-select>
-                                            
-
-                                        
-                                            <label class="mt-1" for="input-live">Orden de compra:</label>
-                                            <b-form-select id="input-live" v-model="id_orden_compra" :options="opcionesOrdenCompra"></b-form-select>
-                                                                                   
-
-                                        <label class="mt-1" for="input-live">Observaciones:</label>
-                                        <b-form-textarea id="input-live" v-model="observaciones" aria-describedby="input-live-help observaciones-live-feedback"></b-form-textarea>
-                                    </b-col>
-                                </b-row>
-                            </b-card>
-                            <template>
-                              <div>
-                                <div class="mb-3">
-                                  <b-button class="mt-3" v-b-toggle.my-collapse>Información previa</b-button>                                  
-                                </div>
-                            
-                                <b-collapse id="my-collapse">
-                                    <b-card title="Información ingresada previamente">
-
-                                      <ul class="left-aligned-list">                                        
-                                        <li>N° de Muestras: {{ this.nMuestrasOG }}</li>
-                                        <li>Fecha de muestreo: {{ this.fechaOG }}</li>
-                                        <li>Hora de muestreo: {{ this.horaOG }}</li>
-                                        <li>Fecha de Entrega: {{ this.fechaEntregaOG }}</li>
-                                        <li>Muestreado por: {{ this.muestreadoOG }}</li>
-                                        <li>Prioridad: {{ this.prioridadOG }}</li>
-                                        <li>Tipo de matriz: {{ this.nombreMatrizOG }}</li>
-                                        <!-- Agrega más elementos de la lista según tus necesidades -->
-                                      </ul>
-                                    </b-card>
-                                </b-collapse>                            
-                                
-                              </div>
-                            </template>
-                        </b-tab>
-
-                        <b-tab title="Transportista">Datos del Transportista
-                            <b-card>
-                                <b-row class="pb-2">
-                                    <b-col class="col-6">
-                                        <label for="input-live">Rut:</label>
-                                        <b-form-input id="transportistaRut-input" class="mb-1" v-model="transportistaRut" aria-describedby="transportistaRut-live-feedback"></b-form-input>                                        
-
-                                        <label for="input-live">Telefono Movil:</label>
-                                        <div id="app">
-                                            <b-input-group v-for="(telefono, index) in telefonos_agregar" :key="index" class="mb-1">
-                                                <b-input-group-prepend is-text>
-                                                    +56 9
-                                                </b-input-group-prepend>
-                                                <b-form-input v-model="telefono.telefono_transportista" aria-describedby="input-live-help fono-live-feedback" placeholder=""></b-form-input>
-                                                <div>
-                                                    <b-button @click="addInput" v-if="index === telefonos_agregar.length - 1">+</b-button>
-                                                    <b-button @click="removeInput(index)" variant="danger" class="ml-2">
-                                                        <b-icon-trash-fill></b-icon-trash-fill>
-                                                    </b-button>
+                                            </b-card>
+                                        </b-tab>
+                                    
+                                        <b-tab title="Asignar analista">
+                                            Asignar analista a muestra
+                                            <b-card>
+                                              <div class="mt-5">
+                                                <div v-for="(subMuestra, index) in this.subMuestra" :key="index">
+                                                  <b-row>
+                                                    <b-col>
+                                                      <b-input
+                                                        v-model="subMuestra.identificador"
+                                                        type="text"
+                                                        placeholder="Identificador de submuestra"
+                                                      ></b-input>
+                                                    </b-col>
+                                                    <b-button v-b-modal="'modal-asignar-analista-' + index">+</b-button>
+                                                  </b-row>
+                                                  <b-modal :id="'modal-asignar-analista-' + index" ref="modal" size="lg">
+                                                    <template #modal-header="{ close }">
+                                                      <b-row class="d-flex justify-content-around">
+                                                        <div class="pl-3">Asignar analista a submuestra</div>
+                                                      </b-row>
+                                                      <button type="button" class="close" aria-label="Close" @click="close()">
+                                                        <span aria-hidden="true" style="color:white">&times;</span>
+                                                      </button>
+                                                    </template>
+                                                    <b-row>
+                                                        <b-col cols="6">
+                                                          <div>
+                                                            <p>ID de parámetro: {{ subMuestra.id_parametro }}</p>
+                                                            <p>ID de metodología: {{ subMuestra.id_metodologia }}</p>
+                                                            <p>Nombre de parámetro: {{ obtenerNombreParametro(subMuestra.id_parametro) }}</p>
+                                                            <p>Nombre de metodología: {{ obtenerNombreMetodologia(subMuestra.id_metodologia) }}</p>
+                                                          </div>
+                                                        </b-col>
+                                                        <b-col cols="6">                                                          
+                                                          <b-form-select id="input-live" v-model="id_orden_compra" :options="opcionesOrdenCompra"></b-form-select>
+                                                        </b-col>
+                                                    </b-row>
+                                                    <template #modal-footer="{ close }">
+                                                      <b-button @click="close()" variant="primary" size="xl" class="float-right reactive-button" style="font-weight:bold">
+                                                        Cerrar
+                                                      </b-button>
+                                                    </template>
+                                                  </b-modal>
+                                                  <br>
                                                 </div>
-                                            </b-input-group>
-                                            <div v-if="telefonos_agregar.length === 0">
-                                                No se han agregado teléfonos.
-                                                <b-button @click="addInput">+</b-button>
-                                            </div>
-                                        </div>
-                                    </b-col>
-
-                                    <b-col class="col-6">
-                                        <label for="input-live">Nombre y apellido:</label>
-                                        <b-form-input class="mb-1" id="input-live" v-model="transportista" aria-describedby="input-live-help transportista-live-feedback" placeholder="" trim></b-form-input>
-
-                                        <label for="input-live">Patente:</label>
-                                        <b-form-input class="mb-1" id="input-live" v-model="patente" aria-describedby="input-live-help patente-live-feedback" placeholder="" trim></b-form-input>
+                                              </div>
+                                            </b-card>
+                                        </b-tab>
                                     </b-col>
                                 </b-row>
-                            </b-card>
-                            <template>
-                                <div>
-                                  <div class="mb-3">
-                                    <b-button class="mt-3" v-b-toggle.my-collapse>Información previa</b-button>                                  
-                                  </div>
-                              
-                                  <b-collapse id="my-collapse">
-                                    <b-card title="Información ingresada previamente">
-                                      <ul class="left-aligned-list">
-                                        <li>Rut: {{ this.transportistaRutOG }}</li>
-                                        <li>Temperatura de transporte: {{ this.TemperaturaOG }}</li>
-                                        <li>Nombre del transportista: {{ this.transportistaOG }}</li>
-                                        <li>Patente: {{ this.patenteOG }}</li>
-                                        <li>
-                                          Teléfono(s):
-                                          <ul>
-                                            <li v-for="(telefono, index) in telefonos_agregarOG" :key="index">{{ telefono.telefono_transportista }}</li>
-                                          </ul>
-                                        </li>
-                                      </ul>
-                                    </b-card>
-                                  </b-collapse>
-                                </div>
-                            </template>
-
-
-                        </b-tab>
-
-                        <b-tab title="Parámetros">Parámetros
-                            <b-card>
-                                <b-row>
-                                    <b-col class="col-6">
-                                        <b-form-group label="Seleccione una norma">
-                                            <b-form-select v-model="norma" :options="opcionesNorma" text-field="nombre_norma" value-field="id_norma" @change="obtenerTablasNormas"></b-form-select>
-                                        </b-form-group>
-                                    </b-col>
-
-                                    <b-col class="col-6">
-                                        <b-form-group label="Seleccione una tabla">
-                                            <b-form-select v-model="tabla" :options="opcionesTabla" value-field="id" @change="actualizarParametrosTabla"></b-form-select>
-                                        </b-form-group>
-                                    </b-col>
-                                </b-row>
-
-                                <b-row>
-                                    <b-col>
-                                        <b-form-group label="Seleccione un parámetro">
-                                            <div class="d-flex align-items-center">
-                                                <b-form-select v-model="parametroSeleccionado" :options="opcionesParametro" placeholder="Seleccione un Parámetro" :disabled="parametroDeshabilitado" @change="agregarObjetosSeleccionados"></b-form-select>
-                                                <div>
-                                                    <b-button class="ml-2" v-b-modal.modal-Agregar-Opciones>+</b-button>
-                                                </div>
-                                            </div>
-                                        </b-form-group>
-                                    </b-col>
-
-                                    <b-col>
-                                        <b-form-group label="Seleccione una metodología">
-                                            <b-form-select v-model="metodologiaSeleccionada" :options="opcionesMetodologia" placeholder="Seleccione una metodología" :disabled="metodologiaDeshabilitada" @change="agregarObjetosSeleccionados"></b-form-select>
-                                        </b-form-group>
-                                    </b-col>
-                                </b-row>
-
-                                <b-row v-if="objetosSeleccionados.length > 0" class="mt-3">
-                                    <b-col>
-                                        <b-form-group label="Parámetros Seleccionados:">
-                                            <div v-for="(objetos, index) in objetosSeleccionados" :key="index" class="d-flex align-items-center objetos-item mb-3">
-                                                <b-input readonly :value="objetos.parametro" class="mr-2"></b-input>
-                                                <b-input readonly :value="objetos.metodologia" class="mr-2"></b-input>
-                                                <b-button variant="danger" @click="eliminarObjetosSeleccionados(index)" class="ml-2">
-                                                    <b-icon-trash-fill></b-icon-trash-fill>
-                                                </b-button>
-                                            </div>
-                                        </b-form-group>
-                                    </b-col>
-                                </b-row>
-
-                                <b-alert variant="danger" :show="alertaDuplicado" dismissible @dismissed="alertaDuplicado = false">
-                                    El parámetro ya fue agregado.
-                                </b-alert>
-                            </b-card>
-                            <template>
-                              <div>
-                                <div class="mb-3">
-                                  <b-button class="mt-3" v-b-toggle.my-collapse>Información previa</b-button>                                  
-                                </div>
-                            
-                                <b-collapse id="my-collapse">
-                                    <b-card title="Información ingresada previamente">
-
-                                      <ul class="left-aligned-list">                                        
-                                        <li>Nombre Norma: {{ this.nombreNormaOG }}</li>
-                                        <li>Nombre Tabla: {{ this.nombreTablaOG }}</li>                                        
-                                      </ul>
-                                    </b-card>
-                                </b-collapse>                            
-                                
-                              </div>
-                            </template>
-                        </b-tab>
-                        <b-tab title="Asignar parámetros a muestras">Asignar parámetros a muestras
-                            <b-card>
-                                <div class="mt-5">
-                                    <b-button @click="agregar()" variant="secondary" size="md">
-                                        <b-icon class="mt-1" icon="plus-circle-fill"></b-icon>
-                                    </b-button>
-                                </div>
-                            </b-card>
-                        </b-tab>
-
-                    </b-col>
-                </b-row>
-                    </b-tabs>
-                </b-col>
-            </b-row>
-
-        </b-card>
-        <!-- Control buttons-->
-        <div class="text-center">
-            <b-button-group class="mt-2">
-                <b-button @click="tabIndex--">Atrás</b-button>
-                <b-button @click="tabIndex++">Siguiente</b-button>
-            </b-button-group>
-           <hr/>
-            <b-button @click="enviarFormulario()" variant="primary" size="xl" class="reactive-button" style="font-weight:bold;">
-                Recepcionar Muestra
-            </b-button>
-        </div>
-        <b-modal id="modal-Agregar-Opciones" ref="modal" :title="`Agregar parámetro a opciones`" size="lg" @shown="onModalShown">
-            <template #modal-header="{ close }">
-                <b-row class="d-flex justify-content-around">
-                    <div class="pl-3">Agregar Parámetros</div>
-                </b-row>
-                <button type="button" class="close" aria-label="Close" @click="close()">
-                    <span aria-hidden="true" style="color:white">&times;</span>
-                </button>
-            </template>
-            <b-row>
-                <b-col>
-                    <b-form-group label="Seleccione un parámetro">
-                        <b-form-select v-model="parametroSeleccionado" :options="TodasopcionesParametro" placeholder="Seleccione un Parámetro" @change="agregarObjetosSeleccionados"></b-form-select>
-                    </b-form-group>
-                </b-col>
-
-                <b-col>
-                    <b-form-group label="Seleccione una metodología">
-                        <b-form-select v-model="metodologiaSeleccionada" :options="opcionesMetodologia" placeholder="Seleccione una metodología" :disabled="metodologiaDeshabilitada" @change="agregarObjetosSeleccionados"></b-form-select>
-                    </b-form-group>
-                </b-col>
-            </b-row>
-
-            <b-alert variant="danger" :show="alertaDuplicado" dismissible @dismissed="alertaDuplicado = false">
-                Los Parametros y Metodologias ya se encuentran agregados
-            </b-alert>
-
-            <b-alert variant="success" :show="alertaExito" dismissible @dismissed="alertaExito = false">
-                Parámetro y metodología agregada con éxito!
-            </b-alert>
-            <!-- //////////////////////////////////////////MODAL-FOOTER////////////////////////////////////////////////////////////////////////////////// -->
-            <template #modal-footer="{ close }">
-                <b-button @click="close()" variant="primary" size="xl" class="float-right reactive-button" style="font-weight:bold">
-                    Cerrar
-                </b-button>
-            </template>
-        </b-modal>
+                            </b-tabs>
+                        </b-col>
+                    </b-row>                
+                </b-card>
+                <!-- Control buttons-->
+                <div class="text-center">
+                    <b-button-group class="mt-2">
+                        <b-button @click="tabIndex--">Atrás</b-button>
+                        <b-button @click="tabIndex++">Siguiente</b-button>
+                    </b-button-group>
+                   <hr/>
+                    <b-button @click="enviarFormulario()" variant="primary" size="xl" class="reactive-button" style="font-weight:bold;">
+                        Recepcionar Muestra
+                    </b-button>
+                </div>
+                <b-modal id="modal-Agregar-Opciones" ref="modal" :title="`Agregar parámetro a opciones`" size="lg" @shown="onModalShown">
+                    <template #modal-header="{ close }">
+                        <b-row class="d-flex justify-content-around">
+                            <div class="pl-3">Agregar Parámetros</div>
+                        </b-row>
+                        <button type="button" class="close" aria-label="Close" @click="close()">
+                            <span aria-hidden="true" style="color:white">&times;</span>
+                        </button>
+                    </template>
+                    <b-row>
+                        <b-col>
+                            <b-form-group label="Seleccione un parámetro">
+                                <b-form-select v-model="parametroSeleccionado" :options="TodasopcionesParametro" placeholder="Seleccione un Parámetro" @change="agregarObjetosSeleccionados"></b-form-select>
+                            </b-form-group>
+                        </b-col>
+                    
+                        <b-col>
+                            <b-form-group label="Seleccione una metodología">
+                                <b-form-select v-model="metodologiaSeleccionada" :options="opcionesMetodologia" placeholder="Seleccione una metodología" :disabled="metodologiaDeshabilitada" @change="agregarObjetosSeleccionados"></b-form-select>
+                            </b-form-group>
+                        </b-col>
+                    </b-row>
+                
+                    <b-alert variant="danger" :show="alertaDuplicado" dismissible @dismissed="alertaDuplicado = false">
+                        Los Parametros y Metodologias ya se encuentran agregados
+                    </b-alert>
+                
+                    <b-alert variant="success" :show="alertaExito" dismissible @dismissed="alertaExito = false">
+                        Parámetro y metodología agregada con éxito!
+                    </b-alert>
+                    <!-- //////////////////////////////////////////MODAL-FOOTER////////////////////////////////////////////////////////////////////////////////// -->
+                    <template #modal-footer="{ close }">
+                        <b-button @click="close()" variant="primary" size="xl" class="float-right reactive-button" style="font-weight:bold">
+                            Cerrar
+                        </b-button>
+                    </template>
+                </b-modal>
+            </div>
+        </validation-observer>
     </div>
-</validation-observer>
-</div>
 </template>
 
 <style>
@@ -449,7 +476,7 @@ export default {
 
     data() {
         return {
-            RUM: '',
+            RUM : '',
             direccionOG : "",       
             rutOG : "",
             recepcionistaOG : "",
@@ -468,13 +495,14 @@ export default {
             telefonos_agregarOG : "",
             idParamOG : "",
             idMetOG : "",
-            normaOG: "",
-            tablaOG: "",
-            nombreMatrizOG: "",
-            nombreNormaOG: "",
-            nombreTablaOG: "",
+            normaOG : "",
+            tablaOG : "",
+            nombreMatrizOG : "",
+            nombreNormaOG : "",
+            nombreTablaOG : "",
             prevP : [],
-            prevM : [],  
+            prevM : [],
+            subMuestra : [],
 
             rutSolicitante: '',
             recepcionista: '',
@@ -664,13 +692,13 @@ export default {
         
         this.obtenerNormas(),
 
-            PersonalService.obtenerTodosPersonal().then((response) => {
-                console.log(response.data);
-                if (response != null && response.status === 200) {
-                    this.recepcionistas = response.data
-                    console.log("Los recepcionistas son: ", this.recepcionistas);
-                }
-            });
+        PersonalService.obtenerTodosPersonal().then((response) => {
+            console.log(response.data);
+            if (response != null && response.status === 200) {
+                this.recepcionistas = response.data
+                console.log("Los recepcionistas son: ", this.recepcionistas);
+            }
+        });
         /*EmpresaService.obtenerTodasEmpresa().then((response) => {
             console.log(response.data);
             if (response != null) {
@@ -752,6 +780,21 @@ export default {
             }           
         
             this.telefonos_agregar.splice(index, 1);
+        },
+
+        obtenerNombreParametro(idParametro) {
+          const parametro = this.metodologiasData.find(item => item.id_parametro === idParametro);
+          return parametro ? parametro.nombre_parametro : '';
+        },
+
+        obtenerNombreMetodologia(idMetodologia) {
+          for (const parametro of this.metodologiasData) {
+            const metodologia = parametro.metodologias.find(item => item.id_metodologia === idMetodologia);
+            if (metodologia) {
+              return metodologia.nombre_metodologia;
+            }
+          }
+          return '';
         },
 
         onModalShown() {
@@ -1080,7 +1123,6 @@ export default {
             console.log("cantidad muestras: ", this.nMuestras);
         },
 
-
         capturarDatos(datos) {
             console.log("datos capturados:", datos);
 
@@ -1258,7 +1300,7 @@ export default {
         this.idMetOG = response.submuestras.map((idM) => idM.id_metodologia)
         this.normaOG = response.id_norma
         this.tablaOG = response.id_tabla 
-
+        this.subMuestra = response.submuestras
 
             //TAB RECEPCIONISTA
         this.rut = response.rut_solicitante
@@ -1287,8 +1329,7 @@ export default {
         //this.tabla = response.id_tabla
 
             //TAB ASIGNACIÓN
-        this.identificacion = response.submuestras.map((id) => id.identificador)
-        
+        this.identificacion = response.submuestras.map((id) => id.identificador)       
            
         },
 
@@ -1348,11 +1389,11 @@ export default {
                                     variant: "success",
                                     appendToast: true
                                 })
-                                window.location.reload();
+                                
                             }                            
 
                         } else {
-                            this.$bvToast.toast(`Error al agregar muestra`, {
+                            this.$bvToast.toast(`Error al actualizar la muestra`, {
                                 title: 'Error',
                                 toaster: 'b-toaster-top-center',
                                 solid: true,
