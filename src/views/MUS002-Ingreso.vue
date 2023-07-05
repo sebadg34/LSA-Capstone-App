@@ -1335,33 +1335,14 @@ export default {
                         console.log(response)
                         if (response != null) {
                             if (response.status == 200) {
-                                this.$bvToast.toast(`Creación de la muestra exitosa`, {
+                                this.$bvToast.toast(`Actualización de la muestra exitosa`, {
                                     title: 'Exito',
                                     toaster: 'b-toaster-top-center',
                                     solid: true,
                                     variant: "success",
                                     appendToast: true
                                 })
-                            }
-
-                            this.recepcionista = '';
-                            this.recepcionistaRUT = '';
-                            this.solicitante = '';
-                            this.rut = '';
-                            this.direccion = '';
-                            this.muestreado = '';
-                            this.prioridad = null;
-                            this.TipoMatriz = null;
-                            this.nMuestras = null;
-                            this.Temperatura = '';
-                            this.fechaEntrega = '';
-                            this.transportista = '';
-                            this.patente = '';
-                            this.transportistaRut = '';
-                            this.fono = '';
-                            this.observaciones = '';
-                            this.fecha = '';
-                            this.hora = '';
+                            }                            
 
                         } else {
                             this.$bvToast.toast(`Error al agregar muestra`, {
