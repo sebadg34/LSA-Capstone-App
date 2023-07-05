@@ -443,7 +443,7 @@ export default {
 
     data() {
         return {
-            
+            RUM: '',
             direccionOG : "",       
             rutOG : "",
             recepcionistaOG : "",
@@ -1230,6 +1230,7 @@ export default {
         RellenarForm(response) {
 
             //info anterior
+        this.RUM = response.RUM
         this.nombre_empresa = response.nombre_empresa
         this.direccionOG = response.direccion_empresa       
         this.rutOG = response.rut_solicitante
@@ -1293,6 +1294,7 @@ export default {
                     const matricesFiltradas = this.parametros_agregar.slice(1);
                     const parametrosFiltrados = this.submuestra_agregar.slice(1);
                     var data = {
+                        RUM: this.RUM,
                         rut_empresa: this.rut_empresa,
                         rut_empleado: this.recepcionistaRUT,
                         nombre_empresa: this.nombre_empresa,

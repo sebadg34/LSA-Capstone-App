@@ -885,6 +885,7 @@ export default {
                     const matricesFiltradas = this.parametros_agregar.slice(1);
                     const parametrosFiltrados = this.submuestra_agregar.slice(1);
                     var data = {
+                        RUM: this.RUM,
                         rut_empresa: this.rut_empresa,
                         rut_empleado: this.recepcionistaRUT,
                         nombre_empresa: this.nombre_empresa,
