@@ -72,6 +72,7 @@ export default {
             this.Valoracion = ""
             this.valoracion_faltante = false;
             this.Cargando = false;
+            this.RUM = this.encuestaData.RUM;
             }
         }
     },
@@ -98,7 +99,8 @@ this.Cargando = true;
                 } else {
                     var data = {
                         puntaje: this.Valoracion,
-                        observaciones: this.Observacion
+                        observaciones: this.Observacion,
+                        RUM: this.RUM
                     }
                     MuestraService.responderEncuesta(data).then((response) => {
                         if(response.status == 200){
@@ -139,7 +141,8 @@ this.Cargando = true;
             Observacion: "",
             Valoracion: "",
             valoracion_faltante: false,
-            Cargando: false
+            Cargando: false,
+            RUM: ""
         }
     },
 }

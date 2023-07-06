@@ -184,31 +184,48 @@ export default {
 
                 {
                     key: 'solicitante',
-                    label: 'Nombre solicitante'
+                    label: 'Nombre solicitante',
+                    sortable: true
                 },
                 {
                     key: 'nombre_empresa',
-                    label: 'Empresa'
+                    label: 'Empresa',
+                    sortable: true
                 },
                 {
                     key: 'fecha_entrega',
-                    label: 'Fecha entrega'
+                    label: 'Fecha entrega',
+                    sortable: true
                 },
                 {
                     key: 'matriz',
-                    label: 'matriz'
+                    label: 'matriz',
+                    sortable: true
                 },
                 {
                     key: 'estado',
-                    label: 'Estado'
+                    label: 'Estado',
+                    sortable: true
                 },
                 {
                     key: 'valor_neto',
-                    label: 'Valor neto'
+                    label: 'Valor neto',
+                    sortable: true
+                },
+                {
+                    key: 'dias_faltantes',
+                    label: 'Dias faltantes',
+                    sortable: true
+                },
+                {
+                    key: 'valor_neto',
+                    label: 'Valor neto',
+                    sortable: true
                 },
                 {
                     key: 'prioridad',
-                    label: 'Prioridad'
+                    label: 'Prioridad',
+                    sortable: true
                 },
                 {
                     key: 'accion',
