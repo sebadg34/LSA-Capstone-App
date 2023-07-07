@@ -5,7 +5,7 @@
             <div style="font-size:2rem; font-weight: bold; color: var(--lsa-blue)">
                 Administración de Matrices
             </div>
-        </b-col>style="padding-top:30px; padding-bottom:10px; margin-left: 5px;"
+        </b-col>
     </b-row>
 
     <modal_agregarMatriz @refrescar="MatrizAgregada" />
