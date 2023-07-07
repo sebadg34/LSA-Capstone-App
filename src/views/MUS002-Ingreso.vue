@@ -98,8 +98,7 @@
                                                                 </div>
                                                             </div>
                                                             <b-form-invalid-feedback id="nMuestras-live-feedback">{{ validationContext.errors[0] }}</b-form-invalid-feedback>
-                                                        </ValidationProvider>
-                                                    
+                                                        </ValidationProvider>                                                    
                                                     
                                                         <ValidationProvider name="fechaI" rules="required" v-slot="validationContext">
                                                             <label class="mt-1" for="input-live">Fecha de muestreo:</label>
@@ -261,13 +260,15 @@
                                                 <b-row>
                                                     <b-col class="col-6">
                                                         <b-form-group label="Seleccione una norma">
-                                                            <b-form-select v-model="norma" :options="opcionesNorma" text-field="nombre_norma" value-field="id_norma" @change="obtenerTablasNormas"></b-form-select>
+                                                            <b-form-select v-model="norma" text-field="nombre_norma" value-field="id_norma" @change="obtenerTablasNormas"><option v-for="opcion in opcionesNorma" :key="opcion.id_norma" :value="opcion.id_norma">{{
+                                                                opcion.nombre_norma }}</option></b-form-select>
                                                         </b-form-group>
                                                     </b-col>
                                                 
                                                     <b-col class="col-6">
                                                         <b-form-group label="Seleccione una tabla">
-                                                            <b-form-select v-model="tabla" :options="opcionesTabla" value-field="id" @change="actualizarParametrosTabla"></b-form-select>
+                                                            <b-form-select v-model="tabla" value-field="id_tabla" text-field="nombre_tabla" @change="actualizarParametrosTabla"><option v-for="opcion in opcionesTabla" :key="opcion.id_tabla.toString()" :value="opcion.id_tabla">{{
+                                                                opcion.nombre_tabla }}</option></b-form-select>
                                                         </b-form-group>
                                                     </b-col>
                                                 </b-row>
@@ -339,51 +340,42 @@
                                         </b-tab>
                                     
                                         <b-tab title="Asignar analista">
-                                            Asignar analista a muestra
+
                                             <b-card>
-                                              <div class="mt-5">
-                                                <div v-for="(subMuestra, index) in this.subMuestra" :key="index">
-                                                  <b-row>
-                                                    <b-col>
-                                                      <b-input
-                                                        v-model="subMuestra.identificador"
-                                                        type="text"
-                                                        placeholder="Identificador de submuestra"
-                                                      ></b-input>
-                                                    </b-col>
-                                                    <b-button v-b-modal="'modal-asignar-analista-' + index">+</b-button>
-                                                  </b-row>
-                                                  <b-modal :id="'modal-asignar-analista-' + index" ref="modal" size="lg">
-                                                    <template #modal-header="{ close }">
-                                                      <b-row class="d-flex justify-content-around">
-                                                        <div class="pl-3">Asignar analista a submuestra</div>
-                                                      </b-row>
-                                                      <button type="button" class="close" aria-label="Close" @click="close()">
-                                                        <span aria-hidden="true" style="color:white">&times;</span>
-                                                      </button>
-                                                    </template>
-                                                    <b-row>
-                                                        <b-col cols="6">
-                                                          <div>
-                                                            <p>ID de parámetro: {{ subMuestra.id_parametro }}</p>
-                                                            <p>ID de metodología: {{ subMuestra.id_metodologia }}</p>
-                                                            <p>Nombre de parámetro: {{ obtenerNombreParametro(subMuestra.id_parametro) }}</p>
-                                                            <p>Nombre de metodología: {{ obtenerNombreMetodologia(subMuestra.id_metodologia) }}</p>
-                                                          </div>
-                                                        </b-col>
-                                                        <b-col cols="6">                                                          
-                                                          <b-form-select id="input-live" v-model="id_orden_compra" :options="opcionesOrdenCompra"></b-form-select>
-                                                        </b-col>
-                                                    </b-row>
-                                                    <template #modal-footer="{ close }">
-                                                      <b-button @click="close()" variant="primary" size="xl" class="float-right reactive-button" style="font-weight:bold">
-                                                        Cerrar
-                                                      </b-button>
-                                                    </template>
-                                                  </b-modal>
-                                                  <br>
-                                                </div>
-                                              </div>
+                                            <b-table :items="subMuestra" :fields="tableFields">                                               
+                                                
+                                              <template #cell(identificador)="row">
+                                                {{ row.value }}
+                                              </template>
+                                              <template #cell(fecha_entrega_submuestra)="row">
+                                                <b-form-datepicker v-model="row.item.fecha_entrega" button-only ></b-form-datepicker>
+                                              </template>                                      
+                                              <template #cell(orden)="row">
+                                                {{ row.value }}
+                                              </template>
+                                              <template #cell(analistasSeleccionados)="row">
+                                                <b-form-select
+                                                  v-model="row.item.analistasSeleccionados"        
+                                                  :options="opcionesAnalista"
+                                                  value-field="rut_empleado"
+                                                  text-field="nombre"
+                                                  @change="imprimirSeleccion(row.item.analistasSeleccionados)"
+                                                ></b-form-select>
+                                              </template>
+                                              <template #cell(accion)="row">
+                                                  <b-dropdown right size="sm" variant="link" toggle-class="text-decoration-none" no-caret>
+                                                      <template #button-content>
+                                                          <b-icon style="height: 80%; width: 80%; align-items: center;" icon="three-dots" variant="dark" aria-hidden="true"></b-icon>
+                                                      </template>
+                                                      <b-dropdown-item v-if="row" @click="DetallesMetodología(row.item)">
+                                                          <b-icon icon="file-earmark-medical" aria-hidden="true" class="mr-2"></b-icon>Observaciones
+                                                      </b-dropdown-item>
+                                                      <b-dropdown-item v-if="row" @click="EditarMetodología(row.item)">
+                                                          <b-icon icon="pencil-square" aria-hidden="true" class="mr-2"></b-icon>Editar
+                                                      </b-dropdown-item>
+                                                  </b-dropdown>
+                                              </template>
+                                            </b-table>
                                             </b-card>
                                         </b-tab>
                                     </b-col>
@@ -503,6 +495,9 @@ export default {
             prevP : [],
             prevM : [],
             subMuestra : [],
+            tablaArray : [],
+            subMuestra_Analista : [],
+            tablaItems : [],
 
             rutSolicitante: '',
             recepcionista: '',
@@ -520,6 +515,8 @@ export default {
             direccion_empresa: '',
             muestreado: '',
             cotizacion: '',
+            analistasOptions: ['Analista 1', 'Analista 2', 'Analista 3', 'Analista 4'],
+            opcionesAnalista: [],
             opcionesCotizacion: [],
             opcionesDireccion: [],
             opcionesMuestreado: [{
@@ -631,8 +628,17 @@ export default {
                 identificador: ''
             }],
             currentDate: new Date().toISOString().split('T')[0],
-            subEliminar:[]
-
+            subEliminar:[],
+            analista: [],
+            AnalistaAsignado: '',
+            analistasSeleccionados: [],
+            tableFields: [
+                { key: 'identificador', label: 'Identificador' },                
+                { key: 'fecha_entrega_submuestra', label: 'Fecha Entrega' },
+                { key: 'orden', label: 'Orden'},
+                { key: 'analistasSeleccionados', label: 'Analistas' },
+                { key: 'accion', label: 'Acción'} 
+            ]
         };
     },
 
@@ -654,6 +660,7 @@ export default {
             console.log("Obteniedo detalles",response.data)
             this.datos = response.data;
             this.RellenarForm(response.data);
+            
             const parametros = response.data.parametros_metodologias;
             console.log("parametros(data): ", parametros)
 
@@ -676,11 +683,22 @@ export default {
                 })
             }
             console.log("param en sistema: ", this.objetosSeleccionados)
+            this.obtenerTablasNormas();
+            this.actualizarParametrosTabla();
 
         }).catch(error => {
             console.error(error);
         });
-    },    
+    },
+    
+    computed: {
+        formattedOpcionesAnalista() {
+          return this.opcionesAnalista.map(analista => ({
+            rut_empleado: analista.rut_empleado,
+            nombreCompleto: `${analista.nombre} ${analista.apellido}`
+          }));
+        }
+    },
 
     mounted() {
 
@@ -690,14 +708,24 @@ export default {
 
         this.obtenerMatriz(), 
         
-        this.obtenerNormas(),
+        this.obtenerNormas(),        
 
         PersonalService.obtenerTodosPersonal().then((response) => {
             console.log(response.data);
-            if (response != null && response.status === 200) {
-                this.recepcionistas = response.data
-                console.log("Los recepcionistas son: ", this.recepcionistas);
+            if (response.data != null) {
+              this.analistas = response.data;
+              this.rutEmpleados = this.analistas.map((analista) => analista.rut_empleado);
+            
+              this.opcionesAnalista = this.analistas.filter((analista) => {
+                return analista}).map((analista) => ({
+                rut_empleado: analista.rut_empleado,
+                nombre: analista.nombre,
+              }));
             }
+            console.log("opnciones analista: ",this.opcionesAnalista)
+        })
+        .catch((error) => {
+        console.error('Error al obtener los analistas:', error);
         });
         /*EmpresaService.obtenerTodasEmpresa().then((response) => {
             console.log(response.data);
@@ -734,16 +762,18 @@ export default {
         },
 
         tabla: function (nuevoValor) {
-            const tablaSeleccionada = this.tablasProcesadas.find(tabla => tabla.nombre_tabla === nuevoValor);
+            const tablaSeleccionada = this.tablaArray.find(tabla => tabla.id_tabla === nuevoValor);
+            console.log("entrando al watcher: ", tablaSeleccionada)
             if (tablaSeleccionada) {
-                const idTabla = tablaSeleccionada.id_tablas[0]; // Suponiendo que solo haya una id_tabla por cada nombre_tabla
-                console.log("ID de tabla seleccionada:", idTabla);
-                this.id_tabla = idTabla
-                this.parametroDeshabilitado = false;
+              const idTabla = tablaSeleccionada.id_tabla;
+              console.log("ID de tabla seleccionada:", idTabla);
+              this.id_tabla = idTabla;
+              this.parametroDeshabilitado = false;
             } else {
-                this.parametroDeshabilitado = true;
+              this.parametroDeshabilitado = true;
             }
         },
+
 
         direccion(newValue) {
             const direccionSeleccionada = this.opcionesDireccion.find(opcion => opcion.id_ciudad === newValue);
@@ -765,6 +795,49 @@ export default {
         }) {
             return dirty || validated ? valid : null;
         },
+
+        agregarAnalista(submuestra) {
+  // Obtener el analista seleccionado
+  const analistaSeleccionado = this.opcionesAnalista.find(opcion => opcion.rut_empleado === submuestra.analistasSeleccionados[0]);
+  console.log("Analista seleccionado: ", analistaSeleccionado);
+  console.log("La submuestra es: ", submuestra);
+
+  // Verificar que se haya seleccionado un analista
+  
+
+  console.log("La subMuestra_Analista nueva es: ", this.subMuestra_Analista);
+},
+
+calcularTablaItems() {
+        const items = [];
+        for (let i = 1; i <= parseInt(this.nMuestras); i++) {
+          const identificacion = this.subMuestra.identificador[i - 1] || '';          
+
+          items.push({
+            orden: i,
+            identificacion,            
+          });
+        }
+        this.tablaItems = items; // Actualizar la propiedad de datos con los elementos de la tabla
+      },
+
+
+       
+imprimirSeleccion(valorSeleccionado) {
+  console.log("Opción seleccionada:", valorSeleccionado);
+  console.log("opcionesanalista: ", this.opcionesAnalista);
+  const rutAnalista = valorSeleccionado;
+  console.log("analista: ", rutAnalista);
+  const submuestra = this.subMuestra.find(item => item.analistasSeleccionados.includes(rutAnalista));
+  if (rutAnalista) {
+    this.subMuestra_Analista.push({
+        identificador: submuestra.identificador,
+        rut_empleado: rutAnalista
+      });
+    console.log("const subana: ", this.subMuestra_Analista);
+  }
+},
+
 
         addInput() {
             this.telefonos_agregar.push({
@@ -795,7 +868,7 @@ export default {
             }
           }
           return '';
-        },
+        },      
 
         onModalShown() {
             this.alertaExito = false;
@@ -895,14 +968,7 @@ export default {
 
                 this.opcionesClientes = empresasAgrupadas;
                 console.log("opciones empresas", this.opcionesClientes);
-
-                // Seleccionar la primera empresa de la lista por defecto
-                if (this.opcionesClientes.length > 0) {
-                    const primeraEmpresa = this.opcionesClientes[0];
-                    this.selectedEmpresa.id_ciudad = primeraEmpresa.id_ciudad[0];
-                    this.selectedEmpresa.nombre_ciudad = primeraEmpresa.nombre_ciudad[0];
-                    this.selectedEmpresa.direccion = primeraEmpresa.direccion[0];
-                }
+                
             })
         },
 
@@ -1216,120 +1282,163 @@ export default {
                 if (response.data != null && response.status === 200) {
                     console.log("Obteniendo tablas via norma:", response.data);
 
-                    // Almacena las tablas agrupadas por nombre
-                    const tablasAgrupadas = {};
-
-                    // agrupar las tablas por nombre
-                    response.data.forEach((tabla) => {
-                        const nombreTabla = tabla.nombre_tabla;
-                        const nombreParametro = tabla.nombre_parametro;
-
-                        // Verificar si la tabla ya está en el objeto tablasAgrupadas
-                        if (!tablasAgrupadas[nombreTabla]) {
-                            // Si la tabla no existe, crear un nuevo objeto con el nombre de la tabla
-                            tablasAgrupadas[nombreTabla] = {
-                                nombre_tabla: nombreTabla,
-                                id_tablas: [],
-                                parametros: [],
-                            };
-                        }
-                        // Agregar el id_tabla y el nombre_parametro a la tabla correspondiente en tablasAgrupadas
-                        tablasAgrupadas[nombreTabla].id_tablas.push(tabla.id_tabla);
-                        tablasAgrupadas[nombreTabla].parametros.push(nombreParametro);
+                    const tablaArray = [];
+                    // Iterar sobre la respuesta y agrupar las tablas por id_tabla
+                    response.data.forEach(tabla => {
+                      const tablaExistente = tablaArray.find(t => t.id_tabla === tabla.id_tabla);
+                    
+                      if (tablaExistente) {
+                        // Si ya existe una tabla con el mismo id_tabla, agregar los datos correspondientes
+                        tablaExistente.parametros.push({
+                          id_parametro: tabla.id_parametro,
+                          nombre_parametro: tabla.nombre_parametro
+                        });
+                    
+                        tablaExistente.metodologias.push({
+                          id_metodologia: tabla.id_metodologia,
+                          nombre_metodologia: tabla.nombre_metodologia
+                        });
+                      } else {
+                        // Si no existe una tabla con el mismo id_tabla, crear un nuevo objeto
+                        const nuevaTabla = {
+                          id_tabla: tabla.id_tabla,
+                          nombre_tabla: tabla.nombre_tabla,
+                          parametros: [
+                            {
+                              id_parametro: tabla.id_parametro,
+                              nombre_parametro: tabla.nombre_parametro
+                            }
+                          ],
+                          metodologias: [
+                            {
+                              id_metodologia: tabla.id_metodologia,
+                              nombre_metodologia: tabla.nombre_metodologia
+                            }
+                          ]
+                        };
+                        tablaArray.push(nuevaTabla);
+                        this.opcionesTabla = tablaArray.map(tabla => ({
+                        id_tabla: tabla.id_tabla,
+                        nombre_tabla: tabla.nombre_tabla
+                    }));
+                    console.log("opciones tabla: ",this.opcionesTabla)
+                      }
                     });
-                    // convertir  en un array
-                    const tablasProcesadas = Object.values(tablasAgrupadas);
 
-                    console.log("Tablas procesadas:", tablasProcesadas);
-
-                    // Asignar las tablas procesadas a opcionesTabla
-                    this.opcionesTabla = tablasProcesadas.map((tabla) => tabla.nombre_tabla);
-
-                    const tablaSeleccionada = tablasProcesadas.find(tabla => tabla.id_tablas.includes(this.tablaOG));
-                    if (tablaSeleccionada) {
-                        this.nombreTablaOG = tablaSeleccionada.nombre_tabla;
-                    }
-
-                    // Asignar tablasProcesadas a this.tablasProcesadas
-                    this.tablasProcesadas = tablasProcesadas;
+                    console.log(tablaArray);
+                    this.tablaArray = tablaArray;
+                    
                 }
             });
         },
 
         actualizarParametrosTabla() {
             const tablaSeleccionada = this.tabla;
-            // Buscar la tabla seleccionada en tablasProcesadas
-            const tablaProcesada = this.tablasProcesadas.find(tabla => tabla.nombre_tabla === tablaSeleccionada);
-
-            if (tablaProcesada) {
-                const parametrosUnicos = Array.from(new Set(tablaProcesada.parametros)); // Eliminar duplicados
-                this.parametrosTablaSeleccionada = parametrosUnicos.map(parametro => ({
-                    nombre_parametro: parametro
-                }));
-                this.opcionesParametro = parametrosUnicos;
+            console.log("Tabla seleccionada:", tablaSeleccionada);    
+            
+            if (tablaSeleccionada) {
+              const idTabla = tablaSeleccionada;
+              console.log("ID de tabla seleccionada:", idTabla);
+              this.id_tabla = idTabla;
+              this.parametroDeshabilitado = false;
             } else {
-                // Si la tabla seleccionada no se encuentra en tablasProcesadas, limpiar los parámetros
-                this.parametrosTablaSeleccionada = [];
-                this.opcionesParametro = [];
+              this.parametroDeshabilitado = true;
             }
-            console.log("param", this.parametrosTablaSeleccionada);
+
+            const tablaEncontrada = this.tablaArray.find(tabla => tabla.id_tabla === tablaSeleccionada);
+
+            if (tablaEncontrada) {
+              const parametros = tablaEncontrada.parametros.map(parametro => ({
+                id_parametro: parametro.id_parametro,
+                nombre_parametro: parametro.nombre_parametro
+              }));
+          
+              const metodologias = tablaEncontrada.metodologias.map(metodologia => ({
+                id_metodologia: metodologia.id_metodologia,
+                nombre_metodologia: metodologia.nombre_metodologia
+              }));
+          
+              this.parametrosTablaSeleccionada = parametros;
+              this.opcionesParametro = parametros.map(parametro => parametro.nombre_parametro);
+              this.opcionesMetodologia = metodologias.map(metodologia => metodologia.nombre_metodologia);
+            } else {
+              this.parametrosTablaSeleccionada = [];
+              this.opcionesParametro = [];
+              this.opcionesMetodologia = [];
+            }
+        
+            console.log("Parámetros de la tabla seleccionada:", this.parametrosTablaSeleccionada);
+            
         },
 
         RellenarForm(response) {
 
+            
             //info anterior
-        this.RUM = response.RUM
-        this.nombre_empresa = response.nombre_empresa
-        this.direccionOG = response.direccion_empresa       
-        this.rutOG = response.rut_solicitante
-        this.recepcionistaOG = response.rut_empleado
+        this.RUM = response.RUM;
+        this.nombre_empresa = response.nombre_empresa;
+        this.direccionOG = response.direccion_empresa;       
+        this.rutOG = response.rut_solicitante;
+        this.recepcionistaOG = response.rut_empleado;
         this.nMuestrasOG = response.cantidad_muestras.toString();
-        this.fechaOG = response.fecha_muestreo
-        this.horaOG = response.hora_muestreo
-        this.fechaEntregaOG = response.fecha_entrega
-        this.TipoMatrizOG = response.id_matriz
-        this.muestreadoOG = response.muestreado_por
+        this.fechaOG = response.fecha_muestreo;
+        this.horaOG = response.hora_muestreo;
+        this.fechaEntregaOG = response.fecha_entrega;
+        this.TipoMatrizOG = response.id_matriz;
+        this.muestreadoOG = response.muestreado_por;
         //this.observacionesOG = response.observaciones.map((obs) => obs.observaciones);
         this.prioridadOG = response.prioridad;
-        this.transportistaRutOG = response.rut_transportista
-        this.transportistaOG = response.nombre_transportista                       
-        this.TemperaturaOG = response.temperatura_transporte
-        this.patenteOG = response.patente_vehiculo
-        this.telefonos_agregarOG = response.telefonos_transportistas
-        this.idParamOG = response.submuestras.map((idP) => idP.id_parametro) 
-        this.idMetOG = response.submuestras.map((idM) => idM.id_metodologia)
-        this.normaOG = response.id_norma
-        this.tablaOG = response.id_tabla 
-        this.subMuestra = response.submuestras
+        this.transportistaRutOG = response.rut_transportista;
+        this.transportistaOG = response.nombre_transportista;                       
+        this.TemperaturaOG = response.temperatura_transporte;
+        this.patenteOG = response.patente_vehiculo;
+        this.telefonos_agregarOG = response.telefonos_transportistas;
+        this.idParamOG = response.submuestras.map((idP) => idP.id_parametro);
+        this.idMetOG = response.submuestras.map((idM) => idM.id_metodologia);
+        this.normaOG = response.id_norma;
+        this.tablaOG = response.id_tabla; 
+        this.subMuestra = response.submuestras.map(submuestra=> ({
+                        identificador: submuestra.identificador,
+                        id_metodologia: submuestra.id_metodologia,
+                        id_parametro: submuestra.id_parametro,
+                        orden: submuestra.orden,
+                        analistasSeleccionados: [],
+                    }));
+        console.log("submuestra es: ",this.subMuestra)
+        
 
             //TAB RECEPCIONISTA
-        this.rut = response.rut_solicitante
-        this.solicitante = response.nombre_empresa
-        this.direccion = response.direccion_empresa
+        this.rut = response.rut_solicitante;
+        this.solicitante = response.nombre_empresa;
+        this.direccion = response.direccion_empresa;
+        
         
             //TAB MUESTRA
         this.nMuestras = response.cantidad_muestras.toString();
-        this.fecha = response.fecha_muestreo
-        this.hora = response.hora_muestreo
-        this.fechaEntrega = response.fecha_entrega
-        this.TipoMatriz = response.id_matriz
-        this.muestreado = response.muestreado_por
+        this.fecha = response.fecha_muestreo;
+        this.hora = response.hora_muestreo;
+        this.fechaEntrega = response.fecha_entrega;
+        this.TipoMatriz = response.id_matriz;
+        this.muestreado = response.muestreado_por;
         this.observaciones = response.observaciones.map(obs => obs.observaciones).join("\n");
         this.prioridad = response.prioridad;
+        
 
             //TAB TRANSPORTISTA
-        this.transportistaRut = response.rut_transportista
-        this.transportista = response.nombre_transportista                       
-        this.Temperatura = response.temperatura_transporte
-        this.patente = response.patente_vehiculo
-        this.telefonos_agregar = response.telefonos_transportistas        
+        this.transportistaRut = response.rut_transportista;
+        this.transportista = response.nombre_transportista;                       
+        this.Temperatura = response.temperatura_transporte;
+        this.patente = response.patente_vehiculo;
+        this.telefonos_agregar = response.telefonos_transportistas;  
+            
 
             //TAB PARAMETROS
-        //this.norma = response.id_norma
-        //this.tabla = response.id_tabla
+        this.norma = response.id_norma;
+        this.tabla = response.id_tabla;
+
 
             //TAB ASIGNACIÓN
-        this.identificacion = response.submuestras.map((id) => id.identificador)       
+        this.identificacion = response.submuestras.map((id) => id.identificador);         
            
         },
 
@@ -1374,7 +1483,7 @@ export default {
                         parametros_eliminar: this.parametros_eliminar,
                         id_cotizacion: this.cotizacion,
                         tipo_pago: this.tipo_pago,
-                        valor_neto: this.valor_neto
+                        valor_neto: this.valor_neto,                        
                     }
 
                     console.log("data a enviar", data)
