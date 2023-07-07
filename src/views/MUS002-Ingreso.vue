@@ -367,8 +367,8 @@
                                                       <template #button-content>
                                                           <b-icon style="height: 80%; width: 80%; align-items: center;" icon="three-dots" variant="dark" aria-hidden="true"></b-icon>
                                                       </template>
-                                                      <b-dropdown-item v-if="row" @click="DetallesMetodología(row.item)">
-                                                          <b-icon icon="file-earmark-medical" aria-hidden="true" class="mr-2"></b-icon>Observaciones
+                                                      <b-dropdown-item v-if="row" @click="AgregarAnalista(row.item)">
+                                                          <b-icon icon="person-plus-fill" aria-hidden="true" class="mr-2"></b-icon>Agregar analista
                                                       </b-dropdown-item>
                                                       <b-dropdown-item v-if="row" @click="EditarMetodología(row.item)">
                                                           <b-icon icon="pencil-square" aria-hidden="true" class="mr-2"></b-icon>Editar
