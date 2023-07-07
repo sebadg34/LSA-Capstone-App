@@ -16,14 +16,14 @@
     <b-col>
         <b-row>
             <div>
-                Nombre completo: <span>{{this.Nombre}} {{ this.Apellidos }}</span>
+              <strong>Nombre completo:</strong>   <span>{{this.Nombre}} {{ this.Apellidos }}</span>
             </div>
         </b-row>
         <b-row>
             <div>
-                RUT: <span>{{this.Rut}}</span>
+                <strong> RUT:</strong>    <span>{{this.Rut}}</span>
                 <div>
-                    Correo: <span>{{this.Correo}}</span>
+                    <strong>  Correo:</strong>     <span>{{this.Correo}}</span>
                 </div>
 
             </div>
@@ -32,18 +32,18 @@
     <b-row>
         <b-col class="col-6">
             <div>
-                Teléfono móvil: <span>{{this.Movil}}</span>
+                <strong> Teléfono móvil:</strong>     <span>{{this.Movil}}</span>
             </div>
             <div>
-                Teléfono de emergencia: <span>{{this.Emergencia}}</span>
+                <strong>   Teléfono de emergencia: </strong>   <span>{{this.Emergencia}}</span>
             </div>
         </b-col>
         <b-col class="col-6">
             <div>
-                Cargo: <span>{{ this.Cargo }}</span>
+                <strong>Cargo: </strong>   <span>{{ this.Cargo }}</span>
             </div>
             <div>
-                Tipo de trabajador: <span>{{this.Tipo}}</span>
+                <strong> Tipo de trabajador: </strong> <span>{{this.Tipo}}</span>
             </div>
         </b-col>
     </b-row>

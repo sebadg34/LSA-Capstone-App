@@ -93,14 +93,14 @@
             <b-col class="col-6">
                 <ValidationProvider name="cargo" rules="required" v-slot="validationContext">
                     <label for="input-live">Cargo:</label>
-                    <b-form-select size="sm" aria-describedby="cargo-live-feedback" :state="getValidationState(validationContext)" class="mb-1" v-model="Cargo" :options="cargos"></b-form-select>
+                    <b-form-select size="md" aria-describedby="cargo-live-feedback" :state="getValidationState(validationContext)" class="mb-1" v-model="Cargo" :options="cargos"></b-form-select>
                     <b-form-invalid-feedback id="cargo-live-feedback">{{
                             validationContext.errors[0] }}
                     </b-form-invalid-feedback>
                 </ValidationProvider>
                 <ValidationProvider name="tipo de trabajador" rules="required" v-slot="validationContext">
                     <label for="input-live">Tipo de trabajador:</label>
-                    <b-form-select size="sm" aria-describedby="tipo-live-feedback" :state="getValidationState(validationContext)" class="mb-1" v-model="Tipo" :options="tipos"></b-form-select>
+                    <b-form-select size="md" aria-describedby="tipo-live-feedback" :state="getValidationState(validationContext)" class="mb-1" v-model="Tipo" :options="tipos"></b-form-select>
                     <b-form-invalid-feedback id="tipo-live-feedback">{{
                             validationContext.errors[0] }}
                     </b-form-invalid-feedback>
@@ -121,7 +121,8 @@
         <b-row>
             <b-col class="col-6">
                 <ValidationProvider name="archivo" rules="size:10000" v-slot="validationContext">
-                    Adjuntar archivos:
+                    <label for="area-live">   Adjuntar archivos:</label>
+                 
                     <div>
                         <b-form-file :state="getValidationState(validationContext)" placeholder="Seleccione archivo(s) a subir." browse-text="Buscar" v-on:change="onChange" :multiple="true" v-model="Archivos" ref="file-input"></b-form-file>
                         <b-form-invalid-feedback id="archivo-live-feedback">
@@ -132,7 +133,19 @@
                 </ValidationProvider>
             </b-col>
             <b-col class="col-6">
+                <ValidationProvider name="area" rules="required" v-slot="validationContext">
+                    <label for="area-live">Area:</label>
+                    <b-form-select size="md" aria-describedby="area-live-feedback" :state="getValidationState(validationContext)" class="mb-1" v-model="Area" :options="Areas"></b-form-select>
+                    <b-form-invalid-feedback id="cargo-live-feedback">{{
+                            validationContext.errors[0] }}
+                    </b-form-invalid-feedback>
+                </ValidationProvider>
+               
 
+            </b-col>
+            
+            <b-col class="col-12">
+                 <br/>
                 <div style="font-weight:bold">Archivos seleccionados: </div>
 
                 <b-list-group>
@@ -150,7 +163,6 @@
                     </b-list-group-item>
 
                 </b-list-group>
-
             </b-col>
         </b-row>
 
@@ -169,6 +181,8 @@ export default {
     data() {
 
         return {
+            Area: "",
+            Areas: [],
             Cargando: false,
             Archivos: null,
             Archivos_enviar: "",
@@ -250,6 +264,7 @@ export default {
             this.Revisando_rut = false;
             this.Correo_ocupado = false;
             this.Revisando_rut = false;
+            this.Areas = [];
 
         },
         revisarRutPersonal() {
