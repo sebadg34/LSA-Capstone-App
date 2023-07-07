@@ -145,7 +145,16 @@
                         <span v-else-if="row.item.estado " style="text-transform:uppercase; color:red; font-weight: bold;">inactivo</span>
                     </template>
                        -->
-
+  <template #custom-foot>
+                    <b-tr>
+                        <b-th colspan="9" style="background-color:rgb(235, 235, 235); border-radius:0px 0px 20px 20px; padding:1px" v-if="filtrando">
+                            <div>
+                            <b-icon icon="filter" animation="fade" variant="secondary" scale="0.8"></b-icon>
+                            <div style="font-weight:bold; color:gray">  Resultados filtrados</div>
+                        </div>
+                        </b-th>
+                    </b-tr>
+                </template>
                 <template #cell(accion)="row">
 
                     <b-dropdown right size="sm" variant="link" toggle-class="text-decoration-none" no-caret>
@@ -220,7 +229,7 @@ export default {
             empresaFiltro: "",
             totalRows: "",
             rutFiltro: "",
-            filtrando: false,
+               filtrando : false,
             editarID: 0,
             currentPage: 3,
             perPage: 10,
