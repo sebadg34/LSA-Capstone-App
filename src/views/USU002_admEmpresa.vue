@@ -55,24 +55,6 @@
 
                     </b-row>
                 </b-col>
-                <!--
-
-                <b-col lg="6" class="my-1">
-                    <b-form-group label-cols-sm="3" label-align-sm="right" label-size="md" class="mb-0">
-
-                        <b-input-group size="md">
-                            <b-input-group-prepend is-text>
-                                <b-icon icon="search"></b-icon>
-
-                            </b-input-group-prepend>
-                            <b-form-input id="filter-input" v-model="filter" type="search" placeholder="Escriba rut, nombre, etc. para filtrar"></b-form-input>
-                            <b-input-group-append>
-                                <b-button style="font-weight:bold" class="lsa-blue" :disabled="!filter" @click="filter = ''">Limpiar filtro</b-button>
-                            </b-input-group-append>
-                        </b-input-group>
-                    </b-form-group>
-                </b-col>
-                -->
             </b-row>
         </b-col>
 

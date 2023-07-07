@@ -1,5 +1,5 @@
 <template>
-  <b-modal id="modal-detalle-muestra-gerente" :title="`Detalles de la muestra ${RUM}`" size="lg" @hidden="onHidden">
+  <b-modal id="modal-detalle-muestra-gerente" :title="`Detalles de la muestra ${RUM}`" size="xl" @hidden="onHidden">
 
     <template #modal-header="{ close }">
       <!-- Emulate built in modal header close button action -->
@@ -27,43 +27,43 @@
           <b-col class="col-6">
            
             <b-row style="border-bottom: 1px solid var(--lsa-light-gray); padding:3px">
-              <b-col class="col-7" style="font-weight:bold;"> Nombre solicitante: </b-col>
-              <b-col class="col-5">{{ nombre_solicitante }}</b-col>
+              <b-col class="col-5" style="font-weight:bold;"> Nombre solicitante: </b-col>
+              <b-col class="col-7">{{ nombre_solicitante + " " + apellido_solicitante}}</b-col>
             </b-row>
 
             <b-row style="border-bottom: 1px solid var(--lsa-light-gray); padding:3px">
-              <b-col class="col-7" style="font-weight:bold;"> Empresa: </b-col>
-              <b-col class="col-5">{{ nombre_empresa }}</b-col>
+              <b-col class="col-5" style="font-weight:bold;"> Empresa: </b-col>
+              <b-col class="col-7">{{ nombre_empresa }}</b-col>
             </b-row>
 
             <b-row style="border-bottom: 1px solid var(--lsa-light-gray); padding:3px">
-              <b-col class="col-7" style="font-weight:bold;"> Ciudad empresa: </b-col>
-              <b-col class="col-5">{{ ciudad_empresa }}</b-col>
+              <b-col class="col-5" style="font-weight:bold;"> Ciudad empresa: </b-col>
+              <b-col class="col-7">{{ ciudad_empresa }}</b-col>
             </b-row>
 
             <b-row style="border-bottom: 1px solid var(--lsa-light-gray); padding:3px">
-              <b-col class="col-7" style="font-weight:bold;"> Dirección empresa: </b-col>
-              <b-col class="col-5">{{ direccion_empresa }}</b-col>
+              <b-col class="col-5" style="font-weight:bold;"> Dirección empresa: </b-col>
+              <b-col class="col-7">{{ direccion_empresa }}</b-col>
             </b-row>
            
           </b-col>
 
           <b-col class="col-6">
             <b-row style="border-bottom: 1px solid var(--lsa-light-gray); padding:3px">
-              <b-col class="col-7" style="font-weight:bold;"> Número de muestras: </b-col>
-              <b-col class="col-5">{{ numero_muestras }}</b-col>
+              <b-col class="col-5" style="font-weight:bold;"> Número de muestras: </b-col>
+              <b-col class="col-7">{{ numero_muestras }}</b-col>
             </b-row>
             <b-row style="border-bottom: 1px solid var(--lsa-light-gray); padding:3px">
-              <b-col class="col-7" style="font-weight:bold;"> matriz: </b-col>
-              <b-col class="col-5">{{ matriz }}</b-col>
+              <b-col class="col-5" style="font-weight:bold;"> matriz: </b-col>
+              <b-col class="col-7">{{ matriz }}</b-col>
             </b-row>
             <b-row style="border-bottom: 1px solid var(--lsa-light-gray); padding:3px">
-              <b-col class="col-7" style="font-weight:bold;"> Norma: </b-col>
-              <b-col class="col-5">{{ norma }}</b-col>
+              <b-col class="col-5" style="font-weight:bold;"> Norma: </b-col>
+              <b-col class="col-7">{{ norma }}</b-col>
             </b-row>
             <b-row style="border-bottom: 1px solid var(--lsa-light-gray); padding:3px">
-              <b-col class="col-7" style="font-weight:bold;"> Muestreado por: </b-col>
-              <b-col class="col-5">{{ muestreador }}</b-col>
+              <b-col class="col-5" style="font-weight:bold;"> Muestreado por: </b-col>
+              <b-col class="col-7">{{ muestreador }}</b-col>
             </b-row>
            
 
@@ -116,7 +116,7 @@
 
         </b-list-group>
      
-<hr/>
+<br/>
         <b-list-group horizontal>
           <b-list-group-item class="d-flex align-items-center justify-content-center"
             style="width:30%;font-weight: bold; padding:3px">Analistas designados(s)</b-list-group-item>
@@ -180,11 +180,11 @@ export default {
 
       RUM: '',
       nombre_solicitante: '',
+      apellido_solicitante: '',
       nombre_empresa: '',
       ciudad_empresa: '',
       direccion_empresa: '',
       numero_muestras: '',
-
       numero_empresa: '',
       norma: '',
       muestreador: '',
@@ -196,6 +196,7 @@ export default {
       cargandoParametros: false,
       cargandoAnalistas: false,
       showObservaciones: false,
+      parametros: [],
 
     }
   },
@@ -214,7 +215,32 @@ export default {
             this.valor_neto = detalles.valor_neto;
             this.tipo_pago = detalles.tipo_pago;
             this.muestreador = detalles.muestreado_por;
+            this.apellido_solicitante = detalles.detalles[0].primer_apellido;
+            this.direccion_empresa = detalles.detalles[0].direccion;
+            this.ciudad_empresa = detalles.detalles[0].nombre_ciudad;
 
+            const parametrosData = response.data.parametros_metodologias;
+            for(var i = 0; i < parametrosData.length; i++){
+              const parametroExistente = this.parametros.find(param => param.id_parametro = parametrosData.id_parametro);
+              if(parametroExistente == null){
+                this.parametros.push({
+                  nombre_parametro: parametrosData[i].nombre_parametro,
+                  id_parametro : parametrosData[i].id_parametro,
+                  metodologias: [{
+                    id_metodologia: parametrosData[i].id_metodologia,
+                    nombre_metodologia: parametrosData[i].nombre_metodologia,
+                    detalle_metodologia: parametrosData[i].detalle_metodologia,
+                  }]
+                })
+              } else{
+                parametroExistente.metodologias.push({
+                  id_metodologia: parametrosData[i].id_metodologia,
+                    nombre_metodologia: parametrosData[i].nombre_metodologia,
+                    detalle_metodologia: parametrosData[i].detalle_metodologia,
+                })
+              }
+            }
+            this.cargandoParametros = false;
           }
 
         } else {

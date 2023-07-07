@@ -38,13 +38,13 @@
                                     <b-button class="reactive-button lsa-orange" @click="borrarFiltro">Quitar</b-button>
                                 </b-button-group>
                             </b-input-group>
-
                         </b-form-group>
                     </b-col>
                 </b-row>
             </b-col>
         </b-row>
     </b-col>
+    
 </b-row>
     <div class="row justify-content-center">
         <div class="col-10">
@@ -202,7 +202,6 @@ export default {
                     this.parametrosFiltrado = this.parametros;
 
                     this.loading = false;
-                    console.log("los parametros son: ", parametros);
                 }
             });
         },
