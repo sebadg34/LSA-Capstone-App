@@ -131,9 +131,9 @@
               
             </b-col>
             <b-col class="col-6">
-                <ValidationProvider name="tipo de trabajador" rules="required" v-slot="validationContext">
-                    <label for="input-live">Tipo de analisis:</label>
-                    <b-form-select size="md" aria-describedby="tipo-live-feedback" :state="getValidationState(validationContext)" class="mb-1" v-model="Tipo" :options="tipos"></b-form-select>
+                <ValidationProvider name="tipo de análisis" rules="required" v-slot="validationContext">
+                    <label for="input-live">Tipo de análisis:</label>
+                    <b-form-input size="md" aria-describedby="tipo-live-feedback" :state="getValidationState(validationContext)" class="mb-1" v-model="Tipo" ></b-form-input>
                     <b-form-invalid-feedback id="tipo-live-feedback">{{
                             validationContext.errors[0] }}
                     </b-form-invalid-feedback>

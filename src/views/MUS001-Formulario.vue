@@ -4,6 +4,8 @@
         <!-- <validation-observer ref="form"> -->
         <modal_cantidadMuestra :n-muestras="nMuestras" :objetosSeleccionados="objetosSeleccionados"
             @datosIngresados="capturarDatos" :identificaciones="identificacion" />
+            <modal_agregarMetodologia/>
+            <modal_agregarParametro/>
         <div>
 
             <b-card no-body>
@@ -231,15 +233,15 @@
                                                                 :options="opcionesMatriz"
                                                                 aria-describedby="input-live-help TipoMatriz-live-feedback"
                                                                 :state="getValidationState(validationContext)"
-                                                                text-field="nombre_matriz" value-field="id_matriz"
-                                                            ></b-form-select>
+                                                                text-field="nombre_matriz"
+                                                                value-field="id_matriz"></b-form-select>
                                                             <b-form-invalid-feedback id="TipoMatriz-live-feedback">{{
                                                                 validationContext.errors[0] }}</b-form-invalid-feedback>
                                                         </ValidationProvider>
 
                                                         <label class="mt-1" for="input-live">Observaciones:</label>
-                                                        <b-form-textarea id="input-live" v-model="observaciones"
-                                                          rows="1"  aria-describedby="input-live-help observaciones-live-feedback"></b-form-textarea>
+                                                        <b-form-textarea id="input-live" v-model="observaciones" rows="1"
+                                                            aria-describedby="input-live-help observaciones-live-feedback"></b-form-textarea>
                                                     </b-col>
                                                 </b-row>
                                             </b-card>
@@ -351,9 +353,8 @@
                                                             <b-form-group label="Seleccione una norma">
                                                                 <b-form-select
                                                                     :state="getValidationState(validationContext)"
-                                                                    v-model="norma"
-                                                                    :options="opcionesNorma" text-field="nombre"
-                                                                    value-field="id"
+                                                                    v-model="norma" :options="opcionesNorma"
+                                                                    text-field="nombre" value-field="id"
                                                                     @change="obtenerTablasNormas"></b-form-select>
                                                                 <b-form-invalid-feedback id="norma-live-feedback">{{
                                                                     validationContext.errors[0] }}</b-form-invalid-feedback>
@@ -498,7 +499,7 @@
                 -->
             <!-- Control buttons-->
 
-            <b-modal id="modal-Agregar-Opciones" ref="modal" :title="`Agregar parámetro a opciones`" size="lg"
+            <b-modal centered id="modal-Agregar-Opciones" ref="modal" :title="`Agregar parámetro a opciones`" size="lg"
                 @shown="onModalShown">
                 <template #modal-header="{ close }">
                     <b-row class="d-flex justify-content-around">
@@ -510,18 +511,36 @@
                 </template>
                 <b-row>
                     <b-col>
-                        <b-form-group label="Seleccione un parámetro">
+                        <label>Seleccione un parámetro</label>
+                        <b-input-group>
+                            
                             <b-form-select v-model="parametroSeleccionado" :options="TodasopcionesParametro"
                                 placeholder="Seleccione un Parámetro" @change="agregarObjetosSeleccionados"></b-form-select>
-                        </b-form-group>
+                            <b-input-group-append>
+                                <b-button size="sm" class="lsa-orange reactive-button" style=" border: none"
+                                    v-b-modal.modal-Agregar-Parametro>
+                                    Nuevo
+                                    <b-icon style="color:white" icon="pencil-square"></b-icon>
+                                </b-button>
+                            </b-input-group-append>
+                        </b-input-group>
                     </b-col>
 
                     <b-col>
-                        <b-form-group label="Seleccione una metodología">
+                        <label>Seleccione una metodología</label>
+                        <b-input-group>
+                           
                             <b-form-select v-model="metodologiaSeleccionada" :options="opcionesMetodologia"
                                 placeholder="Seleccione una metodología" :disabled="metodologiaDeshabilitada"
                                 @change="agregarObjetosSeleccionados"></b-form-select>
-                        </b-form-group>
+                            <b-input-group-append>
+                                <b-button size="sm" class="lsa-orange reactive-button" style="border: none"
+                                    v-b-modal.modal-Agregar-Metodologia>
+                                    Nuevo
+                                    <b-icon style="color:white" icon="pencil-square"></b-icon>
+                                </b-button>
+                            </b-input-group-append>
+                        </b-input-group>
                     </b-col>
                 </b-row>
 
@@ -552,6 +571,9 @@ import ElementosService from '@/helpers/api-services/Elementos.service';
 import PersonalService from '@/helpers/api-services/Personal.service';
 //import EmpresaService from '@/helpers/api-services/Empresa.service';
 import SolicitanteService from '@/helpers/api-services/Solicitante.service';
+
+import modal_agregarParametro from '@/components/recepcionMuestra/modal_agregarParametro.vue';
+import modal_agregarMetodologia from '@/components/recepcionMuestra/modal_agregarMetodologia.vue';
 import {
     getUserInfo
 } from "@/helpers/api-services/Auth.service";
@@ -562,7 +584,9 @@ import {
 export default {
 
     components: {
-        modal_cantidadMuestra
+        modal_cantidadMuestra,
+        modal_agregarMetodologia,
+        modal_agregarParametro
     },
 
     data() {
@@ -686,7 +710,7 @@ export default {
 
         this.obtenerMatriz(),
 
-        this.obtenerNormas(),
+            this.obtenerNormas(),
 
             PersonalService.obtenerTodosPersonal().then((response) => {
                 console.log(response.data);
@@ -1054,7 +1078,7 @@ export default {
             });
         },
 
-        obtenerNormas() {            
+        obtenerNormas() {
             ElementosService.obtenerNormas().then((response) => {
                 if (response.data != null && response.status === 200) {
                     console.log("Obteniendo normas:", response.data);
