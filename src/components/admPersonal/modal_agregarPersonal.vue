@@ -187,6 +187,7 @@ import roleService from "@/helpers/api-services/Role.service"
 export default {
     mounted() {
         this.obtenerRoles();
+        this.obtenerAreas();
     },
     data() {
 
@@ -257,6 +258,22 @@ export default {
     },
 
     methods: {
+        obtenerAreas(){
+            personalService.obtenerAreas().then((response) => {
+                if(response != null && response.data != null){
+                    console.log("areas cargadas: ",response);
+                    console.log(response);
+                    const areas = response.data;
+                    for (var i = 0; i < areas.length; i++){
+                        this.Areas.push({
+                            value: areas[i],
+                            text: areas[i].nombre_area,
+
+                        })
+                    }
+                }
+            })
+        },
         reiniciarDatos() {
             this.Archivos = null;
             this.Archivos_enviar = "";
@@ -404,6 +421,12 @@ export default {
                         "telefono_movil": this.Movil,
                         "telefono_emergencia": this.Emergencia,
                         "estado": 1,
+                        "areas": [{
+                            id_area: "",
+                            tipo_analisis: ""
+                        }]
+                        
+                        
                         //"fecha_inicio_vacaciones": "01-01-2000",
                         // "fecha_termino_vacaciones": "01-01-2099",
                         //"//dias_administrativos": "1"

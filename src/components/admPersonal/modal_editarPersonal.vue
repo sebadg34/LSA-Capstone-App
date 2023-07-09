@@ -105,16 +105,6 @@
 
         <b-row>
             <b-col class="col-6">
-                <ValidationProvider name="tipo de trabajador" rules="required" v-slot="validationContext">
-                    <label for="input-live">Tipo de analisis:</label>
-                    <b-form-select size="md" aria-describedby="tipo-live-feedback" :state="getValidationState(validationContext)" class="mb-1" v-model="Tipo" :options="tipos"></b-form-select>
-                    <b-form-invalid-feedback id="tipo-live-feedback">{{
-                            validationContext.errors[0] }}
-                    </b-form-invalid-feedback>
-                </ValidationProvider>
-            </b-col>
-            <b-col class="col-6">
-             
                 <ValidationProvider name="area" rules="required" v-slot="validationContext">
                     <label for="area-live">Area:</label>
                     <b-form-select size="md" aria-describedby="area-live-feedback" :state="getValidationState(validationContext)" class="mb-1" v-model="Area" :options="Areas"></b-form-select>
@@ -122,6 +112,19 @@
                             validationContext.errors[0] }}
                     </b-form-invalid-feedback>
                 </ValidationProvider>
+              
+            </b-col>
+            <b-col class="col-6">
+                <ValidationProvider name="tipo de análisis" rules="required" v-slot="validationContext">
+                    <label for="input-live">Tipo de análisis:</label>
+                    <b-form-input size="md" aria-describedby="tipo-live-feedback" :state="getValidationState(validationContext)" class="mb-1" v-model="Tipo" ></b-form-input>
+                    <b-form-invalid-feedback id="tipo-live-feedback">{{
+                            validationContext.errors[0] }}
+                    </b-form-invalid-feedback>
+                </ValidationProvider>
+              
+             
+
             </b-col>
             <b-col class="col-12">
                 <ValidationProvider name="archivo" rules="size:10000" v-slot="validationContext">
@@ -192,6 +195,7 @@ export default {
     },
     mounted() {
         console.log("editando")
+        this.obtenerAreas();
 
     },
 
@@ -258,6 +262,22 @@ export default {
         }
     },
     methods: {
+        obtenerAreas(){
+            personalService.obtenerAreas().then((response) => {
+                if(response != null && response.data != null){
+                    console.log("areas cargadas: ",response);
+                    console.log(response);
+                    const areas = response.data;
+                    for (var i = 0; i < areas.length; i++){
+                        this.Areas.push({
+                            value: areas[i],
+                            text: areas[i].nombre_area,
+
+                        })
+                    }
+                }
+            })
+        },
         remove(index) {
             this.Archivos.splice(index, 1)
         },
