@@ -35,7 +35,7 @@
   <b-col>
     <b-form-group label="Analistas seleccionados">
       <div v-for="(analista, index) in analistasSeleccionados" :key="index" class="d-flex align-items-center parametro-item">
-        <b-input readonly :value="analista.nombre"></b-input>
+        <b-input readonly :value="analista.nombre + ' ' + analista.apellido"></b-input>
         <b-button variant="danger" @click="eliminarAnalistaSeleccionado(index)" class="ml-2">
           <b-icon-trash-fill></b-icon-trash-fill>
         </b-button>
@@ -94,8 +94,8 @@ export default {
 
       this.opcionesAnalista = this.analistas.filter((analista) => {
         return analista.rol === 'Analista Químico' || analista.rol === 'Químico';}).map((analista) => ({
-        value: analista.nombre,
-        text: analista.nombre,
+        value: analista,
+        text: (analista.nombre + " "+ analista.apellido),
       }));
     }
   })
@@ -113,14 +113,14 @@ export default {
     agregarAnalistaSeleccionado() {
   if (this.AnalistaAsignado) {
     const analistaExistente = this.analistasSeleccionados.find(
-      (analista) => analista.nombre === this.AnalistaAsignado
+      (analista) => analista.nombre === this.AnalistaAsignado.nombre
     );
     if (analistaExistente) {
       this.alertaDuplicado = true;
     } else {
-      const analistaSeleccionado = this.analistas.find((analista) => analista.nombre === this.AnalistaAsignado);
+      const analistaSeleccionado = this.analistas.find((analista) => analista.nombre === this.AnalistaAsignado.nombre);
       const rutAnalista = analistaSeleccionado.rut_empleado;
-      this.analistasSeleccionados.push({ nombre: this.AnalistaAsignado, rut_empleado: rutAnalista });
+      this.analistasSeleccionados.push({apellido: this.AnalistaAsignado.apellido, nombre: this.AnalistaAsignado.nombre, rut_empleado: rutAnalista });
       this.empleados_agregar.push({ rut_empleado: rutAnalista });
       this.AnalistaAsignado = '';
       this.alertaDuplicado = false;
