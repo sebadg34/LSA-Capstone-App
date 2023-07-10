@@ -122,13 +122,15 @@ export default {
                     key: 'nombre_parametro',
                     label: 'Nombre',
                     thClass: 'text-center',
-                    tdClass: 'text-center'
+                    tdClass: 'text-center',
+                    sortable: true
                 },
                 {
                     key: 'nombreMetodologia',
                     label: 'Metodología',
                     thClass: 'text-center',
-                    tdClass: 'text-center'
+                    tdClass: 'text-center',
+                    sortable: true
                 },
                 {
                     key: 'Accion',

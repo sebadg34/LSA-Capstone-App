@@ -143,7 +143,8 @@ export default {
                     key: 'nombre_norma',
                     label: 'Nombre',
                     thClass: 'text-center',
-                    tdClass: 'text-center'
+                    tdClass: 'text-center',
+                    sortable: true
                 },
                 {
                     key: 'matrices_norma',

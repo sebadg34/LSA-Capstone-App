@@ -118,13 +118,15 @@ export default {
                     key: 'nombre_matriz',
                     label: 'Nombre',
                     thClass: 'text-center',
-                    tdClass: 'text-center'
+                    tdClass: 'text-center',
+                    sortable: true
                 },
                 {
                     key: 'nombreParametro',
                     label: 'Parámetro',
                     thClass: 'text-center',
-                    tdClass: 'text-center'
+                    tdClass: 'text-center',
+                    sortable: true
                 },
                 {
                     key: 'Accion',
