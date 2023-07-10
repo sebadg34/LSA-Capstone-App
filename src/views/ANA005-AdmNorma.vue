@@ -81,7 +81,7 @@
                             {{ row.item.matrices[0].nombre_matriz }}
                             <b-icon style="position:absolute; right:0px; top:25%; color: #949494" icon="caret-down-fill"></b-icon>
                         </b-list-group-item>
-                        <b-list-group-item v-else style="padding:2px; border: none; border-bottom: solid 1px #dbdbdb; ">{{ row.item.matrices[0].nombre_matriz }}
+                        <b-list-group-item v-else style="padding:2px; border: none;">{{ row.item.matrices[0].nombre_matriz }}
 
                         </b-list-group-item>
 
