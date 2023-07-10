@@ -20,7 +20,7 @@
             <b-row style="padding-top:30px; padding-bottom:10px">
                 <b-col class="col-4">
 
-                    <b-col class="col-6">
+                    <b-col class="col-10">
                         <b-row>
                             <b-button v-b-modal.modal-personal style="border-radius: 15px; font-weight: bold; font-size: 18px; " class="lsa-light-blue reactive-button">
 
@@ -77,7 +77,7 @@
         </b-col>
 
         <b-col class="col-10">
-            <b-table :filter-included-fields="filterOn" fixed show-empty :filter="filter" @filtered="onFiltered" :fields="campos_tabla" :items="personalFiltrado" style="" :busy="loading" :per-page="perPage" :current-page="currentPage">
+            <b-table :filter-included-fields="filterOn" responsive show-empty :filter="filter" @filtered="onFiltered" :fields="campos_tabla" :items="personalFiltrado" style="" :busy="loading" :per-page="perPage" :current-page="currentPage">
 
                 <template #empty>
                     <div class="text-center lsa-light-blue-text my-2 row">
