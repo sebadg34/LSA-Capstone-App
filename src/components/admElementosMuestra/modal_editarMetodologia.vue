@@ -124,7 +124,7 @@ export default {
                         this.rutEmpleados = this.analistas.map((analista) => analista.rut_empleado);
 
                         this.opcionesAnalista = this.analistas.filter((analista) => {
-                            return analista.rol === 'Analista Químico' || analista.rol === 'Químico' || analista.rol == 'Supervisor';
+                            return analista.rol === 'Analista Químico' || analista.rol === 'Químico' || analista.rol == 'Supervisor(a)';
                         }).map((analista) => ({
                             value: analista,
                             text:  (analista.nombre + " "+ analista.apellido),
