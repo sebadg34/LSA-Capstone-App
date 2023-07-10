@@ -137,8 +137,8 @@ export default {
         },
 
         eliminarMetodologiaSeleccionada(index) {
+             this.metodologias_agregar = this.metodologias_agregar.filter(metodo => metodo.id_metodologia != this.metodologiaSeleccionada[index].id_metodologia)
             this.metodologiaSeleccionada.splice(index, 1);
-            // this.rutEmpleadosSeleccionados.splice(index, 1);
         },
 
         AgregarParametro() {
