@@ -16,7 +16,7 @@
       <b-form-invalid-feedback>{{ validationContext.errors[0] }}</b-form-invalid-feedback>
     </ValidationProvider>
     <br/>
-    <ValidationProvider name="descripción" rules="max:255" v-slot="validationContext">
+    <ValidationProvider name="descripción" rules="max:512" v-slot="validationContext">
       <label for="input-live">Descripción:</label>
       <b-form-textarea  rows="3"
        id="input-live" v-model="Descripción" :state="getValidationState(validationContext)" placeholder="ingrese descripción (opcional)" ></b-form-textarea>
@@ -129,8 +129,9 @@ export default {
 },
 
 eliminarAnalistaSeleccionado(index) {
+  this.empleados_agregar = this.empleados_agregar.filter(emp => emp.rut_empleado != this.analistasSeleccionados[index].rut_empleado)
   this.analistasSeleccionados.splice(index, 1);
-  this.empleados.splice(index + 1, 1); // Eliminar objeto con el RUT y nombre
+  console.log("analista borrado, listado actual: ",this.analistasSeleccionados)
 },
 
 
