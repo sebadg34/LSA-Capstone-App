@@ -65,6 +65,7 @@ export default {
     watch: {
         parametroData: {
             handler() {
+                this.metodologias_agregar = [];
                 console.log("info a editar de parametros", this.parametroData)
                 this.Nombre = this.parametroData.nombre_parametro;
                 this.metodologiaSeleccionada = this.parametroData.metodologias;
