@@ -342,40 +342,58 @@
                                         <b-tab title="Asignar analista">
 
                                             <b-card>
-                                            <b-table :items="subMuestra" :fields="tableFields">                                               
+                                            <b-table :items="empleados" :fields="tableFields">                                               
                                                 
-                                              <template #cell(identificador)="row">
-                                                {{ row.value }}
-                                              </template>
-                                              <template #cell(fecha_entrega_submuestra)="row">
-                                                <b-form-datepicker v-model="row.item.fecha_entrega" button-only ></b-form-datepicker>
-                                              </template>                                      
-                                              <template #cell(orden)="row">
-                                                {{ row.value }}
-                                              </template>
-                                              <template #cell(analistasSeleccionados)="row">
-                                                <b-form-select
-                                                  v-model="row.item.analistasSeleccionados"        
-                                                  :options="opcionesAnalista"
-                                                  value-field="rut_empleado"
-                                                  text-field="nombre"
-                                                  @change="imprimirSeleccion(row.item.analistasSeleccionados)"
-                                                ></b-form-select>
-                                              </template>
-                                              <template #cell(accion)="row">
-                                                  <b-dropdown right size="sm" variant="link" toggle-class="text-decoration-none" no-caret>
-                                                      <template #button-content>
-                                                          <b-icon style="height: 80%; width: 80%; align-items: center;" icon="three-dots" variant="dark" aria-hidden="true"></b-icon>
-                                                      </template>
-                                                      <b-dropdown-item v-if="row" @click="AgregarAnalista(row.item)">
-                                                          <b-icon icon="person-plus-fill" aria-hidden="true" class="mr-2"></b-icon>Agregar analista
-                                                      </b-dropdown-item>
-                                                      <b-dropdown-item v-if="row" @click="EditarMetodología(row.item)">
-                                                          <b-icon icon="pencil-square" aria-hidden="true" class="mr-2"></b-icon>Editar
-                                                      </b-dropdown-item>
-                                                  </b-dropdown>
-                                              </template>
+                                                <template #cell(rut_empleado)="row">
+                                                    <b-form-select v-model="row.item.rut_empleado" :options="formattedOpcionesAnalista" value-field="rut_empleado" text-field="nombreCompleto"></b-form-select>
+                                                </template>                                               
+
+                                                <template #cell(nombre_parametro)="row">  
+                                                    <b-list-group v-if="row.item.nombre_parametro.length > 0">
+                                                        <b-list-group-item v-if="row.item.nombre_parametro.length > 1" v-b-toggle="'toggle-' + row.index" style="padding:2px; border: none; border-bottom: solid 1px #dbdbdb; ">{{ row.item.nombre_parametro[0] }}
+                                                          <b-icon style="position:absolute; right:0px; top:25%; color: #949494" icon="caret-down-fill"></b-icon>
+                                                        </b-list-group-item>
+                                                        <b-list-group-item v-if="row.item.nombre_parametro.length === 1" style="padding:2px; border: none; border-bottom: solid 1px #dbdbdb; ">{{ row.item.nombre_parametro[0] }}</b-list-group-item>
+                                                        <div v-if="row.item.nombre_parametro.length > 1">
+                                                          <b-collapse :id="'toggle-' + row.index">
+                                                            <b-list-group-item style="padding:2px;  border: none; border-bottom: solid 1px #dbdbdb;" v-for="(parametro, index) in row.item.nombre_parametro.slice(1)" :key="index">{{ parametro }}</b-list-group-item>
+                                                          </b-collapse>
+                                                        </div>
+                                                    </b-list-group>
+                                                </template>                                                
+                                                                                   
+                                                <template #cell(orden_de_analisis)="row">
+                                                    <b-input v-model="row.item.orden_de_analisis" type="number" min="1" class="small-input"></b-input>
+                                                </template>
+
+                                                <template #cell(fecha_entrega_submuestra)="row">
+                                                  <b-form-datepicker v-model="row.item.fecha_entrega" button-only ></b-form-datepicker>
+                                                </template> 
+
+                                                <!--  <template #cell(analistasSeleccionados)="row">
+                                                   <b-form-select
+                                                    v-model="row.item.analistasSeleccionados"        
+                                                    :options="opcionesAnalista"
+                                                    value-field="rut_empleado"
+                                                    text-field="nombre"
+                                                    @change="imprimirSeleccion(row.item.analistasSeleccionados)"
+                                                   ></b-form-select>
+                                                </template> -->
+                                                <template #cell(accion)="row">
+                                                    <b-dropdown right size="sm" variant="link" toggle-class="text-decoration-none" no-caret>
+                                                        <template #button-content>
+                                                            <b-icon style="height: 80%; width: 80%; align-items: center;" icon="three-dots" variant="dark" aria-hidden="true"></b-icon>
+                                                        </template>
+                                                        <b-dropdown-item v-if="row" @click="abrirParam(row.item)">
+                                                             <b-icon icon="person-plus-fill" aria-hidden="true" class="mr-2"></b-icon>Agregar Parametro
+                                                        </b-dropdown-item>
+                                                        <b-dropdown-item v-if="row" @click="eliminarFila(row.item)">
+                                                             <b-icon icon="trash-fill" aria-hidden="true" class="mr-2"></b-icon>Eliminar fila
+                                                        </b-dropdown-item>                                                                                                          
+                                                    </b-dropdown>
+                                                </template>
                                             </b-table>
+                                            <b-button @click="agregarFila">+</b-button>
                                             </b-card>
                                         </b-tab>
                                     </b-col>
@@ -429,6 +447,53 @@
                     <template #modal-footer="{ close }">
                         <b-button @click="close()" variant="primary" size="xl" class="float-right reactive-button" style="font-weight:bold">
                             Cerrar
+                        </b-button>
+                    </template>
+                </b-modal>
+                <b-modal id="modal-Agregar-Parametros" ref="modal" :title="`Agregar parámetro a analista`" size="lg">
+                    <template #modal-header="{ close }">
+                        <b-row class="d-flex justify-content-around">
+                            <div class="pl-3">Asignar Parámetros a analista</div>
+                        </b-row>
+                        <button type="button" class="close" aria-label="Close" @click="close()">
+                            <span aria-hidden="true" style="color:white">&times;</span>
+                        </button>
+                    </template>
+                    <b-row>
+                        <b-col>
+                            <b-form-group label="Seleccione un parámetro">
+                                <b-form-select v-model="parametroSeleccionadoIngreso" :options="parametrosOptions" text-field="nombre_parametro" value-field="id_parametro"></b-form-select>
+                            </b-form-group>
+                        </b-col>                       
+                    </b-row>
+
+                    <b-row v-if="parametrosAnalista.length > 0" class="mt-3">
+                        <b-col>
+                            <b-form-group label="Parámetros Seleccionados:">
+                                <div v-for="(param, index) in parametrosAnalista" :key="index" class="d-flex align-items-center objetos-item mb-3">
+                                    <b-input readonly :value="param.parametro" class="mr-2"></b-input>                                    
+                                    <b-button variant="danger" @click="eliminarParametrosSeleccionados(index)" class="ml-2">
+                                        <b-icon-trash-fill></b-icon-trash-fill>
+                                    </b-button>
+                                </div>
+                            </b-form-group>
+                        </b-col>
+                    </b-row>
+                
+                    <b-alert variant="danger" :show="alertaDuplicado" dismissible @dismissed="alertaDuplicado = false">
+                        El Parametro ya se encuentra agregado.
+                    </b-alert>
+                
+                    <b-alert variant="success" :show="alertaExito" dismissible @dismissed="alertaExito = false">
+                        Parámetro agregado con éxito!
+                    </b-alert>
+                    <!-- //////////////////////////////////////////MODAL-FOOTER////////////////////////////////////////////////////////////////////////////////// -->
+                    <template #modal-footer="{ close }">
+                        <b-button @click="agregarParametro(filaSeleccionada)" variant="primary" size="xl" class="float-right reactive-button" style="font-weight:bold">
+                          Agregar Parámetro
+                        </b-button>
+                        <b-button @click="close()" variant="primary" size="xl" class="float-right reactive-button" style="font-weight:bold">
+                          Cerrar
                         </b-button>
                     </template>
                 </b-modal>
@@ -498,6 +563,9 @@ export default {
             tablaArray : [],
             subMuestra_Analista : [],
             tablaItems : [],
+            empleados: [],
+            parametroSeleccionadoIngreso: '',
+            parametrosAnalista: [],
 
             rutSolicitante: '',
             recepcionista: '',
@@ -633,12 +701,15 @@ export default {
             AnalistaAsignado: '',
             analistasSeleccionados: [],
             tableFields: [
-                { key: 'identificador', label: 'Identificador' },                
-                { key: 'fecha_entrega_submuestra', label: 'Fecha Entrega' },
-                { key: 'orden', label: 'Orden'},
-                { key: 'analistasSeleccionados', label: 'Analistas' },
+                { key: 'rut_empleado', label: 'RUT Analista' },                
+                { key: 'orden_de_analisis', label: 'Orden de análisis'},                
+                { key: 'nombre_parametro', label: 'Parámetro(s)'},              
+                { key: 'fecha_entrega_submuestra', label: 'Fecha Entrega'},             
                 { key: 'accion', label: 'Acción'} 
-            ]
+            ],
+            filaSeleccionada: null,
+            parametrosOptions: [],
+            empleados_eliminar: []
         };
     },
 
@@ -697,7 +768,7 @@ export default {
             rut_empleado: analista.rut_empleado,
             nombreCompleto: `${analista.nombre} ${analista.apellido}`
           }));
-        }
+        },        
     },
 
     mounted() {
@@ -713,20 +784,21 @@ export default {
         PersonalService.obtenerTodosPersonal().then((response) => {
             console.log(response.data);
             if (response.data != null) {
-              this.analistas = response.data;
-              this.rutEmpleados = this.analistas.map((analista) => analista.rut_empleado);
-            
-              this.opcionesAnalista = this.analistas.filter((analista) => {
-                return analista}).map((analista) => ({
-                rut_empleado: analista.rut_empleado,
-                nombre: analista.nombre,
-              }));
-            }
-            console.log("opnciones analista: ",this.opcionesAnalista)
-        })
-        .catch((error) => {
-        console.error('Error al obtener los analistas:', error);
-        });
+                this.analistas = response.data;
+                this.rutEmpleados = this.analistas.map((analista) => analista.rut_empleado);
+
+                this.opcionesAnalista = this.analistas.filter((analista) => analista.rol === "Analista Químico" || analista.rol === "Químico").map((analista) => ({
+                    rut_empleado: analista.rut_empleado,
+                    nombre: analista.nombre,
+                    apellido: analista.apellido
+                }));
+        
+              }
+              console.log("opciones analista: ", this.opcionesAnalista);
+            })
+            .catch((error) => {
+              console.error('Error al obtener los analistas:', error);
+            });
         /*EmpresaService.obtenerTodasEmpresa().then((response) => {
             console.log(response.data);
             if (response != null) {
@@ -795,50 +867,7 @@ export default {
         }) {
             return dirty || validated ? valid : null;
         },
-
-        agregarAnalista(submuestra) {
-  // Obtener el analista seleccionado
-  const analistaSeleccionado = this.opcionesAnalista.find(opcion => opcion.rut_empleado === submuestra.analistasSeleccionados[0]);
-  console.log("Analista seleccionado: ", analistaSeleccionado);
-  console.log("La submuestra es: ", submuestra);
-
-  // Verificar que se haya seleccionado un analista
-  
-
-  console.log("La subMuestra_Analista nueva es: ", this.subMuestra_Analista);
-},
-
-calcularTablaItems() {
-        const items = [];
-        for (let i = 1; i <= parseInt(this.nMuestras); i++) {
-          const identificacion = this.subMuestra.identificador[i - 1] || '';          
-
-          items.push({
-            orden: i,
-            identificacion,            
-          });
-        }
-        this.tablaItems = items; // Actualizar la propiedad de datos con los elementos de la tabla
-      },
-
-
-       
-imprimirSeleccion(valorSeleccionado) {
-  console.log("Opción seleccionada:", valorSeleccionado);
-  console.log("opcionesanalista: ", this.opcionesAnalista);
-  const rutAnalista = valorSeleccionado;
-  console.log("analista: ", rutAnalista);
-  const submuestra = this.subMuestra.find(item => item.analistasSeleccionados.includes(rutAnalista));
-  if (rutAnalista) {
-    this.subMuestra_Analista.push({
-        identificador: submuestra.identificador,
-        rut_empleado: rutAnalista
-      });
-    console.log("const subana: ", this.subMuestra_Analista);
-  }
-},
-
-
+        
         addInput() {
             this.telefonos_agregar.push({
                 telefono_transportista: ''
@@ -875,8 +904,66 @@ imprimirSeleccion(valorSeleccionado) {
             this.alertaDuplicado = false;
         },
 
+        agregarFila() {
+            this.empleados.push({
+                RUM: this.RUM,
+                estado: 'Sin iniciar',                
+                orden_de_analisis: null,
+                fecha_entrega: null,
+                id_parametro: '',
+                nombre_parametro: '',
+                rut_empleado: null,
+            });
+        },
+
+        eliminarFila(fila) {
+            const index = this.empleados.indexOf(fila);
+            if (index !== -1) {
+              if (Object.values(fila).some(value => value !== '' && value !== null && value !== undefined)) {
+                this.empleados_eliminar.push(fila);
+              }
+              this.empleados.splice(index, 1);
+              console.log("eliminar empleados: ", this.empleados_eliminar)
+            }
+        },
+
         countDownChanged(dismissCountDown) {
             this.dismissCountDown = dismissCountDown
+        },
+
+        agregarParametro(filaSeleccionada) {
+            // Obtener el ID del parámetro seleccionado
+            const parametroId = this.parametroSeleccionadoIngreso;
+            console.log('El parámetro ID a agregar a la fila es:', parametroId);
+
+            // Buscar el parámetro en la lista de opciones
+            const parametroSeleccionado = this.parametrosOptions.find(param => param.id_parametro === parametroId);
+            
+            // Almacenar información anterior en variables auxiliares
+            if (!(Array.isArray(filaSeleccionada.id_parametro) && Array.isArray(filaSeleccionada.nombre_parametro))) {
+                filaSeleccionada.id_parametro = [filaSeleccionada.id_parametro];
+                filaSeleccionada.nombre_parametro = [filaSeleccionada.nombre_parametro];
+            }                  
+            
+            if (filaSeleccionada.id_parametro.includes(parametroSeleccionado.id_parametro) &&
+              filaSeleccionada.nombre_parametro.includes(parametroSeleccionado.nombre_parametro)
+            ) {
+              console.log('El parámetro ya existe en la fila.');
+              this.alertaDuplicado = true;
+              this.alertaExito = false;
+            } else {
+              // Agregar el nuevo valor a los arrays existentes
+              filaSeleccionada.id_parametro.push(parametroSeleccionado.id_parametro);
+              filaSeleccionada.nombre_parametro.push(parametroSeleccionado.nombre_parametro);
+              this.alertaExito = true;
+              this.alertaDuplicado = false;
+            }
+
+            filaSeleccionada.id_parametro = filaSeleccionada.id_parametro.filter(Boolean);
+            filaSeleccionada.nombre_parametro = filaSeleccionada.nombre_parametro.filter(Boolean);
+        
+            console.log('Parámetro agregado a la fila:', filaSeleccionada);
+            console.log("nuevo array empleado: ", this.empleados)
         },
 
         buscarYagregar() {
@@ -915,6 +1002,11 @@ imprimirSeleccion(valorSeleccionado) {
                     console.log("Opc. cotizaciones: ", this.opcionesCotizacion)
                 }  
             })
+        },
+        abrirParam(row) {        
+            this.filaSeleccionada = row;
+            this.$bvModal.show('modal-Agregar-Parametros');
+            console.log("fila", row);
         },
 
         detallesSolicitante() {
@@ -1065,6 +1157,28 @@ imprimirSeleccion(valorSeleccionado) {
             }
         },
 
+        agregarParametroSeleccionado(){
+            if (this.parametroSeleccionadoIngreso) {
+                const ParamExistente = this.parametrosAnalista.find(objeto => objeto.id_parametro === this.parametroSeleccionadoIngreso);
+    
+                if (ParamExistente) {
+                    this.alertaDuplicado = true;
+                    this.parametroSeleccionadoIngreso = '';
+                } else {
+                    const parametroData = this.metodologiasData.find(item => item.nombre_parametro === this.parametroSeleccionadoIngreso);
+                
+                    this.parametrosAnalista.push({ 
+                        id_parametro: parametroData.id_parametro,
+                        parametro: this.parametroSeleccionadoIngreso, });             
+                
+                    this.alertaDuplicado = false;
+                    console.log("parametros analista: ", this.parametrosAnalista)
+                }
+            }            
+            
+        },
+        
+
         obtenerParametro() {
             ElementosService.obtenerParametros().then((response) => {
                 if (response.data != null && response.status === 200) {
@@ -1082,6 +1196,10 @@ imprimirSeleccion(valorSeleccionado) {
                     console.log("Metodologia Data: ", this.metodologiasData)
                     this.opcionesParametro = response.data.map(item => item.nombre_parametro);
                     this.TodasopcionesParametro = response.data.map(item => item.nombre_parametro);
+                    this.parametrosOptions = response.data.map(parametro => ({
+                        id_parametro: parametro.id_parametro,
+                        nombre_parametro: parametro.nombre_parametro
+                    }))
                     console.log("opcion", this.opcionesParametro)
 
                     // Buscar nombres de parámetro en base a los IDs
@@ -1404,7 +1522,8 @@ imprimirSeleccion(valorSeleccionado) {
                         orden: submuestra.orden,
                         analistasSeleccionados: [],
                     }));
-        console.log("submuestra es: ",this.subMuestra)
+        this.empleados = response.empleados;
+
         
 
             //TAB RECEPCIONISTA
@@ -1483,7 +1602,9 @@ imprimirSeleccion(valorSeleccionado) {
                         parametros_eliminar: this.parametros_eliminar,
                         id_cotizacion: this.cotizacion,
                         tipo_pago: this.tipo_pago,
-                        valor_neto: this.valor_neto,                        
+                        valor_neto: this.valor_neto,
+                        empleados: this.empleados,
+                        empleados_eliminar: this.empleados_eliminar                    
                     }
 
                     console.log("data a enviar", data)
