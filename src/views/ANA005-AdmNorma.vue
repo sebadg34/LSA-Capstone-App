@@ -74,6 +74,25 @@
                         </b-th>
                     </b-tr>
                 </template>
+
+                <template  #cell(matrices_norma)="row">
+                    <b-list-group v-if="row.item.matrices.length > 0">
+                        <b-list-group-item v-if="row.item.matrices.length > 1" v-b-toggle="(row.item.id_norma).toString()" style="padding:2px; border: none; border-bottom: solid 1px #dbdbdb; ">
+                            {{ row.item.matrices[0].nombre_matriz }}
+                            <b-icon style="position:absolute; right:0px; top:25%; color: #949494" icon="caret-down-fill"></b-icon>
+                        </b-list-group-item>
+                        <b-list-group-item v-else style="padding:2px; border: none; border-bottom: solid 1px #dbdbdb; ">{{ row.item.matrices[0].nombre_matriz }}
+
+                        </b-list-group-item>
+
+                        <div v-if="row.item.matrices.length > 1">
+                            <b-collapse :id="(row.item.id_norma).toString()">
+                                <b-list-group-item style="padding:2px;  border: none; border-bottom: solid 1px #dbdbdb;" v-for="index in row.item.matrices.length-1" :key="index">{{ row.item.matrices[index].nombre_matriz }}</b-list-group-item>
+                            </b-collapse>
+                        </div>
+
+                    </b-list-group>
+                </template>
                 <template #cell(accion)="row">
 
                     <b-dropdown right size="sm" variant="link" toggle-class="text-decoration-none" no-caret>
@@ -127,7 +146,7 @@ export default {
                     tdClass: 'text-center'
                 },
                 {
-                    key: 'nombre_matriz',
+                    key: 'matrices_norma',
                     label: 'Matrices',
                     thClass: 'text-center',
                     tdClass: 'text-center'
@@ -208,7 +227,7 @@ export default {
                             this.normas_formatted.push({
                                 id_norma: this.normas_request[i].id_norma,
                                 nombre_norma: this.normas_request[i].nombre_norma,
-                                nombre_matriz: this.normas_request[i].matrices[0].nombre_matriz
+                                matrices: this.normas_request[i].matrices
                             })
                         }
                         this.normas = this.normas_formatted;
