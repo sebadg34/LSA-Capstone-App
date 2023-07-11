@@ -653,10 +653,11 @@ export default {
             })
         },
         cargarParametrosMatriz(value) {
-            var data = {
-                id_matriz: value
-            }
-            ElementosService.obtenerDetallesMatriz(data).then((response) => {
+            console.log(value)
+           // var data = {
+           //     id_matriz: value
+           // }
+            ElementosService.obtenerParametros().then((response) => {
                 console.log("detalles matriz", response);
                 if (response.data != null && response.status == 200) {
                     for (var i = 0; i < response.data.length; i++) {
