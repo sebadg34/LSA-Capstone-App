@@ -661,31 +661,22 @@ export default {
                 console.log("detalles matriz", response);
                 if (response.data != null && response.status == 200) {
                     for (var i = 0; i < response.data.length; i++) {
-                        var parametroExistente = this.parametrosMatriz.find(param => param.id_parametro == response.data[i].id_parametro);
+                        const parametroExistente = this.parametrosMatriz.find(param => param.id_parametro == response.data[i].id_parametro);
 
                         if (parametroExistente == null) {
                             var parametroAgregar = {
                                 nombre_parametro: response.data[i].nombre_parametro,
                                 id_parametro: response.data[i].id_parametro,
-
                             }
 
                             this.parametrosMatriz.push({
                                 value: parametroAgregar,
                                 id_parametro: response.data[i].id_parametro,
                                 text: response.data[i].nombre_parametro,
-                                metodologias: [{
-                                    nombre_metodologia: response.data[i].nombre_metodologia,
-                                    id_metodologia: response.data[i].id_metodologia,
-                                    detalle_metodologia: response.data[i].detalle_metodologia,
-                                }]
+                                metodologias: response.data[i].metodologias
                             })
                         } else {
-                            parametroExistente.metodologias.push({
-                                nombre_metodologia: response.data[i].nombre_metodologia,
-                                id_metodologia: response.data[i].id_metodologia,
-                                detalle_metodologia: response.data[i].detalle_metodologia,
-                            })
+                            parametroExistente.metodologias = response.data[i].metodologias;
                         }
 
                     }
