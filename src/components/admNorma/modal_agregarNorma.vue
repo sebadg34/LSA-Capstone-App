@@ -60,7 +60,7 @@
 
                             </template>
                             <b-form-select class="form-control" name="opciones" :select-size="5"
-                                v-model="matrizSeleccionada" :options="opcionesMatriz" @change="matrizSeleccionadaCambiada">
+                                v-model="matrizSeleccionada" :options="opcionesMatriz">
 
                             </b-form-select>
                         </b-card>
@@ -390,6 +390,7 @@ export default {
     mounted() {
 
         this.obtenerMatriz();
+        this.cargarParametros();
     },
 
     methods: {
@@ -405,46 +406,6 @@ export default {
             console.log("tabla del parametro a modificar", this.tablaSeleccionada)
             this.tablaSeleccionada.parametros = this.tablaSeleccionada.parametros.filter(param => param.id_parametro != parametro.id_parametro);
             this.parametroSeleccionado = "";
-        },
-        matrizCambiada() {
-            if (this.id_matriz == '') {
-                this.id_matriz = this.matrizSeleccionada
-
-                this.cargarParametrosMatriz(this.id_matriz);
-            } else {
-                this.confirmarCambioMatriz();
-
-            }
-        },
-        confirmarCambioMatriz() {
-            this.boxTwo = ''
-            this.$bvModal.msgBoxConfirm('Al cambiar la matríz, las tablas y sus parametros serán reiniciados', {
-                title: 'Confirmar cambio',
-                size: 'sm',
-                buttonSize: 'sm',
-                okVariant: 'danger',
-                okTitle: 'Cambiar matríz',
-                cancelTitle: 'Mantener matríz',
-                footerClass: 'p-2',
-                hideHeaderClose: false,
-                centered: true
-            })
-                .then(value => {
-                    if (value) {
-
-                        this.reiniciarDatosParcial();
-                        this.id_matriz = this.matrizSeleccionada;
-                        this.cargarParametrosMatriz(this.id_matriz);
-
-                    } else {
-                        this.matrizSeleccionada = this.id_matriz;
-                    }
-
-                })
-                .catch(err => {
-                    console.log(err)
-
-                })
         },
         // Reiniciar cuando se cambia la matriz
         reiniciarDatosParcial() {
@@ -652,11 +613,9 @@ export default {
                 }
             })
         },
-        cargarParametrosMatriz(value) {
-            console.log(value)
-           // var data = {
-           //     id_matriz: value
-           // }
+        cargarParametros() {
+          
+
             ElementosService.obtenerParametros().then((response) => {
                 console.log("detalles matriz", response);
                 if (response.data != null && response.status == 200) {
@@ -688,11 +647,7 @@ export default {
         mostrarModalAgregarTabla() {
             this.$bvModal.show('modal-agregar-tabla');
         },
-        matrizSeleccionadaCambiada() {
-            this.parametrosMatriz = [];
-            this.opcionesParametro = [];
-            this.cargarParametrosMatriz(this.matrizSeleccionada.id_matriz)
-        },
+        
         tablaSeleccionadaCambiada() {
             console.log('Tabla seleccionada:', this.tablaSeleccionada);
             // Realiza las acciones adicionales que necesites
