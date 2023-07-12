@@ -144,37 +144,27 @@
             <hr>
 
             <b-row>
-
                 <b-col class="col-5">
-                    <ValidationProvider name="area" rules="required" v-slot="validationContext">
                         <label for="area-live">Area:</label>
                         <b-form-select size="md" aria-describedby="area-live-feedback"
-                            :state="getValidationState(validationContext)" class="mb-1" v-model="AreaSeleccionada"
+                            class="mb-1" v-model="AreaSeleccionada"
                             :options="Areas"></b-form-select>
-                        <b-form-invalid-feedback id="cargo-live-feedback">{{
-                            validationContext.errors[0] }}
-                        </b-form-invalid-feedback>
-                    </ValidationProvider>
-
                 </b-col>
                 <b-col class="col-6">
-                    <ValidationProvider name="tipo de análisis" rules="required" v-slot="validationContext">
+                 
                         <label for="input-live">Tipo de análisis:</label>
                         <b-form-input size="md" aria-describedby="tipo-live-feedback"
-                            :state="getValidationState(validationContext)" class="mb-1"
+                             class="mb-1" :disabled="!AreaSeleccionada"
                             v-model="AnalisisSeleccionado"></b-form-input>
-                        <b-form-invalid-feedback id="tipo-live-feedback">{{
-                            validationContext.errors[0] }}
-                        </b-form-invalid-feedback>
-                    </ValidationProvider>
                 </b-col>
                 <b-col class="col-1 d-flex align-items-end">
-                    <b-button :disabled="esParticular" variant="success" class="reactive-button"
-                        @click="agregarAreaAnalisis()"
+                    <b-button  variant="success" class="reactive-button"
+                        @click="agregarAreaAnalisis()" :disabled="!AnalisisSeleccionado"
                         style="padding:1px; margin-bottom:5px; aspect-ratio: 1 / 1; width:35px; height: 35px;">
                         <b-icon icon=" plus-circle-fill"></b-icon>
                     </b-button>
                 </b-col>
+
                 <b-col>
                     <b-alert variant="danger" :show="alertaDuplicado" dismissible @dismissed="alertaDuplicado = false">
                         El area y tipo de analisis ya fueron agregados
@@ -182,10 +172,10 @@
                 </b-col>
 <b-col class="col-12">
                 <div>
-                    <b-row v-if="Areas_agregar.length > 0" class="mt-3">
+                    <b-row v-if="Areas_seleccionadas.length > 0" class="mt-3">
                         <b-col>
                             <b-form-group label="Areas y tipo analisis agregados:">
-                                <div v-for="(objetos, index) in Areas_agregar" :key="index"
+                                <div v-for="(objetos, index) in Areas_seleccionadas" :key="index"
                                     class="d-flex align-items-center objetos-item mb-3">
                                     <b-input readonly :value="objetos.nombre_area" class="mr-2"></b-input>
                                     <b-input readonly :value="objetos.tipo_analisis" class="mr-2"></b-input>
@@ -257,6 +247,7 @@ export default {
             Areas: [],
             alertaDuplicado: false,
             Areas_agregar: [],
+            Areas_seleccionadas: [],
             Cargando: false,
             Archivos: null,
             Archivos_enviar: "",
@@ -322,12 +313,12 @@ export default {
 
     methods: {
         eliminarAreaAnalisis(index) {
-            this.Areas_agregar.splice(index, 1);
+            this.Areas_seleccionadas.splice(index, 1);
         },
         agregarAreaAnalisis() {
-            const existeAreaAnalisis = this.Areas_agregar.find(area => area.id_area = this.AreaSeleccionada.id_area && area.tipo_analisis == this.AnalisisSeleccionado);
+            const existeAreaAnalisis = this.Areas_seleccionadas.find(area => area.id_area == this.AreaSeleccionada.id_area && area.tipo_analisis == this.AnalisisSeleccionado);
             if (existeAreaAnalisis == null) {
-                this.Areas_agregar.push({
+                this.Areas_seleccionadas.push({
                     id_area: this.AreaSeleccionada.id_area,
                     nombre_area: this.AreaSeleccionada.nombre_area,
                     tipo_analisis: this.AnalisisSeleccionado
@@ -340,8 +331,7 @@ export default {
         obtenerAreas() {
             personalService.obtenerAreas().then((response) => {
                 if (response != null && response.data != null) {
-                    console.log("areas cargadas: ", response);
-                    console.log(response);
+                    
                     const areas = response.data;
                     for (var i = 0; i < areas.length; i++) {
                         this.Areas.push({
@@ -434,7 +424,7 @@ export default {
 
         },
         obtenerIdRol(value) {
-            console.log("value a revisar rol", value);
+            
             return this.Roles.find(x => x.descripcion == value).id_rol;
         },
         obtenerRoles() {
@@ -442,7 +432,7 @@ export default {
                 if (response != null) {
                     if (response.data != null) {
                         this.Roles = response.data;
-                        console.log(this.Roles);
+                    
                     }
                 }
             })
@@ -460,20 +450,7 @@ export default {
             for (var i = 0; i < this.files.length; i++) {
                 this.Archivos_enviar[i] = this.files[i];
             }
-            //  this.files = e.target.files;
-            //  console.log(this.files)
-            //  for (var i = 0; i < this.files.length; i++) {
-            //      let blob = this.files[i];
-            //      this.imagenToBase64(blob).then((textoConvertido) => {
-            //          this.Archivos_enviar.push({
-            //              nombreArchivo: (blob.name).split(".")[0],
-            //              archivoBase64: textoConvertido
-            //
-            //          })
-            //
-            //      })
-            //  }
-            console.log(this.Archivos_enviar)
+            
         },
         getValidationState({
             dirty,
@@ -488,6 +465,12 @@ export default {
                 if (!success) {
                     return;
                 } else {
+                    for(var i = 0; i < this.Areas_seleccionadas.length; i++){
+                        this.Areas_agregar.push({
+                            id_area: (this.Areas_seleccionadas[i].id_area).toString(),
+                            tipo_analisis: this.Areas_seleccionadas[i].tipo_analisis
+                        })
+                    }
                     this.Cargando = true;
                     let formData = new FormData();
                     formData = {
@@ -500,20 +483,23 @@ export default {
                         "telefono_movil": this.Movil,
                         "telefono_emergencia": this.Emergencia,
                         "estado": 1,
-                        "areas_agregar": this.Areas_agregar
+                      
 
                         //"fecha_inicio_vacaciones": "01-01-2000",
                         // "fecha_termino_vacaciones": "01-01-2099",
                         //"//dias_administrativos": "1"
                     }
+
+                    formData.areas_agregar = this.Areas_agregar;
+                  
                     if (this.Archivos_enviar.length != 0) {
                         formData.documentos = this.Archivos_enviar;
                     }
                     formData.id_rol = this.obtenerIdRol(formData.rol);
-                    console.log("data a enviar", formData)
+                   
                     personalService.ingresarPersonal(formData).then((response) => {
                         this.Cargando = false;
-                        console.log(response)
+
                         if (response != null) {
                             if (response.status == 200) {
                                 this.$bvToast.toast(`Creación de personal exitosa`, {
