@@ -27,13 +27,13 @@
                     </b-list-group-item>
             <b-list-group-item style="padding:10px" class="col-2 d-flex justify-content-center">
                         <div>
-                            N° Cotización
+                            N° cotización
                         </div>
                        
                     </b-list-group-item>
             <b-list-group-item style="padding:10px" class="col-3 d-flex justify-content-center">
                         <div>
-                            Nombre Archivo
+                            Nombre archivo
                         </div>
                        
                     </b-list-group-item>  

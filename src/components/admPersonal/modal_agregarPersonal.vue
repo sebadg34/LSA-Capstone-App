@@ -143,23 +143,23 @@
             </template>
             <hr>
 
-            <b-row>
+            <b-row v-if="PerteneceArea">
+
+
                 <b-col class="col-5">
-                        <label for="area-live">Area:</label>
-                        <b-form-select size="md" aria-describedby="area-live-feedback"
-                            class="mb-1" v-model="AreaSeleccionada"
-                            :options="Areas"></b-form-select>
+                    <label for="area-live">Area:</label>
+                    <b-form-select size="md" aria-describedby="area-live-feedback" class="mb-1" v-model="AreaSeleccionada"
+                        :options="Areas"></b-form-select>
                 </b-col>
                 <b-col class="col-6">
-                 
-                        <label for="input-live">Tipo de análisis:</label>
-                        <b-form-input size="md" aria-describedby="tipo-live-feedback"
-                             class="mb-1" :disabled="!AreaSeleccionada"
-                            v-model="AnalisisSeleccionado"></b-form-input>
+
+                    <label for="input-live">Tipo de análisis:</label>
+                    <b-form-input size="md" aria-describedby="tipo-live-feedback" class="mb-1" :disabled="!AreaSeleccionada"
+                        v-model="AnalisisSeleccionado"></b-form-input>
                 </b-col>
                 <b-col class="col-1 d-flex align-items-end">
-                    <b-button  variant="success" class="reactive-button"
-                        @click="agregarAreaAnalisis()" :disabled="!AnalisisSeleccionado"
+                    <b-button variant="success" class="reactive-button" @click="agregarAreaAnalisis()"
+                        :disabled="!AnalisisSeleccionado"
                         style="padding:1px; margin-bottom:5px; aspect-ratio: 1 / 1; width:35px; height: 35px;">
                         <b-icon icon=" plus-circle-fill"></b-icon>
                     </b-button>
@@ -167,28 +167,35 @@
 
                 <b-col>
                     <b-alert variant="danger" :show="alertaDuplicado" dismissible @dismissed="alertaDuplicado = false">
-                        El area y tipo de analisis ya fueron agregados
+                        El area y tipo de análisis ya fueron agregados.
+                    </b-alert>
+                    <b-alert variant="danger" :show="alertaVacio" dismissible @dismissed="alertaVacio = false">
+                        Se requiere de area y tipo de análisis para registrar personal.
                     </b-alert>
                 </b-col>
-<b-col class="col-12">
-                <div>
-                    <b-row v-if="Areas_seleccionadas.length > 0" class="mt-3">
-                        <b-col>
-                            <b-form-group label="Areas y tipo analisis agregados:">
-                                <div v-for="(objetos, index) in Areas_seleccionadas" :key="index"
-                                    class="d-flex align-items-center objetos-item mb-3">
-                                    <b-input readonly :value="objetos.nombre_area" class="mr-2"></b-input>
-                                    <b-input readonly :value="objetos.tipo_analisis" class="mr-2"></b-input>
-                                    <b-button variant="danger" @click="eliminarAreaAnalisis(index)" class="ml-2">
-                                        <b-icon-trash-fill></b-icon-trash-fill>
-                                    </b-button>
-                                </div>
-                            </b-form-group>
-                        </b-col>
-                    </b-row>
-                </div>
-            </b-col>
+                <b-col class="col-12">
+                    <div>
+
+                        <b-row v-if="Areas_seleccionadas.length > 0" class="mt-3">
+                            <b-col>
+                                <b-form-group label="Areas y tipo analisis agregados:">
+                                    <div v-for="(objetos, index) in Areas_seleccionadas" :key="index"
+                                        class="d-flex align-items-center objetos-item mb-3">
+                                        <b-input readonly :value="objetos.nombre_area" class="mr-2"></b-input>
+                                        <b-input readonly :value="objetos.tipo_analisis" class="mr-2"></b-input>
+                                        <b-button variant="danger" @click="eliminarAreaAnalisis(index)" class="ml-2">
+                                            <b-icon-trash-fill></b-icon-trash-fill>
+                                        </b-button>
+                                    </div>
+                                </b-form-group>
+                            </b-col>
+                        </b-row>
+                    </div>
+                </b-col>
                 <hr />
+
+            </b-row>
+            <b-row>
                 <b-col class="col-12">
                     <ValidationProvider name="archivo" rules="size:10000" v-slot="validationContext">
                         <label for="area-live"> Adjuntar archivos:</label>
@@ -242,10 +249,12 @@ export default {
     data() {
 
         return {
+            PerteneceArea: false,
             AreaSeleccionada: "",
             AnalisisSeleccionado: "",
             Areas: [],
             alertaDuplicado: false,
+            alertaVacio: false,
             Areas_agregar: [],
             Areas_seleccionadas: [],
             Cargando: false,
@@ -310,7 +319,17 @@ export default {
             ],
         }
     },
-
+    watch: {
+        Cargo: {
+            handler() {
+                if (this.Cargo == "Gerente" || this.Cargo == "Jefe(a) de laboratorio" || this.Cargo == "Administrador(a) de Finanzas") {
+                    this.PerteneceArea = false;
+                } else {
+                    this.PerteneceArea = true;
+                }
+            }
+        }
+    },
     methods: {
         eliminarAreaAnalisis(index) {
             this.Areas_seleccionadas.splice(index, 1);
@@ -331,7 +350,7 @@ export default {
         obtenerAreas() {
             personalService.obtenerAreas().then((response) => {
                 if (response != null && response.data != null) {
-                    
+
                     const areas = response.data;
                     for (var i = 0; i < areas.length; i++) {
                         this.Areas.push({
@@ -346,6 +365,13 @@ export default {
         reiniciarDatos() {
             this.Archivos = null;
             this.Archivos_enviar = "";
+            this.Areas_agregar = "";
+            this.Areas_seleccionadas = "";
+            this.PerteneceArea = false;
+            this.AnalisisSeleccionado = false;
+            this.AreaSeleccionada = false;
+            this.alertaDuplicado = false;
+            this.alertaVacio = false;
             this.file = "";
             this.files = "";
             this.Nombre = "";
@@ -424,7 +450,7 @@ export default {
 
         },
         obtenerIdRol(value) {
-            
+
             return this.Roles.find(x => x.descripcion == value).id_rol;
         },
         obtenerRoles() {
@@ -432,7 +458,7 @@ export default {
                 if (response != null) {
                     if (response.data != null) {
                         this.Roles = response.data;
-                    
+
                     }
                 }
             })
@@ -450,7 +476,7 @@ export default {
             for (var i = 0; i < this.files.length; i++) {
                 this.Archivos_enviar[i] = this.files[i];
             }
-            
+
         },
         getValidationState({
             dirty,
@@ -465,7 +491,14 @@ export default {
                 if (!success) {
                     return;
                 } else {
-                    for(var i = 0; i < this.Areas_seleccionadas.length; i++){
+                    if (this.PerteneceArea && this.Areas_seleccionadas.length == 0) {
+                        this.alertaVacio = true;
+                        return;
+                    }
+
+
+
+                    for (var i = 0; i < this.Areas_seleccionadas.length; i++) {
                         this.Areas_agregar.push({
                             id_area: (this.Areas_seleccionadas[i].id_area).toString(),
                             tipo_analisis: this.Areas_seleccionadas[i].tipo_analisis
@@ -483,7 +516,7 @@ export default {
                         "telefono_movil": this.Movil,
                         "telefono_emergencia": this.Emergencia,
                         "estado": 1,
-                      
+
 
                         //"fecha_inicio_vacaciones": "01-01-2000",
                         // "fecha_termino_vacaciones": "01-01-2099",
@@ -491,12 +524,12 @@ export default {
                     }
 
                     formData.areas_agregar = this.Areas_agregar;
-                  
+
                     if (this.Archivos_enviar.length != 0) {
                         formData.documentos = this.Archivos_enviar;
                     }
                     formData.id_rol = this.obtenerIdRol(formData.rol);
-                   
+
                     personalService.ingresarPersonal(formData).then((response) => {
                         this.Cargando = false;
 
