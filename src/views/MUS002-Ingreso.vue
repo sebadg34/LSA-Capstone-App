@@ -92,7 +92,7 @@
                                                             <div class="d-flex align-items-center">
                                                                 <b-form-input id="nMuestras-input" v-model="nMuestras" :state="getValidationState(validationContext)" type="number" min="0" aria-describedby="nMuestras-live-feedback"></b-form-input>
                                                                 <div>
-                                                                    <b-button class="ml-2" @click="agregar()" variant="secondary" size="md">
+                                                                    <b-button class="ml-2" variant="secondary" size="md">
                                                                         <b-icon class="mt-1" icon="plus-circle-fill"></b-icon>
                                                                     </b-button>
                                                                 </div>
@@ -277,7 +277,7 @@
                                                     <b-col>
                                                         <b-form-group label="Seleccione un parámetro">
                                                             <div class="d-flex align-items-center">
-                                                                <b-form-select v-model="parametroSeleccionado" :options="opcionesParametro" placeholder="Seleccione un Parámetro" :disabled="parametroDeshabilitado" @change="agregarObjetosSeleccionados"></b-form-select>
+                                                                <b-form-select v-model="parametroTablaSeleccionado" :options="opcionesParametro" placeholder="Seleccione un Parámetro" :disabled="parametroDeshabilitado" @change="agregarObjetosTablaSeleccionados"></b-form-select>
                                                                 <div>
                                                                     <b-button class="ml-2" v-b-modal.modal-Agregar-Opciones>+</b-button>
                                                                 </div>
@@ -287,7 +287,7 @@
                                                 
                                                     <b-col>
                                                         <b-form-group label="Seleccione una metodología">
-                                                            <b-form-select v-model="metodologiaSeleccionada" :options="opcionesMetodologia" placeholder="Seleccione una metodología" :disabled="metodologiaDeshabilitada" @change="agregarObjetosSeleccionados"></b-form-select>
+                                                            <b-form-select v-model="metodologiaSeleccionada" :options="opcionesMetodologiaTabla" placeholder="Seleccione una metodología" :disabled="metodologiaDeshabilitada" @change="agregarObjetosTablaSeleccionados" value-field="nombre_metodologia" text-field="nombre_metodologia"></b-form-select>
                                                         </b-form-group>
                                                     </b-col>
                                                 </b-row>
@@ -367,7 +367,7 @@
                                                 </template>
 
                                                 <template #cell(fecha_entrega_submuestra)="row">
-                                                  <b-form-datepicker v-model="row.item.fecha_entrega" button-only ></b-form-datepicker>
+                                                  <b-form-datepicker v-model="row.item.fecha_entrega" ></b-form-datepicker>
                                                 </template> 
 
                                                 <!--  <template #cell(analistasSeleccionados)="row">
@@ -566,6 +566,7 @@ export default {
             empleados: [],
             parametroSeleccionadoIngreso: '',
             parametrosAnalista: [],
+            parametroTablaSeleccionado:'',
 
             rutSolicitante: '',
             recepcionista: '',
@@ -701,7 +702,7 @@ export default {
             AnalistaAsignado: '',
             analistasSeleccionados: [],
             tableFields: [
-                { key: 'rut_empleado', label: 'RUT Analista' },                
+                { key: 'rut_empleado', label: 'Analista' },                
                 { key: 'orden_de_analisis', label: 'Orden de análisis'},                
                 { key: 'nombre_parametro', label: 'Parámetro(s)'},              
                 { key: 'fecha_entrega_submuestra', label: 'Fecha Entrega'},             
@@ -709,7 +710,10 @@ export default {
             ],
             filaSeleccionada: null,
             parametrosOptions: [],
-            empleados_eliminar: []
+            empleados_eliminar: [],
+            opcionesMetodologiaTabla: [],
+            met:[],
+            tablaE : []
         };
     },
 
@@ -827,10 +831,30 @@ export default {
         parametroSeleccionado: function (newParametro) {
             if (newParametro) {
                 this.actualizarMetodologias();
+                if (this.parametroSeleccionado) {
+                  const parametroData = this.metodologiasData.find(item => item.nombre_parametro === this.parametroSeleccionado);
+                  this.opcionesMetodologiaTabla = parametroData.metodologias.map(metodologia => metodologia.nombre_metodologia);
+                } else {
+                  this.opcionesMetodologiaTabla = [];
+                }
+                
                 this.metodologiaDeshabilitada = false; // Habilita el input 
             } else {
                 this.metodologiaDeshabilitada = true;
             }
+        },
+
+        parametroTablaSeleccionado: function (newParametro){
+            if(newParametro){
+                this.actualizarMetodologiasTabla();
+                
+                
+                this.metodologiaDeshabilitada = false; // Habilita el input 
+            } else {
+                this.metodologiaDeshabilitada = true;
+            
+            }
+
         },
 
         tabla: function (nuevoValor) {
@@ -988,7 +1012,6 @@ export default {
         },
 
         detallesCotizaciones(){
-
             const data = {
                 rut_solicitante: this.rutSolicitante
             };
@@ -1003,6 +1026,7 @@ export default {
                 }  
             })
         },
+
         abrirParam(row) {        
             this.filaSeleccionada = row;
             this.$bvModal.show('modal-Agregar-Parametros');
@@ -1110,9 +1134,11 @@ export default {
         },
 
         agregarObjetosSeleccionados() {
+            console.log("param seleccionada: ", this.parametroSeleccionado)
             if (this.parametroSeleccionado && this.metodologiaSeleccionada) {
                 const ParamExistente = this.objetosSeleccionados.find(objeto => objeto.parametro === this.parametroSeleccionado);
                 const MetExistente = this.objetosSeleccionados.find(objeto => objeto.metodologia === this.metodologiaSeleccionada);
+                
 
                 if (ParamExistente && MetExistente) {
                     this.alertaDuplicado = true;
@@ -1136,20 +1162,78 @@ export default {
                     });
 
                       // En caso de agregar un parametro que no está registrado en la BD
-                      const parametroAntiguo = this.parametros_ya_en_sistema.find(param => param.nombre_metodologia == this.metodologiaSeleccionada.nombre_metodologia &&
+                    const parametroAntiguo = this.parametros_ya_en_sistema.find(param => param.nombre_metodologia == this.metodologiaSeleccionada.nombre_metodologia &&
                         param.nombre_parametro == this.parametroSeleccionado.nombre_parametro);
-                    if (parametroAntiguo == null) {
-                        this.parametros_agregar.push({
-                            id_parametro: this.parametroSeleccionado.id_parametro,
-                            id_metodologia: this.metodologiaSeleccionada.id_metodologia,
-                        });
-                    } else {
-                        this.parametros_eliminar = this.parametros_eliminar.filter(param => param.id_metodologia != this.metodologiaSeleccionada.id_metodologia &&
-                    param.id_parametro != this.parametroSeleccionado.id_parametro)
+                        if (parametroAntiguo == null) {
+                            if (this.parametroSeleccionado.id_parametro && this.metodologiaSeleccionada.id_metodologia) {
+                                this.parametros_agregar.push({
+                                    id_parametro: this.parametroSeleccionado.id_parametro,
+                                    id_metodologia: this.metodologiaSeleccionada.id_metodologia,
+                                });
+                            }
+                        } else {
+                            this.parametros_eliminar = this.parametros_eliminar.filter(param => param.id_metodologia !== this.metodologiaSeleccionada.id_metodologia &&
+                            param.id_parametro !== this.parametroSeleccionado.id_parametro &&
+                            typeof param.id_metodologia !== 'undefined' &&
+                            typeof param.id_parametro !== 'undefined');
+                        }
 
-                    }
                     console.log("las matrices han guardado lo siguiente: ", this.parametros_agregar)
                     this.parametroSeleccionado = '';
+                    this.metodologiaSeleccionada = '';
+                    this.alertaDuplicado = false;
+                    this.alertaExito = true;
+                }
+            }
+        },
+
+        agregarObjetosTablaSeleccionados() {
+            console.log("param seleccionada: ", this.parametroTablaSeleccionado)
+            if  (this.parametroTablaSeleccionado && this.metodologiaSeleccionada) {
+                const ParamExistente = this.objetosSeleccionados.find(objeto => objeto.parametro === this.parametroTablaSeleccionado);
+                const MetExistente = this.objetosSeleccionados.find(objeto => objeto.metodologia === this.metodologiaSeleccionada);
+                
+
+                if (ParamExistente && MetExistente) {
+                    this.alertaDuplicado = true;
+                    this.parametroTablaSeleccionado = '';
+                    this.metodologiaSeleccionada = '';
+                    this.alertaExito = false;
+                } else {
+                    const parametroData = this.metodologiasData.find(item => item.nombre_parametro === this.parametroTablaSeleccionado);
+                    const metodologiaCompleta = parametroData.metodologias.find(metodologia => metodologia.nombre_metodologia === this.metodologiaSeleccionada);
+                    console.log("parametroData:", parametroData)
+                    console.log("metodologiaCompleta:", metodologiaCompleta)
+                    this.objetosSeleccionados.push({
+                        id_parametro: parametroData.id_parametro,
+                        parametro: this.parametroTablaSeleccionado,
+                        metodologia: metodologiaCompleta.nombre_metodologia,
+                        id_metodologia: metodologiaCompleta.id_metodologia
+                    });
+                    this.parametros_agregar.push({
+                        id_parametro: parametroData.id_parametro,
+                        id_metodologia: metodologiaCompleta.id_metodologia,
+                    });
+
+                      // En caso de agregar un parametro que no está registrado en la BD
+                    const parametroAntiguo = this.parametros_ya_en_sistema.find(param => param.nombre_metodologia == this.metodologiaSeleccionada.nombre_metodologia &&
+                        param.nombre_parametro == this.parametroTablaSeleccionado.nombre_parametro);
+                        if (parametroAntiguo == null) {
+                            if (this.parametroTablaSeleccionado.id_parametro && this.metodologiaSeleccionada.id_metodologia) {
+                                this.parametros_agregar.push({
+                                    id_parametro: this.parametroTablaSeleccionado.id_parametro,
+                                    id_metodologia: this.metodologiaSeleccionada.id_metodologia,
+                                });
+                            }
+                        } else {
+                            this.parametros_eliminar = this.parametros_eliminar.filter(param => param.id_metodologia !== this.metodologiaSeleccionada.id_metodologia &&
+                            param.id_parametro !== this.parametroTablaSeleccionado.id_parametro &&
+                            typeof param.id_metodologia !== 'undefined' &&
+                            typeof param.id_parametro !== 'undefined');
+                        }
+
+                    console.log("las matrices han guardado lo siguiente: ", this.parametros_agregar)
+                    this.parametroTablaSeleccionado = '';
                     this.metodologiaSeleccionada = '';
                     this.alertaDuplicado = false;
                     this.alertaExito = true;
@@ -1259,6 +1343,7 @@ export default {
 
             this.opcionesMetodologia = this.metodologias.map(item => item.nombre_metodologia);
             console.log("opciones Metodologia:", this.opcionesMetodologia);
+            
 
             /*if (parametroData.metodologias.length > 0) {
               // Obtener las metodologías asociadas al parámetro seleccionado
@@ -1272,6 +1357,7 @@ export default {
               this.opcionesMetodologia = []; // No se encontraron metodologías para el parámetro seleccionado
             }*/
         },
+       
 
         identificadores(datos) {
             console.log("identificador de submuestras capturados:", datos);
@@ -1435,10 +1521,8 @@ export default {
                           ]
                         };
                         tablaArray.push(nuevaTabla);
-                        this.opcionesTabla = tablaArray.map(tabla => ({
-                        id_tabla: tabla.id_tabla,
-                        nombre_tabla: tabla.nombre_tabla
-                    }));
+                        this.opcionesTabla = tablaArray
+
                     console.log("opciones tabla: ",this.opcionesTabla)
                       }
                     });
@@ -1464,8 +1548,11 @@ export default {
             }
 
             const tablaEncontrada = this.tablaArray.find(tabla => tabla.id_tabla === tablaSeleccionada);
+            this.tablaE = tablaEncontrada
+            
 
             if (tablaEncontrada) {
+                console.log("tabla encontrada: ", tablaEncontrada)
               const parametros = tablaEncontrada.parametros.map(parametro => ({
                 id_parametro: parametro.id_parametro,
                 nombre_parametro: parametro.nombre_parametro
@@ -1475,18 +1562,65 @@ export default {
                 id_metodologia: metodologia.id_metodologia,
                 nombre_metodologia: metodologia.nombre_metodologia
               }));
+              console.log("metodologias de la tabla seleccionada: ", metodologias)
+               this.met = metodologias;
           
               this.parametrosTablaSeleccionada = parametros;
               this.opcionesParametro = parametros.map(parametro => parametro.nombre_parametro);
-              this.opcionesMetodologia = metodologias.map(metodologia => metodologia.nombre_metodologia);
+              this.opcionesMetodologiaTabla = metodologias.map(metodologia => metodologia.nombre_metodologia);
+              
+
+              
+              
             } else {
               this.parametrosTablaSeleccionada = [];
               this.opcionesParametro = [];
-              this.opcionesMetodologia = [];
+              this.opcionesMetodologiaTabla = [];
             }
+
+            
         
             console.log("Parámetros de la tabla seleccionada:", this.parametrosTablaSeleccionada);
             
+        },
+
+        actualizarMetodologiasTabla(){
+            console.log("parametrotablaseleccionado: ", this.parametroTablaSeleccionado)            
+
+            const parametroSeleccionado = this.parametrosOptions.find(parametro => parametro.nombre_parametro === this.parametroTablaSeleccionado);
+            console.log("parametro Seleccionado: ", parametroSeleccionado)
+            if (parametroSeleccionado) {
+                console.log("parametro Seleccionado: ", parametroSeleccionado)                  
+                
+              const metodologiasdelparametroseleccionado = this.metodologiasData.find(p => p.nombre_parametro === parametroSeleccionado.nombre_parametro);              
+
+              if(metodologiasdelparametroseleccionado){
+
+                console.log("nombre parametro encontrado:", metodologiasdelparametroseleccionado)
+
+                const metodologiaEncontrada = metodologiasdelparametroseleccionado.metodologias
+
+                if (metodologiaEncontrada){
+                    console.log("metodologias totales del parametro encontrado:", metodologiaEncontrada)
+
+                    console.log("met:", this.met.map(n => n.nombre_metodologia))
+
+                    const opcionesM = metodologiaEncontrada.find(m => m.nombre_metodologia)                    
+
+                    console.log("opcion encontrada: ", opcionesM)                    
+
+                    this.opcionesMetodologiaTabla = [];
+
+                    this.opcionesMetodologiaTabla.push({
+                        nombre_metodologia: opcionesM.nombre_metodologia
+               
+                    });
+
+                    console.log("opcion metodologia en tabla: ", this.opcionesMetodologiaTabla);
+                }
+              }         
+              
+            } 
         },
 
         RellenarForm(response) {
@@ -1524,7 +1658,6 @@ export default {
                     }));
         this.empleados = response.empleados;
 
-        
 
             //TAB RECEPCIONISTA
         this.rut = response.rut_solicitante;
@@ -1567,7 +1700,7 @@ export default {
                     return;
                 } else {
                     const matricesFiltradas = this.parametros_agregar.slice(1);
-                    const parametrosFiltrados = this.submuestra_agregar.slice(1);
+                    
                     var data = {
                         RUM: this.RUM,
                         rut_empresa: this.rut_empresa,
@@ -1596,7 +1729,7 @@ export default {
                         id_matriz: this.TipoMatriz,
                         id_norma: this.norma,
                         id_tabla: this.id_tabla,
-                        submuestras_agregar: parametrosFiltrados,
+                        submuestras_agregar: this.submuestra_agregar,
                         submuestras_eliminar: this.subEliminar,
                         telefonos_eliminar: this.telefonos_eliminar,
                         parametros_eliminar: this.parametros_eliminar,
@@ -1618,10 +1751,8 @@ export default {
                                     solid: true,
                                     variant: "success",
                                     appendToast: true
-                                })
-                                
-                            }                            
-
+                                })                                
+                            } 
                         } else {
                             this.$bvToast.toast(`Error al actualizar la muestra`, {
                                 title: 'Error',
