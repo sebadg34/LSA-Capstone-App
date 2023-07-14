@@ -238,11 +238,23 @@
         <div v-if="tablas_agregar">
             <div v-for="matriz in matrices_agregar" :key="matriz.id_matriz">
 
-                <b-card no-body :header="'Tablas de matriz: ' + matriz.nombre_matriz">
+                <b-card no-body >
+                    <template #header>
+                       <b-row class=" d-flex justify-content-between align-items-center" style="padding-left:10px; padding-right:10px">
+                        
+                            <div>
+                               {{ 'Tablas de matriz: ' + matriz.nombre_matriz }} 
+                            </div>
+                            <b-button @click="borrarMatriz(matriz)" variant="danger"
+                                style="padding:1px; aspect-ratio: 1 / 1; height: 30px; width: 30px">
+                                <b-icon scale="0.9" icon="trash-fill"></b-icon>
+                            </b-button>
+                       </b-row> 
+                    </template>
                     <b-list-group v-for="(tabla, tablaindex) in matriz.tablas_agregar" :item="tabla" :key="tablaindex"
                         horizontal="lg">
                         <b-list-group-item style="width:35%" class=" d-flex justify-content-start align-items-center">
-                            <b-button @click="borrarTabla(tabla)" variant="danger"
+                            <b-button @click="borrarTabla(matriz,tabla)" variant="danger"
                                 style="padding:1px; aspect-ratio: 1 / 1; height: 30px; width: 30px">
                                 <b-icon scale="0.9" icon="trash-fill"></b-icon>
                             </b-button>
@@ -406,46 +418,7 @@ export default {
             this.tablaSeleccionada.parametros = this.tablaSeleccionada.parametros.filter(param => param.id_parametro != parametro.id_parametro);
             this.parametroSeleccionado = "";
         },
-        matrizCambiada() {
-            if (this.id_matriz == '') {
-                this.id_matriz = this.matrizSeleccionada
-
-                this.cargarParametrosMatriz(this.id_matriz);
-            } else {
-                this.confirmarCambioMatriz();
-
-            }
-        },
-        confirmarCambioMatriz() {
-            this.boxTwo = ''
-            this.$bvModal.msgBoxConfirm('Al cambiar la matríz, las tablas y sus parametros serán reiniciados', {
-                title: 'Confirmar cambio',
-                size: 'sm',
-                buttonSize: 'sm',
-                okVariant: 'danger',
-                okTitle: 'Cambiar matríz',
-                cancelTitle: 'Mantener matríz',
-                footerClass: 'p-2',
-                hideHeaderClose: false,
-                centered: true
-            })
-                .then(value => {
-                    if (value) {
-
-                        this.reiniciarDatosParcial();
-                        this.id_matriz = this.matrizSeleccionada;
-                        this.cargarParametrosMatriz(this.id_matriz);
-
-                    } else {
-                        this.matrizSeleccionada = this.id_matriz;
-                    }
-
-                })
-                .catch(err => {
-                    console.log(err)
-
-                })
-        },
+        
         // Reiniciar cuando se cambia la matriz
         reiniciarDatosParcial() {
             this.tablas_agregar = [];
@@ -470,9 +443,17 @@ export default {
             this.parametroSeleccionado_agregar = "";
 
         },
-        borrarTabla(tabla) {
+        borrarMatriz(matriz) {
+            console.log("matriz a borrar: ", matriz)
+            this.matrices_agregar = this.matrices_agregar.filter(oldMatriz => oldMatriz.nombre_matriz != matriz.nombre_matriz);
+        },
+        borrarTabla(matriz,tabla) {
             console.log("tabla a borrar: ", tabla)
-            this.tablas_agregar = this.tablas_agregar.filter(oldTabla => oldTabla.nombre_tabla != tabla.nombre_tabla);
+            matriz.tablas_agregar = matriz.tablas_agregar.filter(oldTabla => oldTabla.nombre_tabla != tabla.nombre_tabla);
+            // En caso de que la matriz quede sin tablas, borrar matriz
+            if(matriz.tablas_agregar.length == 0){
+                this.borrarMatriz(matriz);
+            }
         },
         // Agregar tablas ya existentes en la DB al modal
 
