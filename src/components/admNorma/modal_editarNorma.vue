@@ -239,26 +239,27 @@
     </b-row>
 -->
         <br />
-        <div v-if="tablas_agregar">
+        <div v-if="matrices_seleccionadas">
             <div v-for="matriz in matrices_seleccionadas" :key="matriz.id_matriz">
 
-                <b-card no-body >
+                <b-card no-body>
                     <template #header>
-                       <b-row class=" d-flex justify-content-between align-items-center" style="padding-left:10px; padding-right:10px">
-                        
+                        <b-row class=" d-flex justify-content-between align-items-center"
+                            style="padding-left:10px; padding-right:10px">
+
                             <div>
-                               {{ 'Tablas de matriz: ' + matriz.nombre_matriz }} 
+                                {{ 'Tablas de matriz: ' + matriz.nombre_matriz }}
                             </div>
                             <b-button @click="borrarMatriz(matriz)" variant="danger"
                                 style="padding:1px; aspect-ratio: 1 / 1; height: 30px; width: 30px">
                                 <b-icon scale="0.9" icon="trash-fill"></b-icon>
                             </b-button>
-                       </b-row> 
+                        </b-row>
                     </template>
                     <b-list-group v-for="(tabla, tablaindex) in matriz.tablas_agregar" :item="tabla" :key="tablaindex"
                         horizontal="lg">
                         <b-list-group-item style="width:35%" class=" d-flex justify-content-start align-items-center">
-                            <b-button @click="borrarTabla(matriz,tabla)" variant="danger"
+                            <b-button @click="borrarTabla(matriz, tabla)" variant="danger"
                                 style="padding:1px; aspect-ratio: 1 / 1; height: 30px; width: 30px">
                                 <b-icon scale="0.9" icon="trash-fill"></b-icon>
                             </b-button>
@@ -282,7 +283,7 @@
                                                 </b-button>
                                             </b-row>
                                             <b-collapse :id="'colapse-' + parametro.id_parametro + '-' + tablaindex">
-<hr/>
+                                                <hr />
                                                 <b-card no-body header="Metodologías: ">
                                                     <b-list-group flush>
                                                         <b-list-group-item v-for="metodologia in parametro.metodologias"
@@ -380,7 +381,8 @@ export default {
         return {
             nombre_norma: '',
             id_matriz: '',
-            tablas_agregar: [],
+            tablas_agregar_db: [],
+            tablas_eliminar: [],
             matrices_agregar: [],
             matrices_eliminar: [],
             matrices_editar: [],
@@ -427,9 +429,10 @@ export default {
                 this.matrices_eliminar = [];
                 this.matrices_seleccionadas = [];
                 this.matrices_antiguas = [];
+                this.tablas_agregar_db = [];
                 this.obtenerDetallesNorma(this.id_norma)
             }
-        }
+        },
     },
     methods: {
 
@@ -504,15 +507,17 @@ export default {
                                 }
                             }
                         }
-                        for (var j = 0; j < this.tablas.length; j++) {
-                            for (var k = 0; k < this.parametros.length; k++) {
-                                if (this.tablas[j].id_tabla == this.parametros[k].id_tabla) {
-                                    this.tablas[j].parametros.push(this.parametros[k]);
-                                }
-                            }
-                        }
+
+                       // for (var j = 0; j < this.tablas.length; j++) {
+                       //     for (var k = 0; k < this.parametros.length; k++) {
+                       //         if (this.tablas[j].id_tabla == this.parametros[k].id_tabla) {
+                       //             this.tablas[j].parametros.push(this.parametros[k]);
+                       //         }
+                       //     }
+                       // }
+
                         this.matrices_seleccionadas = this.matrices;
-                        for(var m = 0; m < this.matrices.length; m++){
+                        for (var m = 0; m < this.matrices.length; m++) {
                             this.matrices_antiguas.push(this.matrices[m]);
                         }
                         this.loading = false;
@@ -536,7 +541,7 @@ export default {
 
         // Reiniciar cuando se cambia la matriz
         reiniciarDatosParcial() {
-            this.tablas_agregar = [];
+            this.tablas_agregar_db = [];
             this.parametrosMatriz = [];
             this.opcionesTabla = [];
             this.opcionesParametro = [];
@@ -548,7 +553,7 @@ export default {
         reiniciarDatos() {
             this.nombre_norma = "";
             this.id_matriz = "";
-            this.tablas_agregar = [];
+            this.tablas_agregar_db = [];
             this.matrizSeleccionada = '';
             this.parametrosMatriz = [];
             this.opcionesTabla = [];
@@ -562,22 +567,43 @@ export default {
             console.log("matriz a borrar: ", matriz)
             const matrizAntigua = this.matrices_antiguas.find(oldMatriz => oldMatriz.nombre_matriz == matriz.nombre_matriz);
 
-            if(matrizAntigua != null){
-             
+            if (matrizAntigua != null) {
+
                 this.matrices_eliminar.push(matrizAntigua);
-                console.log("matriz antigua! mejor borrarla de la DB",this.matrices_eliminar);
-            }else{
+                this.tablas_eliminar = this.tablas_eliminar.filter(tabla => tabla.id_matriz != matrizAntigua.id_matriz);
+                this.tablas_agregar_db.splice(this.tablas_agregar_db.indexOf(this.tablas_agregar_db.find(newTabla => newTabla.id_matriz == matrizAntigua.id_matriz)), 1);
+                //this.tablas_agregar_db = this.tablas_agregar_db.filter(tabla => tabla.id_matriz != matrizAntigua.id_matriz);
+                console.log("matriz antigua! mejor borrarla de la DB", this.matrices_eliminar);
+            } else {
                 // En caso de borrar una matriz que se iba a agregar
                 this.matrices_agregar = this.matrices_agregar.filter(newMatriz => newMatriz.nombre_matriz != matriz.nombre_matriz);
-                console.log("matriz nueva borrada, mejor quitala del registro a agregar",this.matrices_agregar)
+                console.log("matriz nueva borrada, mejor quitala del registro a agregar", this.matrices_agregar)
             }
             this.matrices_seleccionadas = this.matrices_seleccionadas.filter(oldMatriz => oldMatriz.nombre_matriz != matriz.nombre_matriz);
         },
-        borrarTabla(matriz,tabla) {
-            console.log("tabla a borrar: ", tabla)
-            matriz.tablas_agregar = matriz.tablas_agregar.filter(oldTabla => oldTabla.nombre_tabla != tabla.nombre_tabla);
+        borrarTabla(matriz, tabla) {
+            console.log("listado de tablas a agregar: ", this.tablas_agregar_db)
+            console.log("matriz en dnde se borrara: ", matriz);
+            console.log("tabla que se borrara: ", tabla)
+
+
+            // solo las tablas traidas de la DB tienen id.
+            const matrizAntigua = this.matrices_antiguas.find(mat => mat.id_matriz == matriz.id_matriz);
+            if(matrizAntigua != null){
+            if(tabla.id_tabla != null){
+                this.tablas_eliminar.push({
+                    id_matriz: matriz.id_matriz,
+                    id_tabla: tabla.id_tabla
+                })
+            }else{
+                this.tablas_agregar_db.splice(this.tablas_agregar_db.indexOf(this.tablas_agregar_db.find(newTabla => newTabla.tabla.nombre_tabla == tabla.nombre_tabla && newTabla.id_matriz == matriz.id_matriz)), 1);
+               // this.tablas_agregar_db = this.tablas_agregar_db.filter(newTabla => newTabla.tabla.nombre_tabla !== tabla.nombre_tabla && newTabla.id_matriz !== matriz.id_matriz)
+            }
+        }
+
+            matriz.tablas_agregar = matriz.tablas_agregar.filter(tab => tab.nombre_tabla != tabla.nombre_tabla);
             // En caso de que la matriz quede sin tablas, borrar matriz
-            if(matriz.tablas_agregar.length == 0){
+            if (matriz.tablas_agregar.length == 0) {
                 this.borrarMatriz(matriz);
             }
         },
@@ -586,8 +612,8 @@ export default {
         agregarTablaNorma() {
             const existeMatriz = this.matrices_seleccionadas.find(matriz => matriz.id_matriz == this.matrizSeleccionada.id_matriz);
             var matriz;
-            var tablaAgregar;
-            var tabla;
+           
+            
             if (existeMatriz == null) {
                 matriz = {
                     id_matriz: this.matrizSeleccionada.id_matriz,
@@ -595,27 +621,27 @@ export default {
                     tablas_agregar: []
                 }
 
-                tablaAgregar = this.tablaSeleccionada;
-                tabla = {
+                const tablaAgregar = this.tablaSeleccionada;
+                const tabla_aux = {
                     nombre_tabla: tablaAgregar.nombre_tabla,
                     parametros: []
                 }
 
                 for (var i = 0; i < tablaAgregar.parametros.length; i++) {
-                    tabla.parametros.push({
+                    tabla_aux.parametros.push({
                         nombre_parametro: tablaAgregar.parametros[i].text,
                         id_parametro: tablaAgregar.parametros[i].value.id_parametro,
                         metodologias: []
                     })
                     for (var j = 0; j < tablaAgregar.parametros[i].value.metodologias.length; j++) {
-                        tabla.parametros[i].metodologias.push({
+                        tabla_aux.parametros[i].metodologias.push({
                             id_metodologia: tablaAgregar.parametros[i].value.metodologias[j].id_metodologia,
                             nombre_metodologia: tablaAgregar.parametros[i].value.metodologias[j].nombre_metodologia,
                             detalle_metodologia: tablaAgregar.parametros[i].value.metodologias[j].detalle_metodologia,
                         })
                     }
                 }
-                matriz.tablas_agregar.push(tabla);
+                matriz.tablas_agregar.push(tabla_aux);
 
 
                 this.matrices_agregar.push(matriz);
@@ -627,29 +653,41 @@ export default {
                 const existeTabla = matriz.tablas_agregar.find(tabla => tabla.nombre_tabla == this.tablaSeleccionada.nombre_tabla);
                 if (existeTabla == null) {
                     console.log("tabla a agregar", this.tablaSeleccionada);
-                    tablaAgregar = this.tablaSeleccionada;
+                    //tablaAgregar = this.tablaSeleccionada;
 
 
-                    tabla = {
-                        nombre_tabla: tablaAgregar.nombre_tabla,
+                    const tabla_aux = {
+                        nombre_tabla: this.tablaSeleccionada.nombre_tabla,
                         parametros: []
                     }
 
-                    for (var x = 0; x < tablaAgregar.parametros.length; x++) {
-                        tabla.parametros.push({
-                            nombre_parametro: tablaAgregar.parametros[x].text,
-                            id_parametro: tablaAgregar.parametros[x].value.id_parametro,
+                    for (var x = 0; x < this.tablaSeleccionada.parametros.length; x++) {
+                        tabla_aux.parametros.push({
+                            nombre_parametro: this.tablaSeleccionada.parametros[x].text,
+                            id_parametro:  this.tablaSeleccionada.parametros[x].value.id_parametro,
                             metodologias: []
                         })
-                        for (var y = 0; y < tablaAgregar.parametros[x].value.metodologias.length; y++) {
-                            tabla.parametros[x].metodologias.push({
-                                id_metodologia: tablaAgregar.parametros[x].value.metodologias[y].id_metodologia,
-                                nombre_metodologia: tablaAgregar.parametros[x].value.metodologias[y].nombre_metodologia,
-                                detalle_metodologia: tablaAgregar.parametros[x].value.metodologias[y].detalle_metodologia,
+                        for (var y = 0; y < this.tablaSeleccionada.parametros[x].value.metodologias.length; y++) {
+                            tabla_aux.parametros[x].metodologias.push({
+                                id_metodologia: this.tablaSeleccionada.parametros[x].value.metodologias[y].id_metodologia,
+                                nombre_metodologia: this.tablaSeleccionada.parametros[x].value.metodologias[y].nombre_metodologia,
+                                detalle_metodologia: this.tablaSeleccionada.parametros[x].value.metodologias[y].detalle_metodologia,
                             })
                         }
                     }
-                    matriz.tablas_agregar.push(tabla);
+
+                    matriz.tablas_agregar.push(tabla_aux);
+
+                    // En caso de agregar una tabla a una matriz ya existente en sistema.
+                    const matrizAntigua = this.matrices_antiguas.find(oldMatriz => oldMatriz.nombre_matriz == matriz.nombre_matriz);
+                    if (matrizAntigua != null) {
+                        this.tablas_agregar_db.push({
+                            id_matriz: matrizAntigua.id_matriz,
+                            tabla: tabla_aux
+                        });
+                        console.log("matriz en sistema, agregar a tablas para actualziar", this.tablas_agregar_db);
+                    }
+
                 } else {
                     this.alertaTablaDuplicada = true;
                 }
@@ -658,7 +696,7 @@ export default {
 
 
 
-
+            console.log("matriz en sistema, agregar a tablas para actualziar parte 2", this.tablas_agregar_db);
         },
         borrarMetodologiaTabla(metodologia) {
             console.log(metodologia)
@@ -705,7 +743,29 @@ export default {
 
             // TODO: Optimizar ciclos FOR
             var tablas_param_metodo = [];
+            var tablas_agregar_data = [];
+            var tabla_aux = [];
             var matrices_seleccionadas_aux = [];
+            this.tablas_agregar_db.forEach((tabla) => {
+              
+                    tabla.tabla.parametros.forEach((parametro) => {
+                        parametro.metodologias.forEach((metodo) => {
+                            tabla_aux.push({
+                            nombre_tabla: tabla.nombre_tabla,
+                            id_parametro: parametro.id_parametro,
+                            id_metodologia: metodo.id_metodologia
+                        })
+                        })
+                    })
+                    tablas_agregar_data.push({
+                        id_matriz: tabla.id_matriz,
+                        tablas_agregar: tabla_aux
+                    });
+                    tabla_aux = [];
+                })
+          
+
+
             for (var x = 0; x < this.matrices_agregar.length; x++) {
                 var matriz_aux = this.matrices_agregar[x];
                 var matriz_agregar = {
@@ -728,12 +788,14 @@ export default {
                 tablas_param_metodo = [];
 
             }
-            
+
 
             var data = {
                 nombre_norma: this.nombre_norma,
                 matrices_agregar: matrices_seleccionadas_aux,
-                matrices_eliminar: this.matrices_eliminar
+                matrices_eliminar: this.matrices_eliminar,
+                tablas_agregar: tablas_agregar_data,
+                tablas_eliminar: this.tablas_eliminar
             }
             ElementosService.actualizarNorma(data).then((response) => {
                 if (response.status == 200) {
@@ -810,7 +872,7 @@ export default {
         },
 
         agregarTabla() {
-            var tabla = {
+            const tabla = {
                 text: this.nuevoNombreTabla,
                 nombre_tabla: this.nuevoNombreTabla,
                 parametros: []
@@ -894,4 +956,5 @@ export default {
     height: auto;
     min-height: 38px;
     /* Ajusta este valor según tus necesidades */
-}</style>
+}
+</style>

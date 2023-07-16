@@ -60,15 +60,15 @@
                     <b-list-group horizontal style="width:100%">
                         <b-list-group-item class="d-flex align-items-center justify-content-center"
                     style="width:40%; padding-top:2px; padding-bottom:2px">
-                    tablas
+                    Tablas
                 </b-list-group-item>
                 <b-list-group-item class="d-flex align-items-center justify-content-center"
                     style="width:30%;  padding-top:2px; padding-bottom:2px">
-                    parámetros
+                    Parámetros
                 </b-list-group-item>
                 <b-list-group-item class="d-flex align-items-center justify-content-center"
                     style="width:30%;  padding-top:2px; padding-bottom:2px">
-                    metodologías
+                    Metodologías
                 </b-list-group-item>
                     </b-list-group>
 
