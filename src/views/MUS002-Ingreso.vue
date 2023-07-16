@@ -45,11 +45,9 @@
                                                         </b-alert>
                                                     
                                                         <ValidationProvider name="solicitante" rules="required" v-slot="validationContext">
-                                                            <label for="input-live">Nombre empresa:</label>
-                                                            <b-form-select id="input-live" v-model="solicitante" :state="getValidationState(validationContext)" value-field="rut_empresa" text-field="nombre_empresa" @input="actualizarSelectedEmpresa">  
-                                                                <option v-for="opcion in opcionesClientes" :key="opcion.rut_empresa" :value="opcion.rut_empresa">
-                                                                {{opcion.nombre_empresa }}</option>
-                                                            </b-form-select>                                                                                        
+                                                            <label for="input-live">Nombre empresa:</label>                                                            
+                                                            <b-form-select v-model="solicitante"  :state="getValidationState(validationContext)" text-field="nombre_empresa" value-field="rut_empresa" @change="actualizarSelectedEmpresa"><option v-for="opcion in opcionesClientes" :key="opcion.rut_empresa" :value="opcion.rut_empresa">{{
+                                                                opcion.nombre_empresa }}</option></b-form-select>                                                                                                                                               
                                                             <b-form-invalid-feedback>{{ validationContext.errors[0] }}</b-form-invalid-feedback>
                                                         </ValidationProvider>
                                                     
@@ -342,7 +340,7 @@
                                         <b-tab title="Asignar analista">
 
                                             <b-card>
-                                            <b-table :items="empleados" :fields="tableFields">                                               
+                                            <b-table :items="EmpleadosArray" :fields="tableFields">                                               
                                                 
                                                 <template #cell(rut_empleado)="row">
                                                     <b-form-select v-model="row.item.rut_empleado" :options="formattedOpcionesAnalista" value-field="rut_empleado" text-field="nombreCompleto"></b-form-select>
@@ -367,18 +365,9 @@
                                                 </template>
 
                                                 <template #cell(fecha_entrega_submuestra)="row">
-                                                  <b-form-datepicker v-model="row.item.fecha_entrega" ></b-form-datepicker>
+                                                  <b-form-datepicker locale="es" :date-format-options="{ year: 'numeric', month: 'numeric', day: 'numeric' }" v-model="row.item.fecha_entrega" ></b-form-datepicker>
                                                 </template> 
-
-                                                <!--  <template #cell(analistasSeleccionados)="row">
-                                                   <b-form-select
-                                                    v-model="row.item.analistasSeleccionados"        
-                                                    :options="opcionesAnalista"
-                                                    value-field="rut_empleado"
-                                                    text-field="nombre"
-                                                    @change="imprimirSeleccion(row.item.analistasSeleccionados)"
-                                                   ></b-form-select>
-                                                </template> -->
+                                                
                                                 <template #cell(accion)="row">
                                                     <b-dropdown right size="sm" variant="link" toggle-class="text-decoration-none" no-caret>
                                                         <template #button-content>
@@ -462,17 +451,17 @@
                     <b-row>
                         <b-col>
                             <b-form-group label="Seleccione un parámetro">
-                                <b-form-select v-model="parametroSeleccionadoIngreso" :options="parametrosOptions" text-field="nombre_parametro" value-field="id_parametro"></b-form-select>
+                                <b-form-select v-model="parametroSeleccionadoIngreso" :options="parametrosOptions" text-field="nombre_parametro" value-field="id_parametro" @change="agregarParametro(filaSeleccionada)"></b-form-select>
                             </b-form-group>
                         </b-col>                       
                     </b-row>
 
-                    <b-row v-if="parametrosAnalista.length > 0" class="mt-3">
+                    <b-row v-if="filaSeleccionada && filaSeleccionada.id_parametro.length > 0" class="mt-3">
                         <b-col>
                             <b-form-group label="Parámetros Seleccionados:">
-                                <div v-for="(param, index) in parametrosAnalista" :key="index" class="d-flex align-items-center objetos-item mb-3">
-                                    <b-input readonly :value="param.parametro" class="mr-2"></b-input>                                    
-                                    <b-button variant="danger" @click="eliminarParametrosSeleccionados(index)" class="ml-2">
+                                <div v-for="(id_parametro, index) in filaSeleccionada.id_parametro" :key="index" class="d-flex align-items-center objetos-item mb-3">
+                                    <b-input readonly :value="getParametroNombre(id_parametro)" class="mr-2"></b-input>                                    
+                                    <b-button variant="danger" @click="eliminarParametro(filaSeleccionada, index)" class="ml-2">
                                         <b-icon-trash-fill></b-icon-trash-fill>
                                     </b-button>
                                 </div>
@@ -488,10 +477,7 @@
                         Parámetro agregado con éxito!
                     </b-alert>
                     <!-- //////////////////////////////////////////MODAL-FOOTER////////////////////////////////////////////////////////////////////////////////// -->
-                    <template #modal-footer="{ close }">
-                        <b-button @click="agregarParametro(filaSeleccionada)" variant="primary" size="xl" class="float-right reactive-button" style="font-weight:bold">
-                          Agregar Parámetro
-                        </b-button>
+                    <template #modal-footer="{ close }">                        
                         <b-button @click="close()" variant="primary" size="xl" class="float-right reactive-button" style="font-weight:bold">
                           Cerrar
                         </b-button>
@@ -560,13 +546,13 @@ export default {
             prevP : [],
             prevM : [],
             subMuestra : [],
-            tablaArray : [],
-            subMuestra_Analista : [],
+            tablaArray : [],            
             tablaItems : [],
             empleados: [],
             parametroSeleccionadoIngreso: '',
             parametrosAnalista: [],
             parametroTablaSeleccionado:'',
+            submuestrasOG : [],
 
             rutSolicitante: '',
             recepcionista: '',
@@ -713,7 +699,8 @@ export default {
             empleados_eliminar: [],
             opcionesMetodologiaTabla: [],
             met:[],
-            tablaE : []
+            tablaE : [],
+            EmpleadosArray: []
         };
     },
 
@@ -790,19 +777,14 @@ export default {
             if (response.data != null) {
                 this.analistas = response.data;
                 this.rutEmpleados = this.analistas.map((analista) => analista.rut_empleado);
-
                 this.opcionesAnalista = this.analistas.filter((analista) => analista.rol === "Analista Químico" || analista.rol === "Químico").map((analista) => ({
                     rut_empleado: analista.rut_empleado,
                     nombre: analista.nombre,
                     apellido: analista.apellido
-                }));
-        
-              }
-              console.log("opciones analista: ", this.opcionesAnalista);
-            })
-            .catch((error) => {
-              console.error('Error al obtener los analistas:', error);
-            });
+                }));        
+            }
+            console.log("opciones analista: ", this.opcionesAnalista);
+        })        
         /*EmpresaService.obtenerTodasEmpresa().then((response) => {
             console.log(response.data);
             if (response != null) {
@@ -846,15 +828,11 @@ export default {
 
         parametroTablaSeleccionado: function (newParametro){
             if(newParametro){
-                this.actualizarMetodologiasTabla();
-                
-                
+                this.actualizarMetodologiasTabla();              
                 this.metodologiaDeshabilitada = false; // Habilita el input 
             } else {
-                this.metodologiaDeshabilitada = true;
-            
+                this.metodologiaDeshabilitada = true;            
             }
-
         },
 
         tabla: function (nuevoValor) {
@@ -913,6 +891,11 @@ export default {
           return parametro ? parametro.nombre_parametro : '';
         },
 
+        getParametroNombre(id_parametro) {
+            const parametro = this.parametrosOptions.find(param => param.id_parametro === id_parametro);
+            return parametro ? parametro.nombre_parametro : '';
+        },
+
         obtenerNombreMetodologia(idMetodologia) {
           for (const parametro of this.metodologiasData) {
             const metodologia = parametro.metodologias.find(item => item.id_metodologia === idMetodologia);
@@ -929,7 +912,7 @@ export default {
         },
 
         agregarFila() {
-            this.empleados.push({
+            this.EmpleadosArray.push({
                 RUM: this.RUM,
                 estado: 'Sin iniciar',                
                 orden_de_analisis: null,
@@ -941,14 +924,23 @@ export default {
         },
 
         eliminarFila(fila) {
-            const index = this.empleados.indexOf(fila);
+            const index = this.EmpleadosArray.indexOf(fila);
             if (index !== -1) {
-              if (Object.values(fila).some(value => value !== '' && value !== null && value !== undefined)) {
-                this.empleados_eliminar.push(fila);
-              }
-              this.empleados.splice(index, 1);
-              console.log("eliminar empleados: ", this.empleados_eliminar)
+              if ( fila.id_parametro == '' || fila.rut_empleado == null ) {
+                  this.EmpleadosArray.splice(index, 1);
+
+              }else{
+                  this.empleados_eliminar.push(fila);
+                  this.EmpleadosArray.splice(index, 1);
+              }   
+    
+            console.log("eliminar empleados: ", this.empleados_eliminar);
             }
+        },
+        
+        eliminarParametro(filaSeleccionada, index) {
+            filaSeleccionada.id_parametro.splice(index, 1); 
+            filaSeleccionada.nombre_parametro.splice(index, 1);   
         },
 
         countDownChanged(dismissCountDown) {
@@ -1003,6 +995,7 @@ export default {
                     console.log('Rut solicitante encontrado:', this.rutSolicitante);
                     this.detallesSolicitante();
                     this.detallesCotizaciones();
+                    
 
                 } else {
                     this.alertaNOexiste = true;
@@ -1082,7 +1075,13 @@ export default {
                 console.log("Empresas:", empresas);
                 console.log("Empresas agrupadas:", empresasAgrupadas);
 
-                this.opcionesClientes = empresasAgrupadas;
+                this.opcionesClientes = empresasAgrupadas.map(detalle => ({
+                    rut_empresa: detalle.rut_empresa,
+                    nombre_empresa: detalle.nombre_empresa,
+                    nombre_ciudad: detalle.nombre_ciudad,
+                    id_ciudad: detalle.id_ciudad,
+                    direccion: detalle.direccion,
+                }));
                 console.log("opciones empresas", this.opcionesClientes);
                 
             })
@@ -1303,6 +1302,14 @@ export default {
                     console.log("nombres metodologias: ", nombresMetodologia)
                     this.prevM = nombresMetodologia
                     console.log("nombres M: ", this.prevM)
+
+                    const nuevaVariable = JSON.parse(JSON.stringify(this.empleados));
+                    nuevaVariable.forEach(objeto => {
+                      objeto.nombre_parametro = [objeto.nombre_parametro];
+                      objeto.id_parametro = [objeto.id_parametro];
+                      this.EmpleadosArray.push(objeto);
+                    });
+                    console.log("EmpleadosARRAY: ", this.EmpleadosArray);
                 }
             });
         },
@@ -1398,48 +1405,66 @@ export default {
 
             // Array para cada columna
             const identificacionArray = [];
-            const ordenArray = [];
-            const parametrosArray = [];
+            const ordenArray = [];            
             const idparametros = [];
             const idmetodologias = [];
-            const metodologiasArray = [];
+            const submuestraArray = [];                        
 
             // Recorrer los datos y almacenarlos en las columnas correspondientes
-            datos.forEach((objeto) => {
-                identificacionArray.push(objeto.identificacion);
-                ordenArray.push(objeto.orden);
-                parametrosArray.push(objeto.parametros);
-                idparametros.push(objeto.id_parametro);
+            datos.forEach((objeto) => {                
+                identificacionArray.push(objeto.identificador);
+                ordenArray.push(objeto.orden);               
                 idmetodologias.push(objeto.id_metodologia);
-                metodologiasArray.push(objeto.metodologias);
-            });
+                idparametros.push(objeto.id_parametro);               
+            });            
 
             datos.forEach((objeto) => {
-                this.submuestra_agregar.push({
-                    identificador: objeto.identificacion,
+                submuestraArray.push({
+                    identificador: objeto.identificador,
                     orden: objeto.orden,
                     id_parametro: objeto.id_parametro,
                     id_metodologia: objeto.id_metodologia
-                });
+                                });
             });
-            const sonIguales = JSON.stringify(datos) === JSON.stringify(this.submuestra_agregar);
 
-            if (sonIguales) {
-            this.submuestra_agregar = [];
-            } else {
-                this.submuestra_agregar = datos;
-            }  
-            console.log("submuestra_agregar:", this.submuestra_agregar);
+            console.log("submuestra_original: ", this.submuestrasOG)            
+            console.log("submuestras: ", submuestraArray)                       
 
-            // Asignar los arrays a las variables del componente
-            this.identificacion = identificacionArray;
-            this.orden = ordenArray;
-            this.parametros = parametrosArray;
-            this.id_parametro = idparametros;
-            this.id_metodologia = idmetodologias;
-            console.log("identificacion:", this.identificacion);
-            console.log("idPARAM:", this.id_parametro);
-            console.log("idMET:", this.id_metodologia);
+            for (let i = 0; i < this.submuestrasOG.length; i++) {
+                const elementoRepetido = submuestraArray.find(objeto => (
+                  objeto.identificador === this.submuestrasOG[i].identificador &&
+                  objeto.orden === this.submuestrasOG[i].orden &&
+                  objeto.id_parametro === this.submuestrasOG[i].id_parametro &&
+                  objeto.id_metodologia === this.submuestrasOG[i].id_metodologia
+                ));
+
+                if (elementoRepetido) {
+                  console.log("elemento repetido:", elementoRepetido);
+                }
+            }
+
+            const elementosNoRepetidos = submuestraArray.filter(objeto => (
+                !this.submuestrasOG.some(elemento => (
+                    elemento.identificador === objeto.identificador &&
+                    elemento.orden === objeto.orden &&
+                    elemento.id_parametro === objeto.id_parametro &&
+                    elemento.id_metodologia === objeto.id_metodologia
+                ))
+            ));
+
+            console.log("elementos no repetidos:", elementosNoRepetidos);
+
+            elementosNoRepetidos.forEach(objeto => {
+              this.submuestra_agregar.push({
+                identificador: objeto.identificador,
+                orden: objeto.orden,
+                id_parametro: objeto.id_parametro,
+                id_metodologia: objeto.id_metodologia
+              });
+            });
+            
+            console.log("submuestras_agregar: ", this.submuestra_agregar)
+            
         },
 
         obtenerMatriz() {
@@ -1548,8 +1573,7 @@ export default {
             }
 
             const tablaEncontrada = this.tablaArray.find(tabla => tabla.id_tabla === tablaSeleccionada);
-            this.tablaE = tablaEncontrada
-            
+            this.tablaE = tablaEncontrada            
 
             if (tablaEncontrada) {
                 console.log("tabla encontrada: ", tablaEncontrada)
@@ -1567,18 +1591,13 @@ export default {
           
               this.parametrosTablaSeleccionada = parametros;
               this.opcionesParametro = parametros.map(parametro => parametro.nombre_parametro);
-              this.opcionesMetodologiaTabla = metodologias.map(metodologia => metodologia.nombre_metodologia);
-              
-
-              
+              this.opcionesMetodologiaTabla = metodologias.map(metodologia => metodologia.nombre_metodologia);                           
               
             } else {
               this.parametrosTablaSeleccionada = [];
               this.opcionesParametro = [];
               this.opcionesMetodologiaTabla = [];
-            }
-
-            
+            }        
         
             console.log("Parámetros de la tabla seleccionada:", this.parametrosTablaSeleccionada);
             
@@ -1623,9 +1642,7 @@ export default {
             } 
         },
 
-        RellenarForm(response) {
-
-            
+        RellenarForm(response) {            
             //info anterior
         this.RUM = response.RUM;
         this.nombre_empresa = response.nombre_empresa;
@@ -1649,19 +1666,26 @@ export default {
         this.idMetOG = response.submuestras.map((idM) => idM.id_metodologia);
         this.normaOG = response.id_norma;
         this.tablaOG = response.id_tabla; 
+        this.submuestrasOG = response.submuestras.map(submuestra => ({
+            identificador:submuestra.identificador,
+            orden: submuestra.orden,
+            id_metodologia:submuestra.id_metodologia,            
+            id_parametro:submuestra.id_parametro,            
+        }));
         this.subMuestra = response.submuestras.map(submuestra=> ({
-                        identificador: submuestra.identificador,
-                        id_metodologia: submuestra.id_metodologia,
-                        id_parametro: submuestra.id_parametro,
-                        orden: submuestra.orden,
-                        analistasSeleccionados: [],
-                    }));
+            identificador: submuestra.identificador,
+            id_metodologia: submuestra.id_metodologia,
+            id_parametro: submuestra.id_parametro,
+            orden: submuestra.orden,
+            analistasSeleccionados: [],
+        }));        
         this.empleados = response.empleados;
+        console.log("empleados: ", this.empleados)  
 
 
             //TAB RECEPCIONISTA
         this.rut = response.rut_solicitante;
-        this.solicitante = response.nombre_empresa;
+        this.solicitante = response.rut_empresa;
         this.direccion = response.direccion_empresa;
         
         
@@ -1700,6 +1724,7 @@ export default {
                     return;
                 } else {
                     const matricesFiltradas = this.parametros_agregar.slice(1);
+                    const submuestraFiltrada = this.submuestra_agregar.slice(1);
                     
                     var data = {
                         RUM: this.RUM,
@@ -1729,7 +1754,7 @@ export default {
                         id_matriz: this.TipoMatriz,
                         id_norma: this.norma,
                         id_tabla: this.id_tabla,
-                        submuestras_agregar: this.submuestra_agregar,
+                        submuestras_agregar: submuestraFiltrada,
                         submuestras_eliminar: this.subEliminar,
                         telefonos_eliminar: this.telefonos_eliminar,
                         parametros_eliminar: this.parametros_eliminar,

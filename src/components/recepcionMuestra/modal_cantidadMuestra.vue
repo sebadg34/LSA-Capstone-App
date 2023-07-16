@@ -164,9 +164,8 @@
           const id_metodologia = metodologiaSeleccionada ? metodologiaSeleccionada.id_metodologia : null;    
           
           return {
-            identificacion: item.identificacion,
-            orden: item.orden,
-            parametros: item.parametros,
+            identificador: item.identificacion,
+            orden: item.orden,            
             id_parametro: id_parametro,
             id_metodologia: id_metodologia
           };
