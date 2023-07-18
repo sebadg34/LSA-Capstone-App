@@ -711,6 +711,7 @@ export default {
             nuevaobs: [],
             empresasDirecciones: [],
             datosCargados: false,
+            empleados_objeto: [],
         };
     },
 
@@ -990,7 +991,29 @@ export default {
         
             console.log('Parámetro agregado a la fila:', filaSeleccionada);
             console.log("nuevo array empleado: ", this.EmpleadosArray);
-            console.log("empleadoOG: ", this.empleadosOG);       
+            console.log("empleadoOG: ", this.empleadosOG);
+            
+            for (var i = 0; i < this.EmpleadosArray.length; i++) {
+                var empleado = this.EmpleadosArray[i];
+                console.log("empleados for: ", empleado)
+                var idParametros = empleado.id_parametro;                
+
+                for (var j = 0; j < idParametros.length; j++) {
+                  var objeto = {
+                    "rut_empleado": empleado.rut_empleado,
+                    "orden_de_analisis": empleado.orden_de_analisis,   
+                    "id_parametro": idParametros[j], 
+                    "fecha_entrega": empleado.fecha_entrega,                  
+                    
+                  };
+
+                  console.log("Objeto " + (j + 1) + ":", objeto);
+                  this.empleados_objeto.push(objeto)
+                  console.log("empleados objeto: ", this.empleados_objeto)
+
+                }
+            }
+            
 
         
         },
@@ -1141,8 +1164,7 @@ export default {
             }
         },
 
-        buscarYagregar() {
-            
+        /*buscarYagregar() {            
             SolicitanteService.obtenerTodosSolicitantes().then((response) => {
                 if (response.data != null && response.status === 200) {
                     this.solicitante = response.data;
@@ -1152,16 +1174,14 @@ export default {
                 if (solicitanteEncontrado) {
                     this.rutSolicitante = solicitanteEncontrado.rut_solicitante;
                     console.log('Rut solicitante encontrado:', this.rutSolicitante);
-                    this.detallesSolicitante();
-                    
-                    
+                    this.detallesSolicitante();                 
 
                 } else {
                     this.alertaNOexiste = true;
                     this.dismissCountDown = this.dismissSecs
                 }
             })
-        },
+        },*/
 
         detallesCotizaciones(){
             const data = {
@@ -1187,7 +1207,7 @@ export default {
             console.log("fila", row);
         },
 
-        detallesSolicitante() {
+        /*detallesSolicitante() {
             console.log("rut a obtener: ", this.rutSolicitante)
             const data = {
                 rut_solicitante: this.rutSolicitante
@@ -1246,9 +1266,9 @@ export default {
                 console.log("opciones empresas", this.opcionesClientes);
                 
             })
-        },
+        },*/
 
-        actualizarSelectedEmpresa() {
+        /*actualizarSelectedEmpresa() {
 
             console.log("entre a la funcion selected empresa")
             const empresaSeleccionada = this.opcionesEmpresa.find(empresa =>
@@ -1272,7 +1292,7 @@ export default {
                 console.log("RUT de la empresa seleccionada: ", RUTEmpresaSeleccionada);
                 this.rut_empresa = RUTEmpresaSeleccionada;
             }
-        },
+        },*/
 
         /*generarFechaHoraActual() {
                 const now = new Date();
@@ -1472,10 +1492,7 @@ export default {
                       objeto.id_parametro = [objeto.id_parametro];
                       this.EmpleadosArray.push(objeto);                      
                     });
-                    console.log("EmpleadosARRAY: ", this.EmpleadosArray);
-
-
-                    
+                    console.log("EmpleadosARRAY: ", this.EmpleadosArray);                   
                 }
             });
         },
@@ -1616,9 +1633,11 @@ export default {
                     elemento.id_parametro === objeto.id_parametro &&
                     elemento.id_metodologia === objeto.id_metodologia
                 ))
+                
             ));
 
             console.log("elementos no repetidos:", elementosNoRepetidos);
+            
 
             elementosNoRepetidos.forEach(objeto => {
               this.submuestra_agregar.push({
@@ -1899,6 +1918,8 @@ export default {
                     this.obs();               
                     const matricesFiltradas = this.parametros_agregar.slice(1);
                     const submuestraFiltrada = this.submuestra_agregar.slice(1);
+                    const submuestra_eliminar = this.submuestra_eliminar.slice(1);
+                    
                     
                     var data = {
                         RUM: this.RUM,
@@ -1933,25 +1954,14 @@ export default {
                         id_norma: this.norma,
                         id_tabla: this.id_tabla,
                         submuestras_agregar: submuestraFiltrada,
-                        submuestras_eliminar: this.subEliminar,
+                        submuestras_eliminar: submuestra_eliminar,
                         telefonos_eliminar: this.telefonos_eliminar,
                         parametros_eliminar: this.parametros_eliminar,
                         id_cotizacion: this.cotizacion,
                         tipo_pago: this.tipo_pago,
                         valor_neto: this.valor_neto,
-                        empleados_agregar: this.empleados_agregar.map(agregar => ({
-                            rut_empleado: agregar.rut_empleado,
-                            orden_de_analisis: agregar.orden_de_analisis,
-                            id_parametro: agregar.id_parametro,
-                            fecha_entrega: agregar.fecha_entrega,                           
-                        })),                   
-                        empleados_eliminar: this.empleados_eliminar.map(eliminar => ({
-                            rut_empleado: eliminar.rut_empleado,
-                            orden_de_analisis: eliminar.orden_de_analisis,
-                            id_parametro: eliminar.id_parametro, 
-                            fecha_entrega: eliminar.fecha_entrega,                                                       
-                            estado: eliminar.estado
-                        })),                   
+                        empleados_agregar: this.empleados_objeto,
+                        empleados_eliminar: this.empleadosOG,                   
                     }
 
                     console.log("data a enviar", data)
