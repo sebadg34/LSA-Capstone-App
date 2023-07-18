@@ -1,5 +1,5 @@
 <template>
-  <b-modal id="modal-observaciones-muestra-gerente" :title="`Observaciones de la muestra ${RUM}`" size="xl"
+  <b-modal id="modal-observaciones-muestra-quimico" :title="`Observaciones de la muestra ${RUM}`" size="xl"
     @hidden="onHidden">
 
     <template #modal-header="{ close }">
@@ -86,7 +86,7 @@
 </template>
 
 <script>
-import MuestraGerenteService from '@/helpers/api-services/Muestra-gerente.service';
+import MuestraQuimicoService from '@/helpers/api-services/Muestra-quimicos.service';
 
 export default {
   props: {
@@ -106,7 +106,7 @@ export default {
     obtenerObservaciones(rum) {
 
       this.cargandoObservaciones = true;
-      MuestraGerenteService.obtenerObservaciones(rum).then((response) => {
+      MuestraQuimicoService.obtenerObservaciones(rum).then((response) => {
         console.log(response)
         if (response != null) {
           if (response.status == 200 && response.data != null) {

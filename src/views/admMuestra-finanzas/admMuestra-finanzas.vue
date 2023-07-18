@@ -1,7 +1,7 @@
 <template>
 <div>
 
-    <ModalObservaciones :muestra-data="this.observacionesData" />
+    <ModalObservaciones :detalles-data="this.observacionesData" />
     <ModalDetalleMuestra :detalles-data="this.detallesData" />
     <!-- Inicio tabla -->
 
@@ -67,7 +67,7 @@
         </b-col>
 
         <b-col class="col-10">
-            <b-table show-empty fixed :busy="loading" :items="muestrasFiltradas" :fields="fields" :per-page="perPage" :current-page="currentPage">
+            <b-table show-empty  :busy="loading" :items="muestrasFiltradas" :fields="fields" :per-page="perPage" :current-page="currentPage">
 
                 <template #empty>
                     <div class="text-center lsa-light-blue-text my-2 row">
@@ -142,10 +142,11 @@
 </template>
 
 <script>
+
 import ModalObservaciones from '@/components/admMuestras-finanzas/modal_observacionesMuestra-finanzas.vue';
 import MuestraFinanzasService from '@/helpers/api-services/Muestra-finanzas.service';
-
 import ModalDetalleMuestra from '@/components/admMuestras-finanzas/modal_detallesMuestra-finanzas.vue';
+
 import moment from 'moment';
 export default {
     data() {
@@ -382,7 +383,7 @@ export default {
         MostrarObservaciones(data) {
             console.log(data)
             this.observacionesData = data;
-            this.$bvModal.show('modal-observaciones-finanzas');
+            this.$bvModal.show('modal-observaciones-muestra-finanzas');
         },
 
         abrirDetallesMuestra(data) {

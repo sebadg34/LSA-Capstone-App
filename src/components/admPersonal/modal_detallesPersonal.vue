@@ -35,7 +35,13 @@
                     <strong> Teléfono móvil:</strong> <span>{{ this.Movil }}</span>
                 </div>
                 <div>
-                    <strong> Teléfono de emergencia: </strong> <span>{{ this.Emergencia }}</span>
+                    <strong> Teléfono de emergencia: </strong> <span>
+                        <template v-if="this.Emergencia == null">
+                        teléfono sin asignar.</template>
+                        <template v-else>
+                            {{ this.Emergencia }}</template>
+                    
+                    </span>
                 </div>
             </b-col>
             <b-col class="col-6">

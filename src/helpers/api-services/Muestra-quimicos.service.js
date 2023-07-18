@@ -8,7 +8,7 @@ import {
  const obtenerMuestras = async () => {
    try {
     const instanciaApi = await crearApi();
-    const response = await instanciaApi.get("/muestras-administrador-finanzas");
+    const response = await instanciaApi.get("/muestras-analista-quimico");
             console.log(response);
         if(response.status == 200){
             return response;
@@ -25,7 +25,7 @@ import {
 const obtenerObservaciones = async (RUM) => {
     try {
         const instanciaApi = await crearApi();
-        const response = await instanciaApi.get("/muestras-administrador-finanzas/observacionesMuestra/" + RUM);
+        const response = await instanciaApi.get("/muestras-analista-quimico/observacionesMuestra/" + RUM);
          console.log(response);
          if(response.status == 200){
              return response;
@@ -42,7 +42,7 @@ const obtenerObservaciones = async (RUM) => {
  const obtenerDetallesMuestra = async (RUM) => {
     try {
         const instanciaApi = await crearApi();
-        const response = await instanciaApi.get("/muestras-administrador-finanzas/detallesMuestra/" + RUM);
+        const response = await instanciaApi.get("/muestras-analista-quimico/detallesMuestra/" + RUM);
          console.log(response);
          if(response.status == 200){
              return response;
@@ -55,12 +55,28 @@ const obtenerObservaciones = async (RUM) => {
          return;
      }
  };
-
+ const completarAnalisis = async (RUM) => {
+    try {
+        const instanciaApi = await crearApi();
+        const response = await instanciaApi.get("/muestras-analista-quimico/completarAnalisis/" + RUM);
+         console.log(response);
+         if(response.status == 200){
+             return response;
+         } else {
+             return;
+         }
+         
+     } catch (error) {
+         console.log(error);
+         return;
+     }
+ };
+ 
 
  const crearObservacionMuestra = async (data) => {
     try {
         const instanciaApi = await crearApi();
-        const response = await instanciaApi.post("/muestras-administrador-finanzas/crearObservacionMuestra",data);
+        const response = await instanciaApi.post("/muestras-analista-quimico/crearObservacionMuestra",data);
          console.log(response);
          if(response.status == 200){
              return response;
@@ -73,54 +89,8 @@ const obtenerObservaciones = async (RUM) => {
          return;
      }
  };
- const agregarOrdenCompra = async (data) => {
-    try {
-        const instanciaApi = await crearApi();
-        const response = await instanciaApi.post("/muestras-administrador-finanzas/agregarOrdenCompra",data);
-         console.log(response);
-         if(response.status == 200){
-             return response;
-         } else {
-             return;
-         }
-         
-     } catch (error) {
-         console.log(error);
-         return;
-     }
- };
- const descargarOrdenCompra = async (data) => {
-    try {
-        const instanciaApi = await crearApi();
-        const response = await instanciaApi.post("/muestras-administrador-finanzas/descargarOrdenCompra",data);
-         console.log(response);
-         if(response.status == 200){
-             return response;
-         } else {
-             return;
-         }
-         
-     } catch (error) {
-         console.log(error);
-         return;
-     }
- };
- const eliminarOrdenCompra = async (data) => {
-    try {
-        const instanciaApi = await crearApi();
-        const response = await instanciaApi.post("/muestras-administrador-finanzas/eliminarOrdenCompra",data);
-         console.log(response);
-         if(response.status == 200){
-             return response;
-         } else {
-             return;
-         }
-         
-     } catch (error) {
-         console.log(error);
-         return;
-     }
- };
+
+ 
 
 
 
@@ -133,7 +103,5 @@ export default {
     obtenerObservaciones,
     obtenerDetallesMuestra,
     crearObservacionMuestra,
-    agregarOrdenCompra,
-    descargarOrdenCompra,
-    eliminarOrdenCompra
+    completarAnalisis
 };
