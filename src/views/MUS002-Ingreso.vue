@@ -32,10 +32,7 @@
                                                         <ValidationProvider name="rut" rules="required|rut" v-slot="validationContext">
                                                             <label for="input-live">Rut solicitante:</label>
                                                             <div class="d-flex align-items-center">
-                                                              <b-form-input id="input-live" v-model="rut" :state="getValidationState(validationContext)" @input="buscarYagregar"></b-form-input>
-                                                              <div>
-                                                                <!-- Eliminamos el botón de búsqueda -->
-                                                              </div>
+                                                              <b-form-input id="input-live" v-model="rut" :state="getValidationState(validationContext)" @input="buscar"></b-form-input>                                                              
                                                             </div>
                                                             <b-form-invalid-feedback>{{ validationContext.errors[0] }}</b-form-invalid-feedback>
                                                         </ValidationProvider>
@@ -44,16 +41,19 @@
                                                             El rut del solicitante no existe en la base de datos!
                                                         </b-alert>
                                                     
-                                                        <ValidationProvider name="solicitante" rules="required" v-slot="validationContext">
+                                                        <ValidationProvider name="Nombre empresa" rules="required" v-slot="validationContext">
                                                             <label for="input-live">Nombre empresa:</label>                                                            
-                                                            <b-form-select v-model="solicitante"  :state="getValidationState(validationContext)" text-field="nombre_empresa" value-field="rut_empresa" @change="actualizarSelectedEmpresa"><option v-for="opcion in opcionesClientes" :key="opcion.rut_empresa" :value="opcion.rut_empresa">{{
+                                                            <b-form-select v-model="rut_empresa"  :state="getValidationState(validationContext)" text-field="nombre_empresa" value-field="rut_empresa" @input="actualizarOpcionesDireccion"><option v-for="opcion in opcionesEmpresa" :key="opcion.rut_empresa" :value="opcion.rut_empresa">{{
                                                                 opcion.nombre_empresa }}</option></b-form-select>                                                                                                                                               
                                                             <b-form-invalid-feedback>{{ validationContext.errors[0] }}</b-form-invalid-feedback>
                                                         </ValidationProvider>
                                                     
                                                         <ValidationProvider name="Dirección Cliente" rules="required" v-slot="validationContext">
                                                             <label for="input-live">Dirección empresa:</label>
-                                                            <b-form-select id="input-live" v-model="direccion" :options="opcionesDireccion" :state="getValidationState(validationContext)" text-field="direccionConCiudad" value-field="id_ciudad">
+                                                            <b-form-select id="input-live" v-model="direccion" :state="getValidationState(validationContext)" text-field="direccionConCiudad" value-field="id_ciudad">
+                                                                <option v-for="opcion in opcionesDireccion" :key="opcion.id_ciudad" :value="opcion.id_ciudad">
+                                                                    {{ opcion.direccionConCiudad }} 
+                                                                </option>
                                                             </b-form-select>
                                                             <b-form-invalid-feedback>{{ validationContext.errors[0] }}</b-form-invalid-feedback>
                                                         </ValidationProvider>
@@ -117,10 +117,10 @@
                                                             <b-form-datepicker id="input-live" v-model="fechaEntrega" placeholder="Seleccione una fecha de entrega" :min="currentDate"></b-form-datepicker>
                                                         </div>
                                                     
-                                                        <ValidationProvider name="TipoPago" rules="required" v-slot="validationContext">
+                                                        <ValidationProvider name="Tipo de pago" rules="required" v-slot="validationContext">
                                                             <label class="mt-1" for="input-live">Forma de pago:</label>
-                                                            <b-form-select id="input-live" v-model="tipo_pago" :options="opcionesPago" aria-describedby="input-live-help TipoPago-live-feedback" :state="getValidationState(validationContext)"></b-form-select>
-                                                            <b-form-invalid-feedback id="TipoPago-live-feedback">{{validationContext.errors[0]}}</b-form-invalid-feedback>
+                                                            <b-form-select id="input-live" v-model="tipo_pago" :options="opcionesPago" aria-describedby="input-live-help Tipo de pago-live-feedback" :state="getValidationState(validationContext)"></b-form-select>
+                                                            <b-form-invalid-feedback id="Tipo de pago-live-feedback">{{validationContext.errors[0]}}</b-form-invalid-feedback>
                                                         </ValidationProvider>
                                                     
                                                         <ValidationProvider name="Valor Neto" rules="required" v-slot="validationContext">
@@ -158,8 +158,11 @@
                                                             <b-form-invalid-feedback id="Temperatura-live-feedback">{{validationContext.errors[0]}}</b-form-invalid-feedback>
                                                         </ValidationProvider>
                                                     
+                                                        <ValidationProvider name="Cotizacion" rules="required" v-slot="validationContext">
                                                             <label class="mt-1" for="input-live">Cotización:</label>
-                                                            <b-form-select id="input-live" v-model="cotizacion" :options="opcionesCotizacion" text-field="nombre_original_documento" value-field="id_cotizacion"></b-form-select>                                                                                                                                                                 
+                                                            <b-form-select id="input-live" v-model="cotizacion" :options="opcionesCotizacion" text-field="idconNombre" value-field="id_cotizacion" aria-describedby="input-live-help Cotizacion-live-feedback" :state="getValidationState(validationContext)"></b-form-select> 
+                                                            <b-form-invalid-feedback id="Cotizacion-live-feedback">{{validationContext.errors[0]}}</b-form-invalid-feedback>
+                                                        </ValidationProvider>                                                                                                                                                                
                                                     
                                                         <label class="mt-1" for="input-live">Observaciones:</label>
                                                         <b-form-textarea id="input-live" v-model="observaciones" aria-describedby="input-live-help observaciones-live-feedback"></b-form-textarea>
@@ -553,6 +556,7 @@ export default {
             parametrosAnalista: [],
             parametroTablaSeleccionado:'',
             submuestrasOG : [],
+            empleadosOG: [],
 
             rutSolicitante: '',
             recepcionista: '',
@@ -623,6 +627,7 @@ export default {
             opcionesMatriz: [],
             opcionesRecepcionistas: [],
             opcionesClientes: [],
+            opcionesEmpresa: [],
             opcionesParametro: [],
             norma: null,
             opcionesNorma: [],
@@ -658,6 +663,7 @@ export default {
                 id_metodologia: '',
             }],
             userData: '',
+            id_ciudad: '',
             dismissSecs: 2,
             dismissCountDown: 0,
             parametrosTablaSeleccionada: [],
@@ -700,7 +706,11 @@ export default {
             opcionesMetodologiaTabla: [],
             met:[],
             tablaE : [],
-            EmpleadosArray: []
+            EmpleadosArray: [],
+            empleados_agregar : [],
+            nuevaobs: [],
+            empresasDirecciones: [],
+            datosCargados: false,
         };
     },
 
@@ -722,6 +732,10 @@ export default {
             console.log("Obteniedo detalles",response.data)
             this.datos = response.data;
             this.RellenarForm(response.data);
+            this.buscar();   
+             
+            
+            
             
             const parametros = response.data.parametros_metodologias;
             console.log("parametros(data): ", parametros)
@@ -748,6 +762,8 @@ export default {
             this.obtenerTablasNormas();
             this.actualizarParametrosTabla();
 
+
+
         }).catch(error => {
             console.error(error);
         });
@@ -762,15 +778,15 @@ export default {
         },        
     },
 
-    mounted() {
-
-        this.buscarYagregar();
+    mounted() {         
+        
         
         this.obtenerParametro();       
 
         this.obtenerMatriz(), 
         
-        this.obtenerNormas(),        
+        this.obtenerNormas(),              
+        
 
         PersonalService.obtenerTodosPersonal().then((response) => {
             console.log(response.data);
@@ -784,15 +800,8 @@ export default {
                 }));        
             }
             console.log("opciones analista: ", this.opcionesAnalista);
-        })        
-        /*EmpresaService.obtenerTodasEmpresa().then((response) => {
-            console.log(response.data);
-            if (response != null) {
-                this.empresas = response.data;
-                this.opcionesClientes = this.empresas.map((empresa) => empresa.nombre_empresa);
-                console.log("Los clientes son: ", this.opcionesClientes);
-            }
-        });*/
+        })
+        
     },
 
     watch: {
@@ -848,8 +857,11 @@ export default {
             }
         },
 
+        
+       
 
-        direccion(newValue) {
+
+       /* direccion(newValue) {
             const direccionSeleccionada = this.opcionesDireccion.find(opcion => opcion.id_ciudad === newValue);
             if (direccionSeleccionada) {
                 const direccion = direccionSeleccionada.direccion;
@@ -858,7 +870,7 @@ export default {
             } else {
                 console.log("No se encontró la dirección seleccionada.");
             }
-        },
+        },*/
     },
 
     methods: {
@@ -878,11 +890,9 @@ export default {
 
         removeInput(index) {
             const telefonoEliminado = this.telefonos_agregar[index].telefono_transportista;
-
             if (telefonoEliminado !== "") {
               this.telefonos_eliminar.push({ telefono_transportista: telefonoEliminado });
-            }           
-        
+            }                   
             this.telefonos_agregar.splice(index, 1);
         },
 
@@ -979,7 +989,156 @@ export default {
             filaSeleccionada.nombre_parametro = filaSeleccionada.nombre_parametro.filter(Boolean);
         
             console.log('Parámetro agregado a la fila:', filaSeleccionada);
-            console.log("nuevo array empleado: ", this.empleados)
+            console.log("nuevo array empleado: ", this.EmpleadosArray);
+            console.log("empleadoOG: ", this.empleadosOG);       
+
+        
+        },
+
+        repetido(){
+            const elementosNoRepetidos = this.EmpleadosArray.filter(objeto => (
+                !this.empleadosOG.some(elemento => (
+                  elemento.RUM === objeto.RUM &&
+                  elemento.rut_empleado === objeto.rut_empleado &&
+                  elemento.orden_de_analisis === objeto.orden_de_analisis &&
+                  elemento.id_parametro === objeto.id_parametro &&
+                  elemento.nombre_parametro === objeto.nombre_parametro &&
+                  elemento.fecha_entrega === objeto.fecha_entrega
+                ))
+            ));
+
+            console.log("elementos no repetidos:", elementosNoRepetidos);
+
+            elementosNoRepetidos.forEach(objeto => {
+              this.empleados_agregar.push({
+                RUM: objeto.RUM,
+                rut_empleado: objeto.rut_empleado,
+                orden_de_analisis: objeto.orden_de_analisis,
+                id_parametro: objeto.id_parametro,
+                nombre_parametro: objeto.nombre_parametro,
+                fecha_entrega: objeto.fecha_entrega,
+              });
+            });
+
+            console.log("empleados_agregar:", this.empleados_agregar);
+
+        },
+
+        modificado(){
+            const empleadoModificadoString = JSON.stringify(this.EmpleadosArray);
+            const haSidoModificado = !this.empleadosOG.some(elemento => {
+              const elementoString = JSON.stringify(elemento);
+              return elementoString === empleadoModificadoString;
+            
+            });
+            
+            if (haSidoModificado) {
+              console.log("Al menos un elemento ha sido modificado", empleadoModificadoString);
+              this.empleados_eliminar.push(...this.empleadosOG);
+              console.log("empleados a modificar: ", this.empleados_eliminar);
+            } else {
+              console.log("Ningún elemento ha sido modificado");
+            }
+        },
+
+        obs(){
+            console.log(this.observacionesOG);
+            const fechaObs = this.observacionesOG[0].fecha_observacion;
+            console.log("fecha observacion: ", fechaObs)  
+            
+            const partesFecha = fechaObs.split("/");
+            const dia = partesFecha[0];
+            const mes = partesFecha[1];
+            const anio = partesFecha[2];
+                    
+            // Formatear la fecha en "yyyy-mm-dd"
+            const fechaFormateada = `${anio}/${mes}/${dia}`;
+            console.log(fechaFormateada);
+
+            const horaObs = this.observacionesOG[0].hora_observacion;
+            console.log("fecha observacion: ", horaObs)
+
+            const observaciones = [{ 
+                observaciones: this.observaciones,
+                fecha_observacion: fechaObs,
+                hora_observacion: horaObs,            
+            }]
+
+            if (observaciones === this.observacionesOG){
+                this.nuevaobs = []
+            }else{
+
+                this.nuevaobs = observaciones;
+                console.log("obs nueva: ",observaciones)
+            }      
+
+        },
+
+        buscar(){
+
+            const data = {
+                rut_solicitante: this.rut
+            };
+
+            MuestraService.obtenerDetallesSolicitante(data).then((response) =>{
+                if(response.data != null && response.status === 200){
+                    console.log("obteniendo detalles", response.data.detalles_empresas)
+                    const empresasSolicitante = response.data.detalles_empresas.map(empresas => ({
+                        nombre_empresa: empresas.nombre_empresa,
+                        rut_empresa: empresas.rut_empresa
+                    }))
+                    console.log("empresas Solicitante: ", empresasSolicitante)
+                    this.opcionesEmpresa = empresasSolicitante;
+                    console.log("opciones empresas : ", this.opcionesEmpresa)
+
+                    const empresasDirecciones = response.data.detalles_empresas.map(empresas => ({
+                        nombre_empresa: empresas.nombre_empresa,
+                        rut_empresa: empresas.rut_empresa,
+                        nombre_ciudad: empresas.nombre_ciudad,
+                        id_ciudad: empresas.id_ciudad,
+                        direccion: empresas.direccion,
+                    }));
+                    console.log("empresas Solicitante: ", empresasDirecciones)
+                    this.empresasDirecciones = empresasDirecciones;
+
+                }
+                this.actualizarOpcionesDireccion()
+                this.detallesCotizaciones();
+            })           
+            console.log("rut:", data)         
+
+        },      
+
+        actualizarOpcionesDireccion() {
+            // Filtrar las direcciones correspondientes a la empresa seleccionada
+            console.log(this.rut_empresa);
+            console.log("opciones direccion: ", this.opcionesDireccion);
+                    
+            if (this.rut_empresa) {
+              console.log("entrando al if");
+              const empresa = this.empresasDirecciones.find(
+                (elemento) => elemento.rut_empresa === this.rut_empresa
+              );
+              const empresaArray = [];
+              empresaArray.push(empresa);
+              console.log(empresaArray);
+              console.log("empresa: ", empresa);
+              if (empresaArray) {
+                const direccion = empresaArray.map((direccion) => ({
+                  id_ciudad: direccion.id_ciudad,
+                  direccion: direccion.direccion,
+                  direccionConCiudad: `${direccion.nombre_ciudad} / ${direccion.direccion}`
+                }))[0]; // Obtener el primer elemento del array
+                console.log("direccion: ", direccion);
+                this.opcionesDireccion = [direccion]; // Convertir la dirección en un nuevo array
+                console.log("opciones direccion: ", this.opcionesDireccion);
+                const direccionEmpresa = direccion.direccion;
+                this.direccion_empresa = direccionEmpresa;
+                console.log("direccion empresa: ", direccionEmpresa);
+
+                
+              }
+            }
         },
 
         buscarYagregar() {
@@ -994,7 +1153,7 @@ export default {
                     this.rutSolicitante = solicitanteEncontrado.rut_solicitante;
                     console.log('Rut solicitante encontrado:', this.rutSolicitante);
                     this.detallesSolicitante();
-                    this.detallesCotizaciones();
+                    
                     
 
                 } else {
@@ -1006,14 +1165,16 @@ export default {
 
         detallesCotizaciones(){
             const data = {
-                rut_solicitante: this.rutSolicitante
+                rut_solicitante: this.rut
             };
             SolicitanteService.CotizacionSolicitante(data).then((response) => {
                 if (response.data != null && response.status === 200){
                     console.log("cotizaciones: ", response.data)
                     this.opcionesCotizacion = response.data.map(cotizacion => ({
                         id_cotizacion: cotizacion.id_cotizacion,
-                        nombre_original_documento: cotizacion.nombre_original_documento
+                        nombre_original_documento: cotizacion.nombre_original_documento,
+                        idconNombre: `${cotizacion.id_cotizacion} - ${cotizacion.nombre_original_documento}`
+                        
                     }))
                     console.log("Opc. cotizaciones: ", this.opcionesCotizacion)
                 }  
@@ -1088,8 +1249,10 @@ export default {
         },
 
         actualizarSelectedEmpresa() {
-            const empresaSeleccionada = this.opcionesClientes.find(empresa =>
-                empresa.rut_empresa === this.solicitante
+
+            console.log("entre a la funcion selected empresa")
+            const empresaSeleccionada = this.opcionesEmpresa.find(empresa =>
+                empresa.rut_empresa === this.rut_empresa
             );
             if (empresaSeleccionada) {
                 this.selectedEmpresa.id_ciudad = empresaSeleccionada.id_ciudad;
@@ -1307,9 +1470,12 @@ export default {
                     nuevaVariable.forEach(objeto => {
                       objeto.nombre_parametro = [objeto.nombre_parametro];
                       objeto.id_parametro = [objeto.id_parametro];
-                      this.EmpleadosArray.push(objeto);
+                      this.EmpleadosArray.push(objeto);                      
                     });
                     console.log("EmpleadosARRAY: ", this.EmpleadosArray);
+
+
+                    
                 }
             });
         },
@@ -1655,7 +1821,7 @@ export default {
         this.fechaEntregaOG = response.fecha_entrega;
         this.TipoMatrizOG = response.id_matriz;
         this.muestreadoOG = response.muestreado_por;
-        //this.observacionesOG = response.observaciones.map((obs) => obs.observaciones);
+        this.observacionesOG = response.observaciones
         this.prioridadOG = response.prioridad;
         this.transportistaRutOG = response.rut_transportista;
         this.transportistaOG = response.nombre_transportista;                       
@@ -1680,13 +1846,18 @@ export default {
             analistasSeleccionados: [],
         }));        
         this.empleados = response.empleados;
-        console.log("empleados: ", this.empleados)  
+        console.log("empleados: ", this.empleados)
+        this.empleadosOG = response.empleados;
+
 
 
             //TAB RECEPCIONISTA
         this.rut = response.rut_solicitante;
         this.solicitante = response.rut_empresa;
-        this.direccion = response.direccion_empresa;
+        this.direccion = response.id_ciudad;
+
+        this.rut_empresa = response.rut_empresa;
+        this.datosCargados = true;
         
         
             //TAB MUESTRA
@@ -1723,6 +1894,9 @@ export default {
                 if (!success) {
                     return;
                 } else {
+                    this.repetido();
+                    this.modificado(); 
+                    this.obs();               
                     const matricesFiltradas = this.parametros_agregar.slice(1);
                     const submuestraFiltrada = this.submuestra_agregar.slice(1);
                     
@@ -1746,7 +1920,11 @@ export default {
                         patente_vehiculo: this.patente,
                         telefonos_agregar: this.telefonos_agregar,
                         estado: 'Recepcionado',
-                        observaciones: this.observaciones,
+                        observaciones: this.nuevaobs.map(obs=> ({
+                            fecha_observacion: obs.fecha_observacion,
+                            hora_observacion: obs.hora_observacion,
+                            observaciones: obs.observaciones
+                        })),
                         parametros_agregar: matricesFiltradas.map(matriz => ({
                             id_parametro: matriz.id_parametro,
                             id_metodologia: matriz.id_metodologia,
@@ -1761,8 +1939,19 @@ export default {
                         id_cotizacion: this.cotizacion,
                         tipo_pago: this.tipo_pago,
                         valor_neto: this.valor_neto,
-                        empleados: this.empleados,
-                        empleados_eliminar: this.empleados_eliminar                    
+                        empleados_agregar: this.empleados_agregar.map(agregar => ({
+                            rut_empleado: agregar.rut_empleado,
+                            orden_de_analisis: agregar.orden_de_analisis,
+                            id_parametro: agregar.id_parametro,
+                            fecha_entrega: agregar.fecha_entrega,                           
+                        })),                   
+                        empleados_eliminar: this.empleados_eliminar.map(eliminar => ({
+                            rut_empleado: eliminar.rut_empleado,
+                            orden_de_analisis: eliminar.orden_de_analisis,
+                            id_parametro: eliminar.id_parametro, 
+                            fecha_entrega: eliminar.fecha_entrega,                                                       
+                            estado: eliminar.estado
+                        })),                   
                     }
 
                     console.log("data a enviar", data)
