@@ -86,7 +86,7 @@ const obtenerObservaciones = async (RUM) => {
  const actualizarMuestra = async (data) => {
     try {
         console.log("DATA: ", data.RUM);
-        const response = await axios.put(apiUrl + "/muestras/" + data.RUM + "/update", data);
+        const response = await axios.put(apiUrl + "/ingreso-muestra", data);
         
         console.log(response);
         
