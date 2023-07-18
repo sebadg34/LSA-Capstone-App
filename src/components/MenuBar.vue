@@ -74,7 +74,7 @@
 
                         <div style="height:10px"></div>
                     </b-list-group-item>
-                    <b-list-group-item v-if="rol == 3 || rol == 4 || rol == 0" @click="navegarRuta('AdminMuestraLab')" class="cursorToHand menuButton">
+                    <b-list-group-item v-if="rol == 3 || rol == 4 || rol == 0 || rol == 6" @click="navegarRuta('AdminMuestraLab')" class="cursorToHand menuButton">
 
                         <div class="roleTag">Químicos</div>
                         <div style="height:10px"></div>

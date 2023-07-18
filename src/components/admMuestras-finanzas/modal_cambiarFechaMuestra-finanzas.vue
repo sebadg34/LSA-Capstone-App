@@ -28,7 +28,7 @@
 
                     <b-row style="border-bottom: 1px solid var(--lsa-light-gray); padding:3px">
                         <b-col class="col-7" style="font-weight:bold;"> Nombre solicitante: </b-col>
-                        <b-col class="col-5">{{ nombre_solicitante + " " + apellido_solicitante }}</b-col>
+                        <b-col class="col-5">{{ nombre_solicitante }}</b-col>
                     </b-row>
 
                     <b-row style="border-bottom: 1px solid var(--lsa-light-gray); padding:3px">
@@ -99,7 +99,8 @@
 </template>
 
 <script>
-import MuestraFinanzasService from '@/helpers/api-services/Muestra-finanzas.service';
+import MuestraGerenteService from '@/helpers/api-services/Muestra-gerente.service';
+
 export default {
     props: {
         detallesData: Object
@@ -109,12 +110,14 @@ export default {
 
             RUM: '',
             nombre_solicitante: '',
-            apellido_solicitante: '',
             nombre_empresa: '',
             ciudad_empresa: '',
             direccion_empresa: '',
             numero_muestras: '',
             estado: '',
+            numero_empresa: '',
+            norma: '',
+            muestreador: '',
             fecha_entrega: '',
             tipo_pago: '',
             matriz: '',
@@ -131,8 +134,8 @@ export default {
         obtenerDetalles(rum) {
             this.cargandoParametros = true;
             this.cargandoAnalistas = true;
-            MuestraFinanzasService.obtenerDetallesMuestra(rum).then((response) => {
-        
+            MuestraGerenteService.obtenerDetallesMuestra(rum).then((response) => {
+                console.log(response)
                 if (response != null) {
                     if (response.status == 200 && response.data != null) {
                         const detalles = response.data;
@@ -165,10 +168,10 @@ export default {
     watch: {
         detallesData: {
             handler() {
-               
+                console.log("detallesData actualizada", this.detallesData)
+
                 this.RUM = this.detallesData.RUM;
                 this.nombre_solicitante = this.detallesData.solicitante[0].nombre;
-                this.apellido_solicitante = this.detallesData.solicitante[0].primer_apellido;
                 this.nombre_empresa = this.detallesData.nombre_empresa;
                 this.matriz = this.detallesData.matriz.nombre_matriz;
                 this.valor_neto = this.detallesData.valor_neto;

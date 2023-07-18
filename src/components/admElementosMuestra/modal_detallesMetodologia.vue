@@ -122,6 +122,7 @@ export default {
     watch: {
         detallesData: {
             handler() {
+                    this.listaEmpleados = [];
                 console.log("detallesData actualizada", this.detallesData)
                 this.Nombre = this.detallesData.nombre_metodologia;
                 this.id = this.detallesData.id_metodologia;

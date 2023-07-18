@@ -16,7 +16,7 @@
       <b-form-invalid-feedback>{{ validationContext.errors[0] }}</b-form-invalid-feedback>
     </ValidationProvider>
     <br/>
-    <ValidationProvider name="descripción" rules="max:255" v-slot="validationContext">
+    <ValidationProvider name="descripción" rules="max:512" v-slot="validationContext">
       <label for="input-live">Descripción:</label>
       <b-form-textarea  rows="3"
        id="input-live" v-model="Descripción" :state="getValidationState(validationContext)" placeholder="ingrese descripción (opcional)" ></b-form-textarea>
@@ -35,7 +35,7 @@
   <b-col>
     <b-form-group label="Analistas seleccionados">
       <div v-for="(analista, index) in analistasSeleccionados" :key="index" class="d-flex align-items-center parametro-item">
-        <b-input readonly :value="analista.nombre"></b-input>
+        <b-input readonly :value="analista.nombre + ' ' + analista.apellido"></b-input>
         <b-button variant="danger" @click="eliminarAnalistaSeleccionado(index)" class="ml-2">
           <b-icon-trash-fill></b-icon-trash-fill>
         </b-button>
@@ -93,9 +93,9 @@ export default {
       this.rutEmpleados = this.analistas.map((analista) => analista.rut_empleado);
 
       this.opcionesAnalista = this.analistas.filter((analista) => {
-        return analista.rol === 'Analista Químico' || analista.rol === 'Químico';}).map((analista) => ({
-        value: analista.nombre,
-        text: analista.nombre,
+        return analista.rol === 'Analista Químico' || analista.rol === 'Químico' || analista.rol == 'Supervisor(a)';}).map((analista) => ({
+        value: analista,
+        text: (analista.nombre + " "+ analista.apellido),
       }));
     }
   })
@@ -113,14 +113,14 @@ export default {
     agregarAnalistaSeleccionado() {
   if (this.AnalistaAsignado) {
     const analistaExistente = this.analistasSeleccionados.find(
-      (analista) => analista.nombre === this.AnalistaAsignado
+      (analista) => analista.nombre === this.AnalistaAsignado.nombre
     );
     if (analistaExistente) {
       this.alertaDuplicado = true;
     } else {
-      const analistaSeleccionado = this.analistas.find((analista) => analista.nombre === this.AnalistaAsignado);
+      const analistaSeleccionado = this.analistas.find((analista) => analista.nombre === this.AnalistaAsignado.nombre);
       const rutAnalista = analistaSeleccionado.rut_empleado;
-      this.analistasSeleccionados.push({ nombre: this.AnalistaAsignado, rut_empleado: rutAnalista });
+      this.analistasSeleccionados.push({apellido: this.AnalistaAsignado.apellido, nombre: this.AnalistaAsignado.nombre, rut_empleado: rutAnalista });
       this.empleados_agregar.push({ rut_empleado: rutAnalista });
       this.AnalistaAsignado = '';
       this.alertaDuplicado = false;
@@ -129,8 +129,9 @@ export default {
 },
 
 eliminarAnalistaSeleccionado(index) {
+  this.empleados_agregar = this.empleados_agregar.filter(emp => emp.rut_empleado != this.analistasSeleccionados[index].rut_empleado)
   this.analistasSeleccionados.splice(index, 1);
-  this.empleados.splice(index + 1, 1); // Eliminar objeto con el RUT y nombre
+  console.log("analista borrado, listado actual: ",this.analistasSeleccionados)
 },
 
 

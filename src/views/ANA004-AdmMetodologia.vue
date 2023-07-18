@@ -122,13 +122,15 @@ export default {
                     key: 'nombre_metodologia',
                     label: 'Nombre',
                     thClass: 'text-center',
-                    tdClass: 'text-center'
+                    tdClass: 'text-center',
+                    sortable: true
                 },
                 {
                     key: 'rutEmpleado',
                     label: 'Analista(s)',
                     thClass: 'text-center',
-                    tdClass: 'text-center'
+                    tdClass: 'text-center',
+                    sortable: true
                 },
                 {
                     key: 'Accion',

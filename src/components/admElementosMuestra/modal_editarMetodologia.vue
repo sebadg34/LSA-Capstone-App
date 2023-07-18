@@ -16,7 +16,7 @@
       <b-form-invalid-feedback>{{ validationContext.errors[0] }}</b-form-invalid-feedback>
     </ValidationProvider>
 <br/>
-    <ValidationProvider name="descripción" rules="max:255" v-slot="validationContext">
+    <ValidationProvider name="descripción" rules="max:512" v-slot="validationContext">
       <label for="input-live">Descripción:</label>
       <b-form-textarea  rows="3"
        id="input-live" v-model="Descripción" :state="getValidationState(validationContext)" placeholder="ingrese descripción (opcional)" ></b-form-textarea>
@@ -35,7 +35,7 @@
         <b-col>
             <b-form-group label="Analistas seleccionados">
                 <div v-for="(analista, index) in analistas_ya_seleccionados" :key="index" class="d-flex align-items-center analista-item">
-                    <b-input readonly :value="analista.nombre"></b-input>
+                    <b-input readonly :value="analista.nombre + ' ' + analista.apellido"></b-input>
                     <b-button variant="danger" @click="eliminarAnalistaSeleccionado(index)" class="ml-2">
                         <b-icon-trash-fill></b-icon-trash-fill>
                     </b-button>
@@ -124,10 +124,10 @@ export default {
                         this.rutEmpleados = this.analistas.map((analista) => analista.rut_empleado);
 
                         this.opcionesAnalista = this.analistas.filter((analista) => {
-                            return analista.rol === 'Analista Químico' || analista.rol === 'Químico';
+                            return analista.rol === 'Analista Químico' || analista.rol === 'Químico' || analista.rol == 'Supervisor(a)';
                         }).map((analista) => ({
                             value: analista,
-                            text: analista.nombre,
+                            text:  (analista.nombre + " "+ analista.apellido),
                         }));
                     }
                 })
@@ -169,6 +169,7 @@ export default {
 
                     this.analistas_ya_seleccionados.push({
                         nombre: value.nombre,
+                        apellido: value.apellido,
                         rut_empleado: value.rut_empleado
                     });
 

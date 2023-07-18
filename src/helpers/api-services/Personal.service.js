@@ -15,6 +15,8 @@ const existePersonal = async (data) => {
         return error.response;
     }
 };
+
+
 const existeCorreoPersonal = async (data) => {
     try {  
         const instanciaApi = await crearApi();
@@ -71,6 +73,21 @@ const eliminarDocumento = async (data) => {
     }
 };
 
+const obtenerAreas = async () => {
+    try {
+        const instanciaApi = await crearApi();
+        const response = await instanciaApi.get("/empleados/areas");
+            console.log(response);
+        if(response.status == 200){
+            return response;
+        }else{
+            return;
+        }
+    } catch (error) {
+        console.log(error);
+        return;
+    }
+};
 
 const obtenerTodosPersonal = async () => {
     try {
@@ -163,6 +180,7 @@ export default {
     obtenerDetallesPersonal,
     eliminarDocumento,
     descargarDocumento,
-    obtenerPersonal
+    obtenerPersonal,
+    obtenerAreas
 
 };

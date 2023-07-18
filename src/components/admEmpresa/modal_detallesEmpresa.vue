@@ -18,24 +18,24 @@
         <b-row class="pb-2">
             <b-col class="col-6">
                 <div>
-                    Nombre: <span>{{this.Nombre}}</span>
+                  <strong>Nombre:</strong>   <span>{{this.Nombre}}</span>
                 </div>
                 <div>
-                    Nombre abreviado: <span>{{this.Nombre_abreviado}}</span>
+                    <strong> Nombre abreviado:</strong>   <span>{{this.Nombre_abreviado}}</span>
                 </div>
                 <div>
-                    Correo electrónico: <span>{{this.Correo}}</span>
+                    <strong>  Correo electrónico:</strong>   <span>{{this.Correo}}</span>
                 </div>
             </b-col>
             <b-col class="col-6">
                 <div>
-                    Rut: <span>{{this.Rut}}</span>
+                    <strong>Rut:</strong>  <span>{{this.Rut}}</span>
                 </div>
                 <div>
-                    Razón Social: <span>{{this.Razon_social}}</span>
+                    <strong>Razón Social:</strong>   <span>{{this.Razon_social}}</span>
                 </div>
                 <div>
-                    Giro: <span>{{this.Giro}}</span>
+                    <strong> Giro:</strong>  <span>{{this.Giro}}</span>
                 </div>
             </b-col>
         </b-row>

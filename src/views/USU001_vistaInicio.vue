@@ -2,10 +2,13 @@
 <div class="home">
     <div class="image-container">
 <div style="height:50px"></div>
-        <b-card  bg-variant="light"  class="card-inicio" >
+        <b-card  bg-variant="light"  class="card-inicio" style="min-height: 40vh;" >
 
             <template #header>
-                <span>{{ rol_descripcion }}</span>
+                <div class="row d-flex justify-content-center">
+                    <span>Rol del sistema:</span>   <strong>{{rol_descripcion }}</strong>
+                </div>
+             
             </template>
             <b-card-text>
                 vista titulo

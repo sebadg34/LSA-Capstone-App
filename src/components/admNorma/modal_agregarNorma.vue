@@ -13,33 +13,73 @@
         <!-- ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// -->
         <div>
             <b-row>
-                <b-col cols="4">
+                <b-col cols="12">
                     <b-form-group label="Nombre de la norma">
                         <b-form-input v-model="nombre_norma"></b-form-input>
                     </b-form-group>
                 </b-col>
 
-                <b-col cols="4">
-                    <b-form-group label="Seleccione una matriz">
-                        <b-form-select v-model="matrizSeleccionada" @change="matrizCambiada"
-                            placeholder="Seleccione una Matriz">
-                            <option v-for="opcion in opcionesMatriz" :key="opcion.id_matriz" :value="opcion.id_matriz">{{
-                                opcion.nombre_matriz }}</option>
-                        </b-form-select>
+                <b-col cols="6">
+                    <b-form-group>
+                        <b-card no-body header="Matrices: ">
+                            <template #header>
+                              
+                                <b-row class="d-flex justify-content-around align-items-center" style="height:30px">
+                                   <h5 style="position:absolute; top:-15px; left:-10px"><b-badge pill class="lsa-orange">1</b-badge> </h5> 
+                                    <b-col class="col-4" style="padding:5px">
+                                        <div style="font-weight:bold">Matrices:</div>
+
+                                    </b-col>
+
+                                    <b-col class="col-6" style="padding:0px">
+                                        <b-input-group size="md">
+                                            <b-form-select style="height: 30px; padding-top:2px; padding-bottom: 2px;"
+                                                v-model="matrizSeleccionada_agregar"
+                                                :options="dataMatrices"></b-form-select>
+                                            <b-input-group-append>
+                                                <b-button :disabled="!matrizSeleccionada_agregar" @click="agregarMatriz"
+                                                    class="reactive-button" style="padding:1px; aspect-ratio: 1 / 1; "
+                                                    variant="primary">
+                                                    <b-icon icon="plus-circle-fill"></b-icon>
+                                                </b-button>
+                                            </b-input-group-append>
+
+                                        </b-input-group>
+
+                                    </b-col>
+                                    <b-col class="col-1" style="padding:0px">
+                                        <b-button :disabled="!parametroSeleccionado" class="reactive-button"
+                                            style="margin-right:10px;padding-left:5px; padding-right:5px; padding-top:1px; padding-bottom: 1px; height: 30px; font-weight: bold;"
+                                            @click="borrarParametroSeleccionado(parametroSeleccionado)" variant="danger">
+                                            <b-icon icon="trash-fill"></b-icon>
+                                        </b-button>
+
+                                    </b-col>
+
+                                </b-row>
+
+                            </template>
+                            <b-form-select class="form-control" name="opciones" :select-size="5"
+                                v-model="matrizSeleccionada" :options="opcionesMatriz">
+
+                            </b-form-select>
+                        </b-card>
                     </b-form-group>
                 </b-col>
-            </b-row>
-        </div>
-        <hr />
-        <b-row>
-            <b-col cols="4">
+                <b-col cols="6">
                 <b-form-group>
                     <b-card no-body header="Tablas: ">
                         <template #header>
-                            <b-col>
+                         
                                 <b-row class="d-flex justify-content-between align-items-center" style="height:30px">
-                                    <div style="font-weight:bold">Tabla:</div>
-                                    <div>
+                                    <h5 style="position:absolute; top:-15px; left:-10px"><b-badge pill class="lsa-orange">2</b-badge> </h5> 
+                                    <b-col class="col-4" style="padding:5px">
+                                        <div style="font-weight:bold">Tabla:</div>
+
+                                    </b-col>
+                                    
+                                    <b-col class="col-6" style="padding:5px">
+                                        <div class="d-flex justify-content-end align-items-center">
                                         <b-button :disabled="!tablaSeleccionada" class="reactive-button"
                                             style="margin-right:10px;padding-left:5px; padding-right:5px; padding-top:1px; padding-bottom: 1px; height: 30px; font-weight: bold;"
                                             @click="borrarTablaSeleccionada(tablaSeleccionada)" variant="danger">
@@ -52,8 +92,11 @@
                                             <b-icon icon="plus-circle-fill"></b-icon>
                                         </b-button>
                                     </div>
+
+                                    </b-col>
+                                  
                                 </b-row>
-                            </b-col>
+                           
                         </template>
                         <b-form-select class="form-control" name="opciones" :select-size="5" v-model="tablaSeleccionada"
                             :options="opcionesTabla" @change="tablaSeleccionadaCambiada">
@@ -62,13 +105,19 @@
                     </b-card>
                 </b-form-group>
             </b-col>
+            </b-row>
+        </div>
+        <hr />
+        <b-row>
+          
 
-            <b-col cols="4">
+            <b-col cols="6">
                 <b-form-group>
                     <b-card no-body>
 
                         <template #header>
                             <b-row class="d-flex justify-content-around align-items-center" style="height:30px">
+                                <h5 style="position:absolute; top:-15px; left:-10px"><b-badge pill class="lsa-orange">3</b-badge> </h5> 
                                 <b-col class="col-4" style="padding:5px">
                                     <div style="font-weight:bold">Parámetros:</div>
 
@@ -111,19 +160,24 @@
                     </b-card>
                 </b-form-group>
             </b-col>
-            <b-col cols="4">
+            <b-col cols="6">
                 <b-form-group>
                     <b-card no-body>
 
                         <template #header>
-                            <b-col>
+                           
                                 <b-row class="d-flex justify-content-start align-items-center" style="height:30px">
-                                    <div>Metodologías de: <span style="font-weight:bold"
+                                    <h5 style="position:absolute; top:-15px; left:-10px"><b-badge pill class="lsa-orange">4</b-badge> </h5> 
+<b-col class="col-12">
+    <div>Metodologías de: <span style="font-weight:bold"
                                             v-if="parametroSeleccionado != null"> {{
                                                 parametroSeleccionado.nombre_parametro }}</span></div>
+</b-col>
+                                  
+
 
                                 </b-row>
-                            </b-col>
+                           
                         </template>
                         <b-list-group :key="metodosKey">
                             <b-list-group-item v-for="metodo in this.parametroSeleccionado.metodologias" :key="metodo.index"
@@ -134,10 +188,11 @@
                                     <b-popover placement="topleft"
                                         :target="'button-' + metodo.id_metodologia + '-' + metodo.id_parametro"
                                         title="Descripción metodología" triggers="focus">
-                                        <template v-if=" metodo.detalle_metodologia != null">{{ metodo.detalle_metodologia }}</template>
-                                    <template v-else>
-                                        <div>La metodología no cuenta con una descripción actualmente.</div>
-                                    </template>
+                                        <template v-if="metodo.detalle_metodologia != null">{{ metodo.detalle_metodologia
+                                        }}</template>
+                                        <template v-else>
+                                            <div>La metodología no cuenta con una descripción actualmente.</div>
+                                        </template>
                                     </b-popover>
                                     <b-button class="boton-ojo-metodo"
                                         :id="'button-' + metodo.id_metodologia + '-' + metodo.id_parametro">
@@ -181,70 +236,80 @@
 -->
         <br />
         <div v-if="tablas_agregar">
-            <b-card no-body header="Tablas de norma">
-                <b-list-group v-for="(tabla, tablaindex) in tablas_agregar" :item="tabla" :key="tablaindex" horizontal="lg">
-                    <b-list-group-item style="width:35%" class=" d-flex justify-content-start align-items-center">
-                        <b-button @click="borrarTabla(tabla)" variant="danger"
-                            style="padding:1px; aspect-ratio: 1 / 1; height: 30px; width: 30px">
-                            <b-icon scale="0.9" icon="trash-fill"></b-icon>
-                        </b-button>
-                        <div class="pl-2 pr-2" style="font-weight:bold">
-                            {{ tabla.nombre_tabla }}
-                        </div>
-                    </b-list-group-item>
-                    <b-list-group-item style="width:65%" class="item-no-padding">
-                        <b-card no-body header="Parámetros: ">
+            <div v-for="matriz in matrices_agregar" :key="matriz.id_matriz">
 
-                            <b-list-group flush>
-                                <b-list-group-item v-for="parametro in tabla.parametros" :key="parametro.id_parametro">
-                                    <b-col>
-                                        <b-row class="d-flex justify-content-between align-items-center"
-                                            style="margin-bottom:10px">
-                                            <div>{{ parametro.nombre_parametro }}</div>
-                                            <b-button v-b-toggle="'colapse-' + parametro.id_parametro  + '-' + tablaindex" pill
-                                                class="lsa-blue">detalles <b-icon icon="journals"
-                                                    aria-hidden="true"></b-icon>
-                                            </b-button>
-                                        </b-row>
-                                        <b-collapse :id="'colapse-' + parametro.id_parametro  + '-' + tablaindex">
+                <b-card no-body :header="'Tablas de matriz: ' + matriz.nombre_matriz">
+                    <b-list-group v-for="(tabla, tablaindex) in matriz.tablas_agregar" :item="tabla" :key="tablaindex"
+                        horizontal="lg">
+                        <b-list-group-item style="width:35%" class=" d-flex justify-content-start align-items-center">
+                            <b-button @click="borrarTabla(tabla)" variant="danger"
+                                style="padding:1px; aspect-ratio: 1 / 1; height: 30px; width: 30px">
+                                <b-icon scale="0.9" icon="trash-fill"></b-icon>
+                            </b-button>
+                            <div class="pl-2 pr-2" style="font-weight:bold">
+                                {{ tabla.nombre_tabla }}
+                            </div>
+                        </b-list-group-item>
+                        <b-list-group-item style="width:65%" class="item-no-padding">
+                            <b-card no-body header="Parámetros: ">
 
-                                            <b-card no-body header="Metodologías: ">
-                                                <b-list-group flush>
-                                                    <b-list-group-item v-for="metodologia in parametro.metodologias"
-                                                        :key="metodologia.nombre_metodologia">
-                                                        <b-col>
-                                                            <b-row
-                                                                class="d-flex justify-content-between align-items-center">
-                                                                <div>
-                                                                    {{ metodologia.nombre_metodologia }}
-                                                                </div>
-                                                                <b-popover placement="topleft"
-                                                                    :target="'button-' + metodologia.id_metodologia + '-' + parametro.id_parametro"
-                                                                    title="Descripción metodología" triggers="focus">
-                                                                    <template v-if=" metodologia.detalle_metodologia != null">{{ metodologia.detalle_metodologia }}</template>
-                                                                <template v-else>
-                                                                    <div>La metodología no cuenta con una descripción actualmente.</div>
-                                                                </template>
-                                                                </b-popover>
-                                                                <b-button
-                                                                    :id="'button-' + metodologia.id_metodologia + '-' + parametro.id_parametro"
-                                                                    class="boton-ojo-metodo">
-                                                                    <b-icon scale="0.9" icon="eye-fill"
-                                                                        style="color:gray"></b-icon>
-                                                                </b-button>
-                                                            </b-row>
-                                                        </b-col>
-                                                    </b-list-group-item>
-                                                </b-list-group>
-                                            </b-card>
-                                        </b-collapse>
-                                    </b-col>
-                                </b-list-group-item>
-                            </b-list-group>
-                        </b-card>
-                    </b-list-group-item>
-                </b-list-group>
-            </b-card>
+                                <b-list-group flush>
+                                    <b-list-group-item v-for="parametro in tabla.parametros" :key="parametro.id_parametro">
+                                        <b-col>
+                                            <b-row class="d-flex justify-content-between align-items-center"
+                                                style="margin-bottom:10px">
+                                                <div>{{ parametro.nombre_parametro }}</div>
+                                                <b-button
+                                                    v-b-toggle="'colapse-' + parametro.id_parametro + '-' + tablaindex" pill
+                                                    class="lsa-blue">detalles <b-icon icon="journals"
+                                                        aria-hidden="true"></b-icon>
+                                                </b-button>
+                                            </b-row>
+                                            <b-collapse :id="'colapse-' + parametro.id_parametro + '-' + tablaindex">
+<hr/>
+                                                <b-card no-body header="Metodologías: ">
+                                                    <b-list-group flush>
+                                                        <b-list-group-item v-for="metodologia in parametro.metodologias"
+                                                            :key="metodologia.nombre_metodologia">
+                                                            <b-col>
+                                                                <b-row
+                                                                    class="d-flex justify-content-between align-items-center">
+                                                                    <div>
+                                                                        {{ metodologia.nombre_metodologia }}
+                                                                    </div>
+                                                                    <b-popover placement="topleft"
+                                                                        :target="'button-' + metodologia.id_metodologia + '-' + parametro.id_parametro"
+                                                                        title="Descripción metodología" triggers="focus">
+                                                                        <template
+                                                                            v-if="metodologia.detalle_metodologia != null">{{
+                                                                                metodologia.detalle_metodologia }}</template>
+                                                                        <template v-else>
+                                                                            <div>La metodología no cuenta con una
+                                                                                descripción
+                                                                                actualmente.</div>
+                                                                        </template>
+                                                                    </b-popover>
+                                                                    <b-button
+                                                                        :id="'button-' + metodologia.id_metodologia + '-' + parametro.id_parametro"
+                                                                        class="boton-ojo-metodo">
+                                                                        <b-icon scale="0.9" icon="eye-fill"
+                                                                            style="color:gray"></b-icon>
+                                                                    </b-button>
+                                                                </b-row>
+                                                            </b-col>
+                                                        </b-list-group-item>
+                                                    </b-list-group>
+                                                </b-card>
+                                            </b-collapse>
+                                        </b-col>
+                                    </b-list-group-item>
+                                </b-list-group>
+                            </b-card>
+                        </b-list-group-item>
+                    </b-list-group>
+                </b-card>
+            </div>
+
         </div>
         <hr />
         <b-modal centered id="modal-agregar-tabla" ref="tabla" title="Agregar Tabla">
@@ -300,14 +365,18 @@ export default {
             nombre_norma: '',
             id_matriz: '',
             tablas_agregar: [],
+            matrices_agregar: [],
+            dataMatrices: [],
+            opcionesNorma: [],
             nombreTabla: [],
-            matrizSeleccionada: '',
             opcionesMatriz: [],
             parametrosMatriz: [],
             opcionesTabla: [],
             opcionesParametro: [],
             tablaSeleccionada: '',
+            matrizSeleccionada: '',
             parametroSeleccionado_agregar: '',
+            matrizSeleccionada_agregar: '',
             parametroSeleccionado: '',
             alertaDuplicado: false,
             alertaTablaDuplicada: false,
@@ -321,6 +390,7 @@ export default {
     mounted() {
 
         this.obtenerMatriz();
+        this.cargarParametros();
     },
 
     methods: {
@@ -336,46 +406,6 @@ export default {
             console.log("tabla del parametro a modificar", this.tablaSeleccionada)
             this.tablaSeleccionada.parametros = this.tablaSeleccionada.parametros.filter(param => param.id_parametro != parametro.id_parametro);
             this.parametroSeleccionado = "";
-        },
-        matrizCambiada() {
-            if (this.id_matriz == '') {
-                this.id_matriz = this.matrizSeleccionada
-
-                this.cargarParametrosMatriz(this.id_matriz);
-            } else {
-                this.confirmarCambioMatriz();
-
-            }
-        },
-        confirmarCambioMatriz() {
-            this.boxTwo = ''
-            this.$bvModal.msgBoxConfirm('Al cambiar la matríz, las tablas y sus parametros serán reiniciados', {
-                title: 'Confirmar cambio',
-                size: 'sm',
-                buttonSize: 'sm',
-                okVariant: 'danger',
-                okTitle: 'Cambiar matríz',
-                cancelTitle: 'Mantener matríz',
-                footerClass: 'p-2',
-                hideHeaderClose: false,
-                centered: true
-            })
-                .then(value => {
-                    if (value) {
-
-                        this.reiniciarDatosParcial();
-                        this.id_matriz = this.matrizSeleccionada;
-                        this.cargarParametrosMatriz(this.id_matriz);
-
-                    } else {
-                        this.matrizSeleccionada = this.id_matriz;
-                    }
-
-                })
-                .catch(err => {
-                    console.log(err)
-
-                })
         },
         // Reiniciar cuando se cambia la matriz
         reiniciarDatosParcial() {
@@ -408,12 +438,19 @@ export default {
         // Agregar tablas ya existentes en la DB al modal
 
         agregarTablaNorma() {
-            const existeTabla = this.tablas_agregar.find(tabla => tabla.nombre_tabla == this.tablaSeleccionada.nombre_tabla);
+            const existeMatriz = this.matrices_agregar.find(matriz => matriz.id_matriz == this.matrizSeleccionada.id_matriz);
+            var matriz;
+            var tablaAgregar;
+            var tabla;
+            if (existeMatriz == null) {
+                matriz = {
+                    id_matriz: this.matrizSeleccionada.id_matriz,
+                    nombre_matriz: this.matrizSeleccionada.nombre_matriz,
+                    tablas_agregar: []
+                }
 
-            if (existeTabla == null) {
-                console.log("tabla a agregar", this.tablaSeleccionada);
-                var tablaAgregar = this.tablaSeleccionada;
-                var tabla = {
+                tablaAgregar = this.tablaSeleccionada;
+                tabla = {
                     nombre_tabla: tablaAgregar.nombre_tabla,
                     parametros: []
                 }
@@ -432,11 +469,47 @@ export default {
                         })
                     }
                 }
-                this.tablas_agregar.push(tabla)
-                console.log("TABLAS AGREGADAS", this.tablas_agregar)
-            } else {
-                this.alertaTablaDuplicada = true;
+                matriz.tablas_agregar.push(tabla);
+                this.matrices_agregar.push(matriz);
+                console.log("matriz nueva, creando matriz!", matriz);
             }
+            else {
+                matriz = existeMatriz;
+                const existeTabla = matriz.tablas_agregar.find(tabla => tabla.nombre_tabla == this.tablaSeleccionada.nombre_tabla);
+                if (existeTabla == null) {
+                    console.log("tabla a agregar", this.tablaSeleccionada);
+                    tablaAgregar = this.tablaSeleccionada;
+
+
+                    tabla = {
+                        nombre_tabla: tablaAgregar.nombre_tabla,
+                        parametros: []
+                    }
+
+                    for (var x = 0; x < tablaAgregar.parametros.length; x++) {
+                        tabla.parametros.push({
+                            nombre_parametro: tablaAgregar.parametros[x].text,
+                            id_parametro: tablaAgregar.parametros[x].value.id_parametro,
+                            metodologias: []
+                        })
+                        for (var y = 0; y < tablaAgregar.parametros[x].value.metodologias.length; y++) {
+                            tabla.parametros[x].metodologias.push({
+                                id_metodologia: tablaAgregar.parametros[x].value.metodologias[y].id_metodologia,
+                                nombre_metodologia: tablaAgregar.parametros[x].value.metodologias[y].nombre_metodologia,
+                                detalle_metodologia: tablaAgregar.parametros[x].value.metodologias[y].detalle_metodologia,
+                            })
+                        }
+                    }
+                    matriz.tablas_agregar.push(tabla);
+                    console.log("matriz nueva, creando matriz!", matriz);
+                } else {
+                    this.alertaTablaDuplicada = true;
+                }
+
+            }
+
+
+
 
         },
         borrarMetodologiaTabla(metodologia) {
@@ -448,6 +521,16 @@ export default {
             this.parametroSeleccionado.metodologias = this.parametroSeleccionado.metodologias.filter(metodo => metodo.id_metodologia != id);
             this.metodosKey++;
 
+        },
+        agregarMatriz() {
+            const existeMatriz = this.opcionesMatriz.find(matriz => matriz.id_matriz == this.matrizSeleccionada_agregar.id_matriz);
+            if (existeMatriz == null) {
+                this.opcionesMatriz.push({
+                    value: this.matrizSeleccionada_agregar,
+                    text: this.matrizSeleccionada_agregar.nombre_matriz,
+                    id_matriz: this.matrizSeleccionada_agregar.id_matriz
+                }); // Agregar el nombre de la tabla a las opciones
+            }
         },
         agregarParametroTabla() {
             const existeParametro = this.tablaSeleccionada.parametros.find(parametro => parametro.id_parametro == this.parametroSeleccionado_agregar.id_parametro)
@@ -467,8 +550,37 @@ export default {
         },
         enviarFormulario() {
 
+
+
+       
+
+
             // TODO: Optimizar ciclos FOR
             var tablas_param_metodo = [];
+            var matrices_agregar_aux = [];
+            for(var x = 0; x < this.matrices_agregar.length; x++){
+                var matriz_aux = this.matrices_agregar[x];
+                var matriz_agregar = {
+                    id_matriz:this.matrices_agregar[x].id_matriz
+                } 
+
+                for (var k = 0; k < matriz_aux.tablas_agregar.length; k++) {
+                for (var i = 0; i < matriz_aux.tablas_agregar[k].parametros.length; i++) {
+                    for (var j = 0; j < matriz_aux.tablas_agregar[k].parametros[i].metodologias.length; j++) {
+                        tablas_param_metodo.push({
+                            nombre_tabla: matriz_aux.tablas_agregar[k].nombre_tabla,
+                            id_parametro: matriz_aux.tablas_agregar[k].parametros[i].id_parametro,
+                            id_metodologia: matriz_aux.tablas_agregar[k].parametros[i].metodologias[j].id_metodologia
+                        })
+                    }
+                }
+            }
+            matriz_agregar.tablas_agregar = tablas_param_metodo;
+            matrices_agregar_aux.push(matriz_agregar);
+            tablas_param_metodo = [];
+
+            }
+/** 
             for (var k = 0; k < this.tablas_agregar.length; k++) {
                 for (var i = 0; i < this.tablas_agregar[k].parametros.length; i++) {
                     for (var j = 0; j < this.tablas_agregar[k].parametros[i].metodologias.length; j++) {
@@ -480,11 +592,11 @@ export default {
                     }
                 }
             }
+*/
 
             var data = {
                 nombre_norma: this.nombre_norma,
-                id_matriz: this.id_matriz,
-                tablas_agregar: tablas_param_metodo
+                matrices_agregar: matrices_agregar_aux
             }
             ElementosService.agregarNorma(data).then((response) => {
                 if (response.status == 200) {
@@ -501,39 +613,29 @@ export default {
                 }
             })
         },
-        cargarParametrosMatriz(value) {
-            var data = {
-                id_matriz: value
-            }
-            ElementosService.obtenerDetallesMatriz(data).then((response) => {
+        cargarParametros() {
+          
+
+            ElementosService.obtenerParametros().then((response) => {
                 console.log("detalles matriz", response);
                 if (response.data != null && response.status == 200) {
                     for (var i = 0; i < response.data.length; i++) {
-                        var parametroExistente = this.parametrosMatriz.find(param => param.id_parametro == response.data[i].id_parametro);
+                        const parametroExistente = this.parametrosMatriz.find(param => param.id_parametro == response.data[i].id_parametro);
 
                         if (parametroExistente == null) {
                             var parametroAgregar = {
                                 nombre_parametro: response.data[i].nombre_parametro,
                                 id_parametro: response.data[i].id_parametro,
-
                             }
 
                             this.parametrosMatriz.push({
                                 value: parametroAgregar,
                                 id_parametro: response.data[i].id_parametro,
                                 text: response.data[i].nombre_parametro,
-                                metodologias: [{
-                                    nombre_metodologia: response.data[i].nombre_metodologia,
-                                    id_metodologia: response.data[i].id_metodologia,
-                                    detalle_metodologia: response.data[i].detalle_metodologia,
-                                }]
+                                metodologias: response.data[i].metodologias
                             })
                         } else {
-                            parametroExistente.metodologias.push({
-                                nombre_metodologia: response.data[i].nombre_metodologia,
-                                id_metodologia: response.data[i].id_metodologia,
-                                detalle_metodologia: response.data[i].detalle_metodologia,
-                            })
+                            parametroExistente.metodologias = response.data[i].metodologias;
                         }
 
                     }
@@ -545,7 +647,7 @@ export default {
         mostrarModalAgregarTabla() {
             this.$bvModal.show('modal-agregar-tabla');
         },
-
+        
         tablaSeleccionadaCambiada() {
             console.log('Tabla seleccionada:', this.tablaSeleccionada);
             // Realiza las acciones adicionales que necesites
@@ -576,12 +678,13 @@ export default {
                 if (response.data != null && response.status === 200) {
                     console.log("Obteniendo Matrices: ", response.data);
                     // Mapear los datos de las matrices a las opciones del select
-                    this.opcionesMatriz = response.data.map(matriz => ({
-                        id_matriz: matriz.id_matriz,
-                        nombre_matriz: matriz.nombre_matriz
+                    this.dataMatrices = response.data.map(matriz => ({
+                        value: matriz,
+                        text: matriz.nombre_matriz,
+                        id_matriz: matriz.id_matriz
                     }));
                 }
-                console.log("opciones de la matriz: ", this.opcionesMatriz)
+                console.log("opciones de la matriz: ", this.dataMatrices)
             });
         },
 
@@ -616,7 +719,8 @@ export default {
 }
 </script>
 
-<style>.item-no-padding {
+<style>
+.item-no-padding {
     padding: 0px
 }
 
