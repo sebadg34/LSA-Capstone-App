@@ -2,7 +2,7 @@
     <div>
   
         <!-- <validation-observer ref="form"> -->
-          <modal_cantidadMuestra :n-muestras="nMuestras" :objetosSeleccionados="objetosSeleccionados" @datosIngresados="capturarDatos" @identificacionEliminada="identificadores" :identificaciones="identificacion" :parametros="prevP" :metodologias="prevM" />
+          <modal_cantidadMuestra :n-muestras="nMuestras" :objetosSeleccionados="objetosSeleccionados" @datosIngresados="capturarDatos" @identificacionEliminada="identificadores" :identificaciones="identificacion" :id_submuestra="id_submuestra" :parametros="prevP" :metodologias="prevM" />
           
             <modal_agregarMetodologia/>
             <modal_agregarParametro/>
@@ -653,7 +653,7 @@
                       <b-row>
                           <b-col>
                               <b-form-group label="Seleccione un parámetro">
-                                  <b-form-select v-model="parametroSeleccionadoIngreso" :options="parametrosOptions" text-field="nombre_parametro" value-field="id_parametro" @change="agregarParametro(filaSeleccionada)"></b-form-select>
+                                  <b-form-select v-model="parametroSeleccionadoIngreso" :options="parametros_metodologias" text-field="nombre_parametro" value-field="id_parametro" @change="agregarParametro(filaSeleccionada)"></b-form-select>
                               </b-form-group>
                           </b-col>                       
                       </b-row>
@@ -920,7 +920,9 @@ export default {
             muestra_incompleto: true,
             transportista_incompleto: true,
             parametros_incompleto: true,
-            revisado: false
+            revisado: false,
+            id_submuestra: [],
+            parametros_metodologias: []
         };
     },
 
@@ -1255,13 +1257,8 @@ export default {
             
             });
             
-            if (haSidoModificado) {
-              console.log("Al menos un elemento ha sido modificado", empleadoModificadoString);
-              this.empleados_eliminar.push(...this.empleadosOG);
-              console.log("empleados a modificar: ", this.empleados_eliminar);
-            } else {
-              console.log("Ningún elemento ha sido modificado");
-            }
+            console.log("modificaod: ",haSidoModificado)
+            
         },
 
         obs(){
@@ -1538,10 +1535,13 @@ export default {
                         metodologia: metodologiaCompleta.nombre_metodologia,
                         id_metodologia: metodologiaCompleta.id_metodologia
                     });
+
                     this.parametros_agregar.push({
                         id_parametro: parametroData.id_parametro,
                         id_metodologia: metodologiaCompleta.id_metodologia,
-                    });
+                    });             
+
+
 
                       // En caso de agregar un parametro que no está registrado en la BD
                     const parametroAntiguo = this.parametros_ya_en_sistema.find(param => param.nombre_metodologia == this.metodologiaSeleccionada.nombre_metodologia &&
@@ -1552,6 +1552,7 @@ export default {
                                     id_parametro: this.parametroSeleccionado.id_parametro,
                                     id_metodologia: this.metodologiaSeleccionada.id_metodologia,
                                 });
+                                
                             }
                         } else {
                             this.parametros_eliminar = this.parametros_eliminar.filter(param => param.id_metodologia !== this.metodologiaSeleccionada.id_metodologia &&
@@ -1560,7 +1561,7 @@ export default {
                             typeof param.id_parametro !== 'undefined');
                         }
 
-                    console.log("las matrices han guardado lo siguiente: ", this.parametros_agregar)
+                    console.log("las matrices han guardado lo siguiente: ", this.parametros_metodologias)
                     this.parametroSeleccionado = '';
                     this.metodologiaSeleccionada = '';
                     this.alertaDuplicado = false;
@@ -1596,6 +1597,13 @@ export default {
                         id_parametro: parametroData.id_parametro,
                         id_metodologia: metodologiaCompleta.id_metodologia,
                     });
+
+                    this.parametros_metodologias.push({
+                        id_parametro: parametroData.id_parametro,
+                        nombre_parametro: this.parametroTablaSeleccionado,
+                    });
+
+                    console.log ("param met:",this.parametros_metodologias)
 
                       // En caso de agregar un parametro que no está registrado en la BD
                     const parametroAntiguo = this.parametros_ya_en_sistema.find(param => param.nombre_metodologia == this.metodologiaSeleccionada.nombre_metodologia &&
@@ -1757,11 +1765,11 @@ export default {
 
             const subEliminarAntes = this.submuestra_eliminar.length - 1;
 
-            identificacionEliminada.forEach(identificacion => {
+            identificacionEliminada.forEach(id_submuestra => {
               // Verificar si la submuestra ya existe en submuestra_eliminar
-              const existe = this.submuestra_eliminar.some(submuestra => submuestra.identificador === identificacion);
+              const existe = this.submuestra_eliminar.some(submuestra => submuestra.id_submuestra === id_submuestra);
               if (!existe) {
-                this.submuestra_eliminar.push({ identificador: identificacion });
+                this.submuestra_eliminar.push({ id_submuestra: id_submuestra });
               }
             });
             console.log("submuestra_eliminar:", this.submuestra_eliminar);
@@ -2092,7 +2100,8 @@ export default {
         this.empleados = response.empleados;
         console.log("empleados: ", this.empleados)
         this.empleadosOG = response.empleados;
-
+        this.parametros_metodologias = response.parametros_metodologias;
+        console.log("parámetros_metodologias: ", this.parametros_metodologias)
 
 
             //TAB RECEPCIONISTA
@@ -2129,100 +2138,98 @@ export default {
 
 
             //TAB ASIGNACIÓN
-        this.identificacion = response.submuestras.map((id) => id.identificador);         
+        this.identificacion = response.submuestras.map((id) => id.identificador);    
+        this.id_submuestra = response.submuestras.map((id) => id.id_submuestra);
+        console.log("id de las submuestras: ", this.id_submuestra)     
            
         },
 
         async enviarFormulario() {
             const datosValidos = await this.validarFormularios();
-
             
-                if (!datosValidos) {
-                    return;
-                } else {
-                    this.repetido();
-                    this.modificado(); 
-                    this.obs();               
-                    const matricesFiltradas = this.parametros_agregar.slice(1);
-                    const submuestraFiltrada = this.submuestra_agregar.slice(1);
-                    const submuestra_eliminar = this.submuestra_eliminar.slice(1);
-                    
-                    
-                    var data = {
-                        RUM: this.RUM,
-                        rut_empresa: this.rut_empresa,
-                        rut_empleado: this.recepcionistaRUT,
-                        nombre_empresa: this.nombre_empresa,
-                        id_ciudad: this.direccion,
-                        direccion_empresa: this.direccion_empresa,
-                        rut_solicitante: this.rut,
-                        muestreado_por: this.muestreado,
-                        cantidad_muestras: this.nMuestras,
-                        prioridad: this.prioridad,
-                        temperatura_transporte: this.Temperatura,
-                        fecha_entrega: this.fechaEntrega,
-                        fecha_muestreo: this.fecha,
-                        hora_muestreo: this.hora,
-                        rut_transportista: this.transportistaRut,
-                        nombre_transportista: this.transportista,
-                        patente_vehiculo: this.patente,
-                        telefonos_agregar: this.telefonos_agregar,
-                        estado: 'Recepcionado',
-                        observaciones: this.nuevaobs.map(obs=> ({
-                            fecha_observacion: obs.fecha_observacion,
-                            hora_observacion: obs.hora_observacion,
-                            observaciones: obs.observaciones
-                        })),
-                        parametros_agregar: matricesFiltradas.map(matriz => ({
-                            id_parametro: matriz.id_parametro,
-                            id_metodologia: matriz.id_metodologia,
-                        })),
-                        id_matriz: this.TipoMatriz,
-                        id_norma: this.norma,
-                        id_tabla: this.id_tabla,
-                        submuestras_agregar: submuestraFiltrada,
-                        submuestras_eliminar: submuestra_eliminar,
-                        telefonos_eliminar: this.telefonos_eliminar,
-                        parametros_eliminar: this.parametros_eliminar,
-                        id_cotizacion: this.cotizacion,
-                        tipo_pago: this.tipo_pago,
-                        valor_neto: this.valor_neto,
-                        empleados_agregar: this.empleados_objeto,
-                        empleados_eliminar: this.empleadosOG.map(objeto => ({
-                            rut_empleado: objeto.rut_empleado,
-                            orden_de_analisis: objeto.orden_de_analisis,
-                            id_parametro: objeto.id_parametro,
-                            fecha_entrega: objeto.fecha_entrega,
-                            estado: objeto.estado
-
-                        })),                   
-                    }
-
-                    console.log("data a enviar", data)
-                    MuestraService.actualizarMuestra(data).then((response) => {
-                        console.log(response)
-                        if (response != null) {
-                            if (response.status == 200) {
-                                this.$bvToast.toast(`Actualización de la muestra exitosa`, {
-                                    title: 'Exito',
-                                    toaster: 'b-toaster-top-center',
-                                    solid: true,
-                                    variant: "success",
-                                    appendToast: true
-                                })                                
-                            } 
-                        } else {
-                            this.$bvToast.toast(`Error al actualizar la muestra`, {
-                                title: 'Error',
+            if (!datosValidos) {
+                return;
+            } else {
+                this.repetido();
+                this.modificado(); 
+                this.obs();               
+                const matricesFiltradas = this.parametros_agregar.slice(1);
+                const submuestraFiltrada = this.submuestra_agregar.slice(1);
+                const submuestra_eliminar = this.submuestra_eliminar.slice(1);
+                
+                
+                var data = {
+                    RUM: this.RUM,
+                    rut_empresa: this.rut_empresa,
+                    rut_empleado: this.recepcionistaRUT,
+                    nombre_empresa: this.nombre_empresa,
+                    id_ciudad: this.direccion,
+                    direccion_empresa: this.direccion_empresa,
+                    rut_solicitante: this.rut,
+                    muestreado_por: this.muestreado,
+                    cantidad_muestras: this.nMuestras,
+                    prioridad: this.prioridad,
+                    temperatura_transporte: this.Temperatura,
+                    fecha_entrega: this.fechaEntrega,
+                    fecha_muestreo: this.fecha,
+                    hora_muestreo: this.hora,
+                    rut_transportista: this.transportistaRut,
+                    nombre_transportista: this.transportista,
+                    patente_vehiculo: this.patente,
+                    telefonos_agregar: this.telefonos_agregar,
+                    estado: 'Recepcionado',
+                    observaciones: this.nuevaobs.map(obs=> ({
+                        fecha_observacion: obs.fecha_observacion,
+                        hora_observacion: obs.hora_observacion,
+                        observaciones: obs.observaciones
+                    })),
+                    parametros_agregar: matricesFiltradas.map(matriz => ({
+                        id_parametro: matriz.id_parametro,
+                        id_metodologia: matriz.id_metodologia,
+                    })),
+                    id_matriz: this.TipoMatriz,
+                    id_norma: this.norma,
+                    id_tabla: this.id_tabla,
+                    submuestras_agregar: submuestraFiltrada,
+                    submuestras_eliminar: submuestra_eliminar,
+                    telefonos_eliminar: this.telefonos_eliminar,
+                    parametros_eliminar: this.parametros_eliminar,
+                    id_cotizacion: this.cotizacion,
+                    tipo_pago: this.tipo_pago,
+                    valor_neto: this.valor_neto,
+                    empleados_agregar: this.empleados_objeto,
+                    empleados_eliminar: this.empleados_eliminar.map(objeto => ({
+                        rut_empleado: objeto.rut_empleado,
+                        orden_de_analisis: objeto.orden_de_analisis,
+                        id_parametro: objeto.id_parametro,
+                        fecha_entrega: objeto.fecha_entrega,
+                        estado: objeto.estado
+                    })),                   
+                }
+                console.log("data a enviar", data)
+                MuestraService.actualizarMuestra(data).then((response) => {
+                    console.log(response)
+                    if (response != null) {
+                        if (response.status == 200) {
+                            this.$bvToast.toast(`Actualización de la muestra exitosa`, {
+                                title: 'Exito',
                                 toaster: 'b-toaster-top-center',
                                 solid: true,
-                                variant: "warning",
+                                variant: "success",
                                 appendToast: true
-                            })
-                        }
-                    })
-                }
-            
+                            })                                
+                        } 
+                    } else {
+                        this.$bvToast.toast(`Error al actualizar la muestra`, {
+                            title: 'Error',
+                            toaster: 'b-toaster-top-center',
+                            solid: true,
+                            variant: "warning",
+                            appendToast: true
+                        })
+                    }
+                })
+            }        
         },
     }
 }
