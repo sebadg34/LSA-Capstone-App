@@ -63,7 +63,8 @@
         parametrosArray: [],
         metodologiasArray: [],
         tablaItems: [],
-        id_eliminado: []
+        id_eliminado: [],
+        submuestrasID : []
 
         
       };
@@ -83,6 +84,10 @@
         type: Array
       },
 
+      id_submuestra:{
+        type: Array
+      },
+
       parametros : {
         type: Array
       },
@@ -93,7 +98,12 @@
     },
 
     mounted() {
+      
       this.$refs.modal.$on('show', () => {
+        if (this.id_submuestra.length > 0) {
+          this.submuestrasID = JSON.parse(JSON.stringify(this.id_submuestra));          
+          console.log('Id_submuestras recibidas:', this.submuestrasID);          
+        }
         if (this.identificaciones.length > 0) {
           this.identificacionesArray = JSON.parse(JSON.stringify(this.identificaciones));          
           console.log('Identificaciones recibidas:', this.identificacionesArray);          
@@ -131,6 +141,7 @@
 
       tablaFields() {
         const fields = [
+          { key: 'id_submuestra', label: 'Id', thClass: 'text-center', tdClass: 'item-center' },
           { key: 'orden', label: 'Orden', thClass: 'text-center', tdClass: 'text-center', editable: true },
           { key: 'identificacion', label: 'Identificación', thClass: 'text-center', tdClass: 'item-center' },
           
@@ -164,6 +175,7 @@
           const id_metodologia = metodologiaSeleccionada ? metodologiaSeleccionada.id_metodologia : null;    
           
           return {
+            id_submuestra: item.id_submuestra,
             identificador: item.identificacion,
             orden: item.orden,            
             id_parametro: id_parametro,
@@ -182,12 +194,14 @@
       calcularTablaItems() {
         const items = [];
         for (let i = 1; i <= parseInt(this.nMuestras); i++) {
+          const id_submuestra = this.submuestrasID[i - 1] || '';
           const identificacion = this.identificacionesArray[i - 1] || '';
           const parametroPrevio = this.parametrosArray[i - 1] || '';
           const metodologiaPrevia = this.metodologiasArray[i - 1] || '';
 
           items.push({
             orden: i,
+            id_submuestra,
             identificacion,
             parametros_previos: parametroPrevio,
             parametros: this.parametrosOptions[0] || '',
@@ -212,8 +226,11 @@
         const identificacionEliminada = filaEliminada.identificacion;
         console.log('Identificación eliminada:', identificacionEliminada);
 
-        this.id_eliminado.push(identificacionEliminada);
-        console.log('Identificación a eliminar:', this.id_eliminado);
+        const submuestraEliminada = filaEliminada.id_submuestra;
+        console.log('Id_submuestra eliminada:', submuestraEliminada);
+
+        this.id_eliminado.push(submuestraEliminada);
+        console.log('submuestra a eliminar:', this.id_eliminado);
       }
 
 
