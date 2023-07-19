@@ -2,7 +2,7 @@
     <div>
 
         <!-- <validation-observer ref="form"> -->
-        <modal_cantidadMuestra :n-muestras="nMuestras" :objetosSeleccionados="objetosSeleccionados"
+        <modal_ingresarSubmuestra :n-muestras="nMuestras" :objetosSeleccionados="objetosSeleccionados"
             @datosIngresados="capturarDatos" :identificaciones="identificacion" />
             <modal_agregarMetodologia/>
             <modal_agregarParametro/>
@@ -566,7 +566,7 @@
 
 <script>
 import MuestraService from '@/helpers/api-services/Muestra.Service';
-import modal_cantidadMuestra from '@/components/recepcionMuestra/modal_cantidadMuestra.vue';
+import modal_ingresarSubmuestra from '@/components/recepcionMuestra/modal_ingresarSubmuestra.vue';
 import ElementosService from '@/helpers/api-services/Elementos.service';
 import PersonalService from '@/helpers/api-services/Personal.service';
 //import EmpresaService from '@/helpers/api-services/Empresa.service';
@@ -584,7 +584,7 @@ import {
 export default {
 
     components: {
-        modal_cantidadMuestra,
+        modal_ingresarSubmuestra,
         modal_agregarMetodologia,
         modal_agregarParametro
     },
