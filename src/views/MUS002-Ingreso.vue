@@ -151,7 +151,7 @@
                                                             v-slot="validationContext">
                                                             <label class="mt-1" for="input-live">Fecha de muestreo:</label>
                                                             <b-form-datepicker
-                                                                :date-format-options="{ year: 'numeric', month: '2-digit', day: '2-digit' }"
+                                                                :date-format-options="{ year: 'numeric', month: 'numeric', day: 'numeric' }"
                                                                 id="input-live" v-model="fecha"
                                                                 aria-describedby="input-live-help fechaI-live-feedback"
                                                                 :state="getValidationState(validationContext)"
@@ -178,6 +178,7 @@
                                                             v-slot="validationContext"><label class="mt-1"
                                                                 for="input-live">Fecha de Entrega:</label>
                                                             <b-form-datepicker
+                                                                :date-format-options="{ year: 'numeric', month: 'numeric', day: 'numeric' }"
                                                                 :state="getValidationState(validationContext)"
                                                                 id="input-live" v-model="fechaEntrega"
                                                                 placeholder="Seleccione fecha"
@@ -395,7 +396,7 @@
                                                         <b-form-select v-model="tabla" 
                                                           value-field="id_tabla" 
                                                           text-field="nombre_tabla" 
-                                                          @change="actualizarParametrosTabla">
+                                                          @input="actualizarParametrosTabla">
                                                           <option v-for="opcion in opcionesTabla" 
                                                           :key="opcion.id_tabla.toString()" 
                                                           :value="opcion.id_tabla">
@@ -1257,7 +1258,7 @@ export default {
             
             });
             
-            console.log("modificaod: ",haSidoModificado)
+            console.log("modificaod:",haSidoModificado)
             
         },
 
