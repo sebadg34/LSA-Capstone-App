@@ -3,6 +3,50 @@ import {
 } from "./InstanciadorAxios";
 
 
+const agregarOrdenCompra = async (data) => {
+    try {  
+        const instanciaApi = await crearApi();
+        const response = await instanciaApi.post("/muestras-administrador-finanzas/agregarOrdenCompra",data,
+        {
+            headers: {
+                'Content-Type': 'multipart/form-data'
+            }
+
+        }
+            );
+        console.log(response);
+        return response;
+    } catch (error) {
+        console.log(error);
+        return;
+    }
+};
+const descargarOrdenCompra = async (data) => {
+    try { 
+        const instanciaApi = await crearApi(); 
+        
+        const response = await instanciaApi.post("/muestras-administrador-finanzas/descargarOrdenCompra",data,{
+            responseType: 'blob',
+        }
+            );
+        console.log(response);
+        return response;
+    } catch (error) {
+        console.log(error);
+        return;
+    }
+};
+const eliminarOrdenCompra = async (data) => {
+    try {  
+        const instanciaApi = await crearApi();
+        const response = await instanciaApi.post("/muestras-administrador-finanzas/eliminarOrdenCompra",data);
+        console.log(response);
+        return response;
+    } catch (error) {
+        console.log(error);
+        return;
+    }
+};
 
 
  const obtenerMuestras = async () => {
@@ -73,54 +117,7 @@ const obtenerObservaciones = async (RUM) => {
          return;
      }
  };
- const agregarOrdenCompra = async (data) => {
-    try {
-        const instanciaApi = await crearApi();
-        const response = await instanciaApi.post("/muestras-administrador-finanzas/agregarOrdenCompra",data);
-         console.log(response);
-         if(response.status == 200){
-             return response;
-         } else {
-             return;
-         }
-         
-     } catch (error) {
-         console.log(error);
-         return;
-     }
- };
- const descargarOrdenCompra = async (data) => {
-    try {
-        const instanciaApi = await crearApi();
-        const response = await instanciaApi.post("/muestras-administrador-finanzas/descargarOrdenCompra",data);
-         console.log(response);
-         if(response.status == 200){
-             return response;
-         } else {
-             return;
-         }
-         
-     } catch (error) {
-         console.log(error);
-         return;
-     }
- };
- const eliminarOrdenCompra = async (data) => {
-    try {
-        const instanciaApi = await crearApi();
-        const response = await instanciaApi.post("/muestras-administrador-finanzas/eliminarOrdenCompra",data);
-         console.log(response);
-         if(response.status == 200){
-             return response;
-         } else {
-             return;
-         }
-         
-     } catch (error) {
-         console.log(error);
-         return;
-     }
- };
+ 
 
 
 

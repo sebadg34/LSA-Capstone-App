@@ -73,11 +73,11 @@
                         <div>NOMBRE_ORDEN_COMPRA</div>
 
                         <div>
-                            <b-button variant="info" @click="descargarArchivo(file)" style=" height: 30px; width: 30px; border-style: none; padding: 0px; background-color: white;">
+                            <b-button variant="info" @click="descargarArchivo(orden_compra)" style=" height: 30px; width: 30px; border-style: none; padding: 0px; background-color: white;">
                                 <b-icon-download variant="info"></b-icon-download>
                             </b-button>
 
-                            <b-button variant="danger" @click="borrarArchivo(file)" style=" height: 30px; width: 30px; border-style: none; padding: 0px; aspect-ratio: 1;">
+                            <b-button variant="danger" @click="borrarArchivo(orden_compra)" style=" height: 30px; width: 30px; border-style: none; padding: 0px; aspect-ratio: 1;">
                                 <b-icon icon="trash-fill"></b-icon>
                             </b-button>
                         </div>
@@ -100,13 +100,14 @@
 
 <script>
 import MuestraFinanzasService from '@/helpers/api-services/Muestra-finanzas.service';
+import FileSaver from 'file-saver';
 export default {
     props: {
         detallesData: Object
     },
     data() {
         return {
-
+            orden_compra: "",
             RUM: '',
             nombre_solicitante: '',
             apellido_solicitante: '',
@@ -128,6 +129,33 @@ export default {
         }
     },
     methods: {
+        descargarArchivo(file) {
+            console.log(file)
+            //let blob = file.data;
+            MuestraFinanzasService.descargarOrdenCompra(file).then((response) =>{
+                if(response.data != null){
+                    FileSaver.saveAs(response.data, file.nombre_original_documento);
+                }
+            })
+        },
+        borrarArchivo(file){
+            this.BorrandoArchivo = true;
+            console.log('archivo a borrar',file)
+            MuestraFinanzasService.eliminarOrdenCompra(file).then((response) =>{
+                this.BorrandoArchivo = false;
+                if(response.status == 200){
+                    this.$bvToast.toast(`Orden de compra borrada exitosamente`, {
+                        title: 'Exito',
+                        toaster: 'b-toaster-top-center',
+                        solid: true,
+                        variant: "success",
+                        appendToast: true
+                    })
+                    console.log(response)
+                }
+            })
+        },
+
         obtenerDetalles(rum) {
             this.cargandoParametros = true;
             this.cargandoAnalistas = true;

@@ -3,6 +3,7 @@
 
     <ModalObservaciones :detalles-data="this.observacionesData" />
     <ModalDetalleMuestra :detalles-data="this.detallesData" />
+    <modalOrdenCompraMuestra :muestra-data="this.muestraData"/>
     <!-- Inicio tabla -->
 
     <b-row align-h="start" style="padding-top:30px;">
@@ -114,7 +115,7 @@
                         <b-dropdown-item @click="MostrarObservaciones(row.item)">
                             <b-icon icon="check2-square" aria-hidden="true" class="mr-2"></b-icon>Observaciones
                         </b-dropdown-item>
-                        <b-dropdown-item disabled @click="abrirEditarPersonal(row.item)">
+                        <b-dropdown-item  @click="abrirAgregarOrdenCompra(row.item)">
                             <b-icon icon="file-earmark-arrow-down" aria-hidden="true" class="mr-2"></b-icon>Administrar orden de compra
                         </b-dropdown-item>
 
@@ -146,7 +147,7 @@
 import ModalObservaciones from '@/components/admMuestras-finanzas/modal_observacionesMuestra-finanzas.vue';
 import MuestraFinanzasService from '@/helpers/api-services/Muestra-finanzas.service';
 import ModalDetalleMuestra from '@/components/admMuestras-finanzas/modal_detallesMuestra-finanzas.vue';
-
+import modalOrdenCompraMuestra from '@/components/admMuestras-finanzas/modal_ordenCompraMuestra-finanzas.vue';
 import moment from 'moment';
 export default {
     data() {
@@ -263,7 +264,8 @@ export default {
             ],
             prioridad: '',
             detallesData: {},
-            observacionesData: {}
+            observacionesData: {},
+            muestraData: {}
         }
     },
     computed: {
@@ -275,6 +277,7 @@ export default {
     components: {
         ModalObservaciones,
         ModalDetalleMuestra,
+        modalOrdenCompraMuestra
     },
     methods: {
         borrarFiltro() {
@@ -390,6 +393,11 @@ export default {
             console.log(data)
             this.detallesData = data;
             this.$bvModal.show('modal-detalle-muestra-finanzas');
+        },
+        abrirAgregarOrdenCompra(data) {
+            console.log(data)
+            this.muestraData = data;
+            this.$bvModal.show('modal-orden-compra-finanzas');
         },
 
     },

@@ -2,6 +2,8 @@
   <b-modal id="modal-observaciones-muestra-quimico" :title="`Observaciones de la muestra ${RUM}`" size="xl"
     @hidden="onHidden">
 
+    <modalAgregarObservacion @refrescar="obtenerObservaciones(RUM)" :muestra-data="muestraData"/>
+
     <template #modal-header="{ close }">
       <!-- Emulate built in modal header close button action -->
       <b-row class="d-flex justify-content-around">
@@ -15,13 +17,18 @@
 
     <div class="p-3">
       <b-col class="col-12">
-
+<b-row  class="d-flex justify-content-between" style="padding:20px">
         <b-col class="col-3">
           <b-row style="border: 1px solid var(--lsa-light-gray); padding:4px; border-radius:5px">
             <b-col class="col-6" style="font-weight:bold; "> RUM: </b-col>
             <b-col class="col-6">{{ RUM }}</b-col>
           </b-row>
         </b-col>
+        <b-button @click="abrirAgregarObservacion" pill style="border: none" class="lsa-orange reactive-button">
+                                Agregar
+                                <b-icon icon="pencil-square"></b-icon>
+                            </b-button>
+                          </b-row>
         <br />
         <b-row class="pb-2 pl-3">
           Observaciones: 
@@ -55,7 +62,7 @@
            <b-row style=" min-height: 100px;" class="d-flex justify-content-center">
             <b-col class="col-10">
               <div>
-             <strong>Observación:</strong> {{  " " +  observacion.observaciones}} 
+             <strong>Observación:</strong> {{  " " +  observacion.observaciones}}
             </div>
             </b-col>
            
@@ -74,6 +81,7 @@
     </div>
 
    
+    
 
 
 
@@ -87,8 +95,11 @@
 
 <script>
 import MuestraQuimicoService from '@/helpers/api-services/Muestra-quimicos.service';
-
+import modalAgregarObservacion from '@/components/admMuestras-finanzas/modal_agregarObservacion-finanzas.vue';
 export default {
+  components: {
+    modalAgregarObservacion
+  },
   props: {
     detallesData: Object
   },
@@ -98,16 +109,22 @@ export default {
       RUM: '',
       loading: false,
       cargandoObservaciones: false,
-      observaciones: []
+      observaciones: [],
+      muestraData: {}
 
     }
   },
   methods: {
+    abrirAgregarObservacion(){
+      this.muestraData = {
+        RUM: this.RUM
+      }
+      this.$bvModal.show('modal-agregar-observacion-finanzas');
+    },
     obtenerObservaciones(rum) {
-
+      this.observaciones = [];
       this.cargandoObservaciones = true;
       MuestraQuimicoService.obtenerObservaciones(rum).then((response) => {
-        console.log(response)
         if (response != null) {
           if (response.status == 200 && response.data != null) {
             const observacionesData = response.data;
@@ -137,8 +154,8 @@ export default {
   watch: {
     detallesData: {
       handler() {
-        console.log("detallesData actualizada", this.detallesData)
-        this.observaciones = [];
+       
+       
         this.RUM = this.detallesData.RUM;
 
         this.obtenerObservaciones(this.RUM);
