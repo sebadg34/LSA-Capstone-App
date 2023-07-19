@@ -3,6 +3,7 @@
 
       <!-- <validation-observer ref="form"> -->
         <modal_cantidadMuestra :n-muestras="nMuestras" :objetosSeleccionados="objetosSeleccionados" @datosIngresados="capturarDatos" @identificacionEliminada="identificadores" :identificaciones="identificacion" :parametros="prevP" :metodologias="prevM" />
+        
           <modal_agregarMetodologia/>
           <modal_agregarParametro/>
       <div>
@@ -61,20 +62,10 @@
                                                           <div class="d-flex align-items-center ">
                                                               <b-input-group size="sm">
                                                                   <b-form-input id="input-live" v-model="rut"
-                                                                      :state="getValidationState(validationContext)">
-                                                                  </b-form-input>
-
-                                                                  <b-input-group-append>
-                                                                      <b-button class=" lsa-orange reactive-button"
-                                                                          style="aspect-ratio: 1; border:none"
-                                                                          @click="buscarYagregar()">
-                                                                          <b-icon icon="search"></b-icon>
-                                                                      </b-button>
-
-                                                                  </b-input-group-append>
-
-                                                              </b-input-group>
-
+                                                                      :state="getValidationState(validationContext)"
+                                                                      @input="buscar">
+                                                                  </b-form-input>                                                                
+                                                                </b-input-group>
                                                           </div>
                                                           <b-form-invalid-feedback>{{ validationContext.errors[0]
                                                           }}</b-form-invalid-feedback>
@@ -85,29 +76,27 @@
                                                           El rut del solicitante no está registrado en la base de datos
                                                       </b-alert>
 
-                                                      <ValidationProvider name="solicitante" rules="required"
-                                                          v-slot="validationContext">
-                                                          <label for="input-live">Nombre empresa:</label>
-                                                          <b-form-select :disabled="!rutSolicitante" v-model="solicitante"
-                                                              :state="getValidationState(validationContext)"
-                                                              :options="opcionesClientes" value-field="rut_empresa"
-                                                              text-field="nombre_empresa"
-                                                              @input="actualizarSelectedEmpresa"></b-form-select>
-                                                          <b-form-invalid-feedback>{{ validationContext.errors[0]
-                                                          }}</b-form-invalid-feedback>
+                                                      <ValidationProvider name="Nombre empresa" rules="required" v-slot="validationContext">
+                                                            <label for="input-live">Nombre empresa:</label>                                                            
+                                                            <b-form-select v-model="rut_empresa"  
+                                                            :state="getValidationState(validationContext)" 
+                                                            text-field="nombre_empresa" 
+                                                            value-field="rut_empresa" 
+                                                            @input="actualizarOpcionesDireccion">
+                                                            <option v-for="opcion in opcionesEmpresa" :key="opcion.rut_empresa" :value="opcion.rut_empresa">
+                                                            {{ opcion.nombre_empresa }}</option></b-form-select>                                                                                                                                               
+                                                            <b-form-invalid-feedback>{{ validationContext.errors[0] }}</b-form-invalid-feedback>
                                                       </ValidationProvider>
 
-                                                      <ValidationProvider name="Dirección Cliente" rules="required"
-                                                          v-slot="validationContext">
-                                                          <label for="input-live">Dirección empresa:</label>
-                                                          <b-form-select :disabled="!rut_empresa" id="input-live"
-                                                              v-model="direccion" :options="opcionesDireccion"
-                                                              :state="getValidationState(validationContext)"
-                                                              text-field="direccionConCiudad" value-field="id_ciudad">
-                                                          </b-form-select>
-                                                          <b-form-invalid-feedback>{{ validationContext.errors[0]
-                                                          }}</b-form-invalid-feedback>
-                                                      </ValidationProvider>
+                                                      <ValidationProvider name="Dirección Cliente" rules="required" v-slot="validationContext">
+                                                            <label for="input-live">Dirección empresa:</label>
+                                                            <b-form-select id="input-live" v-model="direccion" :state="getValidationState(validationContext)" text-field="direccionConCiudad" value-field="id_ciudad">
+                                                                <option v-for="opcion in opcionesDireccion" :key="opcion.id_ciudad" :value="opcion.id_ciudad">
+                                                                    {{ opcion.direccionConCiudad }} 
+                                                                </option>
+                                                            </b-form-select>
+                                                            <b-form-invalid-feedback>{{ validationContext.errors[0] }}</b-form-invalid-feedback>
+                                                        </ValidationProvider>
                                                   </b-col>
                                               </b-row>
                                           </b-card>
@@ -278,9 +267,11 @@
                                                               validationContext.errors[0] }}</b-form-invalid-feedback>
                                                       </ValidationProvider>
 
-                                                      <label class="mt-1" for="input-live">Cotización:</label>
-                                                      <b-form-select id="input-live" v-model="cotizacion" :options="opcionesCotizacion" text-field="nombre_original_documento" value-field="id_cotizacion"></b-form-select>                                                                                                                                                                 
-                                                    
+                                                      <ValidationProvider name="Cotizacion" rules="required" v-slot="validationContext">
+                                                            <label class="mt-1" for="input-live">Cotización:</label>
+                                                            <b-form-select id="input-live" v-model="cotizacion" :options="opcionesCotizacion" text-field="idconNombre" value-field="id_cotizacion" aria-describedby="input-live-help Cotizacion-live-feedback" :state="getValidationState(validationContext)"></b-form-select> 
+                                                            <b-form-invalid-feedback id="Cotizacion-live-feedback">{{validationContext.errors[0]}}</b-form-invalid-feedback>
+                                                        </ValidationProvider>  
 
                                                       <label class="mt-1" for="input-live">Observaciones:</label>
                                                       <b-form-textarea id="input-live" v-model="observaciones" rows="1"
@@ -501,54 +492,54 @@
                                           </div>
                                       </b-card>
                                   </b-tab>
-                                  <b-tab title="Asignar analista">
+                                <b-tab title="Asignar analista">
 
-<b-card>
-<b-table :items="EmpleadosArray" :fields="tableFields">                                               
-    
-    <template #cell(rut_empleado)="row">
-        <b-form-select v-model="row.item.rut_empleado" :options="formattedOpcionesAnalista" value-field="rut_empleado" text-field="nombreCompleto"></b-form-select>
-    </template>                                               
+                                    <b-card>
+                                    <b-table :items="EmpleadosArray" :fields="tableFields">                                               
 
-    <template #cell(nombre_parametro)="row">  
-        <b-list-group v-if="row.item.nombre_parametro.length > 0">
-            <b-list-group-item v-if="row.item.nombre_parametro.length > 1" v-b-toggle="'toggle-' + row.index" style="padding:2px; border: none; border-bottom: solid 1px #dbdbdb; ">{{ row.item.nombre_parametro[0] }}
-              <b-icon style="position:absolute; right:0px; top:25%; color: #949494" icon="caret-down-fill"></b-icon>
-            </b-list-group-item>
-            <b-list-group-item v-if="row.item.nombre_parametro.length === 1" style="padding:2px; border: none; border-bottom: solid 1px #dbdbdb; ">{{ row.item.nombre_parametro[0] }}</b-list-group-item>
-            <div v-if="row.item.nombre_parametro.length > 1">
-              <b-collapse :id="'toggle-' + row.index">
-                <b-list-group-item style="padding:2px;  border: none; border-bottom: solid 1px #dbdbdb;" v-for="(parametro, index) in row.item.nombre_parametro.slice(1)" :key="index">{{ parametro }}</b-list-group-item>
-              </b-collapse>
-            </div>
-        </b-list-group>
-    </template>                                                
-                                       
-    <template #cell(orden_de_analisis)="row">
-        <b-input v-model="row.item.orden_de_analisis" type="number" min="1" class="small-input"></b-input>
-    </template>
+                                        <template #cell(rut_empleado)="row">
+                                            <b-form-select v-model="row.item.rut_empleado" :options="formattedOpcionesAnalista" value-field="rut_empleado" text-field="nombreCompleto"></b-form-select>
+                                        </template>                                               
+                                    
+                                        <template #cell(nombre_parametro)="row">  
+                                            <b-list-group v-if="row.item.nombre_parametro.length > 0">
+                                                <b-list-group-item v-if="row.item.nombre_parametro.length > 1" v-b-toggle="'toggle-' + row.index" style="padding:2px; border: none; border-bottom: solid 1px #dbdbdb; ">{{ row.item.nombre_parametro[0] }}
+                                                  <b-icon style="position:absolute; right:0px; top:25%; color: #949494" icon="caret-down-fill"></b-icon>
+                                                </b-list-group-item>
+                                                <b-list-group-item v-if="row.item.nombre_parametro.length === 1" style="padding:2px; border: none; border-bottom: solid 1px #dbdbdb; ">{{ row.item.nombre_parametro[0] }}</b-list-group-item>
+                                                <div v-if="row.item.nombre_parametro.length > 1">
+                                                  <b-collapse :id="'toggle-' + row.index">
+                                                    <b-list-group-item style="padding:2px;  border: none; border-bottom: solid 1px #dbdbdb;" v-for="(parametro, index) in row.item.nombre_parametro.slice(1)" :key="index">{{ parametro }}</b-list-group-item>
+                                                  </b-collapse>
+                                                </div>
+                                            </b-list-group>
+                                        </template>                                                
 
-    <template #cell(fecha_entrega_submuestra)="row">
-      <b-form-datepicker locale="es" :date-format-options="{ year: 'numeric', month: 'numeric', day: 'numeric' }" v-model="row.item.fecha_entrega" ></b-form-datepicker>
-    </template> 
-    
-    <template #cell(accion)="row">
-        <b-dropdown right size="sm" variant="link" toggle-class="text-decoration-none" no-caret>
-            <template #button-content>
-                <b-icon style="height: 80%; width: 80%; align-items: center;" icon="three-dots" variant="dark" aria-hidden="true"></b-icon>
-            </template>
-            <b-dropdown-item v-if="row" @click="abrirParam(row.item)">
-                 <b-icon icon="person-plus-fill" aria-hidden="true" class="mr-2"></b-icon>Agregar Parametro
-            </b-dropdown-item>
-            <b-dropdown-item v-if="row" @click="eliminarFila(row.item)">
-                 <b-icon icon="trash-fill" aria-hidden="true" class="mr-2"></b-icon>Eliminar fila
-            </b-dropdown-item>                                                                                                          
-        </b-dropdown>
-    </template>
-</b-table>
-<b-button @click="agregarFila">+</b-button>
-</b-card>
-</b-tab>
+                                        <template #cell(orden_de_analisis)="row">
+                                            <b-input v-model="row.item.orden_de_analisis" type="number" min="1" class="small-input"></b-input>
+                                        </template>
+                                    
+                                        <template #cell(fecha_entrega_submuestra)="row">
+                                          <b-form-datepicker locale="es" :date-format-options="{ year: 'numeric', month: 'numeric', day: 'numeric' }" v-model="row.item.fecha_entrega" ></b-form-datepicker>
+                                        </template> 
+
+                                        <template #cell(accion)="row">
+                                            <b-dropdown right size="sm" variant="link" toggle-class="text-decoration-none" no-caret>
+                                                <template #button-content>
+                                                    <b-icon style="height: 80%; width: 80%; align-items: center;" icon="three-dots" variant="dark" aria-hidden="true"></b-icon>
+                                                </template>
+                                                <b-dropdown-item v-if="row" @click="abrirParam(row.item)">
+                                                     <b-icon icon="person-plus-fill" aria-hidden="true" class="mr-2"></b-icon>Agregar Parametro
+                                                </b-dropdown-item>
+                                                <b-dropdown-item v-if="row" @click="eliminarFila(row.item)">
+                                                     <b-icon icon="trash-fill" aria-hidden="true" class="mr-2"></b-icon>Eliminar fila
+                                                </b-dropdown-item>                                                                                                          
+                                            </b-dropdown>
+                                        </template>
+                                    </b-table>
+                                    <b-button @click="agregarFila">+</b-button>
+                                    </b-card>
+                                </b-tab>
 
                               </b-col>
                               <div style="position:absolute; right:20px; bottom:15px; width:45%">
