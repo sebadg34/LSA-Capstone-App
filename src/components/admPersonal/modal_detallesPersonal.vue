@@ -37,7 +37,7 @@
                 <div>
                     <strong> Teléfono de emergencia: </strong> <span>
                         <template v-if="this.Emergencia == null">
-                        teléfono sin asignar.</template>
+                        Teléfono sin asignar.</template>
                         <template v-else>
                             {{ this.Emergencia }}</template>
                     

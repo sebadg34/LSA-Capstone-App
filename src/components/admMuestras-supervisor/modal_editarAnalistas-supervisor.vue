@@ -62,47 +62,7 @@
 
       </div>
 
-      <b-list-group style="padding:0px">
-        <b-list-group-item style="padding:0px; height: 50px;">
-          <b-list-group horizontal>
-            <b-list-group-item class="p-3 text-center " style="width:25%;font-weight: bold;">
-              Rut
-            </b-list-group-item>
-            <b-list-group-item class="p-3 text-center " style="width:25%;font-weight: bold;">
-              Nombre
-            </b-list-group-item>
-            <b-list-group-item class="p-3 text-center " style="width:25%;font-weight: bold;">
-              Parámetro
-            </b-list-group-item>
-            <b-list-group-item class="p-3 text-center " style="width:10%;font-weight: bold;">
-              Orden
-            </b-list-group-item>
-            <b-list-group-item class="p-3 text-center " style="width:15%;font-weight: bold;">
-              Acción
-            </b-list-group-item>
-          </b-list-group>
-        </b-list-group-item>
-
-        <b-list-group-item v-for="analista in analistas" :key="analista.rut_empleado" style="padding:0px">
-          <b-list-group horizontal>
-            <b-list-group-item class="text-center" style="width:25%">
-              {{ analista.rut_empleado }}
-            </b-list-group-item>
-            <b-list-group-item class="text-center" style="width:25%">
-              {{ analista.nombre + " " + analista.apellido }}
-            </b-list-group-item>
-            <b-list-group-item class="text-center" style="width:25%">
-              {{ analista.id_parametro }}
-            </b-list-group-item>
-            <b-list-group-item class="text-center" style="width:10%">
-              {{ analista.orden_de_analisis }}
-            </b-list-group-item>
-            <b-list-group-item class="text-center" style="width:15%">
-              accion
-            </b-list-group-item>
-          </b-list-group>
-        </b-list-group-item>
-      </b-list-group>
+   
 
 
 
@@ -137,6 +97,17 @@ export default {
     }
   },
   methods: {
+    add() {
+            this.analistas.push({
+                nombre_analista: '',
+                orden_analista: ''
+            })
+            console.log(this.direcciones)
+        },
+
+        remove(index) {
+            this.analistas.splice(index, 1)
+        },
     getValidationState({
       dirty,
       validated,
@@ -152,7 +123,14 @@ export default {
       })
     },
     cargarAnalistas() {
-      this.analistas = this.analistasData.analistas;
+      this.analistas = [];
+      this.analistasData.analistas.forEach(analista => {
+        this.analistas.push({
+          nombre_analista: analista.nombre + " " + analista.apellido,
+          orden_analista: analista.orden_de_analisis,
+          id_parametro: analista.id_parametro
+        })
+      });
     },
     onHidden() {
       this.$emit('modal-cerrado');

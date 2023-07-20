@@ -41,7 +41,7 @@
                 </b-col>
                 <b-col class="col-6">
                     <ValidationProvider name="de nombres" rules="required|min:2" v-slot="validationContext">
-                        <label for="input-live">Nombres:</label>
+                        <label for="input-live">Nombre:</label>
                         <b-form-input size="sm" class="mb-1" id="input-live" :state="getValidationState(validationContext)"
                             v-model="Nombre" aria-describedby="input-live-help nombre-live-feedback" placeholder=""
                             trim></b-form-input>

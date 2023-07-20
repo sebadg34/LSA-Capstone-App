@@ -175,7 +175,7 @@ import MuestraSupervisorService from '@/helpers/api-services/Muestra-supervisor.
 import ModalCompletarAnalisis from '@/components/admMuestras-supervisor/modal_completarAnalisis-supervisor.vue';
 import ModalAnalistasDesignados from '@/components/admMuestras-supervisor/modal_analistasDesignados-supervisor.vue';
 import ModalDetalleMuestra from '@/components/admMuestras-supervisor/modal_detallesMuestra-supervisor.vue';
-import moment from 'moment';
+
 export default {
     components: {
         ModalObservaciones,
@@ -338,7 +338,7 @@ export default {
                 if (response.data != null && response.status === 200) {
                     this.muestras = response.data
                     for (var i = 0; i < this.muestras.length; i++) {
-                        this.muestras[i].fecha_entrega = moment(this.muestras[i].fecha_entrega).format('DD/MM/YYYY');
+                        this.muestras[i].fecha_entrega;
 
 
                     }

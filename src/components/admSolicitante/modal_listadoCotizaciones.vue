@@ -85,7 +85,7 @@
                     </b-list-group-item>
                 <b-list-group-item style="padding:10px" class="col-2 d-flex justify-content-center">
                         <div>
-                            {{ file.id_cotizacion }}
+                            {{ file.numero_cotizacion }}
                         </div>
                        
                     </b-list-group-item>
