@@ -1205,7 +1205,8 @@ export default {
                     "rut_empleado": empleado.rut_empleado,
                     "orden_de_analisis": empleado.orden_de_analisis,   
                     "id_parametro": idParametros[j], 
-                    "fecha_entrega": empleado.fecha_entrega,                  
+                    "fecha_entrega": empleado.fecha_entrega,
+                    "estado": empleado.estado                  
                     
                   };        
 
