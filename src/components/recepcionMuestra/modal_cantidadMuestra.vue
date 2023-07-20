@@ -31,7 +31,8 @@
         </template>
         <template #cell(metodologias)="row">
           <template v-if="objetosSeleccionados.length > 0">
-            <b-form-select v-model="row.item.metodologias" :options="metodologiasOptions"> </b-form-select>             
+            <b-form-select v-model="row.item.metodologias" :options="metodologiasOptions">                                                                     
+              </b-form-select>             
           </template>
         </template>
         <template #cell(accion)="row">
@@ -192,25 +193,38 @@
       },
       
       calcularTablaItems() {
-        const items = [];
-        for (let i = 1; i <= parseInt(this.nMuestras); i++) {
-          const id_submuestra = this.submuestrasID[i - 1] || '';
-          const identificacion = this.identificacionesArray[i - 1] || '';
-          const parametroPrevio = this.parametrosArray[i - 1] || '';
-          const metodologiaPrevia = this.metodologiasArray[i - 1] || '';
+    const items = [];
+    for (let i = 1; i <= parseInt(this.nMuestras); i++) {
+      const id_submuestra = this.submuestrasID[i - 1] || '';
+      const identificacion = this.identificacionesArray[i - 1] || '';
+      const parametroPrevio = this.parametrosArray[i - 1] || '';
+      const metodologiaPrevia = this.metodologiasArray[i - 1] || '';
 
-          items.push({
-            orden: i,
-            id_submuestra,
-            identificacion,
-            parametros_previos: parametroPrevio,
-            parametros: this.parametrosOptions[0] || '',
-            metodologias_previas: metodologiaPrevia,
-            metodologias: this.metodologiasOptions[0] || ''
-          });
+      // Find the default parametro and metodologia values for the current row
+      let defaultParametro = '';
+      let defaultMetodologia = '';
+      if (this.objetosSeleccionados.length > 0) {
+        const defaultSelected = this.objetosSeleccionados[i - 1];
+        if (defaultSelected && defaultSelected.parametro) {
+          defaultParametro = defaultSelected.parametro;
         }
-        this.tablaItems = items; // Actualizar la propiedad de datos con los elementos de la tabla
-      },
+        if (defaultSelected && defaultSelected.metodologia) {
+          defaultMetodologia = defaultSelected.metodologia;
+        }
+      }
+
+      items.push({
+        orden: i,
+        id_submuestra,
+        identificacion,
+        parametros_previos: parametroPrevio,
+        parametros: defaultParametro,
+        metodologias_previas: metodologiaPrevia,
+        metodologias: defaultMetodologia, // Set the default value for "metodologias"
+      });
+    }
+    this.tablaItems = items; // Update the property with the updated elements for the table
+  },
 
       eliminarFila(index) {
         const filaEliminada = this.tablaItems[index]; // Guardar la fila eliminada en una variable

@@ -134,7 +134,7 @@
                                                                         <b-button style="aspect-ratio: 1; border:none"
                                                                             :disabled="!nMuestras"
                                                                             class="lsa-orange reactive-button"
-                                                                            @click="agregar()" variant="secondary"
+                                                                            variant="secondary"
                                                                             size="md">
                                                                             <b-icon class="mt-1"
                                                                                 icon="plus-circle-fill"></b-icon>
@@ -254,7 +254,7 @@
                                                                 validationContext.errors[0] }}</b-form-invalid-feedback>
                                                         </ValidationProvider>
   
-                                                        <ValidationProvider name="Temperatura" rules="required|numeric"
+                                                        <ValidationProvider name="Temperatura" rules="required"
                                                             v-slot="validationContext">
                                                             <label for="input-live">Temperatura (°C):</label>
                                                             <div class="d-flex align-items-center">
@@ -923,7 +923,8 @@ export default {
             parametros_incompleto: true,
             revisado: false,
             id_submuestra: [],
-            parametros_metodologias: []
+            parametros_metodologias: [],
+            empleados_originales: []
         };
     },
 
@@ -1088,7 +1089,7 @@ export default {
         },
         
         addInput() {
-            this.telefonos_agregar.push({
+            this.telefonos_agregar.push({                
                 telefono_transportista: ''
             }); // Agregar un nuevo objeto con valor vacío
         },
@@ -1197,6 +1198,10 @@ export default {
             console.log("nuevo array empleado: ", this.EmpleadosArray);
             console.log("empleadoOG: ", this.empleadosOG);
             
+            
+        },
+
+        empleadosCoinciden(){
             for (var i = 0; i < this.EmpleadosArray.length; i++) {
                 var empleado = this.EmpleadosArray[i];
                 console.log("empleados for: ", empleado)
@@ -1209,17 +1214,111 @@ export default {
                     "id_parametro": idParametros[j], 
                     "fecha_entrega": empleado.fecha_entrega,                  
                     
-                  };
+                  };        
+
 
                   console.log("Objeto " + (j + 1) + ":", objeto);
-                  this.empleados_objeto.push(objeto)
+                  
                   console.log("empleados objeto: ", this.empleados_objeto)
+                  console.log("empleados originales: ", this.empleados)
 
-                }
-            }     
+                  const empleadosSeleccionados = this.empleados.map((empleado) => {
+                    // Extraer las propiedades deseadas del objeto original
+                    const { fecha_entrega, id_parametro, orden_de_analisis, rut_empleado } = empleado;
+
+                    // Crear un nuevo objeto solo con las propiedades deseadas
+                    return { fecha_entrega, id_parametro, orden_de_analisis, rut_empleado };
+                 });
+
+                  // Mostrar la nueva variable en la consola
+                    console.log("empleados seleccionados:", empleadosSeleccionados);
+                    this.empleados_originales = empleadosSeleccionados
+                    const objetoExistente = this.empleados_objeto.some((obj) => {
+                        return (
+                            objeto.rut_empleado === obj.rut_empleado &&
+                            objeto.orden_de_analisis === obj.orden_de_analisis &&
+                            objeto.id_parametro === obj.id_parametro &&
+                            objeto.fecha_entrega === obj.fecha_entrega
+                        );
+                    });
+                    if (!objetoExistente) {
+                      this.empleados_objeto.push(objeto);
+                    }
+                }                
+            }
+            // Comparar this.empleados_objeto con empleadosSeleccionados y obtener los objetos que no coinciden
+            const objetosNoCoinciden = this.empleados_objeto.filter((objetoEmpleado) => {
+              // Verificar si el objeto no coincide con ninguno de los objetos en empleadosSeleccionados
+              return !this.empleados_originales.some((empleadoSeleccionado) => {
+                // Comprobar si los valores coinciden en las propiedades que estamos evaluando
+                return (
+                  objetoEmpleado.fecha_entrega === empleadoSeleccionado.fecha_entrega &&
+                  objetoEmpleado.id_parametro === empleadoSeleccionado.id_parametro &&
+                  objetoEmpleado.orden_de_analisis === empleadoSeleccionado.orden_de_analisis &&
+                  objetoEmpleado.rut_empleado === empleadoSeleccionado.rut_empleado
+                );
+              });
+            });
+
+            // Mostrar el nuevo array de objetos que no coinciden en la consola
+            console.log("Objetos que no coinciden:", objetosNoCoinciden);
+
+            this.empleados_objeto = objetosNoCoinciden
+
+            console.log("Objetos empleaods que no coinciden:", this.empleados_objeto);
+
+
+
+
+        },
+
+        telefonosCoinciden() {
+
+            this.telefonos_agregarOG = this.telefonos_agregarOG.map(fono => ({
+  telefono_transportista: fono.telefono_transportista
+}));
+console.log("telefono_transportista nuevo:", this.telefonos_agregarOG);
+
+if(this.telefonos_agregar === this.telefonos_agregarOG){
+
+    console.log("coindicen", this.telefonos_agregarOG)
+}else{
+
+    console.log("NO coindicen", this.telefonos_agregar)
+    
+}
+
+
+
+
+            /*const elementosNoRepetidos = submuestraArray.filter(objeto => (
+                !this.submuestrasOG.some(elemento => (
+                    elemento.identificador === objeto.identificador &&
+                    elemento.orden === objeto.orden &&
+                    elemento.id_parametro === objeto.id_parametro &&
+                    elemento.id_metodologia === objeto.id_metodologia
+                ))
+                
+            ));
+
+            console.log("elementos no repetidos:", elementosNoRepetidos);
+            
+
+            elementosNoRepetidos.forEach(objeto => {
+              this.submuestra_agregar.push({
+                identificador: objeto.identificador,
+                orden: objeto.orden,
+                id_parametro: objeto.id_parametro,
+                id_metodologia: objeto.id_metodologia
+              });
+            });
+            
+            console.log("submuestras_agregar: ", this.submuestra_agregar)*/
+            
+},
+
 
         
-        },
 
         repetido(){
             const elementosNoRepetidos = this.EmpleadosArray.filter(objeto => (
@@ -1263,7 +1362,19 @@ export default {
         },
 
         obs(){
-            console.log(this.observacionesOG);
+            console.log(this.observacionesOG);           
+
+             if (this.observacionesOG.length === 0) {
+                this.nuevaobs = [{
+                  fecha_observacion: '',
+                  hora_observacion: '',
+                  observaciones: this.observaciones,
+                }];
+
+                
+                console.log("primero: ",this.nuevaobs)                
+               
+            }else{
             const fechaObs = this.observacionesOG[0].fecha_observacion;
             console.log("fecha observacion: ", fechaObs)  
             
@@ -1279,10 +1390,11 @@ export default {
             const horaObs = this.observacionesOG[0].hora_observacion;
             console.log("fecha observacion: ", horaObs)
 
-            const observaciones = [{ 
-                observaciones: this.observaciones,
+            const observaciones = [{
                 fecha_observacion: fechaObs,
-                hora_observacion: horaObs,            
+                hora_observacion: horaObs,  
+                observaciones: this.observaciones,             
+                          
             }]
 
             if (observaciones === this.observacionesOG){
@@ -1291,7 +1403,9 @@ export default {
 
                 this.nuevaobs = observaciones;
                 console.log("obs nueva: ",observaciones)
-            }      
+            }  
+            
+        }
 
         },
 
@@ -1540,9 +1654,7 @@ export default {
                     this.parametros_agregar.push({
                         id_parametro: parametroData.id_parametro,
                         id_metodologia: metodologiaCompleta.id_metodologia,
-                    });             
-
-
+                    });   
 
                       // En caso de agregar un parametro que no está registrado en la BD
                     const parametroAntiguo = this.parametros_ya_en_sistema.find(param => param.nombre_metodologia == this.metodologiaSeleccionada.nombre_metodologia &&
@@ -1552,8 +1664,7 @@ export default {
                                 this.parametros_agregar.push({
                                     id_parametro: this.parametroSeleccionado.id_parametro,
                                     id_metodologia: this.metodologiaSeleccionada.id_metodologia,
-                                });
-                                
+                                });                                
                             }
                         } else {
                             this.parametros_eliminar = this.parametros_eliminar.filter(param => param.id_metodologia !== this.metodologiaSeleccionada.id_metodologia &&
@@ -2152,7 +2263,8 @@ export default {
                 return;
             } else {
                 this.repetido();
-                this.modificado(); 
+                this.empleadosCoinciden();
+                this.telefonosCoinciden();
                 this.obs();               
                 const matricesFiltradas = this.parametros_agregar.slice(1);
                 const submuestraFiltrada = this.submuestra_agregar.slice(1);
