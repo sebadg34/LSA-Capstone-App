@@ -130,16 +130,7 @@
                                                                     <b-form-input id="nMuestras-input" v-model="nMuestras"
                                                                         :state="getValidationState(validationContext)"
                                                                         aria-describedby="nMuestras-live-feedback"></b-form-input>
-                                                                    <b-input-group-append>
-                                                                        <b-button style="aspect-ratio: 1; border:none"
-                                                                            :disabled="!nMuestras"
-                                                                            class="lsa-orange reactive-button"
-                                                                            variant="secondary"
-                                                                            size="md">
-                                                                            <b-icon class="mt-1"
-                                                                                icon="plus-circle-fill"></b-icon>
-                                                                        </b-button>
-                                                                    </b-input-group-append>
+                                                                    
                                                                 </b-input-group>
   
                                                             </div>
@@ -201,7 +192,7 @@
                                                             </b-form-invalid-feedback>
                                                         </ValidationProvider>
   
-                                                        <ValidationProvider name="Valor Neto" rules="required|numeric"
+                                                        <ValidationProvider name="Valor Neto" rules="required"
                                                             v-slot="validationContext">
                                                             <label for="input-live">Valor neto(UF):</label>
                                                             <div class="d-flex align-items-center">
@@ -996,7 +987,9 @@ export default {
 
         this.obtenerMatriz(), 
         
-        this.obtenerNormas(),              
+        this.obtenerNormas(),     
+        
+        
         
 
         PersonalService.obtenerTodosPersonal().then((response) => {
@@ -1272,12 +1265,17 @@ export default {
 
         },
 
-        telefonosCoinciden() {
-
+        mapeotelefono() {
             this.telefonos_agregarOG = this.telefonos_agregarOG.map(fono => ({
   telefono_transportista: fono.telefono_transportista
 }));
 console.log("telefono_transportista nuevo:", this.telefonos_agregarOG);
+        },
+
+
+        telefonosCoinciden() {
+
+            
 
 if(this.telefonos_agregar === this.telefonos_agregarOG){
 
@@ -2191,7 +2189,8 @@ if(this.telefonos_agregar === this.telefonos_agregarOG){
         this.transportistaOG = response.nombre_transportista;                       
         this.TemperaturaOG = response.temperatura_transporte;
         this.patenteOG = response.patente_vehiculo;
-        this.telefonos_agregarOG = response.telefonos_transportistas;
+        this.telefonos_agregarOG = response.telefonos_transportista;
+        this.mapeotelefono(),
         this.idParamOG = response.submuestras.map((idP) => idP.id_parametro);
         this.idMetOG = response.submuestras.map((idM) => idM.id_metodologia);
         this.normaOG = response.id_norma;
@@ -2241,7 +2240,7 @@ if(this.telefonos_agregar === this.telefonos_agregarOG){
         this.transportista = response.nombre_transportista;                       
         this.Temperatura = response.temperatura_transporte;
         this.patente = response.patente_vehiculo;
-        this.telefonos_agregar = response.telefonos_transportistas;  
+        this.telefonos_agregar = response.telefonos_transportista;  
             
 
             //TAB PARAMETROS
@@ -2252,7 +2251,8 @@ if(this.telefonos_agregar === this.telefonos_agregarOG){
             //TAB ASIGNACIÓN
         this.identificacion = response.submuestras.map((id) => id.identificador);    
         this.id_submuestra = response.submuestras.map((id) => id.id_submuestra);
-        console.log("id de las submuestras: ", this.id_submuestra)     
+        console.log("id de las submuestras: ", this.id_submuestra);
+           
            
         },
 
@@ -2290,7 +2290,7 @@ if(this.telefonos_agregar === this.telefonos_agregarOG){
                     nombre_transportista: this.transportista,
                     patente_vehiculo: this.patente,
                     telefonos_agregar: this.telefonos_agregar,
-                    estado: 'Recepcionado',
+                    estado: 'En Análisis',
                     observaciones: this.nuevaobs.map(obs=> ({
                         fecha_observacion: obs.fecha_observacion,
                         hora_observacion: obs.hora_observacion,

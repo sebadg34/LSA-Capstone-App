@@ -62,7 +62,8 @@
                                                             <div class="d-flex align-items-center ">
                                                                 <b-input-group size="sm">
                                                                     <b-form-input id="input-live" v-model="rut"
-                                                                        :state="getValidationState(validationContext)">
+                                                                        :state="getValidationState(validationContext)"
+                                                                        @input="detallesCotizaciones">
                                                                     </b-form-input>
 
                                                                     <b-input-group-append>
@@ -161,7 +162,7 @@
 
                                                         <ValidationProvider name="fechaI" rules="required"
                                                             v-slot="validationContext">
-                                                            <label class="mt-1" for="input-live">Fecha de muestreo:</label>
+                                                            <label for="input-live">Fecha de muestreo:</label>
                                                             <b-form-datepicker
                                                                 :date-format-options="{ year: 'numeric', month: '2-digit', day: '2-digit' }"
                                                                 id="input-live" v-model="fecha"
@@ -175,7 +176,7 @@
 
                                                         <ValidationProvider name="hora" rules="required"
                                                             v-slot="validationContext">
-                                                            <label class="mt-1" for="input-time">Hora de muestreo:</label>
+                                                            <label for="input-time">Hora de muestreo:</label>
                                                             <b-form-timepicker id="input-time" v-model="hora"
                                                                 :state="getValidationState(validationContext)"
                                                                 aria-describedby="input-live-help horaI-live-feedback"
@@ -187,9 +188,10 @@
 
 
                                                         <ValidationProvider name="entrega" rules="required"
-                                                            v-slot="validationContext"><label class="mt-1"
+                                                            v-slot="validationContext"><label
                                                                 for="input-live">Fecha de Entrega:</label>
                                                             <b-form-datepicker
+                                                                :date-format-options="{ year: 'numeric', month: '2-digit', day: '2-digit' }"
                                                                 :state="getValidationState(validationContext)"
                                                                 id="input-live" v-model="fechaEntrega"
                                                                 placeholder="Seleccione fecha"
@@ -199,6 +201,12 @@
                                                                 validationContext.errors[0] }}
                                                             </b-form-invalid-feedback>
                                                         </ValidationProvider>
+
+                                                        <ValidationProvider name="Cotizacion" rules="required" v-slot="validationContext">
+                                                            <label for="input-live">Cotización:</label>
+                                                            <b-form-select id="input-live" v-model="cotizacion" :options="opcionesCotizacion" text-field="idconNombre" value-field="id_cotizacion" aria-describedby="input-live-help Cotizacion-live-feedback" :state="getValidationState(validationContext)"></b-form-select> 
+                                                            <b-form-invalid-feedback id="Cotizacion-live-feedback">{{validationContext.errors[0]}}</b-form-invalid-feedback>
+                                                        </ValidationProvider> 
                                                     </b-col>
 
                                                     <b-col class="col-6">
@@ -217,7 +225,7 @@
                                                         <ValidationProvider name="prioridad" rules="required"
                                                             v-slot="validationContext">
                                                             <label for="input-live">Prioridad:</label>
-                                                            <b-form-select class="mt-1" id="input-live" v-model="prioridad"
+                                                            <b-form-select id="input-live" v-model="prioridad"
                                                                 :options="opcionesPrioridad"
                                                                 aria-describedby="input-live-help prioridad-live-feedback"
                                                                 :state="getValidationState(validationContext)"></b-form-select>
@@ -228,7 +236,7 @@
 
                                                         <ValidationProvider name="TipoMatriz" rules="required"
                                                             v-slot="validationContext">
-                                                            <label class="mt-1" for="input-live">Tipo de Matriz:</label>
+                                                            <label for="input-live">Tipo de Matriz:</label>
                                                             <b-form-select id="input-live" v-model="TipoMatriz"
                                                                 :options="opcionesMatriz"
                                                                 aria-describedby="input-live-help TipoMatriz-live-feedback"
@@ -239,7 +247,21 @@
                                                                 validationContext.errors[0] }}</b-form-invalid-feedback>
                                                         </ValidationProvider>
 
-                                                        <label class="mt-1" for="input-live">Observaciones:</label>
+                                                        <ValidationProvider name="Temperatura" rules="required"
+                                                            v-slot="validationContext">
+                                                            <label for="input-live">Temperatura (°C):</label>
+                                                            <div class="d-flex align-items-center">
+                                                                <b-input-group size="sm">
+                                                                    <b-form-input id="Temperatura-input" v-model="Temperatura"
+                                                                        :state="getValidationState(validationContext)"
+                                                                        aria-describedby="Temperatura-live-feedback"></b-form-input>                                                                  
+                                                                </b-input-group>
+                                                            </div>
+                                                            <b-form-invalid-feedback id="Temperatura-live-feedback">{{
+                                                                validationContext.errors[0] }}</b-form-invalid-feedback>
+                                                        </ValidationProvider>                                                        
+
+                                                        <label for="input-live">Observaciones:</label>
                                                         <b-form-textarea id="input-live" v-model="observaciones" rows="1"
                                                             aria-describedby="input-live-help observaciones-live-feedback"></b-form-textarea>
                                                     </b-col>
@@ -270,12 +292,7 @@
                                                         <label for="input-live">Rut:</label>
                                                         <b-form-input id="transportistaRut-input" class="mb-1"
                                                             v-model="transportistaRut"
-                                                            aria-describedby="transportistaRut-live-feedback"></b-form-input>
-
-                                                        <label for="input-live">Temperatura de transporte:</label>
-                                                        <b-form-input class="mb-1" id="input-live" v-model="Temperatura"
-                                                            aria-describedby="input-live-help Temperatura-live-feedback"
-                                                            placeholder="Ingrese temperatura en C°" trim></b-form-input>
+                                                            aria-describedby="transportistaRut-live-feedback"></b-form-input>                                                        
 
                                                         <label for="input-live">Telefono Movil:</label>
 
@@ -689,7 +706,9 @@ export default {
             muestra_incompleto: true,
             transportista_incompleto: true,
             parametros_incompleto: true,
-            revisado: false
+            revisado: false,
+            opcionesCotizacion: [],
+            cotizacion: '',
 
         };
     },
@@ -921,6 +940,7 @@ export default {
         verificarValidacionTab(value) {
             console.log(value)
         },
+
         agregar() {
             console.log("abirnedo modal")
             this.submuestra_agregar = [{
@@ -930,6 +950,24 @@ export default {
                 this.alertaExito = false;
             this.alertaDuplicado = false;
             this.$bvModal.show('modal-cantidad')
+        },
+
+        detallesCotizaciones(){
+            const data = {
+                rut_solicitante: this.rut
+            };
+            SolicitanteService.CotizacionSolicitante(data).then((response) => {
+                if (response.data != null && response.status === 200){
+                    console.log("cotizaciones: ", response.data)
+                    this.opcionesCotizacion = response.data.map(cotizacion => ({
+                        id_cotizacion: cotizacion.id_cotizacion,
+                        nombre_original_documento: cotizacion.nombre_original_documento,
+                        idconNombre: `${cotizacion.id_cotizacion} - ${cotizacion.nombre_original_documento}`
+                        
+                    }))
+                    console.log("Opc. cotizaciones: ", this.opcionesCotizacion)
+                }  
+            })
         },
 
         agregarObjetosSeleccionados() {
