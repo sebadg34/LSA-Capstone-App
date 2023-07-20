@@ -74,6 +74,15 @@
 
                         <div style="height:10px"></div>
                     </b-list-group-item>
+                    <b-list-group-item v-if="rol == 7 || rol == 0 || rol == 6 || rol == 2" @click="navegarRuta('AdminMuestraSupervisor')" class="cursorToHand menuButton">
+
+                    <div class="roleTag">Supervisor</div>
+                    <div style="height:10px"></div>
+                    <b-icon class="lsa-orange-text" icon="eyedropper"></b-icon>
+                    <span class="px-md-2"></span> Administrar muestra
+
+                    <div style="height:10px"></div>
+                    </b-list-group-item>
                     <b-list-group-item v-if="rol == 3 || rol == 4 || rol == 0 || rol == 6" @click="navegarRuta('AdminMuestraLab')" class="cursorToHand menuButton">
 
                         <div class="roleTag">Químicos</div>

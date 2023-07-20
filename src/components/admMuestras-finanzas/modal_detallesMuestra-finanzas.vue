@@ -69,15 +69,31 @@
                         <b-col class="col-12" style="font-weight:bold;"> Orden de compra: </b-col>
                        
                     </b-row>
-                    <b-list-group-item style="padding:10px" class="col-12 d-flex justify-content-around align-items-center">
-                        <div>NOMBRE_ORDEN_COMPRA</div>
+                    <b-list-group-item v-if="cargando_orden"
+                        class="d-flex align-items-center justify-content-center lsa-orange-text" style="height:100px">
+                        <div>
+                            <b-spinner class="align-middle"></b-spinner>
+                            <strong> Cargando...</strong>
+                        </div>
+                    </b-list-group-item>
+                    <b-list-group-item v-if="orden_compra == null && !cargando_orden" style="padding:10px" class="col-12 d-flex justify-content-around align-items-center">
+                        <div class="text-center lsa-light-blue-text my-2 row">
+                        <div class="col">
+                            <b-icon icon="file-earmark-break" animation="fade" variant="secondary"></b-icon>
+                        <div style="font-weight:bold; color:gray">No hay orden de compra registrada para mostrar.</div>
+                        </div>
+                    
+                    </div>
+                    </b-list-group-item>
+                    <b-list-group-item style="padding:10px" class="col-12 d-flex justify-content-between align-items-center">
+                        <div>{{ orden_compra.nombre_original_documento }}</div>
 
                         <div>
                             <b-button variant="info" @click="descargarArchivo(orden_compra)" style=" height: 30px; width: 30px; border-style: none; padding: 0px; background-color: white;">
                                 <b-icon-download variant="info"></b-icon-download>
                             </b-button>
 
-                            <b-button variant="danger" @click="borrarArchivo(orden_compra)" style=" height: 30px; width: 30px; border-style: none; padding: 0px; aspect-ratio: 1;">
+                            <b-button variant="danger" @click="borrarArchivo(orden_compra)" style=" height: 30px; width: 30px; border-style: none; padding: 0px;margin-left:30px; aspect-ratio: 1;">
                                 <b-icon icon="trash-fill"></b-icon>
                             </b-button>
                         </div>
@@ -107,6 +123,7 @@ export default {
     },
     data() {
         return {
+            cargando_orden: false,
             orden_compra: "",
             RUM: '',
             nombre_solicitante: '',
@@ -155,10 +172,13 @@ export default {
                 }
             })
         },
+        obtenerOrdenCompra(){
 
+        },
         obtenerDetalles(rum) {
             this.cargandoParametros = true;
             this.cargandoAnalistas = true;
+            this.cargando_orden = true;
             MuestraFinanzasService.obtenerDetallesMuestra(rum).then((response) => {
         
                 if (response != null) {
@@ -171,7 +191,8 @@ export default {
                         this.valor_neto = detalles.valor_neto;
                         this.tipo_pago = detalles.tipo_pago;
                         this.muestreador = detalles.muestreado_por;
-
+                        this.orden_compra = detalles.orden_compra;
+                        this.cargando_orden = false;
                     }
 
                 } else {

@@ -17,6 +17,7 @@ import admMuestraQuimico from '../views/admMuestra-quimico/admMuestra-quimico'
 import admMuestraGerente from '../views/admMuestra-gerente/admMuestra-gerente'
 import admMuestraFinanzas from '../views/admMuestra-finanzas/admMuestra-finanzas'
 import admMuestraSolicitante from '../views/admMuestra-solicitante/admMuestra-solicitante'
+import admMuestraSupervisor from  '../views/admMuestra-supervisor/admMuestra-supervisor'
 import ANA001 from '../views/ANA001-RelacionDatos'
 import ANA002 from '../views/ANA002-AdmMatriz'
 import ANA003 from '../views/ANA003-AdmParam'
@@ -177,6 +178,15 @@ const routes = [
       title: "LSA - Administración Muestra"
     }
   }, 
+  {
+    path: '/supervisor/admmuestra',
+    name: 'AdminMuestraSupervisor',
+    component: admMuestraSupervisor,
+    meta: {
+      title: "LSA - Administración Muestra"
+    }
+  },
+  
   {
     path: '/finanzas/admmuestra',
     name: 'AdminMuestraFinanzas',

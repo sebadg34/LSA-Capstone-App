@@ -1,5 +1,5 @@
 <template>
-  <b-modal id="modal-observaciones-muestra-finanzas" :title="`Observaciones de la muestra ${RUM}`" size="xl"
+  <b-modal id="modal-observaciones-muestra-supervisor" :title="`Observaciones de la muestra ${RUM}`" size="xl"
     @hidden="onHidden">
 
     <modalAgregarObservacion @refrescar="obtenerObservaciones(RUM)" :muestra-data="muestraData"/>
@@ -94,8 +94,9 @@
 </template>
 
 <script>
-import MuestraFinanzasService from '@/helpers/api-services/Muestra-finanzas.service';
-import modalAgregarObservacion from '@/components/admMuestras-finanzas/modal_agregarObservacion-finanzas.vue';
+
+import MuestraSupervisorService from '@/helpers/api-services/Muestra-supervisor.service';
+import modalAgregarObservacion from '@/components/admMuestras-supervisor/modal_agregarObservacion-supervisor.vue';
 export default {
   components: {
     modalAgregarObservacion
@@ -119,12 +120,12 @@ export default {
       this.muestraData = {
         RUM: this.RUM
       }
-      this.$bvModal.show('modal-agregar-observacion-finanzas');
+      this.$bvModal.show('modal-agregar-observacion-supervisor');
     },
     obtenerObservaciones(rum) {
       this.observaciones = [];
       this.cargandoObservaciones = true;
-      MuestraFinanzasService.obtenerObservaciones(rum).then((response) => {
+      MuestraSupervisorService.obtenerObservaciones(rum).then((response) => {
         if (response != null) {
           if (response.status == 200 && response.data != null) {
             const observacionesData = response.data;

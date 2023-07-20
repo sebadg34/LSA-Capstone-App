@@ -20,7 +20,7 @@
                     class="d-inline-block">
                     <b-button @click="enviarFormulario()" variant="primary" size="xl" class="float-right reactive-button"
                         style="font-weight:bold">
-                        Subir archivo
+                        Guardar observación
                     </b-button>
                 </b-overlay>
             </template>
@@ -31,7 +31,7 @@
                     <label for="input-live">Observación:</label>
                     <ValidationProvider name="observación" rules="required" v-slot="validationContext">
                         <b-form-textarea id="textarea" v-model="observacion" :state="getValidationState(validationContext)"
-                            placeholder="Enter something..." rows="3" max-rows="6"></b-form-textarea>
+                            placeholder="Ingrese observación..." rows="3" max-rows="6"></b-form-textarea>
 
                         <b-form-invalid-feedback id="fecha-live-feedback">{{
                             validationContext.errors[0] }}
@@ -123,7 +123,7 @@ export default {
                                 appendToast: true
                             })
                             this.$emit('refrescar');
-                            this.$bvModal.hide('modal-agregar-observacion-finanzas');
+                            this.$bvModal.hide('modal-agregar-observacion-quimico');
                             this.reiniciarDatos();
                         }
                     })

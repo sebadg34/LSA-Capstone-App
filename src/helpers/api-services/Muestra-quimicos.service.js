@@ -63,12 +63,12 @@ const obtenerObservaciones = async (RUM) => {
          if(response.status == 200){
              return response;
          } else {
-             return;
+             return response;
          }
          
      } catch (error) {
          console.log(error);
-         return;
+         return error;
      }
  };
  

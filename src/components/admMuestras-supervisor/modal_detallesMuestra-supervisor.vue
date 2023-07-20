@@ -1,5 +1,5 @@
 <template>
-  <b-modal id="modal-detalle-muestra-quimico" :title="`Detalles de la muestra ${RUM}`" size="xl" @hidden="onHidden">
+  <b-modal id="modal-detalle-muestra-supervisor" :title="`Detalles de la muestra ${RUM}`" size="xl" @hidden="onHidden">
 
     <template #modal-header="{ close }">
       <!-- Emulate built in modal header close button action -->
@@ -14,34 +14,39 @@
 
     <div class="p-3">
       <b-col class="col-12">
-<b-row class="d-flex justify-content-between">
+
         <b-col class="col-3">
         <b-row style="border: 1px solid var(--lsa-light-gray); padding:4px; border-radius:5px">
               <b-col class="col-6" style="font-weight:bold; "> RUM: </b-col>
               <b-col class="col-6">{{ RUM }}</b-col>
             </b-row>
-            
           </b-col>
-          <b-col class="col-4">
-            <b-row class="d-flex justify-content-between" style="border: 1px solid var(--lsa-light-gray); padding-left:15px; padding-right:20px; padding-top:6px; padding-bottom:4px; border-radius:5px; margin-right:10px">
-              <div style="font-weight:bold;"> Fecha de entrega: </div>
-              <div>
-              
-                <b-row >
-                 <div class="mr-2"> {{ fecha_entrega }}</div>
-                 
-                </b-row>
-              
-              </div>
-            </b-row>
-          </b-col>
-        </b-row>
-        
-        
-          
 <br/>
         <b-row class="pb-2">
           
+          <b-col class="col-6">
+           
+            <b-row style="border-bottom: 1px solid var(--lsa-light-gray); padding:3px">
+              <b-col class="col-5" style="font-weight:bold;"> Nombre solicitante: </b-col>
+              <b-col class="col-7">{{ nombre_solicitante + " " + apellido_solicitante}}</b-col>
+            </b-row>
+
+            <b-row style="border-bottom: 1px solid var(--lsa-light-gray); padding:3px">
+              <b-col class="col-5" style="font-weight:bold;"> Empresa: </b-col>
+              <b-col class="col-7">{{ nombre_empresa }}</b-col>
+            </b-row>
+
+            <b-row style="border-bottom: 1px solid var(--lsa-light-gray); padding:3px">
+              <b-col class="col-5" style="font-weight:bold;"> Ciudad empresa: </b-col>
+              <b-col class="col-7">{{ ciudad_empresa }}</b-col>
+            </b-row>
+
+            <b-row style="border-bottom: 1px solid var(--lsa-light-gray); padding:3px">
+              <b-col class="col-5" style="font-weight:bold;"> Dirección empresa: </b-col>
+              <b-col class="col-7">{{ direccion_empresa }}</b-col>
+            </b-row>
+           
+          </b-col>
 
           <b-col class="col-6">
             <b-row style="border-bottom: 1px solid var(--lsa-light-gray); padding:3px">
@@ -53,32 +58,16 @@
               <b-col class="col-7">{{ matriz.nombre_matriz }}</b-col>
             </b-row>
             <b-row style="border-bottom: 1px solid var(--lsa-light-gray); padding:3px">
+              <b-col class="col-5" style="font-weight:bold;"> Norma: </b-col>
+              <b-col class="col-7">{{ norma.nombre_norma }}</b-col>
+            </b-row>
+            <b-row style="border-bottom: 1px solid var(--lsa-light-gray); padding:3px">
               <b-col class="col-5" style="font-weight:bold;"> Muestreado por: </b-col>
               <b-col class="col-7">{{ muestreador }}</b-col>
             </b-row>
            
 
           </b-col>
-
-          <b-col class="col-6">
-
-            <b-row style="border-bottom: 1px solid var(--lsa-light-gray); padding:3px">
-              <b-col class="col-5" style="font-weight:bold;"> Norma: </b-col>
-              <b-col class="col-7">{{ norma.nombre_norma }}</b-col>
-            </b-row>
-            <b-row style="border-bottom: 1px solid var(--lsa-light-gray); padding:3px">
-              <b-col class="col-5" style="font-weight:bold;"> Fecha de ingreso: </b-col>
-              <b-col class="col-7">{{ fecha_ingreso }}</b-col>
-            </b-row>
-            <b-row style="border-bottom: 1px solid var(--lsa-light-gray); padding:3px">
-              <b-col class="col-5" style="font-weight:bold;"> Hora de ingreso: </b-col>
-              <b-col class="col-7">{{  hora_ingreso }}</b-col>
-            </b-row>
-       
-
-           
-            
-      </b-col>
         </b-row>
 <br/>
         <b-list-group horizontal>
@@ -163,10 +152,62 @@
         </b-list-group>
         </b-col>
 <br/>
+<b-col class="col-6">
+        <b-row style="border-bottom: 1px solid var(--lsa-light-gray);">
+              <b-col class="col-7" style="font-weight:bold;"> Fecha de entrega: </b-col>
+              <b-col class="col-5">
+                <b-row>
+                 <div class="mr-2"> {{ fecha_entrega }}</div>
+                  <b-button v-b-modal.modal-cambiar-fecha style="padding:2px; background-color: transparent; border:none; aspect-ratio: 1;" class="reactive-button">
+                    <b-icon scale="0.8" icon="pencil-square" style="color:rgb(0, 0, 0)"></b-icon>
+                  </b-button>
+                </b-row>
+                
+              
+              </b-col>
+            </b-row>
 
+            <b-row style="border-bottom: 1px solid var(--lsa-light-gray);">
+              <b-col class="col-7" style="font-weight:bold;"> Tipo de pago: </b-col>
+              <b-col class="col-5">{{ tipo_pago }}</b-col>
+            </b-row>
+            <b-row style="border-bottom: 1px solid var(--lsa-light-gray);">
+              <b-col class="col-7" style="font-weight:bold;"> Valor neto: </b-col>
+              <b-col class="col-5">{{ valor_neto }}</b-col>
+            </b-row>
+            
+      </b-col>
     </div>
 
-   
+    <b-modal centered id="modal-cambiar-fecha" size="sm">
+
+      <template #modal-header="{ close }">
+      <!-- Emulate built in modal header close button action -->
+      <b-row class="d-flex justify-content-around">
+        <div class="pl-3">Cambiar fecha de entega</div>
+      </b-row>
+
+      <button type="button" class="close" aria-label="Close" @click="close()">
+        <span aria-hidden="true" style="color:white">&times;</span>
+      </button>
+    </template>
+    <validation-observer ref="formfecha">
+
+    <ValidationProvider name="fecha inicio" rules="required" v-slot="validationContext">
+                    <b-form-datepicker  :date-format-options="{ year: 'numeric', month: '2-digit', day: '2-digit' }" placeholder="seleccione fecha" :state="getValidationState(validationContext)" v-model="fecha_entrega_nueva" id="datepicker-dateformat2" locale="es"></b-form-datepicker>
+                    <b-form-invalid-feedback id="fecha-live-feedback">{{
+                       validationContext.errors[0] }}
+                    </b-form-invalid-feedback>
+                </ValidationProvider>
+</validation-observer>
+
+
+<template  #modal-footer>
+      <b-button block @click="cambiarFechaEntrega" variant="primary" size="xl" class="float-right reactive-button" style="font-weight:bold">
+        Cambiar fecha
+      </b-button>
+    </template>
+  </b-modal>
 
 
 
@@ -179,8 +220,8 @@
 </template>
 
 <script>
-import MuestraQuimicoService from '@/helpers/api-services/Muestra-quimicos.service';
 
+import MuestraSupervisorService from '@/helpers/api-services/Muestra-supervisor.service';
 export default {
   props: {
     detallesData: Object
@@ -189,13 +230,20 @@ export default {
     return {
 
       RUM: '',
+      nombre_solicitante: '',
+      apellido_solicitante: '',
+      nombre_empresa: '',
+      ciudad_empresa: '',
+      direccion_empresa: '',
       numero_muestras: '',
+      numero_empresa: '',
       norma: '',
       muestreador: '',
       fecha_entrega: '',
-      hora_ingreso: '',
-      fecha_ingreso: '',
+      fecha_entrega_nueva: '',
+      tipo_pago: '',
       matriz: '',
+      valor_neto: '',
       loading: false,
       cargandoParametros: false,
       cargandoAnalistas: false,
@@ -206,7 +254,6 @@ export default {
     }
   },
   methods: {
-   
     getValidationState({
             dirty,
             validated,
@@ -231,7 +278,7 @@ export default {
     obtenerDetalles(rum) {
       this.cargandoParametros = true;
       this.cargandoAnalistas = true;
-      MuestraQuimicoService.obtenerDetallesMuestra(rum).then((response) => {
+      MuestraSupervisorService.obtenerDetallesMuestra(rum).then((response) => {
         console.log(response)
         if (response != null) {
           if (response.status == 200 && response.data != null) {
@@ -240,9 +287,16 @@ export default {
             this.numero_muestras = detalles.cantidad_muestras;
             this.norma = detalles.norma;
             this.matriz = detalles.matriz;
-this.fecha_ingreso = detalles.fecha_ingreso;
-this.hora_ingreso = detalles.hora_ingreso;
+
+            this.valor_neto = detalles.valor_neto;
+            this.tipo_pago = detalles.tipo_pago;
             this.muestreador = detalles.muestreado_por;
+            const solicitante = detalles.informacion_solicitante[0];
+
+            this.nombre_solicitante = solicitante.nombre;
+            this.apellido_solicitante = solicitante.primer_apellido;
+            this.ciudad_empresa = solicitante.nombre_ciudad;
+            this.direccion_empresa = solicitante.direccion;
 
            
 
@@ -303,7 +357,7 @@ this.hora_ingreso = detalles.hora_ingreso;
 
         this.RUM = this.detallesData.RUM;
 
-      
+        this.nombre_empresa = this.detallesData.nombre_empresa;
         this.matriz = this.detallesData.matriz.nombre_matriz;
         this.valor_neto = this.detallesData.valor_neto;
         this.fecha_entrega = this.detallesData.fecha_entrega;

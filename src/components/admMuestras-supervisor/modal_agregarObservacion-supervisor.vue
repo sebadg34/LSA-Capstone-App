@@ -1,6 +1,6 @@
 <template>
     <validation-observer ref="form">
-        <b-modal centered id="modal-agregar-observacion-finanzas" ref="modal" title="Agregar orden de compra" size="md">
+        <b-modal centered id="modal-agregar-observacion-supervisor" ref="modal" title="Agregar orden de compra" size="md">
 
             <template #modal-header="{ close }">
                 <!-- Emulate built in modal header close button action -->
@@ -48,7 +48,7 @@
 </template>
 
 <script>
-import MuestraFinanzasService from '@/helpers/api-services/Muestra-finanzas.service';
+import MuestraSupervisorService from '@/helpers/api-services/Muestra-supervisor.service';
 import {
     getUserInfo
 } from "@/helpers/api-services/Auth.service";
@@ -111,7 +111,7 @@ export default {
 
                     
                     this.busy = true;
-                    MuestraFinanzasService.crearObservacionMuestra(data).then((response) => {
+                    MuestraSupervisorService.crearObservacionMuestra(data).then((response) => {
                         this.busy = false;
                         console.log(response);
                         if (response.request.status == 200) {
@@ -123,7 +123,7 @@ export default {
                                 appendToast: true
                             })
                             this.$emit('refrescar');
-                            this.$bvModal.hide('modal-agregar-observacion-finanzas');
+                            this.$bvModal.hide('modal-agregar-observacion-supervisor');
                             this.reiniciarDatos();
                         }
                     })

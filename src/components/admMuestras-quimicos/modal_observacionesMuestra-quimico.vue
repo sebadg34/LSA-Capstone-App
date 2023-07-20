@@ -48,7 +48,7 @@
             </div>
           </b-list-group-item>
           <b-list-group-item v-for="(observacion,index) in this.observaciones" :key="index" horizontal>
-           <b-row style="border-bottom:1px solid var(--lsa-light-gray);margin-bottom:30px;" class="d-flex justify-content-around align-items-center">
+           <b-row style="border-bottom:1px solid var(--lsa-light-gray);margin-bottom:10px;" class="d-flex justify-content-around align-items-center">
             <div class="d-flex align-items-center justify-content-center" style="width:40%;">
               {{ observacion.nombre + " " + observacion.apellido }}
             </div>
@@ -59,7 +59,7 @@
               {{ observacion.hora_observacion }}
             </div>
            </b-row>
-           <b-row style=" min-height: 100px;" class="d-flex justify-content-center">
+           <b-row style=" min-height: 50px;" class="d-flex justify-content-center">
             <b-col class="col-10">
               <div>
              <strong>Observación:</strong> {{  " " +  observacion.observaciones}}
@@ -95,7 +95,7 @@
 
 <script>
 import MuestraQuimicoService from '@/helpers/api-services/Muestra-quimicos.service';
-import modalAgregarObservacion from '@/components/admMuestras-finanzas/modal_agregarObservacion-finanzas.vue';
+import modalAgregarObservacion from '@/components/admMuestras-quimicos/modal_agregarObservacion-quimico.vue';
 export default {
   components: {
     modalAgregarObservacion
@@ -119,7 +119,7 @@ export default {
       this.muestraData = {
         RUM: this.RUM
       }
-      this.$bvModal.show('modal-agregar-observacion-finanzas');
+      this.$bvModal.show('modal-agregar-observacion-quimico');
     },
     obtenerObservaciones(rum) {
       this.observaciones = [];

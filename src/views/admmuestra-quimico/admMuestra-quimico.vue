@@ -3,6 +3,7 @@
 
     <ModalObservaciones :detalles-data="this.observacionesData" />
     <ModalDetalleMuestra :detalles-data="this.detallesData" />
+    <ModalCompletarTarea :muestra-data="this.muestraData" />
     <!-- Inicio tabla -->
 
     <b-row align-h="start" style="padding-top:30px;">
@@ -121,7 +122,7 @@
               <b-dropdown-item @click="MostrarObservaciones(row.item)">
                 <b-icon icon="check2-square" aria-hidden="true" class="mr-2"></b-icon>Observaciones
               </b-dropdown-item>
-              <b-dropdown-item @click="abrirEditarPersonal(row.item)">
+              <b-dropdown-item v-if="row.item.estado != 'Finalizado' " @click="abrirCompletarTarea(row.item)">
                 <b-icon icon="file-earmark-arrow-down" aria-hidden="true" class="mr-2"></b-icon>Marcar tarea como completado
               </b-dropdown-item>
 
@@ -153,7 +154,7 @@
 import ModalObservaciones from '@/components/admMuestras-quimicos/modal_observacionesMuestra-quimico.vue';
 
 import MuestraQuimicoService from '@/helpers/api-services/Muestra-quimicos.service';
-
+import ModalCompletarTarea from '@/components/admMuestras-quimicos/modal_completarTarea-quimico.vue';
 import ModalDetalleMuestra from '@/components/admMuestras-quimicos/modal_detallesMuestra-quimico.vue';
 import moment from 'moment';
 export default {
@@ -262,7 +263,8 @@ export default {
       ],
       prioridad: '',
       detallesData: {},
-      observacionesData: {}
+      observacionesData: {},
+      muestraData: {}
     }
   },
   computed: {
@@ -274,6 +276,7 @@ export default {
   components: {
     ModalObservaciones,
     ModalDetalleMuestra,
+    ModalCompletarTarea
   },
   methods: {
     borrarFiltro() {
@@ -394,6 +397,11 @@ export default {
       console.log(data)
       this.detallesData = data;
       this.$bvModal.show('modal-detalle-muestra-quimico');
+    },
+    abrirCompletarTarea(data) {
+      console.log(data)
+      this.muestraData = data;
+      this.$bvModal.show('modal-completar-tarea-quimico');
     },
 
   

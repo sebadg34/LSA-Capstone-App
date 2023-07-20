@@ -27,7 +27,7 @@
 
 
             <b-row class="d-flex justify-content-center">
-                <b-col class="col-6">
+                <b-col class="col-12">
 
                     
                     <label for="input-live">Fecha emisión:</label>
@@ -44,8 +44,8 @@
                 </b-col>
                     <br />
                     <b-col class="col-12">
-                    <div>Archivo:
-                    </div>
+                    
+                    <label for="input-live">Archivo:</label>
                     <ValidationProvider name="archivo" rules="required|size:5000" v-slot="validationContext">
 
                         <b-form-file placeholder="seleccione archivo" browse-text="Buscar"
@@ -85,6 +85,7 @@ export default {
         muestraData: {
             handler() {
                 console.log(this.muestraData)
+                this.RUM = this.muestraData.RUM;
                 this.rut_solicitante = this.muestraData.solicitante[0].rut_solicitante;
                 console.log(this.rut_solicitante)
                 this.reiniciarDatos();
@@ -100,6 +101,7 @@ export default {
         const max = new Date()
         max.setMonth(max.getMonth() + 6);
         return {
+            RUM: "",
             busy: false,
             Archivo: null,
             Fecha: "",
@@ -148,7 +150,7 @@ export default {
                     formData.enctype = "multipart/form-data";
                     console.log("data a enviar", formData);
                     this.busy = true;
-                    MuestraFinanzasService.agregarOrdenCompra(formData).then((response) => {
+                    MuestraFinanzasService.agregarOrdenCompra(this.RUM,formData).then((response) => {
                         this.busy = false;
                         console.log(response);
                         if (response.request.status == 200) {
