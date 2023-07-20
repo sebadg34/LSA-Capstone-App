@@ -142,6 +142,7 @@ export default {
                 } else {
                     let formData = new FormData();
                     formData = {
+                        RUM: this.RUM,
                         fecha_emision: this.FechaFormatted,
                         rut_solicitante: this.muestraData.solicitante[0].rut_solicitante
                     }
@@ -150,7 +151,7 @@ export default {
                     formData.enctype = "multipart/form-data";
                     console.log("data a enviar", formData);
                     this.busy = true;
-                    MuestraFinanzasService.agregarOrdenCompra(this.RUM,formData).then((response) => {
+                    MuestraFinanzasService.agregarOrdenCompra(formData).then((response) => {
                         this.busy = false;
                         console.log(response);
                         if (response.request.status == 200) {

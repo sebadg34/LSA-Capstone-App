@@ -3,10 +3,10 @@ import {
 } from "./InstanciadorAxios";
 
 
-const agregarOrdenCompra = async (RUM,data) => {
+const agregarOrdenCompra = async (data) => {
     try {  
         const instanciaApi = await crearApi();
-        const response = await instanciaApi.post("/muestras-administrador-finanzas/agregarOrdenCompra/"+RUM,data,
+        const response = await instanciaApi.post("/muestras-administrador-finanzas/agregarOrdenCompra/",data,
         {
             headers: {
                 'Content-Type': 'multipart/form-data'
