@@ -1910,18 +1910,22 @@ if(this.telefonos_agregar === this.telefonos_agregarOG){
             const ordenArray = [];            
             const idparametros = [];
             const idmetodologias = [];
-            const submuestraArray = [];                        
+            const submuestraArray = [];  
+            const id_submuestra = [];                      
 
             // Recorrer los datos y almacenarlos en las columnas correspondientes
-            datos.forEach((objeto) => {                
+            datos.forEach((objeto) => {
+                id_submuestra.push(objeto.id_submuestra)              
                 identificacionArray.push(objeto.identificador);
                 ordenArray.push(objeto.orden);               
                 idmetodologias.push(objeto.id_metodologia);
-                idparametros.push(objeto.id_parametro);               
+                idparametros.push(objeto.id_parametro);
+                               
             });            
 
             datos.forEach((objeto) => {
                 submuestraArray.push({
+                    id_submuestra: objeto.id_submuestra,
                     identificador: objeto.identificador,
                     orden: objeto.orden,
                     id_parametro: objeto.id_parametro,
@@ -1956,10 +1960,13 @@ if(this.telefonos_agregar === this.telefonos_agregarOG){
             ));
 
             console.log("elementos no repetidos:", elementosNoRepetidos);
+
+            this.submuestra_agregar = this.submuestrasOG;            
             
 
             elementosNoRepetidos.forEach(objeto => {
               this.submuestra_agregar.push({
+                id_submuestra: objeto.id_submuestra,
                 identificador: objeto.identificador,
                 orden: objeto.orden,
                 id_parametro: objeto.id_parametro,
@@ -2197,10 +2204,12 @@ if(this.telefonos_agregar === this.telefonos_agregarOG){
         this.normaOG = response.id_norma;
         this.tablaOG = response.id_tabla; 
         this.submuestrasOG = response.submuestras.map(submuestra => ({
+            id_submuestra: submuestra.id_submuestra,
             identificador:submuestra.identificador,
             orden: submuestra.orden,
+            id_parametro:submuestra.id_parametro,  
             id_metodologia:submuestra.id_metodologia,            
-            id_parametro:submuestra.id_parametro,            
+                      
         }));
         this.subMuestra = response.submuestras.map(submuestra=> ({
             identificador: submuestra.identificador,
@@ -2268,7 +2277,7 @@ if(this.telefonos_agregar === this.telefonos_agregarOG){
                 this.telefonosCoinciden();
                 this.obs();               
                 const matricesFiltradas = this.parametros_agregar.slice(1);
-                const submuestraFiltrada = this.submuestra_agregar.slice(1);
+                //const submuestraFiltrada = this.submuestra_agregar.slice(1);
                 const submuestra_eliminar = this.submuestra_eliminar.slice(1);
                 
                 
@@ -2304,7 +2313,7 @@ if(this.telefonos_agregar === this.telefonos_agregarOG){
                     id_matriz: this.TipoMatriz,
                     id_norma: this.norma,
                     id_tabla: this.id_tabla,
-                    submuestras_agregar: submuestraFiltrada,
+                    submuestras_agregar: this.submuestra_agregar,
                     submuestras_eliminar: submuestra_eliminar,
                     telefonos_eliminar: this.telefonos_eliminar,
                     parametros_eliminar: this.parametros_eliminar,
