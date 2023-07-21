@@ -915,7 +915,10 @@ export default {
             revisado: false,
             id_submuestra: [],
             parametros_metodologias: [],
-            empleados_originales: []
+            empleados_originales: [],
+            emp: [],
+            diferentes: [],
+            empleadosNuevos: []
         };
     },
 
@@ -1133,19 +1136,30 @@ export default {
         },
 
         eliminarFila(fila) {
-            const index = this.EmpleadosArray.indexOf(fila);
-            if (index !== -1) {
-              if ( fila.id_parametro == '' || fila.rut_empleado == null ) {
-                  this.EmpleadosArray.splice(index, 1);
-
-              }else{
-                  this.empleados_eliminar.push(fila);
-                  this.EmpleadosArray.splice(index, 1);
-              }   
-    
-            console.log("eliminar empleados: ", this.empleados_eliminar);
+          const index = this.EmpleadosArray.indexOf(fila);
+          if (index !== -1) {
+            if (fila.id_parametro === '' || fila.rut_empleado === null) {
+              this.EmpleadosArray.splice(index, 1);
+            } else {
+              // Convertir el campo id_parametro a un objeto único si es un array
+              const idParametroUnico = Array.isArray(fila.id_parametro) ? fila.id_parametro[0] : fila.id_parametro;
+              const nombreParametroUnico = Array.isArray(fila.nombre_parametro) ? fila.nombre_parametro[0] : fila.nombe_parametro;
+            
+              // Crear un nuevo objeto empleado con el campo id_parametro transformado
+              const empleadoConParametroUnico = {
+                ...fila,
+                id_parametro: idParametroUnico,
+                nombre_parametro: nombreParametroUnico
+              };
+          
+              this.empleados_eliminar.push(empleadoConParametroUnico);
+              this.EmpleadosArray.splice(index, 1);
             }
+
+            console.log("eliminar empleados: ", this.empleados_eliminar);
+          }
         },
+
         
         eliminarParametro(filaSeleccionada, index) {
             filaSeleccionada.id_parametro.splice(index, 1); 
@@ -1260,6 +1274,95 @@ export default {
             this.empleados_objeto = objetosNoCoinciden
 
             console.log("Objetos empleaods que no coinciden:", this.empleados_objeto);
+
+            const empleados_original = this.emp.map((empleado, index) => ({
+  ...empleado,
+  id_aux: index + 1 // El índice + 1 se usará como id_aux autoincremental
+}));
+
+console.log("empleados en BD: ",empleados_original);
+
+
+
+this.empleadosNuevos = this.empleados_agregar.map(empleados => ({
+            rut_empleado: empleados.rut_empleado,
+            orden_de_analisis: empleados.orden_de_analisis,
+            id_parametro: empleados.id_parametro,
+            fecha_entrega: empleados.fecha_entrega
+
+        }));
+
+        const nuevoArray = this.empleadosNuevos.map(empleado => {
+  // Creamos un nuevo objeto con las mismas propiedades del objeto original
+  const nuevoEmpleado = {
+    ...empleado,
+  };
+
+  // Verificamos si el campo 'id_parametro' es un array
+  if (Array.isArray(empleado.id_parametro)) {
+    // Asignamos el primer valor del array 'id_parametro' al campo 'id_parametro' del nuevo objeto
+    nuevoEmpleado.id_parametro = empleado.id_parametro[0];
+  }
+
+  return nuevoEmpleado;
+  
+});
+console.log(" nuevo array empleados: ", nuevoArray)
+
+            const empleados = nuevoArray.map((empleado, index) => ({
+  ...empleado,
+  id_aux: index + 1 // El índice + 1 se usará como id_aux autoincremental
+}));
+
+console.log("nuevos empleados: ",empleados);
+
+// Función para comparar dos empleados por su id_aux
+function compararEmpleadosPorIdAux(empleado1, empleado2) {
+  return empleado1.id_aux === empleado2.id_aux;
+}
+
+// Función para comparar dos empleados por sus propiedades restantes (fecha_entrega, rut_empleado, id_parametro)
+function compararEmpleadosPorPropiedades(empleado1, empleado2) {
+  return (
+    empleado1.rut_empleado === empleado2.rut_empleado &&
+    empleado1.orden_de_analisis === empleado2.orden_de_analisis &&
+    empleado1.id_parametro === empleado2.id_parametro &&
+    empleado1.fecha_entrega === empleado2.fecha_entrega   
+  );
+}
+
+// Filtrar los empleados diferentes
+const empleadosDiferentes = empleados.filter(empleado => {
+  // Buscar el empleado correspondiente en empleados_original con el mismo id_aux
+  const empleadoCorrespondiente = empleados_original.find(e => compararEmpleadosPorIdAux(empleado, e));
+
+  // Si no se encontró el empleado en empleados_original, significa que es diferente
+  if (!empleadoCorrespondiente) {
+    return true;
+  }
+
+  // Comparar las propiedades restantes para asegurarse de que son iguales
+  return !compararEmpleadosPorPropiedades(empleado, empleadoCorrespondiente);
+});
+
+console.log("Empleados diferentes:", empleadosDiferentes);
+this.empleados_agregar = [];
+this.empleados_agregar.push(...empleadosDiferentes);
+
+console.log("Nuevos Empleados agregar:", this.empleados_agregar);
+
+// Mostrar el objeto correspondiente en empleados_original para cada empleado en empleadosDiferentes
+empleadosDiferentes.forEach(empleado => {
+  const empleadoCorrespondiente = empleados_original.find(e => compararEmpleadosPorIdAux(empleado, e));
+  console.log("Objeto en empleados_original:", empleadoCorrespondiente);
+  this.empleados_eliminar.push(empleadoCorrespondiente)
+  console.log("empleados eliminar: ",this.empleados_eliminar)
+
+});
+
+
+
+
 
 
 
@@ -2208,7 +2311,7 @@ if(this.telefonos_agregar === this.telefonos_agregarOG){
             identificador:submuestra.identificador,
             orden: submuestra.orden,
             id_parametro:submuestra.id_parametro,  
-            id_metodologia:submuestra.id_metodologia,            
+            id_metodologia:submuestra.id_metodologia,           
                       
         }));
         this.subMuestra = response.submuestras.map(submuestra=> ({
@@ -2243,6 +2346,7 @@ if(this.telefonos_agregar === this.telefonos_agregarOG){
         this.muestreado = response.muestreado_por;
         this.observaciones = response.observaciones.map(obs => obs.observaciones).join("\n");
         this.prioridad = response.prioridad;
+        this.cotizacion = response.id_cotizacion;
         
 
             //TAB TRANSPORTISTA
@@ -2262,9 +2366,20 @@ if(this.telefonos_agregar === this.telefonos_agregarOG){
         this.identificacion = response.submuestras.map((id) => id.identificador);    
         this.id_submuestra = response.submuestras.map((id) => id.id_submuestra);
         console.log("id de las submuestras: ", this.id_submuestra);
-           
+
+        this.emp = response.empleados.map(empleados => ({
+            rut_empleado: empleados.rut_empleado,
+            orden_de_analisis: empleados.orden_de_analisis,
+            id_parametro: empleados.id_parametro,
+            fecha_entrega: empleados.fecha_entrega
+
+        }));
+
+                  
            
         },
+
+        
 
         async enviarFormulario() {
             const datosValidos = await this.validarFormularios();
@@ -2320,13 +2435,18 @@ if(this.telefonos_agregar === this.telefonos_agregarOG){
                     id_cotizacion: this.cotizacion,
                     tipo_pago: this.tipo_pago,
                     valor_neto: this.valor_neto,
-                    empleados_agregar: this.empleados_objeto,
+                    empleados_agregar: this.empleados_agregar.map(objeto => ({
+                        rut_empleado: objeto.rut_empleado,
+                        orden_de_analisis: objeto.orden_de_analisis,
+                        id_parametro: objeto.id_parametro,
+                        fecha_entrega: objeto.fecha_entrega,                        
+                    })),
                     empleados_eliminar: this.empleados_eliminar.map(objeto => ({
                         rut_empleado: objeto.rut_empleado,
                         orden_de_analisis: objeto.orden_de_analisis,
                         id_parametro: objeto.id_parametro,
                         fecha_entrega: objeto.fecha_entrega,
-                        estado: objeto.estado
+                        estado: "Sin iniciar"
                     })),                   
                 }
                 console.log("data a enviar", data)
