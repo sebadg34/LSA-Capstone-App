@@ -19,7 +19,8 @@
         <b-col class="col-6 mx-auto">
             <div style="font-weight:bold">
                 Dias totales posibles:
-                <span>{{ this.DiasTotablesAsignables }}</span>
+                <span v-if="this.DiasTotablesAsignables != null">{{ this.DiasTotablesAsignables }}</span>
+                <span v-else>0</span>
             </div>
             <br/>
             <div style="font-weight:bold">
@@ -95,7 +96,7 @@ export default {
     computed: {
         hoy(){
             const todayDate = new Date()
-            todayDate.setDate(todayDate.getDate() + 1)
+            todayDate.setDate(todayDate.getDate())
             return todayDate;
         },
         fechaInicioMasUno(){
@@ -110,7 +111,7 @@ export default {
             var d2 = new Date(this.FechaTermino);
             var diff = d2.getTime() - d1.getTime();
 
-            var daydiff = diff / (1000 * 60 * 60 * 24);
+            var daydiff = (diff / (1000 * 60 * 60 * 24));
             return daydiff;
             }else{
                 return 0;
@@ -212,8 +213,8 @@ export default {
             CargandoArchivos: false,
             busy: false,
             Archivo: null,
-            FechaInicio: "",
-            FechaTermino: "",
+            FechaInicio: null,
+            FechaTermino: null,
             FechaInicioFormatted: "",
             FechaTerminoFormatted: "",
         }

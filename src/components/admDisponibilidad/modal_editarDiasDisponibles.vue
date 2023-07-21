@@ -117,7 +117,7 @@ export default {
                                     appendToast: true
                                 })
                             this.$emit('refrescar');
-                            this.$bvModal.hide('modal-editar-fechas');
+                            this.$bvModal.hide('modal-editar-dias-disponibles');
                         }else{
                             this.$bvToast.toast(`Error al cambiar dias disponibles`, {
                                 title: 'Error',
