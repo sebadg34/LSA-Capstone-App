@@ -111,7 +111,7 @@ export default {
             var d2 = new Date(this.FechaTermino);
             var diff = d2.getTime() - d1.getTime();
 
-            var daydiff = (diff / (1000 * 60 * 60 * 24));
+            var daydiff = (diff / (1000 * 60 * 60 * 24)) +1;
             return daydiff;
             }else{
                 return 0;
@@ -132,7 +132,7 @@ export default {
             var d2 = new Date(this.FechaTermino);
             var diff = d2.getTime() - d1.getTime();
 
-            var daydiff = diff / (1000 * 60 * 60 * 24);
+            var daydiff = (diff / (1000 * 60 * 60 * 24)) +1;
             this.DiasTotablesAsignables = this.DiasDisponibles + daydiff;
             }else{
                 this.DiasTotablesAsignables = this.DiasDisponibles;
