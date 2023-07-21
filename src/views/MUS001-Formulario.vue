@@ -1228,6 +1228,7 @@ export default {
                     rut_empleado: this.recepcionistaRUT,
                     nombre_empresa: this.nombre_empresa,
                     id_ciudad: this.direccion,
+                    id_cotizacion: this.cotizacion,
                     direccion_empresa: this.direccion_empresa,
                     rut_solicitante: this.rut,
                     muestreado_por: this.muestreado,
