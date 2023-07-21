@@ -852,12 +852,7 @@ export default {
             identificacion: [],
             telefonos_agregar: [],
             TodasopcionesParametro: [],
-            submuestra_agregar: [{
-                identificador: '',
-                orden: '',
-                id_parametro: '',
-                id_metodologia: '',
-            }],
+            submuestra_agregar: [],
             userData: '',
             id_ciudad: '',
             dismissSecs: 2,
@@ -1720,10 +1715,7 @@ if(this.telefonos_agregar === this.telefonos_agregarOG){
         agregar() {
             console.log("abirnedo modal")
             
-            this.submuestra_agregar = [{
-                    identificacion: '',
-                    orden: '',
-                }],
+            
                 this.alertaExito = false;
             this.alertaDuplicado = false;
             this.$bvModal.show('modal-cantidad')
@@ -2377,9 +2369,7 @@ if(this.telefonos_agregar === this.telefonos_agregarOG){
 
                   
            
-        },
-
-        
+        },       
 
         async enviarFormulario() {
             const datosValidos = await this.validarFormularios();
@@ -2390,7 +2380,9 @@ if(this.telefonos_agregar === this.telefonos_agregarOG){
                 this.repetido();
                 this.empleadosCoinciden();
                 this.telefonosCoinciden();
-                this.obs();               
+                this.obs();
+                
+                               
                 const matricesFiltradas = this.parametros_agregar.slice(1);
                 //const submuestraFiltrada = this.submuestra_agregar.slice(1);
                 const submuestra_eliminar = this.submuestra_eliminar.slice(1);
