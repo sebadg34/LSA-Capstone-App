@@ -21,40 +21,40 @@
     <b-list-group style="padding:0px">
       <b-list-group-item style="padding:0px; height: 50px;">
         <b-list-group horizontal>
-          <b-list-group-item class="p-3 text-center " style="width:25%;font-weight: bold;">
+          <b-list-group-item class="p-3 text-center " style="width:20%;font-weight: bold;">
             Rut
           </b-list-group-item>
-          <b-list-group-item class="p-3 text-center " style="width:25%;font-weight: bold;">
+          <b-list-group-item class="p-3 text-center " style="width:20%;font-weight: bold;">
             Nombre
           </b-list-group-item>
-          <b-list-group-item class="p-3 text-center " style="width:25%;font-weight: bold;">
+          <b-list-group-item class="p-3 text-center " style="width:20%;font-weight: bold;">
             Parámetro
           </b-list-group-item>
-          <b-list-group-item class="p-3 text-center " style="width:10%;font-weight: bold;">
-            Orden
+          <b-list-group-item class="p-3 text-center " style="width:20%;font-weight: bold;">
+            Fecha entrega
           </b-list-group-item>
-          <b-list-group-item class="p-3 text-center " style="width:15%;font-weight: bold;">
-            Acción
+          <b-list-group-item class="p-3 text-center " style="width:20%;font-weight: bold;">
+            Número de orden
           </b-list-group-item>
         </b-list-group>
       </b-list-group-item>
 
       <b-list-group-item v-for="analista in analistas" :key="analista.rut_empleado" style="padding:0px">
         <b-list-group horizontal>
-          <b-list-group-item class="text-center" style="width:25%">
+          <b-list-group-item class="text-center" style="width:20%">
             {{ analista.rut_empleado }}
           </b-list-group-item>
-          <b-list-group-item class="text-center" style="width:25%">
+          <b-list-group-item class="text-center" style="width:20%">
             {{ analista.nombre + " " + analista.apellido }}
           </b-list-group-item>
-          <b-list-group-item class="text-center" style="width:25%">
-            {{ analista.id_parametro }}
+          <b-list-group-item class="text-center" style="width:20%">
+            {{ analista.nombre_parametro }}
           </b-list-group-item>
-          <b-list-group-item class="text-center" style="width:10%">
+          <b-list-group-item class="text-center" style="width:20%">
+            {{ analista.fecha_entrega }}
+          </b-list-group-item>
+          <b-list-group-item class="text-center" style="width:20%">
             {{ analista.orden_de_analisis }}
-          </b-list-group-item>
-          <b-list-group-item class="text-center" style="width:15%">
-            accion
           </b-list-group-item>
         </b-list-group>
       </b-list-group-item>
@@ -83,7 +83,6 @@
 <script>
 
 import MuestraSupervisorService from '@/helpers/api-services/Muestra-supervisor.service';
-
 import ModalEditarAnalistas from '@/components/admMuestras-supervisor/modal_editarAnalistas-supervisor.vue';
 export default {
   components: {
@@ -104,8 +103,11 @@ export default {
     }
   },
   methods: {
+    
+
     abrirEditarAnalistas(){
       this.analistasData = {
+        RUM: this.RUM,
        analistas: this.analistas
       }
       this.$bvModal.show('modal-editar-analistas-supervisor');

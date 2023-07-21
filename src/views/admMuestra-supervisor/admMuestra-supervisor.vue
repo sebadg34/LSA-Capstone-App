@@ -5,7 +5,7 @@
         <ModalDetalleMuestra :detalles-data="this.detallesData" />
         <ModalCompletarAnalisis :muestra-data="this.muestraData" />
         <ModalAnalistasDesignados :analista-data="this.analistaData" />
-        
+        <ModalIngresarResultados :resultados-data="this.resultadosData" />
         <!-- Inicio tabla -->
 
         <b-row align-h="start" style="padding-top:30px;">
@@ -135,7 +135,7 @@
                                 <b-icon icon="file-earmark-arrow-down" aria-hidden="true" class="mr-2"></b-icon>
                                 Analistas designados
                             </b-dropdown-item>
-                            <b-dropdown-item @click="abrirEditarPersonal(row.item)">
+                            <b-dropdown-item @click="abrirIngresarResultados(row.item)">
                                 <b-icon icon="file-earmark-arrow-down" aria-hidden="true" class="mr-2"></b-icon>
                                 Ingresar resultados análisis
                             </b-dropdown-item>
@@ -174,6 +174,7 @@ import ModalObservaciones from '@/components/admMuestras-supervisor/modal_observ
 import MuestraSupervisorService from '@/helpers/api-services/Muestra-supervisor.service';
 import ModalCompletarAnalisis from '@/components/admMuestras-supervisor/modal_completarAnalisis-supervisor.vue';
 import ModalAnalistasDesignados from '@/components/admMuestras-supervisor/modal_analistasDesignados-supervisor.vue';
+import ModalIngresarResultados from '@/components/admMuestras-supervisor/modal_ingresarResultados-supervisor.vue';
 import ModalDetalleMuestra from '@/components/admMuestras-supervisor/modal_detallesMuestra-supervisor.vue';
 
 export default {
@@ -181,7 +182,8 @@ export default {
         ModalObservaciones,
         ModalDetalleMuestra,
         ModalCompletarAnalisis,
-        ModalAnalistasDesignados
+        ModalAnalistasDesignados,
+        ModalIngresarResultados
     },
     data() {
         return {
@@ -290,7 +292,8 @@ export default {
             detallesData: {},
             observacionesData: {},
             muestraData: {},
-            analistaData: {}
+            analistaData: {},
+            resultadosData: {}
         }
     },
     computed: {
@@ -428,6 +431,11 @@ export default {
             console.log(data)
             this.muestraData = data;
             this.$bvModal.show('modal-completar-analisis-supervisor');
+        },
+        abrirIngresarResultados(data) {
+            console.log(data)
+            this.resultadosData = data;
+            this.$bvModal.show('modal-ingresar-resultados-supervisor');
         },
 
 

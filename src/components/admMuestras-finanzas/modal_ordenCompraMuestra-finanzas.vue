@@ -97,8 +97,10 @@ export default {
         muestraData: Object
     },
     data() {
-        const now = new Date()
+        //const now = new Date()
         const max = new Date()
+        const min = new Date()
+        min.setMonth(min.getMonth() - 6)
         max.setMonth(max.getMonth() + 6);
         return {
             RUM: "",
@@ -106,7 +108,7 @@ export default {
             Archivo: null,
             Fecha: "",
             FechaFormatted: "",
-            minDate: now,
+            minDate: min,
             maxDate: max,
             rut_solicitante: ""
 

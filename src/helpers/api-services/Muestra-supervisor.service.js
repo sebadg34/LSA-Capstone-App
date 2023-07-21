@@ -23,22 +23,7 @@ import {
 };
 
 
-const obtenerParametros = async (RUM) => {
-    try {
-     const instanciaApi = await crearApi();
-     const response = await instanciaApi.get("/muestras-supervisor/parametros/"+RUM);
-             console.log(response);
-         if(response.status == 200){
-             return response;
-         }else{
-             return;
-         }
-         
-     } catch (error) {
-         console.log(error);
-         return;
-     }
- };
+
  const obtenerResultadosAnalisis = async (RUM) => {
     try {
      const instanciaApi = await crearApi();
@@ -89,6 +74,38 @@ const obtenerParametros = async (RUM) => {
      }
  };
 
+ const obtenerEmpleados = async () => {
+    try {
+     const instanciaApi = await crearApi();
+     const response = await instanciaApi.get("/muestras-supervisor/empleados");
+             console.log(response);
+         if(response.status == 200){
+             return response;
+         }else{
+             return;
+         }
+         
+     } catch (error) {
+         console.log(error);
+         return;
+     }
+ };
+ const obtenerParametros = async (RUM) => {
+    try {
+     const instanciaApi = await crearApi();
+     const response = await instanciaApi.get("/muestras-supervisor/parametros/"+ RUM);
+             console.log(response);
+         if(response.status == 200){
+             return response;
+         }else{
+             return;
+         }
+         
+     } catch (error) {
+         console.log(error);
+         return;
+     }
+ };
 
  const obtenerAnalistasDesignados = async (RUM) => {
     try {
@@ -226,6 +243,7 @@ const marcarTareaComoCompletada = async (RUM) => {
  
 export default {
     obtenerMuestras,
+    obtenerEmpleados,
     obtenerObservaciones,
     obtenerDetallesMuestra,
     obtenerParametros,

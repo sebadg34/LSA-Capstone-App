@@ -85,7 +85,7 @@
                     
                     </div>
                     </b-list-group-item>
-                    <b-list-group-item style="padding:10px" class="col-12 d-flex justify-content-between align-items-center">
+                    <b-list-group-item v-if="orden_compra != null && !cargando_orden" style="padding:10px" class="col-12 d-flex justify-content-between align-items-center">
                         <div>{{ orden_compra.nombre_original_documento }}</div>
 
                         <div>
@@ -169,6 +169,7 @@ export default {
                         appendToast: true
                     })
                     console.log(response)
+                    this.obtenerDetalles(this.RUM);
                 }
             })
         },
@@ -192,6 +193,8 @@ export default {
                         this.tipo_pago = detalles.tipo_pago;
                         this.muestreador = detalles.muestreado_por;
                         this.orden_compra = detalles.orden_compra;
+                        this.cargando_orden = false;
+                    }else{
                         this.cargando_orden = false;
                     }
 

@@ -103,15 +103,16 @@ export default {
         userData: Object
     },
     data() {
-        const now = new Date()
         const max = new Date()
+        const min = new Date()
+        min.setMonth(min.getMonth() - 6)
         max.setMonth(max.getMonth() + 6);
         return {
             busy: false,
             Archivo: null,
             Fecha: "",
             FechaFormatted: "",
-            minDate: now,
+            minDate: min,
             maxDate: max,
             Numero_cotizacion: ""
 

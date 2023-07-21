@@ -27,32 +27,21 @@
           <b-col class="col-6">
            
             <b-row style="border-bottom: 1px solid var(--lsa-light-gray); padding:3px">
-              <b-col class="col-5" style="font-weight:bold;"> Nombre solicitante: </b-col>
-              <b-col class="col-7">{{ nombre_solicitante + " " + apellido_solicitante}}</b-col>
+              <b-col class="col-5" style="font-weight:bold;"> Tipo de pago: </b-col>
+              <b-col class="col-7">{{ tipo_pago }}</b-col>
             </b-row>
-
             <b-row style="border-bottom: 1px solid var(--lsa-light-gray); padding:3px">
-              <b-col class="col-5" style="font-weight:bold;"> Empresa: </b-col>
-              <b-col class="col-7">{{ nombre_empresa }}</b-col>
+              <b-col class="col-5" style="font-weight:bold;"> Valor neto: </b-col>
+              <b-col class="col-7">{{ valor_neto }}</b-col>
             </b-row>
-
-            <b-row style="border-bottom: 1px solid var(--lsa-light-gray); padding:3px">
-              <b-col class="col-5" style="font-weight:bold;"> Ciudad empresa: </b-col>
-              <b-col class="col-7">{{ ciudad_empresa }}</b-col>
-            </b-row>
-
-            <b-row style="border-bottom: 1px solid var(--lsa-light-gray); padding:3px">
-              <b-col class="col-5" style="font-weight:bold;"> Dirección empresa: </b-col>
-              <b-col class="col-7">{{ direccion_empresa }}</b-col>
-            </b-row>
-           
-          </b-col>
-
-          <b-col class="col-6">
             <b-row style="border-bottom: 1px solid var(--lsa-light-gray); padding:3px">
               <b-col class="col-5" style="font-weight:bold;"> Número de muestras: </b-col>
               <b-col class="col-7">{{ numero_muestras }}</b-col>
             </b-row>
+          </b-col>
+
+          <b-col class="col-6">
+       
             <b-row style="border-bottom: 1px solid var(--lsa-light-gray); padding:3px">
               <b-col class="col-5" style="font-weight:bold;"> matriz: </b-col>
               <b-col class="col-7">{{ matriz.nombre_matriz }}</b-col>
@@ -167,14 +156,7 @@
               </b-col>
             </b-row>
 
-            <b-row style="border-bottom: 1px solid var(--lsa-light-gray);">
-              <b-col class="col-7" style="font-weight:bold;"> Tipo de pago: </b-col>
-              <b-col class="col-5">{{ tipo_pago }}</b-col>
-            </b-row>
-            <b-row style="border-bottom: 1px solid var(--lsa-light-gray);">
-              <b-col class="col-7" style="font-weight:bold;"> Valor neto: </b-col>
-              <b-col class="col-5">{{ valor_neto }}</b-col>
-            </b-row>
+       
             
       </b-col>
     </div>
@@ -230,11 +212,6 @@ export default {
     return {
 
       RUM: '',
-      nombre_solicitante: '',
-      apellido_solicitante: '',
-      nombre_empresa: '',
-      ciudad_empresa: '',
-      direccion_empresa: '',
       numero_muestras: '',
       numero_empresa: '',
       norma: '',
@@ -272,6 +249,7 @@ export default {
                     return;
                 } else {
                   console.log("cambiando fecha")
+                  
                 }});
   
     },
@@ -291,12 +269,9 @@ export default {
             this.valor_neto = detalles.valor_neto;
             this.tipo_pago = detalles.tipo_pago;
             this.muestreador = detalles.muestreado_por;
-            const solicitante = detalles.informacion_solicitante[0];
+           
 
-            this.nombre_solicitante = solicitante.nombre;
-            this.apellido_solicitante = solicitante.primer_apellido;
-            this.ciudad_empresa = solicitante.nombre_ciudad;
-            this.direccion_empresa = solicitante.direccion;
+          
 
            
 
@@ -361,6 +336,8 @@ export default {
         this.matriz = this.detallesData.matriz.nombre_matriz;
         this.valor_neto = this.detallesData.valor_neto;
         this.fecha_entrega = this.detallesData.fecha_entrega;
+
+        this.fecha_entrega_nueva = new Date(this.detallesData.fecha_entrega);
       
        this.parametros = [];
        this.empleados = [];
