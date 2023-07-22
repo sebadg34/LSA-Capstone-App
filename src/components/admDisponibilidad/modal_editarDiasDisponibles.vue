@@ -20,8 +20,7 @@
             <br />
             <b-row class="d-flex justify-content-between">
 
-                <div>Días de vacaciones:
-                </div>
+                <div style="font-weight:bold">Días de vacaciones:</div>
                 <div>
                     <ValidationProvider name="días vacaciones" rules="required|numeric" v-slot="validationContext">
 
@@ -34,8 +33,7 @@
                 </div>
             </b-row>
             <b-row class="d-flex justify-content-between">
-                <div>Días administrativos:
-                </div>
+                <div style="font-weight:bold">Días administrativos:</div>
                 <div>
                     <ValidationProvider name="días administrativos" rules="required|numeric" v-slot="validationContext">
 
