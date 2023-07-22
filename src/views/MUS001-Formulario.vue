@@ -368,11 +368,25 @@
                                                         <ValidationProvider name="norma" rules="required"
                                                             v-slot="validationContext">
                                                             <b-form-group label="Seleccione una norma">
-                                                                <b-form-select
-                                                                    :state="getValidationState(validationContext)"
-                                                                    v-model="norma" :options="opcionesNorma"
-                                                                    text-field="nombre" value-field="id"
-                                                                    @change="obtenerTablasNormas"></b-form-select>
+                                                                <b-input-group>
+                                                                <b-form-select v-model="norma" 
+                                                                :options="opcionesNorma"
+                                                                placeholder="Seleccione una norma"
+                                                                :state="getValidationState(validationContext)" 
+                                                                text-field="nombre" value-field="id"   
+                                                                @change="obtenerTablasNormas"></b-form-select>
+                                                                                                                        
+                                                            <b-input-group-append>
+                                                                <b-button size="sm" class="lsa-orange reactive-button"
+                                                                    style="aspect-ratio:1; border: none"
+                                                                    @click="PushParametrosMetodologias()">
+                                                                    <b-icon style="color:white"
+                                                                        icon="box-arrow-in-down-left"></b-icon>
+                                                                </b-button>
+                                                            </b-input-group-append>
+                                                            
+                                                            </b-input-group>
+
                                                                 <b-form-invalid-feedback id="norma-live-feedback">{{
                                                                     validationContext.errors[0] }}</b-form-invalid-feedback>
                                                             </b-form-group>
@@ -1131,6 +1145,7 @@ export default {
         },
 
         obtenerTablasNormas() {
+
             const idNormaSeleccionada = this.norma;
             ElementosService.obtenerTablasNorma(idNormaSeleccionada).then((response) => {
                 if (response.data != null && response.status === 200) {
@@ -1143,6 +1158,9 @@ export default {
                     response.data.forEach((tabla) => {
                         const nombreTabla = tabla.nombre_tabla;
                         const nombreParametro = tabla.nombre_parametro;
+                        const idParametro = tabla.id_parametro;
+                        const idMetodologia = tabla.id_metodologia;
+                        const nombreMetodologia = tabla.nombre_metodologia;
 
                         // Verificar si la tabla ya está en el objeto tablasAgrupadas
                         if (!tablasAgrupadas[nombreTabla]) {
@@ -1151,11 +1169,20 @@ export default {
                                 nombre_tabla: nombreTabla,
                                 id_tablas: [],
                                 parametros: [],
+                                id_parametro: [],
+                                id_metodologia: [],
+                                metodologias: []
+
                             };
                         }
                         // Agregar el id_tabla y el nombre_parametro a la tabla correspondiente en tablasAgrupadas
                         tablasAgrupadas[nombreTabla].id_tablas.push(tabla.id_tabla);
                         tablasAgrupadas[nombreTabla].parametros.push(nombreParametro);
+                        tablasAgrupadas[nombreTabla].id_parametro.push(idParametro);
+                        tablasAgrupadas[nombreTabla].id_metodologia.push(idMetodologia);
+                        tablasAgrupadas[nombreTabla].metodologias.push(nombreMetodologia)
+
+
                     });
                     // convertir  en un array
                     const tablasProcesadas = Object.values(tablasAgrupadas);
@@ -1167,8 +1194,50 @@ export default {
 
                     // Asignar tablasProcesadas a this.tablasProcesadas
                     this.tablasProcesadas = tablasProcesadas;
+
+                                    
                 }
             });
+        },
+
+        PushParametrosMetodologias() {
+            
+            function esDuplicado(parametrosYMetodologias, parametro, metodologia) {
+                return parametrosYMetodologias.some((item) => item.parametro === parametro && item.metodologia === metodologia);
+            }
+
+            let parametrosYMetodologias = [];
+
+            // Recorrer cada tabla procesada
+            for (const tabla of this.tablasProcesadas) {
+                // Recuperar los arrays de id_parametro y metodologias de la tabla actual
+                const idParametro = tabla.id_parametro;
+                const parametros = tabla.parametros;
+                const metodologias = tabla.metodologias;
+                const idMetodologias = tabla.id_metodologia;
+                
+                // Agregar los parámetros y metodologías de la tabla actual a la variable principal
+                for (let i = 0; i < parametros.length; i++) {
+                    const parametro = parametros[i];
+                    const metodologia = metodologias[i];
+                    const id_parametro = idParametro[i];
+                    const id_metodologia = idMetodologias[i];
+                    
+                    // Verificar si el parámetro y la metodología ya existen en la variable "parametrosYMetodologias"
+                    if (!esDuplicado(parametrosYMetodologias, parametro, metodologia)) {
+                        parametrosYMetodologias.push({
+                            id_parametro: id_parametro,
+                            parametro: parametro,
+                            metodologia: metodologia,
+                            id_metodologia: id_metodologia
+                        });
+                    }
+                }
+            }
+            console.log("parametros y metodologias de las tablas: ", parametrosYMetodologias);
+            // Asegurarnos de no agregar duplicados a "this.objetosSeleccionados"
+            const objetosNoDuplicados = parametrosYMetodologias.filter((item) => !esDuplicado(this.objetosSeleccionados, item.parametro, item.metodologia));
+            this.objetosSeleccionados.push(...objetosNoDuplicados); 
         },
 
         actualizarParametrosTabla() {
