@@ -45,7 +45,7 @@
                     <ValidationProvider name="fecha" rules="required" v-slot="validationContext">
                         <b-form-datepicker :min="minDate" :max="maxDate" @context="onContext"
                             :date-format-options="{ year: 'numeric', month: '2-digit', day: '2-digit' }"
-                            placeholder="seleccione fecha" :state="getValidationState(validationContext)" v-model="Fecha"
+                            placeholder="Seleccione una fecha." :state="getValidationState(validationContext)" v-model="Fecha"
                             id="datepicker-dateformat2" locale="es"></b-form-datepicker>
                         <b-form-invalid-feedback id="fecha-live-feedback">{{
                             validationContext.errors[0] }}
@@ -59,7 +59,7 @@
                     </div>
                     <ValidationProvider name="archivo" rules="required|size:5000" v-slot="validationContext">
 
-                        <b-form-file placeholder="seleccione archivo" browse-text="Buscar"
+                        <b-form-file placeholder="Seleccione un archivo." browse-text="Buscar"
                             :state="getValidationState(validationContext)" v-model="Archivo" id="file-large"
                             size="md"></b-form-file>
                         <b-form-invalid-feedback id="archivo-live-feedback">
