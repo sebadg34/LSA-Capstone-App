@@ -123,6 +123,8 @@ const cambiarEstadoAdmin = async (data) => {
         return;
     }
 }
+
+
 const login = async (data) => {
     try {
         await crearApi();
@@ -171,6 +173,22 @@ const register = async (data) => {
     }
 }
 
+const sincronizarUsuarios = async () => {
+    try {
+        crearApi();
+        const response = await apiInstance.post('http://127.0.0.1:8000/api/syncUsuarios');
+        console.log(response);
+        if (response.status == 200) {
+            return response;
+        } else {
+            return;
+        }
+
+    } catch (error) {
+        console.log(error);
+        return;
+    }
+}
 
 const logout = async () => {
     try {
@@ -199,7 +217,8 @@ export default {
     obtenerUsuarios,
     cambiarPassword,
     cambiarPasswordAdmin,
-    cambiarEstadoAdmin
+    cambiarEstadoAdmin,
+    sincronizarUsuarios
     
 
 };

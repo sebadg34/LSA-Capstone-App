@@ -29,6 +29,15 @@
                         </b-row>
                     </b-col>
 
+                    <b-col class="col-4">
+                        <b-row>
+                            <b-button @click="sincronizarUsuarios" style="border-radius: 15px; font-weight: bold; font-size: 18px; " class="lsa-light-blue reactive-button">
+
+                              Sincronizar
+                                <b-icon icon="hammer"></b-icon>
+                            </b-button>
+                        </b-row>
+                    </b-col>
                 </b-col>
 
                 <b-col lg="6" class="my-1">
@@ -185,6 +194,20 @@ export default {
             // Trigger pagination to update the number of buttons/pages due to filtering
             this.totalRows = filteredItems.length
             this.currentPage = 1
+        },
+        sincronizarUsuarios(){
+            usuarioService.sincronizarUsuarios().then((response) => {
+                if (response != null) {
+                    if (response.status == 200) {
+                        this.$bvToast.toast(`Sincronización completada.`, {
+                                    toaster: 'b-toaster-top-center',
+                                    solid: true,
+                                    variant: "success",
+                                    appendToast: true
+                                }) 
+                    }
+                }
+            })  
         },
         obtenerRoles() {
             roleService.obtenerRoles().then((response) => {
