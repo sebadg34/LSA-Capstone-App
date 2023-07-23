@@ -6,7 +6,7 @@
             <!-- Emulate built in modal header close button action -->
 
             <b-row class="d-flex justify-content-around">
-                <div class="pl-3">Detalles Empresa</div>
+                <div class="pl-3">Detalles del cliente</div>
 
             </b-row>
 
@@ -18,7 +18,7 @@
         <b-row class="pb-2">
             <b-col class="col-6">
                 <div>
-                  <strong>Nombre:</strong>   <span>{{this.Nombre}}</span>
+                  <strong>Nombre del cliente:</strong>   <span>{{this.Nombre}}</span>
                 </div>
                 <div>
                     <strong> Nombre abreviado:</strong>   <span>{{this.Nombre_abreviado}}</span>
@@ -29,7 +29,7 @@
             </b-col>
             <b-col class="col-6">
                 <div>
-                    <strong>Rut:</strong>  <span>{{this.Rut}}</span>
+                    <strong>RUT:</strong>  <span>{{this.Rut}}</span>
                 </div>
                 <div>
                     <strong>Razón Social:</strong>   <span>{{this.Razon_social}}</span>
@@ -146,7 +146,7 @@ export default {
                     }
 
                 } else {
-                    this.$bvToast.toast(`Error al obtener detalles empresa`, {
+                    this.$bvToast.toast(`Error al obtener los detalles de la empresa.`, {
                         title: 'Error',
                         toaster: 'b-toaster-top-center',
                         solid: true,
@@ -204,7 +204,7 @@ export default {
                         console.log(response)
                         if (response != null) {
                             if (response.status == 200) {
-                                this.$bvToast.toast(`Edición de empresa exitosa`, {
+                                this.$bvToast.toast(`Edición de empresa exitosa.`, {
                                     title: 'Exito',
                                     toaster: 'b-toaster-top-center',
                                     solid: true,
@@ -215,7 +215,7 @@ export default {
                             }
                             this.$bvModal.hide('modal-editar-empresa')
                         } else {
-                            this.$bvToast.toast(`Error al editar empresa`, {
+                            this.$bvToast.toast(`Error al editar empresa.`, {
                                 title: 'Error',
                                 toaster: 'b-toaster-top-center',
                                 solid: true,

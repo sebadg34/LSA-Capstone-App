@@ -180,7 +180,7 @@ export default {
                     disponibilidadService.editarFechas(data).then((response) => {
                         console.log("respuesta axios", response)
                         if (response.request.status == 200) {
-                            this.$bvToast.toast(`Cambio de fechas exitosa`, {
+                            this.$bvToast.toast(`Cambio de fechas exitoso.`, {
                                 title: 'Exito',
                                 toaster: 'b-toaster-top-center',
                                 solid: true,
@@ -190,7 +190,7 @@ export default {
                             this.$emit('refrescar');
                             this.$bvModal.hide('modal-editar-fechas');
                         } else {
-                            this.$bvToast.toast(`Error al cambiar fechas`, {
+                            this.$bvToast.toast(`Error al cambiar las fechas.`, {
                                 title: 'Error',
                                 toaster: 'b-toaster-top-center',
                                 solid: true,

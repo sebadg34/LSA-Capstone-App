@@ -6,7 +6,7 @@
             <!-- Emulate built in modal header close button action -->
 
             <b-row class="d-flex justify-content-around">
-                <div class="pl-3">Agregar Empresa</div>
+                <div class="pl-3">Editar cliente</div>
 
             </b-row>
 
@@ -17,7 +17,7 @@
 
         <b-row class="pb-2">
             <b-col class="col-6">
-                <label for="input-live">Nombre empresa:</label>
+                <label for="input-live">Nombre del cliente:</label>
                 <ValidationProvider name="nombre" rules="required|min:2" v-slot="validationContext">
 
                     <b-form-input size="sm" class="mb-1" v-model="Nombre" :state="getValidationState(validationContext)" aria-describedby="rut-live-feedback" trim></b-form-input>
@@ -44,7 +44,7 @@
             </b-col>
             <b-col class="col-6">
                 <ValidationProvider name="rut" rules="required|rut" v-slot="validationContext">
-                    <label for="input-live">Rut:</label>
+                    <label for="input-live">RUT:</label>
                     <b-form-input size="sm" class="mb-1" id="input-live" :state="getValidationState(validationContext)" v-model="Rut" aria-describedby="input-live-help nombre-live-feedback" placeholder="" trim></b-form-input>
                     <b-form-invalid-feedback id="rut-live-feedback">{{
                         validationContext.errors[0] }}
@@ -116,7 +116,7 @@
             <b-overlay :show="Cargando" rounded opacity="0.6" spinner-small spinner-variant="primary" class="d-inline-block">
 
                 <b-button @click="enviarFormulario()" variant="primary" size="xl" class="float-right reactive-button" style="font-weight:bold">
-                    Crear y Guardar
+                    Guardar cambios
                 </b-button>
             </b-overlay>
         </template>
@@ -189,7 +189,7 @@ export default {
                     }
 
                 } else {
-                    this.$bvToast.toast(`Error al obtener detalles empresa`, {
+                    this.$bvToast.toast(`Error al obtener los detalles de la empresa.`, {
                         title: 'Error',
                         toaster: 'b-toaster-top-center',
                         solid: true,
@@ -259,7 +259,7 @@ export default {
                         this.Cargando = false;
                         if (response != null) {
                             if (response.status == 200) {
-                                this.$bvToast.toast(`Edición de empresa exitosa`, {
+                                this.$bvToast.toast(`Edición de empresa exitosa.`, {
                                     title: 'Exito',
                                     toaster: 'b-toaster-top-center',
                                     solid: true,
@@ -271,7 +271,7 @@ export default {
                             }
                             this.$bvModal.hide('modal-editar-empresa')
                         } else {
-                            this.$bvToast.toast(`Error al editar empresa`, {
+                            this.$bvToast.toast(`Error al editar empresa.`, {
                                 title: 'Error',
                                 toaster: 'b-toaster-top-center',
                                 solid: true,

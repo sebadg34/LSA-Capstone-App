@@ -10,7 +10,7 @@
     <b-row align-h="start" style="padding-top:30px;">
         <b-col class="col-6">
             <div style="font-size:2rem; font-weight: bold; color: var(--lsa-blue)">
-                Sistema administración de solicitantes
+                Sistema de administración de solicitantes
             </div>
         </b-col>
     </b-row>
@@ -19,13 +19,13 @@
 
         <b-col class="col-10">
             <b-row style="padding-top:30px; padding-bottom:10px">
-                <b-col class="col-6">
+                <b-col class="col-4">
 
-                    <b-col class="col-6">
+                    <b-col class="col-8">
 
                         <b-row>
                             <b-button v-b-modal.modal-solicitante style="border-radius: 15px; font-weight: bold; font-size: 18px; " class="lsa-light-blue reactive-button">
-                                Agregar Solicitante
+                                Agregar solicitante
                                 <b-icon icon="person-plus-fill"></b-icon>
                             </b-button>
                         </b-row>
@@ -33,7 +33,7 @@
                     </b-col>
 
                 </b-col>
-                <b-col class="col-6">
+                <b-col class="col-8">
                     <b-row align-h="end">
 
                         <b-form-group>
@@ -42,10 +42,10 @@
                                 <b-input-group-prepend is-text>
                                     <b-icon icon="search"></b-icon>
                                 </b-input-group-prepend>
-                                <b-form-input placeholder="Nombre solicitante..." id="input-filtro-nombre" v-model="nombreFiltro">
+                                <b-form-input placeholder="Nombre del solicitante..." id="input-filtro-nombre" v-model="nombreFiltro">
                                 </b-form-input>
-                                <b-form-input placeholder="Rut" id="input-filtro-rut" v-model="rutFiltro" trim></b-form-input>
-                                <b-form-input placeholder="Nombre empresa..." id="input-filtro-empresa" v-model="empresaFiltro" trim></b-form-input>
+                                <b-form-input placeholder="RUT del solicitante..." id="input-filtro-rut" v-model="rutFiltro" trim></b-form-input>
+                                <b-form-input placeholder="Nombre de empresa..." id="input-filtro-empresa" v-model="empresaFiltro" trim></b-form-input>
 
                                 <b-button-group style="margin-left:10px; margin-right:20px">
                                     <b-button class="reactive-button lsa-blue" @click="filtrarTabla">Filtrar</b-button>
@@ -89,7 +89,7 @@
                 <template #empty>
                     <div class="text-center lsa-light-blue-text my-2 row">
                         <div class="col">
-                            <div style=" color:gray"> No hay solicitante registrado para mostrar</div>
+                            <div style=" color:gray"> No hay solicitantes registrados para mostrar.</div>
                         </div>
 
                     </div>
@@ -99,7 +99,7 @@
                     <div class="text-center lsa-light-blue-text my-2 row">
                         <div class="col">
                             <b-icon icon="search" animation="fade" variant="secondary"></b-icon>
-                            <div style="font-weight:bold; color:gray"> No hay resultados que coincidan con su búsqueda</div>
+                            <div style="font-weight:bold; color:gray"> No hay resultados que coincidan con su búsqueda.</div>
                         </div>
 
                     </div>
@@ -134,7 +134,7 @@
                         </div>
 
                     </b-list-group>
-                    <div v-else>particular</div>
+                    <div v-else>Particular</div>
                 </template>
 
                 <!--
@@ -240,11 +240,11 @@ export default {
             modalCotizacionData: {},
             campos_tabla: [{
                     key: 'empresas',
-                    label: 'Empresas',
+                    label: 'Empresa(s)',
                     sortable: true
                 }, {
                     key: 'rut_solicitante',
-                    label: 'Rut'
+                    label: 'RUT'
                 }, {
                     key: 'nombre',
                     label: 'Nombre',
@@ -263,7 +263,7 @@ export default {
 
                 {
                     key: 'tipo_cliente',
-                    label: 'Tipo cliente',
+                    label: 'Tipo de cliente',
                     sortable: true
                 }, {
                     key: 'estado',

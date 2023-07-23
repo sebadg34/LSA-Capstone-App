@@ -192,7 +192,7 @@ export default {
             console.log('data a enviar', data)
             personalService.eliminarDocumento(data).then((response) => {
                 if (response.status == 200) {
-                    this.$bvToast.toast(`Archivo borrado exitosamente`, {
+                    this.$bvToast.toast(`Archivo eliminado exitosamente.`, {
                         title: 'Exito',
                         toaster: 'b-toaster-top-center',
                         solid: true,

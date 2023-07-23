@@ -147,7 +147,7 @@
 
 
                 <b-col class="col-5">
-                    <label for="area-live">Area:</label>
+                    <label for="area-live">Área:</label>
                     <b-form-select size="md" aria-describedby="area-live-feedback" class="mb-1" v-model="AreaSeleccionada"
                         :options="Areas"></b-form-select>
                 </b-col>
@@ -167,10 +167,10 @@
 
                 <b-col>
                     <b-alert variant="danger" :show="alertaDuplicado" dismissible @dismissed="alertaDuplicado = false">
-                        El area y tipo de análisis ya fueron agregados.
+                        El área y tipo de análisis ya fueron agregados.
                     </b-alert>
                     <b-alert variant="danger" :show="alertaVacio" dismissible @dismissed="alertaVacio = false">
-                        Se requiere de area y tipo de análisis para registrar personal.
+                        Se requiere de una área y tipo de análisis para registrar personal.
                     </b-alert>
                 </b-col>
                 <b-col class="col-12">
@@ -205,7 +205,7 @@
                                 placeholder="Seleccione archivo(s) a subir." browse-text="Buscar" v-on:change="onChange"
                                 :multiple="true" v-model="Archivos" ref="file-input"></b-form-file>
                             <b-form-invalid-feedback id="archivo-live-feedback">
-                                Los archivos deben ser menor a 10mb.
+                                Los archivos deben ser menores a 10mb.
                             </b-form-invalid-feedback>
 
                         </div>
@@ -535,7 +535,7 @@ export default {
 
                         if (response != null) {
                             if (response.status == 200) {
-                                this.$bvToast.toast(`Creación de personal exitosa`, {
+                                this.$bvToast.toast(`Creación de personal exitosa.`, {
                                     title: 'Éxito',
                                     toaster: 'b-toaster-top-center',
                                     solid: true,
@@ -548,7 +548,7 @@ export default {
                             this.reiniciarDatos();
                             this.$refs.form.reset();
                         } else {
-                            this.$bvToast.toast(`Error al crear personal`, {
+                            this.$bvToast.toast(`Error al crear personal.`, {
                                 title: 'Error',
                                 toaster: 'b-toaster-top-center',
                                 solid: true,

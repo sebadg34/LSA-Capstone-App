@@ -88,7 +88,7 @@ this.Confirming = false;
                 console.log(response)
                 if (response != null) {
                     if (response.status == 200) {
-                        this.$bvToast.toast(`El estado de ` + this.Nombre + " "+ this.Apellido + " ha sido actualizado", {
+                        this.$bvToast.toast(`El estado de ` + this.Nombre + " "+ this.Apellido + " ha sido actualizado.", {
                             title: 'Exito',
                             toaster: 'b-toaster-top-center',
                             solid: true,
@@ -99,7 +99,7 @@ this.Confirming = false;
                     }
                     this.$bvModal.hide('modal-estado-personal')
                 } else {
-                    this.$bvToast.toast(`Error al cambiar estado`, {
+                    this.$bvToast.toast(`Error al cambiar estado.`, {
                         title: 'Error',
                         toaster: 'b-toaster-top-center',
                         solid: true,

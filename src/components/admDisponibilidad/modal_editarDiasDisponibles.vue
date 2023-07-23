@@ -107,7 +107,7 @@ export default {
                     disponibilidadService.editarDiasDisponibles(data).then((response) => {
                         console.log(response)
                         if(response.status == 200){
-                            this.$bvToast.toast(`Cambio de dias disponibles realizado con exito`, {
+                            this.$bvToast.toast(`Cambio de días disponibles realizado con éxito.`, {
                                     title: 'Exito',
                                     toaster: 'b-toaster-top-center',
                                     solid: true,
@@ -117,7 +117,7 @@ export default {
                             this.$emit('refrescar');
                             this.$bvModal.hide('modal-editar-dias-disponibles');
                         }else{
-                            this.$bvToast.toast(`Error al cambiar dias disponibles`, {
+                            this.$bvToast.toast(`Error al cambiar los días disponibles.`, {
                                 title: 'Error',
                                 toaster: 'b-toaster-top-center',
                                 solid: true,

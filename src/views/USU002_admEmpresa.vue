@@ -24,7 +24,7 @@
 
                         <b-row>
                             <b-button v-b-modal.modal-empresa style="border-radius: 15px; font-weight: bold; font-size: 18px; " class="lsa-light-blue reactive-button">
-                                Agregar Cliente
+                                Agregar cliente
                                 <b-icon icon="person-plus-fill"></b-icon>
                             </b-button>
                         </b-row>
@@ -41,9 +41,9 @@
                                 <b-input-group-prepend is-text>
                                     <b-icon icon="search"></b-icon>
                                 </b-input-group-prepend>
-                                <b-form-input placeholder="Nombre empresa..." id="nombre-filtro" v-model="nombreFiltro">
+                                <b-form-input placeholder="Nombre del cliente..." id="nombre-filtro" v-model="nombreFiltro">
                                 </b-form-input>
-                                <b-form-input placeholder="Rut empresa..." id="rut-filtro" v-model="rutFiltro" trim></b-form-input>
+                                <b-form-input placeholder="RUT del cliente..." id="rut-filtro" v-model="rutFiltro" trim></b-form-input>
 
                                 <b-button-group style="margin-left:10px; margin-right:20px">
                                     <b-button class="reactive-button lsa-blue" @click="filtrarTabla">Filtrar</b-button>
@@ -64,7 +64,7 @@
                     <div class="text-center lsa-light-blue-text my-2 row">
                         <div class="col">
 
-                            <div style=" color:gray"> No hay cliente registrado para mostrar</div>
+                            <div style=" color:gray"> No hay cliente registrado para mostrar.</div>
                         </div>
                     </div>
                 </template>
@@ -160,7 +160,7 @@ export default {
             modalEstadoData: {},
             campos_tabla: [{
                 key: 'rut_empresa',
-                label: 'Rut'
+                label: 'RUT'
             }, {
                 key: 'nombre_abreviado',
                 label: 'Nombre abreviado',

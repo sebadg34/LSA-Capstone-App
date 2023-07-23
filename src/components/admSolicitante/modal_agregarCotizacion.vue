@@ -6,7 +6,7 @@
                 <!-- Emulate built in modal header close button action -->
 
                 <b-row class="d-flex justify-content-around">
-                    <div class="pl-3">Agregar Cotización</div>
+                    <div class="pl-3">Agregar cotización</div>
 
                 </b-row>
 
@@ -29,7 +29,7 @@
             <b-row class="d-flex justify-content-center">
                 <b-col class="col-6">
                     <ValidationProvider name="número cotización" rules="required|numeric" v-slot="validationContext">
-                        <label for="input-live">Nro. cotización:</label>
+                        <label for="input-live">Número de cotización:</label>
                         <b-form-input size="sm" class="mb-1" id="input-live" :state="getValidationState(validationContext)"
                             v-model="Numero_cotizacion" aria-describedby="input-live-help numero-live-feedback"
                             placeholder="" trim></b-form-input>
@@ -41,7 +41,7 @@
                 <b-col class="col-6">
 
                     
-                    <label for="input-live">Fecha emisión:</label>
+                    <label for="input-live">Fecha de emisión:</label>
                     <ValidationProvider name="fecha" rules="required" v-slot="validationContext">
                         <b-form-datepicker :min="minDate" :max="maxDate" @context="onContext"
                             :date-format-options="{ year: 'numeric', month: '2-digit', day: '2-digit' }"
@@ -63,7 +63,7 @@
                             :state="getValidationState(validationContext)" v-model="Archivo" id="file-large"
                             size="md"></b-form-file>
                         <b-form-invalid-feedback id="archivo-live-feedback">
-                            El archivo no puede pesar mas de 5MB
+                            El archivo no puede pesar mas de 5MB.
                         </b-form-invalid-feedback>
                         <div class="mt-3">Archivo seleccionado:
                             <b-list-group-item v-if="Archivo" style="padding:10px; font-weight: bold;"
@@ -159,7 +159,7 @@ export default {
                         this.busy = false;
                         console.log(response);
                         if (response.request.status == 200) {
-                            this.$bvToast.toast(`Guardado de cotización exitoso`, {
+                            this.$bvToast.toast(`Guardado de cotización exitoso.`, {
                                 title: 'Exito',
                                 toaster: 'b-toaster-top-center',
                                 solid: true,

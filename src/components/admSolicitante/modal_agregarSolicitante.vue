@@ -6,7 +6,7 @@
             <!-- Emulate built in modal header close button action -->
 
             <b-row class="d-flex justify-content-around">
-                <div class="pl-3">Agregar Solicitante</div>
+                <div class="pl-3">Agregar solicitante</div>
 
             </b-row>
 
@@ -47,9 +47,9 @@
 
             </b-col>
             <b-col class="col-4">
-                <label for="input-live">Rut:</label>
+                <label for="input-live">RUT:</label>
 
-                <ValidationProvider name="rut" rules="required|rut|rutSinPuntoGuion" v-slot="validationContext">
+                <ValidationProvider name="RUT" rules="required|rut|rutSinPuntoGuion" v-slot="validationContext">
                     <!--Mostrar estado cargando solo si se esta revisando rut y no hay errores de validacion (rut valido)-->
                     <b-overlay :show="Revisando_rut && validationContext.errors[0] == null" rounded opacity="0.6" spinner-small spinner-variant="primary">
                         <b-form-input @blur.native="revisarRutSolicitante" size="sm" id="rut-input" class="mb-1" v-model="Rut" :state="getValidationState(validationContext)" aria-describedby="rut-live-feedback"></b-form-input>
@@ -61,7 +61,7 @@
                     <b-alert fade style="margin:2px; padding:2px;" class="text-center" :show="Rut_ocupado" variant="warning">El rut ya está registrado en el sistema</b-alert>
                 </ValidationProvider>
                 <label for="input-live">Teléfono móvil:</label>
-                <ValidationProvider name="Nro. movil" rules="required|numeric|min:8|max:15" v-slot="validationContext">
+                <ValidationProvider name="teléfono movil" rules="required|numeric|min:8|max:15" v-slot="validationContext">
                     <b-input-group size="sm" class="mb-1">
 
                         <b-input-group-prepend is-text>
@@ -75,7 +75,7 @@
 
                 </ValidationProvider>
                 <label for="input-live">Correo electrónico:</label>
-                <ValidationProvider name="correo" rules="required|email" v-slot="validationContext">
+                <ValidationProvider name="correo electrónico" rules="required|email" v-slot="validationContext">
 
                     <b-overlay :show="Revisando_correo && validationContext.errors[0] == null" rounded opacity="0.6" spinner-small spinner-variant="primary">
                         <b-form-input @blur.native="revisarCorreoSolicitante" size="sm" class="mb-1" id="input-live" :state="getValidationState(validationContext)" v-model="Correo" aria-describedby="input-live-help correo-live-feedback" placeholder="" trim></b-form-input>
@@ -87,8 +87,8 @@
                 </ValidationProvider>
             </b-col>
             <b-col class="col-4">
-                <label for="input-live">Fono proveedores:</label>
-                <ValidationProvider name="fono proveedores" rules="required|numeric|min:8|max:15" v-slot="validationContext">
+                <label for="input-live">Fono de proveedores:</label>
+                <ValidationProvider name="fono de proveedores" rules="required|numeric|min:8|max:15" v-slot="validationContext">
                     <b-input-group size="sm" class="mb-1">
                         <b-input-group-prepend is-text>
                             +56 9
@@ -101,7 +101,7 @@
                     </b-input-group>
                 </ValidationProvider>
                 <label for="input-live">Dir. pago proveedores:</label>
-                <ValidationProvider name="dirección pago proveedores" rules="required" v-slot="validationContext">
+                <ValidationProvider name="dirección de pago de proveedores" rules="required" v-slot="validationContext">
 
                     <b-form-input size="sm" id="dirpago-input" class="mb-1" v-model="Contacto_proveedores" :state="getValidationState(validationContext)" aria-describedby="primerapellido-live-feedback"></b-form-input>
 
@@ -110,7 +110,7 @@
                     </b-form-invalid-feedback>
                 </ValidationProvider>
                 <label for="input-live">Dir. envío factura:</label>
-                <ValidationProvider name="dirección envío factura" rules="required" v-slot="validationContext">
+                <ValidationProvider name="dirección de envío de factura" rules="required" v-slot="validationContext">
 
                     <b-form-input size="sm" id="dirfactura-input" class="mb-1" v-model="Direccion_factura" :state="getValidationState(validationContext)" aria-describedby="segundoapellido-live-feedback"></b-form-input>
 
@@ -132,7 +132,7 @@
             </b-col>
             <b-col class="col-4">
 
-                <label for="input-live">Ciudad empresa:</label>
+                <label for="input-live">Ciudad:</label>
                 <b-form-select :disabled="EmpresaSeleccionada && !esParticular ? false : true" aria-describedby="cargo-live-feedback" class="mb-1" v-model="CiudadSeleccionada" text-field="nombre_ciudad" :options="Ciudades">
 
                 </b-form-select>
@@ -147,7 +147,7 @@
 
             <b-col class="col-3">
                 <ValidationProvider name="cargo" rules="required" v-slot="validationContext">
-                    <label for="input-live">Tipo cliente:</label>
+                    <label for="input-live">Tipo de cliente:</label>
                     <b-form-select @change="tipoCambiado" aria-describedby="cargo-live-feedback" :state="getValidationState(validationContext)" class="mb-1" v-model="Tipo" :options="tipos"></b-form-select>
                     <b-form-invalid-feedback id="cargo-live-feedback">{{
                         validationContext.errors[0] }}
@@ -157,7 +157,7 @@
         </b-row>
         <hr />
         <b-alert variant="danger" :show="alertaDuplicado" dismissible @dismissed="alertaDuplicado = false">
-            La empresa y ciudad de esta ya están seleccionadas.
+            La empresa y ciudad ingresadas ya están seleccionadas.
         </b-alert>
         <div>
             <b-row v-if="Empresas_seleccionadas.length > 0" class="mt-3">
@@ -177,7 +177,7 @@
         <template #modal-footer>
 
             <b-button @click="enviarFormulario()" variant="primary" size="xl" class="float-right reactive-button" style="font-weight:bold">
-                Crear y Guardar
+                Crear y guardar
             </b-button>
 
         </template>
@@ -450,7 +450,7 @@ export default {
                         console.log(response)
                         if (response != null) {
                             if (response.status == 200) {
-                                this.$bvToast.toast(`Creación de personal exitosa`, {
+                                this.$bvToast.toast(`Creación de solicitante exitosa.`, {
                                     title: 'Exito',
                                     toaster: 'b-toaster-top-center',
                                     solid: true,
@@ -463,7 +463,7 @@ export default {
                             this.reiniciarDatos();
                             this.$refs.form.reset();
                         } else {
-                            this.$bvToast.toast(`Error al crear personal`, {
+                            this.$bvToast.toast(`Error al crear el solicitante.`, {
                                 title: 'Error',
                                 toaster: 'b-toaster-top-center',
                                 solid: true,
