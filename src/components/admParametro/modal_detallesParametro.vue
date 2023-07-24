@@ -13,13 +13,13 @@
 
     <div>
       
-      <p v-if="this.Nombre == null">No existen detalles del parámetro</p>
+      <p v-if="this.Nombre == null">No existen detalles del parámetro.</p>
       <ul v-else>          
       </ul>
       <b-row>
         <b-col class="col-12">
           <div>
-         <span style="font-weight:bold; padding-right:20px"> Nombre: </span>   <span>{{nombreParametro}}</span>
+         <span style="font-weight:bold; padding-right:20px"> Nombre del parámetro: </span>   <span>{{nombreParametro}}</span>
           </div>
           <hr/>
           <div>

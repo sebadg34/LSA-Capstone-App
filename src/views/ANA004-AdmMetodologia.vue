@@ -3,7 +3,7 @@
     <b-row style="padding-top:30px;">
         <b-col class="col-6">
             <div style="font-size:2rem; font-weight: bold; color: var(--lsa-blue)">
-                Administración de Metodologías
+                Administración de metodologías
             </div>
         </b-col>
     </b-row>
@@ -16,7 +16,7 @@
         <div class="col-4">
             <b-row>
                 <b-button v-b-modal.modal-Agregar-Metodologia style="border-radius: 15px; font-weight: bold; font-size: 18px; " class="lsa-light-blue reactive-button">
-                    Agregar Metodología
+                    Agregar metodología
                     <b-icon icon="journals"></b-icon>
                 </b-button>
             </b-row>
@@ -53,7 +53,7 @@
                     <div class="text-center lsa-light-blue-text my-2 row">
                         <div class="col">
 
-                            <div style=" color:gray"> No hay metodologías registradas para mostrar</div>
+                            <div style=" color:gray"> No hay metodologías registradas para mostrar.</div>
                         </div>
 
                     </div>
@@ -72,7 +72,7 @@
                             <b-icon style="height: 80%; width: 80%; align-items: center;" icon="three-dots" variant="dark" aria-hidden="true"></b-icon>
                         </template>
                         <b-dropdown-item v-if="row" @click="DetallesMetodología(row.item)">
-                            <b-icon icon="file-earmark-medical" aria-hidden="true" class="mr-2"></b-icon>Ver Detalles
+                            <b-icon icon="file-earmark-medical" aria-hidden="true" class="mr-2"></b-icon>Ver detalles
                         </b-dropdown-item>
                         <b-dropdown-item v-if="row" @click="EditarMetodología(row.item)">
                             <b-icon icon="pencil-square" aria-hidden="true" class="mr-2"></b-icon>Editar
@@ -120,7 +120,7 @@ export default {
 
             fields: [{
                     key: 'nombre_metodologia',
-                    label: 'Nombre',
+                    label: 'Nombre de metodología',
                     thClass: 'text-center',
                     tdClass: 'text-center',
                     sortable: true

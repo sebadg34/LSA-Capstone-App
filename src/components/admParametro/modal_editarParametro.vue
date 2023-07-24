@@ -15,24 +15,24 @@
         <!-- ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// -->
         <ValidationProvider name="nombre del parámetro" rules="required" v-slot="validationContext">
             <label for="input-live">Nombre del parámetro:</label>
-            <b-form-input id="input-live" v-model="Nombre" :state="getValidationState(validationContext)" placeholder="Ingrese nombre del parámetro"></b-form-input>
+            <b-form-input id="input-live" v-model="Nombre" :state="getValidationState(validationContext)" placeholder="Ingrese el nombre del parámetro."></b-form-input>
             <b-form-invalid-feedback>{{ validationContext.errors[0] }}</b-form-invalid-feedback>
         </ValidationProvider>
         <br />
         <b-row>
             <b-col>
-                <b-form-group label="Asignar una metodología">
-                    <b-form-select v-model="metodologiaAsignada" :options="opcionesMetodologia" placeholder="Seleccione un Analista" @change="agregarMetodologiaSeleccionada"></b-form-select>
+                <b-form-group label="Asignar una(s) metodología(s):">
+                    <b-form-select v-model="metodologiaAsignada" :options="opcionesMetodologia" placeholder="Seleccione una(s) metodología(s)." @change="agregarMetodologiaSeleccionada"></b-form-select>
                 </b-form-group>
             </b-col>
         </b-row>
         <b-alert variant="danger" :show="sinMetodologia" dismissible @dismissed="sinMetodologia = false">
-            Falta metodología asignada para crear el parámetro.
+            Falta metodología asignada para editar el parámetro.
         </b-alert>
         <hr />
         <b-row v-if="metodologiaSeleccionada.length > 0" class="mt-3">
             <b-col>
-                <b-form-group label="Metodologías Seleccionadas">
+                <b-form-group label="Metodología(s) seleccionada(s)">
                     <div v-for="(metodologia, index) in metodologiaSeleccionada" :key="index" class="d-flex align-items-center analista-item">
                         <b-input readonly :value="metodologia.nombre_metodologia"></b-input>
                         <b-button variant="danger" @click="eliminarMetodologiaSeleccionada(index)" class="ml-2">
@@ -51,7 +51,7 @@
 
         <template #modal-footer>
             <b-button @click="ActualizarParametro()" variant="primary" size="xl" class="reactive-button" style="font-weight:bold">
-                Editar y guardar parámetro
+                Guardar cambios
             </b-button>
         </template>
     </b-modal>

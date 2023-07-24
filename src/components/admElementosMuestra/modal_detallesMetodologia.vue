@@ -13,17 +13,17 @@
     </template>
 
     <div>
-        <p v-if="this.Nombre == null">No existen detalles de la metodología o la metodología no existe</p>
+        <p v-if="this.Nombre == null">No existen detalles de la metodología o la metodología no existe.</p>
         <ul v-else>
         </ul>
         <b-row>
             <b-col class="col-12">
                 <div>
-                    <span style="font-weight:bold; padding-right:20px">Nombre metodología: </span> <span>{{ nombreMetodologia }}</span>
+                    <span style="font-weight:bold; padding-right:20px">Nombre de la metodología: </span> <span>{{ nombreMetodologia }}</span>
                 </div>
                 <hr />
                 <div>
-                    <div style="font-weight:bold; padding-right:20px">Descripción:</div>
+                    <div style="font-weight:bold; padding-right:20px">Descripción de la metodología:</div>
 
                     <span>{{detalleMetodologia}}</span>
                 </div>
