@@ -1,5 +1,5 @@
 <template>
-  <b-modal id="modal-detalle-elementos" ref="modal" :title="`Detalles Elementos`" size="lg">
+  <b-modal id="modal-detalle-elementos" ref="modal" :title="`Detalles Elementos`" size="xl">
     <template #modal-header="{ close }">
       <b-row class="d-flex justify-content-around">
         <div class="pl-3">Detalles del Elemento</div>
@@ -13,12 +13,38 @@
 
     <b-list-group>
       <b-list-group-item>
-      <strong>Matriz: </strong>  {{ " "+ nombre_matriz }}
+        <strong>Matriz: </strong> {{ " " + nombre_matriz }}
       </b-list-group-item>
-      <b-list-group-item class="p-0">
-        <b-list-group>
-          <b-list-group-item v-for="parametro in parametros" :key="parametro.id_parametro">
+      <b-list-group-item class="p-0" v-for="parametro in parametros" :key="parametro.id_parametro">
+        <b-list-group horizontal>
+          <b-list-group-item style="width:40%">
+
             {{ parametro.nombre_parametro }}
+          </b-list-group-item>
+          <b-list-group-item class="p-0" style="width:60%">
+
+            <b-list-group>
+              <b-list-group-item style="font-weight: bold;">
+                Metodologías
+              </b-list-group-item>
+              <b-list-group-item v-for="metodo in parametro.metodologias"
+                :key="metodo.id_metodologia + parametro.id_parametro" class="d-flex justify-content-between">
+              
+                <span>  {{ metodo.nombre_metodologia }}</span>
+
+                <b-popover placement="lefttop" :target="'button-' + metodo.id_metodologia + '-' + metodo.id_parametro"
+                  title="Descripción metodología" triggers="focus">
+
+                  <template v-if="metodo.detalle_metodologia != null">{{ metodo.detalle_metodologia }}</template>
+                  <template v-else>
+                    <div>La metodología no cuenta con una descripción actualmente.</div>
+                  </template>
+                </b-popover>
+                <b-button class="boton-ojo-metodo" :id="'button-' + metodo.id_metodologia + '-' + metodo.id_parametro">
+                  <b-icon scale="0.9" icon="eye-fill" style="color:gray"></b-icon>
+                </b-button>
+              </b-list-group-item>
+            </b-list-group>
           </b-list-group-item>
         </b-list-group>
       </b-list-group-item>
@@ -78,23 +104,24 @@ export default {
 
           for (var i = 0; i < detalles.parametros.length; i++) {
             const existeParametro = this.parametros.find(param => param.id_parametro == detalles.parametros[i].id_parametro);
-            if(existeParametro == null){
+            if (existeParametro == null) {
               const parametroNuevo = {
                 id_parametro: detalles.parametros[i].id_parametro,
-              nombre_parametro: detalles.parametros[i].nombre_parametro,
-              metodologias: []
+                nombre_parametro: detalles.parametros[i].nombre_parametro,
+                metodologias: []
               }
 
-            detalles.parametros[i].metodologias.forEach(metodo => {
-              parametroNuevo.metodologias.push({
-                id_metodologia: metodo.id_metodologia,
-                nombre_metodologia: metodo.nombre_metodologia
-              })
-            });
-            this.parametros.push(parametroNuevo)
+              detalles.parametros[i].metodologias.forEach(metodo => {
+                parametroNuevo.metodologias.push({
+                  id_metodologia: metodo.id_metodologia,
+                  nombre_metodologia: metodo.nombre_metodologia,
+                  detalle_metodologia: metodo.detalle_metodologia
+                })
+              });
+              this.parametros.push(parametroNuevo)
 
             }
-           
+
           }
 
 
