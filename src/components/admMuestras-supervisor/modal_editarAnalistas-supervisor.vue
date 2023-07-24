@@ -1,95 +1,126 @@
 <template>
-<validation-observer ref="form">
-    <b-modal id="modal-editar-analistas-supervisor" :title="`Observaciones de la muestra ${RUM}`" size="xl" @hidden="onHidden">
+    <validation-observer ref="form">
+        <b-modal centered id="modal-editar-analistas-supervisor" :title="`Observaciones de la muestra ${RUM}`" size="xl"
+            @hidden="onHidden">
 
-        <template #modal-header="{ close }">
-            <!-- Emulate built in modal header close button action -->
-            <b-row class="d-flex justify-content-around">
-                <div class="pl-3">Editar analistas</div>
-            </b-row>
+            <template #modal-header="{ close }">
+                <!-- Emulate built in modal header close button action -->
+                <b-row class="d-flex justify-content-around">
+                    <div class="pl-3">Editar analistas</div>
+                </b-row>
 
-            <button type="button" class="close" aria-label="Close" @click="close()">
-                <span aria-hidden="true" style="color:white">&times;</span>
-            </button>
-        </template>
+                <button type="button" class="close" aria-label="Close" @click="close()">
+                    <span aria-hidden="true" style="color:white">&times;</span>
+                </button>
+            </template>
 
-        <b-list-group-item v-if="loading" class="d-flex align-items-center justify-content-center lsa-orange-text" style="height:100px">
-            <div>
-                <b-spinner class="align-middle"></b-spinner>
-                <strong> Cargando...</strong>
+            <b-list-group-item v-if="loading" class="d-flex align-items-center justify-content-center lsa-orange-text"
+                style="height:100px">
+                <div>
+                    <b-spinner class="align-middle"></b-spinner>
+                    <strong> Cargando...</strong>
+                </div>
+            </b-list-group-item>
+            <div class="ml-4">
+                <b-row style="font-weight: bold;" class="ml-4">
+                    <b-col>
+                        Analista
+                    </b-col>
+                    <b-col>
+                        Parámetro
+                    </b-col>
+                    <b-col>
+                        Fecha entrega
+                    </b-col>
+                    <b-col>
+                        N° orden
+                    </b-col>
+                    <b-col>
+                        Acción
+                    </b-col>
+                </b-row>
+                <hr />
+                <div class="form-group ml-4" v-for="(input, k) in analistas" :key="k">
+
+                    <b-row padding="0">
+                        <b-col>
+                            <ValidationProvider :name="'analista ' + (k + 1)" rules="required" v-slot="validationContext">
+
+                                <b-form-select :state="getValidationState(validationContext)"
+                                    :placeholder="'Analista ' + (parseInt(k) + 1)" aria-describedby="cargo-live-feedback"
+                                    class="mb-1" text-field="nombre_analista" v-model="input.analista"
+                                    :options="analistasOpciones"></b-form-select>
+
+                                <b-form-invalid-feedback id="analista-live-feedback">{{
+                                    validationContext.errors[0] }}
+                                </b-form-invalid-feedback>
+                            </ValidationProvider>
+                        </b-col>
+                        <b-col>
+                            <ValidationProvider :name="'parametro ' + (k + 1)" rules="required" v-slot="validationContext">
+
+                                <b-form-select :state="getValidationState(validationContext)"
+                                    :placeholder="'Parametro ' + (parseInt(k) + 1)" aria-describedby="cargo-live-feedback"
+                                    class="mb-1" text-field="nombre_parametro" v-model="input.parametro"
+                                    :options="parametrosOpciones"></b-form-select>
+
+                                <b-form-invalid-feedback id="parametro-live-feedback">{{
+                                    validationContext.errors[0] }}
+                                </b-form-invalid-feedback>
+                            </ValidationProvider>
+                        </b-col>
+                        <b-col>
+                            <ValidationProvider :name="'fecha ' + (k + 1)" rules="required" v-slot="validationContext">
+                                <b-form-datepicker
+                                    :date-format-options="{ year: 'numeric', month: '2-digit', day: '2-digit' }"
+                                    placeholder="seleccione fecha" :state="getValidationState(validationContext)"
+                                    v-model="input.fecha_entrega" :id="'datepicker-' + + (parseInt(k) + 1)"
+                                    locale="es"></b-form-datepicker>
+
+                                <b-form-invalid-feedback id="parametro-live-feedback">{{
+                                    validationContext.errors[0] }}
+                                </b-form-invalid-feedback>
+                            </ValidationProvider>
+                        </b-col>
+                        <b-col>
+                            <ValidationProvider :name="'orden ' + (k + 1)" rules="required" v-slot="validationContext">
+                                <b-form-input :state="getValidationState(validationContext)" :placeholder="'Orden '"
+                                    style="height:30px" type="text" class="form-control" v-model="input.orden_analista" />
+                                <b-form-invalid-feedback id="ciudad-live-feedback">{{
+                                    validationContext.errors[0] }}
+                                </b-form-invalid-feedback>
+                            </ValidationProvider>
+                        </b-col>
+                        <b-col>
+                            <b-button-group style="height: 40px;">
+                                <b-button variant="danger" @click="remove(k)" v-if="k || (!k && analistas.length > 1)"
+                                    style="padding:2px; aspect-ratio: 1 / 1; height: 100%;">
+                                    <b-icon icon="trash-fill"></b-icon>
+                                </b-button>
+                                <b-button variant="success" @click="add(k)" v-if="k == analistas.length - 1"
+                                    style="padding:1px; aspect-ratio: 1 / 1; height: 100%;">
+                                    <b-icon icon=" plus-circle-fill"></b-icon>
+                                </b-button>
+                            </b-button-group>
+
+                        </b-col>
+
+                    </b-row>
+
+                    <span>
+
+                    </span>
+
+                </div>
             </div>
-        </b-list-group-item>
-
-        <div class="form-group" v-for="(input, k) in analistas" :key="k">
-
-            <b-row padding="0">
-                <b-col>
-                    <ValidationProvider :name="'analista ' + (k + 1)" rules="required" v-slot="validationContext">
-
-                        <b-form-select :state="getValidationState(validationContext)" :placeholder="'Analista ' + (parseInt(k) + 1)" aria-describedby="cargo-live-feedback" class="mb-1" text-field="nombre_analista" v-model="input.analista" :options="analistasOpciones"></b-form-select>
-
-                        <b-form-invalid-feedback id="analista-live-feedback">{{
-                validationContext.errors[0] }}
-                        </b-form-invalid-feedback>
-                    </ValidationProvider>
-                </b-col>
-                <b-col >
-                    <ValidationProvider :name="'parametro ' + (k + 1)" rules="required" v-slot="validationContext">
-
-                        <b-form-select :state="getValidationState(validationContext)" :placeholder="'Parametro ' + (parseInt(k) + 1)" aria-describedby="cargo-live-feedback" class="mb-1" text-field="nombre_parametro" v-model="input.parametro" :options="parametrosOpciones"></b-form-select>
-
-                        <b-form-invalid-feedback id="parametro-live-feedback">{{
-                validationContext.errors[0] }}
-                        </b-form-invalid-feedback>
-                    </ValidationProvider>
-                </b-col>
-                <b-col>
-                    <ValidationProvider :name="'fecha ' + (k + 1)" rules="required" v-slot="validationContext">
-                      <b-form-datepicker  
-                            :date-format-options="{ year: 'numeric', month: '2-digit', day: '2-digit' }"
-                            placeholder="seleccione fecha" :state="getValidationState(validationContext)" v-model="input.fecha_entrega"
-                            :id="'datepicker-'+  + (parseInt(k) + 1)" locale="es"></b-form-datepicker>
-
-                        <b-form-invalid-feedback id="parametro-live-feedback">{{
-                validationContext.errors[0] }}
-                        </b-form-invalid-feedback>
-                    </ValidationProvider>
-                </b-col>
-                <b-col>
-                    <ValidationProvider :name="'orden ' + (k + 1)" rules="required" v-slot="validationContext">
-                        <b-form-input :state="getValidationState(validationContext)" :placeholder="'Orden '" style="height:30px" type="text" class="form-control" v-model="input.orden_analista" />
-                        <b-form-invalid-feedback id="ciudad-live-feedback">{{
-                validationContext.errors[0] }}
-                        </b-form-invalid-feedback>
-                    </ValidationProvider>
-                </b-col>
-                <b-col>
-                    <b-button-group style="height: 40px;">
-                        <b-button variant="danger" @click="remove(k)" v-if="k || (!k && analistas.length > 1)" style="padding:2px; aspect-ratio: 1 / 1; height: 100%;">
-                            <b-icon icon="trash-fill"></b-icon>
-                        </b-button>
-                        <b-button variant="success" @click="add(k)" v-if="k == analistas.length - 1" style="padding:1px; aspect-ratio: 1 / 1; height: 100%;">
-                            <b-icon icon=" plus-circle-fill"></b-icon>
-                        </b-button>
-                    </b-button-group>
-
-                </b-col>
-
-            </b-row>
-
-            <span>
-
-            </span>
-
-        </div>
-
-        <template #modal-footer>
-            <b-button @click="enviarFormulario()" variant="primary" size="xl" class="float-right reactive-button" style="font-weight:bold">
-                Guardar cambios
-            </b-button>
-        </template>
-    </b-modal>
-</validation-observer>
+            <template #modal-footer>
+                <b-button @click="enviarFormulario()" variant="primary" size="xl" class="float-right reactive-button"
+                    style="font-weight:bold">
+                    Guardar cambios
+                </b-button>
+            </template>
+        </b-modal>
+    </validation-observer>
 </template>
 
 <script>

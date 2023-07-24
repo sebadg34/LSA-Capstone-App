@@ -62,20 +62,22 @@
 
 
 
-    <b-row class="mt-4">
-      <b-col class="col-3">
-        <b-button @click="abrirEditarAnalistas" block class="lsa-orange reactive-button" style="font-weight: bold; border: none">
+   
+
+    <template #modal-footer="{ close }">
+      <b-col>
+      <b-row class="d-flex justify-content-between">
+        <b-button @click="abrirEditarAnalistas"  class="lsa-orange reactive-button" style="font-weight: bold; border: none">
           Modificar analistas
 
           <b-icon icon="person-lines-fill" class="ml-2"></b-icon>
         </b-button>
-      </b-col>
-    </b-row>
-
-    <template #modal-footer="{ close }">
       <b-button @click="close()" variant="primary" size="xl" class="float-right reactive-button" style="font-weight:bold">
         Cerrar
       </b-button>
+    </b-row>
+  </b-col>
+     
     </template>
   </b-modal>
 </template>

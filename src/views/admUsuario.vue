@@ -18,7 +18,7 @@
         <b-col class="col-10">
             <b-row style="padding-top:30px; padding-bottom:10px">
                 <b-col class="col-6">
-
+<b-row>
                     <b-col class="col-6">
                         <b-row>
                             <b-button v-b-modal.modal-usuario style="border-radius: 15px; font-weight: bold; font-size: 18px; " class="lsa-light-blue reactive-button">
@@ -31,13 +31,14 @@
 
                     <b-col class="col-4">
                         <b-row>
-                            <b-button @click="sincronizarUsuarios" style="border-radius: 15px; font-weight: bold; font-size: 18px; " class="lsa-light-blue reactive-button">
+                            <b-button v-b-tooltip.hover title="Crear cuentas de usuarios faltantes de personal y solicitante registrados en el sistema." @click="sincronizarUsuarios" style="border-radius: 15px; font-weight: bold; font-size: 18px; " class="lsa-light-blue reactive-button">
 
-                              Sincronizar
-                                <b-icon icon="hammer"></b-icon>
+                              Sincronizar Usuarios
+                                <b-icon icon="server"></b-icon>
                             </b-button>
                         </b-row>
                     </b-col>
+                </b-row>
                 </b-col>
 
                 <b-col lg="6" class="my-1">
@@ -200,11 +201,13 @@ export default {
                 if (response != null) {
                     if (response.status == 200) {
                         this.$bvToast.toast(`Sincronización completada.`, {
+                            title: "Éxito",
                                     toaster: 'b-toaster-top-center',
                                     solid: true,
                                     variant: "success",
                                     appendToast: true
                                 }) 
+                                this.obtenerUsuarios();
                     }
                 }
             })  
