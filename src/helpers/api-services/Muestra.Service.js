@@ -35,6 +35,23 @@ const obtenerMuestras = async () => {
     }
 };
 
+
+const obtenerEmpresas = async () => {
+    try {
+         const response = await axios.get(apiUrl + "/recepcion-muestra/empresa-ciudades-direcciones");
+             console.log(response);
+         if(response.status == 200){
+             return response;
+         }else{
+             return;
+         }
+         
+     } catch (error) {
+         console.log(error);
+         return;
+     }
+ };
+
 const obtenerObservaciones = async (RUM) => {
     try {
          const response = await axios.get(apiUrl + "/muestras/" + RUM + "/observaciones");
@@ -66,6 +83,8 @@ const obtenerObservaciones = async (RUM) => {
          return;
      }
  };
+
+ 
 
  const obtenerTelefono = async (RUM) => {
     try {
@@ -181,6 +200,41 @@ const obtenerNombreEmpleados = async () => {
     }
 };
 
+const obtenerDireccionEmpresa = async (data) => {
+    try {
+        const instanciaApi = await crearApi();
+        const response = await instanciaApi.get("/recepcion-muestra/empresa-ciudades/" + data.rut_empresa);
+            console.log(response);
+        if(response.status == 200){
+            return response;
+        }else{
+            return;
+        }
+        
+    } catch (error) {
+        console.log(error);
+        return;
+    }
+};
+
+const obtenerCotizacionEmpresa = async (data) => {
+    try {
+        const instanciaApi = await crearApi();
+        const response = await instanciaApi.get("/recepcion-muestra/cotizaciones/" + data.rut_empresa);
+            console.log(response);
+        if(response.status == 200){
+            return response;
+        }else{
+            return;
+        }
+        
+    } catch (error) {
+        console.log(error);
+        return;
+    }
+};
+
+
 
   
  
@@ -195,7 +249,10 @@ export default {
     calcularDiasTranscurridos,
     obtenerNombreEmpleados,
     actualizarMuestra,
-    obtenerDetallesSolicitante
+    obtenerDetallesSolicitante,
+    obtenerDireccionEmpresa,
+    obtenerCotizacionEmpresa,
+    obtenerEmpresas
 
 
 };

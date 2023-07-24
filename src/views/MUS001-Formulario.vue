@@ -56,20 +56,22 @@
                                                     </b-col>
 
                                                     <b-col class="col-6">
-                                                        <ValidationProvider name="rut" rules="required|rut"
+                                                        <ValidationProvider name="rut" rules="required"
                                                             v-slot="validationContext">
-                                                            <label for="input-live">Rut solicitante:</label>
+                                                            <label for="input-live">Nombre empresa:</label>
                                                             <div class="d-flex align-items-center ">
-                                                                <b-input-group size="sm">
-                                                                    <b-form-input id="input-live" v-model="rut"
+                                                                <b-input-group >
+                                                                    <b-form-select id="input-live" v-model="solicitante"                                                                        
                                                                         :state="getValidationState(validationContext)"
-                                                                        @input="detallesCotizaciones">
-                                                                    </b-form-input>
+                                                                        :options="opcionesEmpresa"                                                                        
+                                                                        text-field="nombre_empresa" value-field="rut_empresa"                                                                      
+                                                                        >
+                                                                    </b-form-select>
 
                                                                     <b-input-group-append>
                                                                         <b-button class=" lsa-orange reactive-button"
                                                                             style="aspect-ratio: 1; border:none"
-                                                                            @click="buscarYagregar()">
+                                                                            @click="actualizarSelectedEmpresa()">
                                                                             <b-icon icon="search"></b-icon>
                                                                         </b-button>
 
@@ -85,24 +87,12 @@
                                                         <b-alert :show="dismissCountDown" dismissible fade variant="danger"
                                                             @dismiss-count-down="countDownChanged">
                                                             El rut del solicitante no está registrado en la base de datos
-                                                        </b-alert>
-
-                                                        <ValidationProvider name="solicitante" rules="required"
-                                                            v-slot="validationContext">
-                                                            <label for="input-live">Nombre empresa:</label>
-                                                            <b-form-select :disabled="!rutSolicitante" v-model="solicitante"
-                                                                :state="getValidationState(validationContext)"
-                                                                :options="opcionesClientes" value-field="rut_empresa"
-                                                                text-field="nombre_empresa"
-                                                                @input="actualizarSelectedEmpresa"></b-form-select>
-                                                            <b-form-invalid-feedback>{{ validationContext.errors[0]
-                                                            }}</b-form-invalid-feedback>
-                                                        </ValidationProvider>
+                                                        </b-alert>                                                        
 
                                                         <ValidationProvider name="Dirección Cliente" rules="required"
                                                             v-slot="validationContext">
                                                             <label for="input-live">Dirección empresa:</label>
-                                                            <b-form-select :disabled="!rut_empresa" id="input-live"
+                                                            <b-form-select id="input-live"
                                                                 v-model="direccion" :options="opcionesDireccion"
                                                                 :state="getValidationState(validationContext)"
                                                                 text-field="direccionConCiudad" value-field="id_ciudad">
@@ -474,7 +464,7 @@
                                             <b-col class="col-12">
                                                 <b-row class="d-flex justify-content-end">
 
-                                                    <strong style="padding-left:30px">parámetros de muestras</strong>
+                                                    <strong style="padding-left:30px">Parámetros de muestras</strong>
                                                 </b-row>
                                             </b-col>
                                         </template>
@@ -612,6 +602,7 @@ import {
     isLoggedIn
 } from "@/helpers/api-services/Auth.service";
 
+
 export default {
 
     components: {
@@ -723,6 +714,7 @@ export default {
             revisado: false,
             opcionesCotizacion: [],
             cotizacion: '',
+            opcionesEmpresa: []
 
         };
     },
@@ -743,6 +735,8 @@ export default {
 
         this.obtenerMatriz(),
 
+        this.obtenerEmpresas(),
+
             this.obtenerNormas(),
 
             PersonalService.obtenerTodosPersonal().then((response) => {
@@ -752,14 +746,9 @@ export default {
                     console.log("Los recepcionistas son: ", this.recepcionistas);
                 }
             });
-        /*EmpresaService.obtenerTodasEmpresa().then((response) => {
-            console.log(response.data);
-            if (response != null) {
-                this.empresas = response.data;
-                this.opcionesClientes = this.empresas.map((empresa) => empresa.nombre_empresa);
-                console.log("Los clientes son: ", this.opcionesClientes);
-            }
-        });*/
+
+            
+       
     },
 
     watch: {
@@ -919,28 +908,69 @@ export default {
             })
         },
 
-        actualizarSelectedEmpresa() {
-            const empresaSeleccionada = this.opcionesClientes.find(empresa =>
-                empresa.rut_empresa === this.solicitante
-            );
-            if (empresaSeleccionada) {
-                this.selectedEmpresa.id_ciudad = empresaSeleccionada.id_ciudad;
-                this.selectedEmpresa.nombre_ciudad = empresaSeleccionada.nombre_ciudad;
-                this.selectedEmpresa.direccion = empresaSeleccionada.direccion;
-                this.opcionesDireccion = empresaSeleccionada.id_ciudad.map((idCiudad, index) => ({
-                    id_ciudad: idCiudad,
-                    direccion: empresaSeleccionada.direccion[index],
-                    direccionConCiudad: `${empresaSeleccionada.nombre_ciudad[index]} / ${empresaSeleccionada.direccion[index]}`
-                }));
-                const nombreEmpresaSeleccionada = empresaSeleccionada.nombre_empresa;
-                console.log("Nombre de la empresa seleccionada: ", nombreEmpresaSeleccionada);
-                this.nombre_empresa = nombreEmpresaSeleccionada;
-                console.log("Nombre_empresa: ", this.nombre_empresa);
+        obtenerEmpresas () {
+            MuestraService.obtenerEmpresas().then((response) => {
+                console.log("obteniendo empresas",response.data)
+                const empresas = response.data;
+                this.opcionesEmpresa = empresas;
+            })
 
-                const RUTEmpresaSeleccionada = empresaSeleccionada.rut_empresa;
-                console.log("RUT de la empresa seleccionada: ", RUTEmpresaSeleccionada);
-                this.rut_empresa = RUTEmpresaSeleccionada;
-            }
+        },
+
+
+
+        actualizarSelectedEmpresa() {
+
+            console.log("empresa:", this.solicitante)
+            const nombreEmpresa = this.opcionesEmpresa.find(objeto => objeto.rut_empresa === this.solicitante);
+            console.log("empresa:", nombreEmpresa)
+            let nombreEmpresaEncontrada = "";
+if (nombreEmpresa) {
+  nombreEmpresaEncontrada = nombreEmpresa.nombre_empresa;
+  this.nombre_empresa = nombreEmpresaEncontrada;
+}
+
+console.log("Nombre de la empresa encontrada:", nombreEmpresaEncontrada);
+
+
+            MuestraService.obtenerEmpresas().then((response) => {
+                console.log("obteniendo empresas",response.data)
+                const empresas = response.data;
+                const direccion = empresas.flatMap(direccion => direccion.ciudades_direcciones);
+                console.log("direccion : ", direccion)
+
+                
+            const direccionCiudad = direccion.map(c => c.direccion);
+            const nombre_ciudad = direccion.map(c => c.nombre_ciudad);
+                this.opcionesDireccion = direccion.map(opc => ({
+                id_ciudad: opc.id_ciudad,
+                nombre_ciudad: opc.nombre_ciudad,
+                direccion: opc.direccion,
+                direccionConCiudad: `${nombre_ciudad} / ${direccionCiudad}`               
+
+            }))
+            console.log("opciondes direccion : ", direccionCiudad);
+            });
+            const data = {
+                rut_empresa: this.solicitante
+            };
+               
+            MuestraService.obtenerCotizacionEmpresa(data).then((response) => {
+                if (response.data != null && response.status === 200){
+                    console.log("cotizaciones: ", response.data)
+                    this.opcionesCotizacion = response.data.map(cotizacion => ({
+                        id_cotizacion: cotizacion.id_cotizacion,
+                        nombre_original_documento: cotizacion.nombre_original_documento,
+                        idconNombre: `${cotizacion.id_cotizacion} - ${cotizacion.nombre_original_documento}`
+                        
+                    }))
+                    console.log("Opc. cotizaciones: ", this.opcionesCotizacion)
+                }  
+            })   
+
+            
+            
+            
         },
 
         /*generarFechaHoraActual() {
@@ -968,7 +998,7 @@ export default {
 
         detallesCotizaciones(){
             const data = {
-                rut_solicitante: this.rut
+                rut_empresa: this.solicitante
             };
             SolicitanteService.CotizacionSolicitante(data).then((response) => {
                 if (response.data != null && response.status === 200){
@@ -1094,13 +1124,13 @@ export default {
                 idmetodologias.push(objeto.id_metodologia);
                 metodologiasArray.push(objeto.metodologias);
             });
+            this.submuestra_agregar = [];
 
             datos.forEach((objeto) => {
                 this.submuestra_agregar.push({
                     identificador: objeto.identificacion,
                     orden: objeto.orden,
-                    id_parametro: objeto.id_parametro,
-                    id_metodologia: objeto.id_metodologia
+                    parametros_agregar : objeto.parametros_agregar
                 });
             });
             console.log("submuestra_agregar:", this.submuestra_agregar);
@@ -1238,6 +1268,9 @@ export default {
             // Asegurarnos de no agregar duplicados a "this.objetosSeleccionados"
             const objetosNoDuplicados = parametrosYMetodologias.filter((item) => !esDuplicado(this.objetosSeleccionados, item.parametro, item.metodologia));
             this.objetosSeleccionados.push(...objetosNoDuplicados); 
+            const IDNoDuplicados = parametrosYMetodologias.filter((item) => !esDuplicado(this.objetosSeleccionados, item.id_parametro, item.id_metodologia));
+            this.parametros_agregar.push(...IDNoDuplicados);        
+                   
         },
 
         actualizarParametrosTabla() {
@@ -1291,9 +1324,9 @@ export default {
                 return;
             } else {
                 const matricesFiltradas = this.parametros_agregar.slice(1);
-                const parametrosFiltrados = this.submuestra_agregar.slice(1);
+                //const parametrosFiltrados = this.submuestra_agregar.slice(1);
                 var data = {
-                    rut_empresa: this.rut_empresa,
+                    rut_empresa: this.solicitante,
                     rut_empleado: this.recepcionistaRUT,
                     nombre_empresa: this.nombre_empresa,
                     id_ciudad: this.direccion,
@@ -1320,7 +1353,7 @@ export default {
                     id_matriz: this.TipoMatriz,
                     id_norma: this.norma,
                     id_tabla: this.id_tabla,
-                    submuestras_agregar: parametrosFiltrados
+                    submuestras_agregar: this.submuestra_agregar
                 }
 
                 console.log("data a enviar", data)

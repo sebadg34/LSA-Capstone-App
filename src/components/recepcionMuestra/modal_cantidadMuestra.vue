@@ -21,7 +21,17 @@
         </template>
         <template #cell(parametros)="row">
           <template v-if="objetosSeleccionados.length > 0">
-            <b-form-select v-model="row.item.parametros" :options="parametrosOptions"> </b-form-select>             
+            <b-list-group v-if="row.item.nombre_parametro.length > 0">
+                                                  <b-list-group-item v-if="row.item.nombre_parametro.length > 1" v-b-toggle="'toggle-' + row.index" style="padding:2px; border: none; border-bottom: solid 1px #dbdbdb; ">{{ row.item.nombre_parametro[0] }}
+                                                    <b-icon style="position:absolute; right:0px; top:25%; color: #949494" icon="caret-down-fill"></b-icon>
+                                                  </b-list-group-item>
+                                                  <b-list-group-item v-if="row.item.nombre_parametro.length === 1" style="padding:2px; border: none; border-bottom: solid 1px #dbdbdb; ">{{ row.item.nombre_parametro[0] }}</b-list-group-item>
+                                                  <div v-if="row.item.nombre_parametro.length > 1">
+                                                    <b-collapse :id="'toggle-' + row.index">
+                                                      <b-list-group-item style="padding:2px;  border: none; border-bottom: solid 1px #dbdbdb;" v-for="(parametro, index) in row.item.nombre_parametro.slice(1)" :key="index">{{ parametro }}</b-list-group-item>
+                                                    </b-collapse>
+                                                  </div>
+                                              </b-list-group>            
           </template>
         </template>
         <template #cell(metodologias_previas)="row">

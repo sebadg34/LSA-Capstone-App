@@ -565,9 +565,9 @@
                 <b-row class="d-flex justify-content-center mt-2">
                     <b-col class="col-10">
                         <b-button @click="enviarFormulario()" variant="primary" size="xl"
-                                                    class="reactive-button" style="font-weight:bold;">
-                                                    Recepcionar Muestra
-                                                </b-button>
+                            class="reactive-button" style="font-weight:bold;">
+                            Recepcionar Muestra
+                        </b-button>
                     </b-col>
                 </b-row>
                 -->
