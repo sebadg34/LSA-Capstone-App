@@ -214,13 +214,15 @@ export default {
         const fields = [
           { key: 'orden', label: 'Orden', thClass: 'text-center', tdClass: 'text-center', editable: true },
           { key: 'identificacion', label: 'Identificación', thClass: 'text-center', tdClass: 'item-center' },
-          { key: 'PYM', label: 'Parámetros y metodologías', thClass: 'text-center', tdClass: 'item-center' },
-          { key: 'accion', label: 'Acción', thClass: 'text-center', tdClass: 'item-center' },
-
         ];
+        if (this.objetosSeleccionados.length > 0) {
+          fields.push({ key: 'PYM', label: 'Parámetros y metodologías', thClass: 'text-center', tdClass: 'item-center' });
+          fields.push({ key: 'accion', label: 'Acción', thClass: 'text-center', tdClass: 'item-center' });
+        }
 
+    return fields;
         
-        return fields;
+        
       },      
     },
 
