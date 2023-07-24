@@ -16,37 +16,59 @@
         <strong>Matriz: </strong> {{ " " + nombre_matriz }}
       </b-list-group-item>
       <b-list-group-item class="p-0" v-for="parametro in parametros" :key="parametro.id_parametro">
-        <b-list-group horizontal>
-          <b-list-group-item style="width:40%">
+        <b-list-group>
+          <b-list-group-item>
 
-            {{ parametro.nombre_parametro }}
+            <strong>Parámetro:</strong> {{ " " + parametro.nombre_parametro }}
           </b-list-group-item>
-          <b-list-group-item class="p-0" style="width:60%">
+          <b-list-group-item class="p-0">
 
             <b-list-group>
               <b-list-group-item style="font-weight: bold;">
                 Metodologías
               </b-list-group-item>
               <b-list-group-item v-for="metodo in parametro.metodologias"
-                :key="metodo.id_metodologia + parametro.id_parametro" class="d-flex justify-content-between">
-              
-                <span>  {{ metodo.nombre_metodologia }}</span>
+                :key="metodo.id_metodologia + parametro.id_parametro" class="p-0 d-flex justify-content-between">
+                <b-list-group horizontal  style="width:100%" >
 
-                <b-popover placement="lefttop" :target="'button-' + metodo.id_metodologia + '-' + metodo.id_parametro"
-                  title="Descripción metodología" triggers="focus">
+                  <b-list-group-item style="width:35%" class="d-flex align-items-center justify-content-between">
+                    <span> {{ metodo.nombre_metodologia }}</span>
 
-                  <template v-if="metodo.detalle_metodologia != null">{{ metodo.detalle_metodologia }}</template>
-                  <template v-else>
-                    <div>La metodología no cuenta con una descripción actualmente.</div>
-                  </template>
-                </b-popover>
-                <b-button class="boton-ojo-metodo" :id="'button-' + metodo.id_metodologia + '-' + metodo.id_parametro">
-                  <b-icon scale="0.9" icon="eye-fill" style="color:gray"></b-icon>
-                </b-button>
+                    <b-popover placement="lefttop" :target="'button-' + metodo.id_metodologia + '-' + metodo.id_parametro"
+                      title="Descripción metodología" triggers="focus">
+
+                      <template v-if="metodo.detalle_metodologia != null">{{ metodo.detalle_metodologia }}</template>
+                      <template v-else>
+                        <div>La metodología no cuenta con una descripción actualmente.</div>
+                      </template>
+                    </b-popover>
+                    <b-button class="boton-ojo-metodo"
+                      :id="'button-' + metodo.id_metodologia + '-' + metodo.id_parametro">
+                      <b-icon scale="0.9" icon="eye-fill" style="color:gray"></b-icon>
+                    </b-button>
+
+                  </b-list-group-item>
+                  <b-list-group-item class="p-0" style="width:65%">
+                    <b-list-group>
+                      <b-list-group-item>
+                        <strong>Analistas: </strong>
+                      </b-list-group-item>
+                      <b-list-group-item v-for="analista in metodo.analistas" :key="analista.rut_empleado" class="p-1">
+                        {{analista.rut_empleado + " - " + analista.nombre + " " + analista.apellido }}
+                      </b-list-group-item>
+                    </b-list-group>
+
+                  </b-list-group-item>
+
+                </b-list-group>
+
+
               </b-list-group-item>
             </b-list-group>
+
           </b-list-group-item>
         </b-list-group>
+        <hr/>
       </b-list-group-item>
     </b-list-group>
 
@@ -115,8 +137,11 @@ export default {
                 parametroNuevo.metodologias.push({
                   id_metodologia: metodo.id_metodologia,
                   nombre_metodologia: metodo.nombre_metodologia,
-                  detalle_metodologia: metodo.detalle_metodologia
+                  detalle_metodologia: metodo.detalle_metodologia,
+                  analistas: metodo.empleados
                 })
+
+
               });
               this.parametros.push(parametroNuevo)
 
