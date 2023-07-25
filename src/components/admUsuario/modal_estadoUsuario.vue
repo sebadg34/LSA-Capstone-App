@@ -5,7 +5,7 @@
         <!-- Emulate built in modal header close button action -->
 
         <b-row class="d-flex justify-content-around">
-            <div class="pl-3">Cambiar Estado</div>
+            <div class="pl-3">Cambiar estado</div>
 
         </b-row>
 
@@ -89,7 +89,7 @@ this.Confirming = false;
                 console.log(response)
                 if (response != null) {
                     if (response.status == 200) {
-                        this.$bvToast.toast(`El estado de ` + this.Nombre + " "+ this.Apellido + " ha sido actualizado", {
+                        this.$bvToast.toast(`El estado de ` + this.Nombre + " "+ this.Apellido + " ha sido actualizado.", {
                             title: 'Exito',
                             toaster: 'b-toaster-top-center',
                             solid: true,
@@ -100,7 +100,7 @@ this.Confirming = false;
                     }
                     this.$bvModal.hide('modal-estado-usuario')
                 } else {
-                    this.$bvToast.toast(`Error al cambiar estado`, {
+                    this.$bvToast.toast(`Error al cambiar el estado del usuario.`, {
                         title: 'Error',
                         toaster: 'b-toaster-top-center',
                         solid: true,

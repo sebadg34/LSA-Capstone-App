@@ -139,7 +139,7 @@
                         <div>
                             <b-icon class="lsa-orange-text" icon="gear-fill"></b-icon>
                             <span class="px-md-2"></span>
-                            <span>Administrar Sistema</span>
+                            <span>Administrar sistema</span>
                         </div>
                         <b-icon icon="chevron-down" variant="dark"></b-icon>
                     </b-list-group-item>

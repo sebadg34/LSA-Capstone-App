@@ -27,7 +27,7 @@
                                         <b-button v-b-modal.modal-usuario style="font-weight: bold; font-size: 18px; "
                                             class="lsa-light-blue reactive-button">
 
-                                            Agregar Usuario
+                                            Agregar usuario
                                             <b-icon icon="person-plus-fill"></b-icon>
                                         </b-button>
                                         <b-button v-b-tooltip.hover
@@ -35,7 +35,7 @@
                                             @click="sincronizarUsuarios" style="font-weight: bold; font-size: 18px; "
                                             class="lsa-light-blue reactive-button">
 
-                                            Sincronizar Usuarios
+                                            Sincronizar usuarios
                                             <b-icon icon="server"></b-icon>
                                         </b-button>
                                     </b-button-group>
@@ -47,14 +47,15 @@
                     </b-col>
 
                     <b-col lg="6" class="my-1">
-                        <b-form-group label-cols-sm="3" label-align-sm="right" label-size="md" class="mb-0">
+                        <b-form-group label-cols-sm="1" label-align-sm="right" label-size="md" class="mb-0">
                             <b-input-group size="md">
                                 <b-input-group-prepend is-text>
                                     <b-icon icon="search"></b-icon>
 
                                 </b-input-group-prepend>
                                 <b-form-input id="filter-input" v-model="filter" type="search"
-                                    placeholder="Escriba rut, nombre, etc. para filtrar"></b-form-input>
+
+                                    placeholder="Escriba RUT, nombre u otro valor, para filtrar..."></b-form-input>
 
                                 <b-input-group-append>
                                     <b-button style="font-weight:bold" class="lsa-blue" :disabled="!filter"
@@ -74,7 +75,7 @@
                         <div class="text-center lsa-light-blue-text my-2 row">
                             <div class="col">
 
-                                <div style=" color:gray"> No hay personal registrado para mostrar</div>
+                                <div style=" color:gray"> No hay personal registrado para mostrar.</div>
                             </div>
 
                         </div>
@@ -173,7 +174,7 @@ export default {
             modalEstadoData: {},
             campos_tabla: [{
                 key: 'nombre',
-                label: 'Nombres',
+                label: 'Nombre',
                 sortable: true
             }, {
                 key: 'apellido',
@@ -188,7 +189,7 @@ export default {
                 sortable: true
             }, {
                 key: 'tipo_usuario',
-                label: 'Tipo usuario',
+                label: 'Tipo de usuario',
                 sortable: true
             }, {
                 key: 'estado',
