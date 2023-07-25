@@ -240,8 +240,8 @@ export default {
             this.numero_muestras = detalles.cantidad_muestras;
             this.norma = detalles.norma;
             this.matriz = detalles.matriz;
-this.fecha_ingreso = detalles.fecha_ingreso;
-this.hora_ingreso = detalles.hora_ingreso;
+this.fecha_ingreso = detalles.fecha_ingreso_formateada;
+this.hora_ingreso = detalles.hora_ingreso_formateada;
             this.muestreador = detalles.muestreado_por;
 
            
@@ -306,7 +306,7 @@ this.hora_ingreso = detalles.hora_ingreso;
       
         this.matriz = this.detallesData.matriz.nombre_matriz;
         this.valor_neto = this.detallesData.valor_neto;
-        this.fecha_entrega = this.detallesData.fecha_entrega;
+        this.fecha_entrega = this.detallesData.fecha_entrega_formateada;
       
        this.parametros = [];
        this.empleados = [];
