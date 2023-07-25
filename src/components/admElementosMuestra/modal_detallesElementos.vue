@@ -2,7 +2,7 @@
   <b-modal id="modal-detalle-elementos" ref="modal" :title="`Detalles Elementos`" size="xl">
     <template #modal-header="{ close }">
       <b-row class="d-flex justify-content-around">
-        <div class="pl-3">Detalles del Elemento</div>
+        <div class="pl-3">Detalles del elemento</div>
       </b-row>
 
       <button type="button" class="close" aria-label="Close" @click="close()">
@@ -12,63 +12,89 @@
 
 
     <b-list-group>
-      <b-list-group-item>
+      <b-list-group-item style="border-radius: 20px;">
         <strong>Matriz: </strong> {{ " " + nombre_matriz }}
       </b-list-group-item>
+      <br />
       <b-list-group-item class="p-0" v-for="parametro in parametros" :key="parametro.id_parametro">
         <b-list-group>
           <b-list-group-item>
+            <b-col>
+              <b-row class="justify-content-between align-items-center">
+                <div>
+                  <strong>Parámetro:</strong> {{ " " + parametro.nombre_parametro }}
+                </div>
+                <b-button pill class="lsa-blue reactive-button" v-b-toggle="(parametro.id_parametro).toString()">Detalles
 
-            <strong>Parámetro:</strong> {{ " " + parametro.nombre_parametro }}
+                  <b-icon icon="journals" aria-hidden="true"></b-icon></b-button>
+              </b-row>
+            </b-col>
           </b-list-group-item>
-          <b-list-group-item class="p-0">
 
-            <b-list-group>
-              <b-list-group-item style="font-weight: bold;">
-                Metodologías
-              </b-list-group-item>
-              <b-list-group-item v-for="metodo in parametro.metodologias"
-                :key="metodo.id_metodologia + parametro.id_parametro" class="p-0 d-flex justify-content-between">
-                <b-list-group horizontal  style="width:100%" >
+          <b-collapse :id="(parametro.id_parametro).toString()" style="padding:0px; margin:0px">
 
-                  <b-list-group-item style="width:35%" class="d-flex align-items-center justify-content-between">
-                    <span> {{ metodo.nombre_metodologia }}</span>
+            <b-list-group-item class="p-0">
 
-                    <b-popover placement="lefttop" :target="'button-' + metodo.id_metodologia + '-' + metodo.id_parametro"
-                      title="Descripción metodología" triggers="focus">
+              <b-list-group>
+                <b-list-group-item v-for="metodo in parametro.metodologias"
+                  :key="metodo.id_metodologia + parametro.id_parametro" class="p-0 d-flex justify-content-between">
+                  <b-list-group horizontal style="width:100%">
+                    <b-list-group-item style="width:35%;border:none" class="p-0">
+                      <b-list-group style="height: 100%;border:none">
+                        <b-list-group-item>
+                          <strong>Metodología</strong>
+                        </b-list-group-item>
+                        <b-list-group-item class="d-flex align-items-center justify-content-between"
+                          style="height: 100%; border:none">
 
-                      <template v-if="metodo.detalle_metodologia != null">{{ metodo.detalle_metodologia }}</template>
-                      <template v-else>
-                        <div>La metodología no cuenta con una descripción actualmente.</div>
-                      </template>
-                    </b-popover>
-                    <b-button class="boton-ojo-metodo"
-                      :id="'button-' + metodo.id_metodologia + '-' + metodo.id_parametro">
-                      <b-icon scale="0.9" icon="eye-fill" style="color:gray"></b-icon>
-                    </b-button>
+                          <span> {{ metodo.nombre_metodologia }}</span>
 
-                  </b-list-group-item>
-                  <b-list-group-item class="p-0" style="width:65%">
-                    <b-list-group>
-                      <b-list-group-item>
-                        <strong>Analistas: </strong>
-                      </b-list-group-item>
-                      <b-list-group-item v-for="analista in metodo.analistas" :key="analista.rut_empleado" class="p-1">
-                        {{analista.rut_empleado + " - " + analista.nombre + " " + analista.apellido }}
-                      </b-list-group-item>
-                    </b-list-group>
+                          <b-popover placement="lefttop"
+                            :target="'button-' + metodo.id_metodologia + '-' + metodo.id_parametro"
+                            title="Descripción metodología" triggers="focus">
 
-                  </b-list-group-item>
+                            <template v-if="metodo.detalle_metodologia != null">{{ metodo.detalle_metodologia
+                            }}</template>
+                            <template v-else>
+                              <div>La metodología no cuenta con una descripción actualmente.</div>
+                            </template>
+                          </b-popover>
+                          <b-button class="boton-ojo-metodo"
+                            :id="'button-' + metodo.id_metodologia + '-' + metodo.id_parametro">
+                            <b-icon scale="0.9" icon="eye-fill" style="color:gray"></b-icon>
+                          </b-button>
 
-                </b-list-group>
+                        </b-list-group-item>
+                      </b-list-group>
+                    </b-list-group-item>
 
 
-              </b-list-group-item>
-            </b-list-group>
 
-          </b-list-group-item>
+                    <b-list-group-item class="p-0" style="width:65%; border:none">
+                      <b-list-group>
+                        <b-list-group-item>
+                          <strong>Analistas: </strong>
+                        </b-list-group-item>
+                        <b-list-group-item v-for="analista in metodo.analistas" :key="analista.rut_empleado" class="p-1">
+                          {{ analista.rut_empleado + " - " + analista.nombre + " " + analista.apellido }}
+                        </b-list-group-item>
+                      </b-list-group>
+
+                    </b-list-group-item>
+
+                  </b-list-group>
+
+
+                </b-list-group-item>
+              </b-list-group>
+
+
+
+            </b-list-group-item>
+            <br />
+          </b-collapse>
         </b-list-group>
-        <hr/>
+      
       </b-list-group-item>
     </b-list-group>
 
@@ -122,18 +148,17 @@ export default {
         if (response.status === 200) {
 
           const detalles = response.data;
-          this.nombre_matriz = detalles.nombre_matriz;
 
-          for (var i = 0; i < detalles.parametros.length; i++) {
-            const existeParametro = this.parametros.find(param => param.id_parametro == detalles.parametros[i].id_parametro);
+          for (var i = 0; i < detalles.length; i++) {
+            const existeParametro = this.parametros.find(param => param.id_parametro == detalles[i].id_parametro);
             if (existeParametro == null) {
               const parametroNuevo = {
-                id_parametro: detalles.parametros[i].id_parametro,
-                nombre_parametro: detalles.parametros[i].nombre_parametro,
+                id_parametro: detalles[i].id_parametro,
+                nombre_parametro: detalles[i].nombre_parametro,
                 metodologias: []
               }
 
-              detalles.parametros[i].metodologias.forEach(metodo => {
+              detalles[i].metodologias.forEach(metodo => {
                 parametroNuevo.metodologias.push({
                   id_metodologia: metodo.id_metodologia,
                   nombre_metodologia: metodo.nombre_metodologia,
@@ -193,7 +218,7 @@ export default {
       handler() {
         console.log("detallesData actualizada", this.detallesData);
 
-        this.Nombre = this.detallesData.nombre_matriz;
+        this.nombre_matriz = this.detallesData.nombre_matriz;
         this.id = this.detallesData.id_matriz;
         console.log("id es: ", this.id)
 

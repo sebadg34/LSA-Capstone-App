@@ -156,7 +156,6 @@ import ModalObservaciones from '@/components/admMuestras-quimicos/modal_observac
 import MuestraQuimicoService from '@/helpers/api-services/Muestra-quimicos.service';
 import ModalCompletarTarea from '@/components/admMuestras-quimicos/modal_completarTarea-quimico.vue';
 import ModalDetalleMuestra from '@/components/admMuestras-quimicos/modal_detallesMuestra-quimico.vue';
-import moment from 'moment';
 export default {
   data() {
     return {
@@ -314,12 +313,7 @@ export default {
       console.log("Obteniendo Muestras: ")
       MuestraQuimicoService.obtenerMuestras().then((response) => {
         if (response.data != null && response.status === 200) {
-          this.muestras = response.data.muestras
-          for (var i = 0; i < this.muestras.length; i++) {
-            this.muestras[i].fecha_entrega = moment(this.muestras[i].fecha_entrega).format('DD/MM/YYYY');
-           
-
-          }
+          this.muestras = response.data
           this.muestrasFiltradas = this.muestras;
           console.log("muestras!!",this.muestrasFiltradas)
           this.loading = false;

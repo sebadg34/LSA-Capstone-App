@@ -1,125 +1,136 @@
 <template>
-<div style="margin-bottom:50px">
+    <div style="margin-bottom:50px">
 
-    <modal_agregarUsuario @refrescar="obtenerUsuarios" />
-    <modal_estadoUsuario @refrescar="obtenerUsuarios" :user-data="this.modalEstadoData" />
-    <modal_passwordUsuario :user-data="this.modalPasswordData" />
+        <modal_agregarUsuario @refrescar="obtenerUsuarios" />
+        <modal_estadoUsuario @refrescar="obtenerUsuarios" :user-data="this.modalEstadoData" />
+        <modal_passwordUsuario :user-data="this.modalPasswordData" />
 
-    <b-row align-h="start" style="padding-top:30px;">
-        <b-col class="col-6">
-            <div style="font-size:2rem; font-weight: bold; color: var(--lsa-blue)">
-                Sistema administración de usuarios
-            </div>
-        </b-col>
-    </b-row>
+        <b-row align-h="start" style="padding-top:30px;">
+            <b-col class="col-6">
+                <div style="font-size:2rem; font-weight: bold; color: var(--lsa-blue)">
+                    Sistema administración de usuarios
+                </div>
+            </b-col>
+        </b-row>
 
-    <b-row class="justify-content-center">
+        <b-row class="justify-content-center">
 
-        <b-col class="col-10">
-            <b-row style="padding-top:30px; padding-bottom:10px">
-                <b-col class="col-6">
-<b-row>
+            <b-col class="col-10">
+                <b-row style="padding-top:30px; padding-bottom:10px">
                     <b-col class="col-6">
                         <b-row>
-                            <b-button v-b-modal.modal-usuario style="border-radius: 15px; font-weight: bold; font-size: 18px; " class="lsa-light-blue reactive-button">
+                            <b-col class="col-10">
+                                <b-row>
 
-                                Agregar Usuario
-                                <b-icon icon="person-plus-fill"></b-icon>
-                            </b-button>
+
+                                    <b-button-group>
+                                        <b-button v-b-modal.modal-usuario style="font-weight: bold; font-size: 18px; "
+                                            class="lsa-light-blue reactive-button">
+
+                                            Agregar Usuario
+                                            <b-icon icon="person-plus-fill"></b-icon>
+                                        </b-button>
+                                        <b-button v-b-tooltip.hover
+                                            title="Crear cuentas de usuarios faltantes de personal y solicitante registrados en el sistema."
+                                            @click="sincronizarUsuarios" style="font-weight: bold; font-size: 18px; "
+                                            class="lsa-light-blue reactive-button">
+
+                                            Sincronizar Usuarios
+                                            <b-icon icon="server"></b-icon>
+                                        </b-button>
+                                    </b-button-group>
+                                </b-row>
+                            </b-col>
+
+                            
                         </b-row>
                     </b-col>
 
-                    <b-col class="col-4">
-                        <b-row>
-                            <b-button v-b-tooltip.hover title="Crear cuentas de usuarios faltantes de personal y solicitante registrados en el sistema." @click="sincronizarUsuarios" style="border-radius: 15px; font-weight: bold; font-size: 18px; " class="lsa-light-blue reactive-button">
+                    <b-col lg="6" class="my-1">
+                        <b-form-group label-cols-sm="3" label-align-sm="right" label-size="md" class="mb-0">
+                            <b-input-group size="md">
+                                <b-input-group-prepend is-text>
+                                    <b-icon icon="search"></b-icon>
 
-                              Sincronizar Usuarios
-                                <b-icon icon="server"></b-icon>
-                            </b-button>
-                        </b-row>
+                                </b-input-group-prepend>
+                                <b-form-input id="filter-input" v-model="filter" type="search"
+                                    placeholder="Escriba rut, nombre, etc. para filtrar"></b-form-input>
+
+                                <b-input-group-append>
+                                    <b-button style="font-weight:bold" class="lsa-blue" :disabled="!filter"
+                                        @click="filter = ''">Limpiar filtro</b-button>
+                                </b-input-group-append>
+                            </b-input-group>
+                        </b-form-group>
                     </b-col>
                 </b-row>
-                </b-col>
+            </b-col>
 
-                <b-col lg="6" class="my-1">
-                    <b-form-group label-cols-sm="3" label-align-sm="right" label-size="md" class="mb-0">
-                        <b-input-group size="md">
-                            <b-input-group-prepend is-text>
-                                <b-icon icon="search"></b-icon>
+            <b-col class="col-10">
+                <b-table fixed show-empty :filter="filter" @filtered="onFiltered" :fields="campos_tabla" :items="usuario"
+                    style="" :busy="loading" :per-page="perPage" :current-page="currentPage">
 
-                            </b-input-group-prepend>
-                            <b-form-input id="filter-input" v-model="filter" type="search" placeholder="Escriba rut, nombre, etc. para filtrar"></b-form-input>
+                    <template #empty>
+                        <div class="text-center lsa-light-blue-text my-2 row">
+                            <div class="col">
 
-                            <b-input-group-append>
-                                <b-button style="font-weight:bold" class="lsa-blue" :disabled="!filter" @click="filter = ''">Limpiar filtro</b-button>
-                            </b-input-group-append>
-                        </b-input-group>
-                    </b-form-group>
-                </b-col>
-            </b-row>
-        </b-col>
+                                <div style=" color:gray"> No hay personal registrado para mostrar</div>
+                            </div>
 
-        <b-col class="col-10">
-            <b-table fixed show-empty :filter="filter" @filtered="onFiltered" :fields="campos_tabla" :items="usuario" style="" :busy="loading" :per-page="perPage" :current-page="currentPage">
-
-                <template #empty>
-                    <div class="text-center lsa-light-blue-text my-2 row">
-                        <div class="col">
-
-                            <div style=" color:gray"> No hay personal registrado para mostrar</div>
                         </div>
+                    </template>
 
-                    </div>
-                </template>
+                    <template #emptyfiltered>
+                        <div class="text-center lsa-light-blue-text my-2 row">
+                            <div class="col">
+                                <b-icon icon="search" animation="fade" variant="secondary"></b-icon>
+                                <div style="font-weight:bold; color:gray"> No hay resultados que coincidan con su búsqueda
+                                </div>
+                            </div>
 
-                <template #emptyfiltered>
-                    <div class="text-center lsa-light-blue-text my-2 row">
-                        <div class="col">
-                            <b-icon icon="search" animation="fade" variant="secondary"></b-icon>
-                            <div style="font-weight:bold; color:gray"> No hay resultados que coincidan con su búsqueda</div>
                         </div>
+                    </template>
+                    <template #table-busy>
+                        <div class="text-center lsa-orange-text my-2">
+                            <b-spinner class="align-middle"></b-spinner>
+                            <strong> Cargando...</strong>
+                        </div>
+                    </template>
 
-                    </div>
-                </template>
-                <template #table-busy>
-                    <div class="text-center lsa-orange-text my-2">
-                        <b-spinner class="align-middle"></b-spinner>
-                        <strong> Cargando...</strong>
-                    </div>
-                </template>
+                    <template #cell(estado)="row">
 
-                <template #cell(estado)="row">
+                        <span v-if="row.item.estado == true"
+                            style="text-transform:uppercase; color:green; font-weight: bold;">HABILITADO</span>
+                        <span v-else style="text-transform:uppercase; color:red; font-weight: bold;">DESHABILITADO</span>
+                    </template>
 
-                    <span v-if="row.item.estado == true" style="text-transform:uppercase; color:green; font-weight: bold;">HABILITADO</span>
-                    <span v-else style="text-transform:uppercase; color:red; font-weight: bold;">DESHABILITADO</span>
-                </template>
+                    <template #cell(tipo_usuario)="row">
+                        <span style="font-weight: bold;"> {{ row.item.tipo_usuario.toUpperCase() }}</span>
+                    </template>
+                    <template #cell(accion)="row">
 
-                <template #cell(tipo_usuario)="row">
-                    <span style="font-weight: bold;"> {{ row.item.tipo_usuario.toUpperCase() }}</span>
-                </template>
-                <template #cell(accion)="row">
+                        <b-dropdown right size="sm" variant="link" toggle-class="text-decoration-none" no-caret>
+                            <template #button-content>
 
-                    <b-dropdown right size="sm" variant="link" toggle-class="text-decoration-none" no-caret>
-                        <template #button-content>
+                                <b-icon style="height: 80%; width: 80%; align-items: center;" icon="three-dots"
+                                    variant="dark" aria-hidden="true"></b-icon>
 
-                            <b-icon style="height: 80%; width: 80%; align-items: center;" icon="three-dots" variant="dark" aria-hidden="true"></b-icon>
+                            </template>
+                            <b-dropdown-item @click="abrirEstadoPersonal(row.item)">
+                                <b-icon icon="person-check" aria-hidden="true" class="mr-2"></b-icon>Cambiar estado
+                            </b-dropdown-item>
+                            <b-dropdown-item @click="abrirPasswordPersonal(row.item)">
+                                <b-icon icon="shield-lock" aria-hidden="true" class="mr-2"></b-icon>Cambiar contraseña
+                            </b-dropdown-item>
+                        </b-dropdown>
 
-                        </template>
-                        <b-dropdown-item @click="abrirEstadoPersonal(row.item)">
-                            <b-icon icon="person-check" aria-hidden="true" class="mr-2"></b-icon>Cambiar estado
-                        </b-dropdown-item>
-                        <b-dropdown-item @click="abrirPasswordPersonal(row.item)">
-                            <b-icon icon="shield-lock" aria-hidden="true" class="mr-2"></b-icon>Cambiar contraseña
-                        </b-dropdown-item>
-                    </b-dropdown>
+                    </template>
+                </b-table>
+                <b-pagination v-model="currentPage" :total-rows="rows" :per-page="perPage" align="right"></b-pagination>
+            </b-col>
+        </b-row>
 
-                </template>
-            </b-table>
-            <b-pagination v-model="currentPage" :total-rows="rows" :per-page="perPage" align="right"></b-pagination>
-        </b-col>
-    </b-row>
-
-</div>
+    </div>
 </template>
 
 <script>
@@ -196,21 +207,21 @@ export default {
             this.totalRows = filteredItems.length
             this.currentPage = 1
         },
-        sincronizarUsuarios(){
+        sincronizarUsuarios() {
             usuarioService.sincronizarUsuarios().then((response) => {
                 if (response != null) {
                     if (response.status == 200) {
                         this.$bvToast.toast(`Sincronización completada.`, {
                             title: "Éxito",
-                                    toaster: 'b-toaster-top-center',
-                                    solid: true,
-                                    variant: "success",
-                                    appendToast: true
-                                }) 
-                                this.obtenerUsuarios();
+                            toaster: 'b-toaster-top-center',
+                            solid: true,
+                            variant: "success",
+                            appendToast: true
+                        })
+                        this.obtenerUsuarios();
                     }
                 }
-            })  
+            })
         },
         obtenerRoles() {
             roleService.obtenerRoles().then((response) => {
