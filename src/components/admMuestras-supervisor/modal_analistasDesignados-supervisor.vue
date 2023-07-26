@@ -51,7 +51,7 @@
             {{ analista.nombre_parametro }}
           </b-list-group-item>
           <b-list-group-item class="text-center" style="width:20%">
-            {{ analista.fecha_entrega }}
+            {{ analista.fecha_entrega_formateada }}
           </b-list-group-item>
           <b-list-group-item class="text-center" style="width:20%">
             {{ analista.orden_de_analisis }}
