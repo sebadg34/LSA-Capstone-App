@@ -297,8 +297,8 @@ export default {
                 text: 'Gerente'
             },
             {
-                value: 'Jefe(a) de laboratorio',
-                text: 'Jefe(a) de laboratorio'
+                value: 'Jefe(a) de Laboratorio',
+                text: 'Jefe(a) de Laboratorio'
             },
             {
                 value: 'Supervisor(a)',
@@ -322,7 +322,7 @@ export default {
     watch: {
         Cargo: {
             handler() {
-                if (this.Cargo == "Gerente" || this.Cargo == "Jefe(a) de laboratorio" || this.Cargo == "Administrador(a) de Finanzas") {
+                if (this.Cargo == "Gerente" || this.Cargo == "Jefe(a) de Laboratorio" || this.Cargo == "Administrador(a) de Finanzas") {
                     this.PerteneceArea = false;
                 } else {
                     this.PerteneceArea = true;

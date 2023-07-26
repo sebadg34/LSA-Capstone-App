@@ -279,7 +279,7 @@ export default {
     obtenerDetalles(rum) {
       this.cargandoParametros = true;
       this.cargandoAnalistas = true;
-             
+      
 
       this.parametros = [];
         this.empleados = [];
@@ -289,6 +289,7 @@ export default {
           if (response.status == 200 && response.data != null) {
             const detalles = response.data;
             this.numero_muestras = detalles.cantidad_muestras;
+            this.fecha_entrega = detalles.fecha_entrega_formateada;
             this.norma = detalles.norma;
             this.matriz = detalles.matriz;
             this.fecha_entrega_nueva = new Date(detalles.fecha_entrega);
@@ -346,7 +347,7 @@ export default {
         this.nombre_empresa = this.detallesData.nombre_empresa;
         this.matriz = this.detallesData.matriz.nombre_matriz;
         this.valor_neto = this.detallesData.valor_neto;
-        this.fecha_entrega = this.detallesData.fecha_entrega_formateada;
+        
         this.obtenerDetalles(this.RUM);
       }
     }
