@@ -44,7 +44,18 @@
     <div style="height:25px"></div>
     <div class="row justify-content-center">
       <div class="col-10">
-        <b-table :items="items" :fields="fields" :per-page="perPage" :current-page="currentPage" responsive>
+        <b-table  show-empty :busy="loading" :items="items" :fields="fields" :per-page="perPage" :current-page="currentPage" responsive>
+        
+
+                <template #table-busy>
+                    <div class="text-center lsa-orange-text my-2">
+                        <b-spinner class="align-middle"></b-spinner>
+                        <strong> Cargando...</strong>
+                    </div>
+                </template>
+        
+        
+        
           <template #cell(Accion)="row">
 
             <b-dropdown right size="sm" variant="link" toggle-class="text-decoration-none" no-caret>
@@ -123,6 +134,7 @@ export default {
       modalDetallesData: {},
       currentPage: 1,
       perPage: 10,
+      loading:false,
     };
   },
 
@@ -160,6 +172,7 @@ export default {
     },
 
     ObtenerRelacionDatos() {
+      this.loading = true;
       ElementosService.obtenerRelacion().then((response) => {
         const items = response.data.map((item) => {
           let nombre = '';
@@ -178,6 +191,7 @@ export default {
           items[i].parametros = response.data[i].parametros
         }
         this.items = items;
+        this.loading = false;
         console.log(this.items)
       });
     },

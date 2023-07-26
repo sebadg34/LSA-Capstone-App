@@ -241,9 +241,6 @@ export default {
         },
         userData: {
             handler() {
-
-                console.log("PROP CHANGED, UPDATE MODAL", this.userData)
-                console.log(this.cargos)
                 this.Nombre = this.userData.nombre
                 this.Rut = this.userData.rut_empleado;
                 this.obtenerAreasEmpleado(this.Rut);
@@ -261,7 +258,6 @@ export default {
         userData: Object
     },
     mounted() {
-        console.log("editando")
         this.obtenerAreas();
 
     },
@@ -341,11 +337,8 @@ export default {
             const areaAntigua = this.Areas_antiguas.find(area => area.id_area == this.Areas_seleccionadas[index].id_area && area.tipo_analisis == this.Areas_seleccionadas[index].tipo_analisis);
             if (areaAntigua != null) {
                 this.Areas_eliminar.push(this.Areas_seleccionadas[index]);
-                console.log("area antigua, borrando!");
-
-            } else {
-                console.log("no es antigua, solo quitala del editar")
-            }
+            } 
+            
             this.Areas_seleccionadas.splice(index, 1);
         },
         agregarAreaAnalisis() {
@@ -357,9 +350,7 @@ export default {
                 // en caso de agregar area antigua que se iba a eliminar
                 if (areaAntigua != null) {
                     this.Areas_eliminar = this.Areas_eliminar.filter(area => area != areaAntigua);
-                    console.log("retracta la eliminacion", this.Areas_eliminar);
                 } else {
-                    console.log("nuevo! agregando...")
                     this.Areas_agregar.push({
                         id_area: this.AreaSeleccionada.id_area,
                         tipo_analisis: this.AnalisisSeleccionado
@@ -380,8 +371,6 @@ export default {
             this.Areas = [];
             personalService.obtenerAreas().then((response) => {
                 if (response != null && response.data != null) {
-                    console.log("areas cargadas: ", response);
-                    console.log(response);
                     const areas = response.data;
                     for (var i = 0; i < areas.length; i++) {
                         this.Areas.push({
@@ -416,12 +405,11 @@ export default {
         onChange(e) {
             this.Archivos_enviar = [];
             this.files = e.target.files;
-            //this.Archivos_enviar = this.files[0];
             for (var i = 0; i < this.files.length; i++) {
                 this.Archivos_enviar[i] = this.files[i];
             }
 
-            console.log(this.Archivos_enviar)
+         
         },
         getValidationState({
             dirty,
@@ -429,9 +417,6 @@ export default {
             valid = null
         }) {
             return dirty || validated ? valid : null;
-        },
-        enviarDocumentos() {
-            console.log(this.Archivos);
         },
         obtenerAreasEmpleado(rut) {
             this.Areas_agregar = [];
@@ -484,6 +469,8 @@ export default {
                         "telefono_movil": this.Movil,
                         "telefono_emergencia": this.Emergencia,
                         "estado": this.Estado,
+                        "areas_agregar" : [],
+                        "areas_eliminar": []
 
                     }
                     formData.areas_agregar = this.Areas_agregar;
@@ -493,10 +480,9 @@ export default {
                     if (this.Archivos_enviar.length != 0) {
                         formData.documentos = this.Archivos_enviar;
                     }
-                    console.log("data a enviar", formData)
+                 
                     personalService.editarPersonal(formData).then((response) => {
                         this.Cargando = false;
-                        console.log(response)
                         if (response != null) {
                             if (response.status == 200) {
 

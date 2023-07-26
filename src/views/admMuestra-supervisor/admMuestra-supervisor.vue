@@ -219,7 +219,7 @@ export default {
                 label: 'RUM'
             },
             {
-                key: 'fecha_entrega',
+                key: 'fecha_entrega_formateada',
                 label: 'Fecha entrega',
                 sortable: true
             },

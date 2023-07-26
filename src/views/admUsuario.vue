@@ -68,7 +68,7 @@
             </b-col>
 
             <b-col class="col-10">
-                <b-table fixed show-empty :filter="filter" @filtered="onFiltered" :fields="campos_tabla" :items="usuario"
+                <b-table  show-empty :filter="filter" @filtered="onFiltered" :fields="campos_tabla" :items="usuario"
                     style="" :busy="loading" :per-page="perPage" :current-page="currentPage">
 
                     <template #empty>

@@ -22,7 +22,7 @@
                 </div>
             </b-list-group-item>
             <div class="ml-4">
-                <b-row style="font-weight: bold;" class="ml-4">
+                <b-row style="font-weight: bold;" class="">
                     <b-col>
                         Muestra
                     </b-col>
@@ -39,17 +39,17 @@
                         Fecha/Hora de inicio análisis
                     </b-col>
                     <b-col>
-                        Fecha/Hora de finalización análisis
+                        Fecha/Hora de término análisis
                     </b-col>
-                    <b-col>
+                    <b-col class="col-1">
                         Acción
                     </b-col>
                 </b-row>
                 <hr />
-                <div class="form-group ml-4" v-for="(input, k) in resultados" :key="k">
+                <div class="form-group" v-for="(input, k) in resultados" :key="k">
 
                     <b-row padding="0">
-                        <b-col>
+                        <b-col class="p-2">
                             <ValidationProvider :name="'analista ' + (k + 1)" rules="required" v-slot="validationContext">
 
                                 <b-form-input :state="getValidationState(validationContext)"
@@ -61,7 +61,8 @@
                                 </b-form-invalid-feedback>
                             </ValidationProvider>
                         </b-col>
-                        <b-col>
+
+                        <b-col class="p-2">
                             <ValidationProvider :name="'parametro ' + (k + 1)" rules="required" v-slot="validationContext">
 
                                 <b-form-select :state="getValidationState(validationContext)"
@@ -74,28 +75,75 @@
                                 </b-form-invalid-feedback>
                             </ValidationProvider>
                         </b-col>
-                        <b-col>
-                            <b-row>
-                                <b-row class="align-items-center">
-                                    <b-form-input :placeholder="'hr. ' + (k + 1)" style="height:30px; width: 4.5rem;" type="text"
-                                        class="form-control" v-model="input.hora_inicio" />
-                                        <div>:</div>
-                                    <b-form-input :placeholder="'min. ' + (k + 1)" style="height:30px;width: 3rem; padding-left:4px; padding-right:4px" type="text"
-                                        class="form-control justify-content-center" v-model="input.minutos_inicio" />
-                                </b-row>
+                        <b-col class="p-2">
+                            <ValidationProvider :name="'unidad ' + (k + 1)" rules="required" v-slot="validationContext">
 
-                            </b-row>
-                        </b-col>
-                        <b-col>
-                            <ValidationProvider :name="'orden ' + (k + 1)" rules="required" v-slot="validationContext">
-                                <b-form-input :state="getValidationState(validationContext)" :placeholder="'Orden '"
-                                    style="height:30px" type="text" class="form-control" v-model="input.orden_analista" />
-                                <b-form-invalid-feedback id="ciudad-live-feedback">{{
+                                <b-form-input :state="getValidationState(validationContext)"
+                                    :placeholder="'unidad ' + (k + 1)" style="height:30px" type="text" class="form-control"
+                                    v-model="input.unidad" />
+
+                                <b-form-invalid-feedback id="analista-live-feedback">{{
                                     validationContext.errors[0] }}
                                 </b-form-invalid-feedback>
                             </ValidationProvider>
                         </b-col>
-                        <b-col>
+                        <b-col class="p-2">
+                            <ValidationProvider :name="'resultado ' + (k + 1)" rules="required" v-slot="validationContext">
+
+                                <b-form-input :state="getValidationState(validationContext)"
+                                    :placeholder="'resultado ' + (k + 1)" style="height:30px" type="text"
+                                    class="form-control" v-model="input.resultado" />
+
+                                <b-form-invalid-feedback id="analista-live-feedback">{{
+                                    validationContext.errors[0] }}
+                                </b-form-invalid-feedback>
+                            </ValidationProvider>
+                        </b-col>
+                        <b-col class="p-2">
+
+                            <ValidationProvider :name="'fecha inicio ' + (k + 1)" rules="required"
+                                v-slot="validationContext">
+                                <b-form-datepicker size="sm" style="padding-left:2px;padding-right:2px" :min="minDate" :max="maxDate" @context="onContext"
+                                    :date-format-options="{ year: 'numeric', month: '2-digit', day: '2-digit' }"
+                                    placeholder="fecha" :state="getValidationState(validationContext)"
+                                    v-model="input.fecha_inicio" id="datepicker-inicio" locale="es"></b-form-datepicker>
+                            </ValidationProvider>
+                            <ValidationProvider :name="'hora inicio ' + (k + 1)" rules="required"
+                                v-slot="validationContext">
+                                <b-form-timepicker size="md" placeholder="hora" :state="getValidationState(validationContext)"
+                                    v-model="input.hora_inicio" locale="es"></b-form-timepicker>
+
+                            </ValidationProvider>
+
+
+
+
+                        </b-col>
+
+                        <b-col class="p-2">
+
+
+                            <ValidationProvider :name="'fecha termino ' + (k + 1)" rules="required"
+                                v-slot="validationContext">
+                                <b-form-datepicker class="justify-content-center" size="sm" style="padding-left:2px;padding-right:2px" :min="minDate" :max="maxDate" @context="onContext"
+                                    :date-format-options="{ year: 'numeric', month: '2-digit', day: '2-digit' }"
+                                    placeholder="fecha" :state="getValidationState(validationContext)"
+                                    v-model="input.fecha_termino" id="datepicker-termino" locale="es"></b-form-datepicker>
+
+                            </ValidationProvider>
+
+                            <ValidationProvider :name="'hora termino ' + (k + 1)" rules="required"
+                                v-slot="validationContext">
+                                <b-form-timepicker size="md" placeholder="hora" :state="getValidationState(validationContext)"
+                                    v-model="input.hora_termino" locale="es"></b-form-timepicker>
+
+                            </ValidationProvider>
+
+
+
+
+                        </b-col>
+                        <b-col class="p-2 col-1">
                             <b-button-group style="height: 40px;">
                                 <b-button variant="danger" @click="remove(k)" v-if="k || (!k && resultados.length > 1)"
                                     style="padding:2px; aspect-ratio: 1 / 1; height: 100%;">
@@ -182,11 +230,8 @@ export default {
                 resultado: '',
                 fecha_inicio: '',
                 hora_inicio: '',
-                minutos_inicio: '',
                 fecha_termino: '',
                 hora_termino: '',
-                minutos_termino: '',
-
 
             })
 
@@ -293,6 +338,7 @@ export default {
                 this.RUM = this.resultadosData.RUM;
                 this.add();
                 //this.cargarresultados();
+                this.cargarParametros(this.RUM);
             }
         }
     }
