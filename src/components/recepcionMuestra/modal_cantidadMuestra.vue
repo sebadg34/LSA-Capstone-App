@@ -1,263 +1,422 @@
 <template>
-  <b-modal id="modal-cantidad" ref="modal" title="Cantidad de submuestras" size="xl" >
-    <template #modal-header="{ close }">
-      <!-- Emulate built-in modal header close button action -->
-      <b-row class="d-flex justify-content-around">
-        <div class="pl-3">Cantidad de muestras</div>
-      </b-row>
-      <button type="button" class="close" aria-label="Close" @click="close()">
-        <span aria-hidden="true" style="color:white">&times;</span>
-      </button>
-    </template>
+  <div>
+<b-modal id="modal-cantidad" ref="modal" title="Cantidad de submuestras" size="xl" >
+<template #modal-header="{ close }">
+ <!-- Emulate built-in modal header close button action -->
+ <b-row class="d-flex justify-content-around">
+   <div class="pl-3">Cantidad de muestras</div>
+ </b-row>
+ <button type="button" class="close" aria-label="Close" @click="close()">
+   <span aria-hidden="true" style="color:white">&times;</span>
+ </button>
+</template>
+<div>
+ <b-table :items="tablaItems" :fields="tablaFields">
+   <template #cell(orden)="row">
+     <b-form-input v-model="row.item.orden" type="number" min="1"></b-form-input>
+   </template>
+   <template #cell(identificacion)="row">
+     <b-form-input v-model="row.item.identificacion" placeholder="Ingrese la identificación de la muestra"></b-form-input>
+   </template>        
+   <template #cell(PYM)="row">
+     <b-list-group>
+       <!-- Utilizamos la directiva 'v-b-toggle' para habilitar la funcionalidad de colapsar -->
+       <!-- Establecemos 'visible' en true para el primer elemento del grupo -->
+       <b-list-group-item v-b-toggle.collapse-pym :visible="row.item.PYM.length > 0">
+         <strong>{{ row.item.PYM[0].parametro }}</strong> - {{ row.item.PYM[0].metodologia }}
+       </b-list-group-item>
+       <!-- Agregamos un colapsable 'b-collapse' al grupo con el ID 'collapse-pym' -->
+       <b-collapse id="collapse-pym">
+         <!-- Iteramos sobre el resto de elementos del array 'row.item.PYM' -->
+         <!-- Mostramos el parámetro y la metodología de cada elemento -->
+         <template v-for="item in row.item.PYM.slice(1)">
+           <b-list-group-item :key="item.id_parametro">
+             <strong>{{ item.parametro }}</strong> - {{ item.metodologia }}
+           </b-list-group-item>
+         </template>
+         <!-- Si 'row.item.PYM' está vacío o no es un array, mostramos un mensaje -->
+         <template v-if="!Array.isArray(row.item.PYM) || row.item.PYM.length === 0">
+           <b-list-group-item>No se encontraron datos</b-list-group-item>
+         </template>
+       </b-collapse>
+     </b-list-group>
+   </template>
+   <template #cell(accion)="row">
+     <b-dropdown right size="sm" variant="link" toggle-class="text-decoration-none" no-caret>
+         <template #button-content>
+             <b-icon style="height: 80%; width: 80%; align-items: center;" icon="three-dots" variant="dark" aria-hidden="true"></b-icon>
+         </template>
+         <b-dropdown-item v-if="row" @click="abrirParam(row.item)">
+              <b-icon icon="clipboard" aria-hidden="true" class="mr-2"></b-icon>Administrar parámetros
+         </b-dropdown-item>                                                                                                                    
+     </b-dropdown>
+   </template>      
+ </b-table>
+</div> 
+<template #modal-footer="{ close }" >
+ <b-button @click="guardarFormulario()" variant="primary" size="xl" class="float-right reactive-button" style="font-weight:bold">Guardar</b-button>
+ <b-button @click="close()" variant="primary" size="xl" class="float-right reactive-button" style="font-weight:bold">
+   Cerrar
+ </b-button>
+</template>
 
-    <div>
-      <b-table :items="tablaItems" :fields="tablaFields">
-        
-        <template #cell(identificacion)="row">
-          <b-form-input v-model="row.item.identificacion" placeholder="Ingrese la identificación de la muestra"></b-form-input>
-        </template>
-        <template #cell(parametros_previos)="row">
-          <b-form-input readonly v-model="row.item.parametros_previos" placeholder="No posee o nuevo."></b-form-input>
-        </template>
-        <template #cell(parametros)="row">
-          <template v-if="objetosSeleccionados.length > 0">
-            <b-list-group v-if="row.item.nombre_parametro.length > 0">
-                                                  <b-list-group-item v-if="row.item.nombre_parametro.length > 1" v-b-toggle="'toggle-' + row.index" style="padding:2px; border: none; border-bottom: solid 1px #dbdbdb; ">{{ row.item.nombre_parametro[0] }}
-                                                    <b-icon style="position:absolute; right:0px; top:25%; color: #949494" icon="caret-down-fill"></b-icon>
-                                                  </b-list-group-item>
-                                                  <b-list-group-item v-if="row.item.nombre_parametro.length === 1" style="padding:2px; border: none; border-bottom: solid 1px #dbdbdb; ">{{ row.item.nombre_parametro[0] }}</b-list-group-item>
-                                                  <div v-if="row.item.nombre_parametro.length > 1">
-                                                    <b-collapse :id="'toggle-' + row.index">
-                                                      <b-list-group-item style="padding:2px;  border: none; border-bottom: solid 1px #dbdbdb;" v-for="(parametro, index) in row.item.nombre_parametro.slice(1)" :key="index">{{ parametro }}</b-list-group-item>
-                                                    </b-collapse>
-                                                  </div>
-                                              </b-list-group>            
-          </template>
-        </template>
-        <template #cell(metodologias_previas)="row">
-          <template v-if="objetosSeleccionados.length > 0">
-            <b-form-input readonly v-model="row.item.metodologias_previas" placeholder="No posee o nueva."> </b-form-input>             
-          </template>
-        </template>
-        <template #cell(metodologias)="row">
-          <template v-if="objetosSeleccionados.length > 0">
-            <b-form-select v-model="row.item.metodologias" :options="metodologiasOptions">                                                                     
-              </b-form-select>             
-          </template>
-        </template>
-        <template #cell(accion)="row">
-          <b-button variant="danger" @click="eliminarFila(row.index)">
-            <b-icon-trash-fill></b-icon-trash-fill>
-          </b-button>
-        </template>
-      </b-table>
-    </div>  
+</b-modal>
 
-    <template #modal-footer="{ close }">
-      <b-button @click="guardarFormulario()" variant="primary" size="xl" class="float-right reactive-button" style="font-weight:bold">Guardar</b-button>
-      <b-button @click="close()" variant="primary" size="xl" class="float-right reactive-button" style="font-weight:bold">
-                    Cerrar sin guardar
-                </b-button>
-    </template>
-  </b-modal>
-</template>  
+<b-modal id="modal-Agregar-P" ref="m" :title="`Agregar parámetro a analista`" size="lg">
+               <template #modal-header="{ close }">
+                   <b-row class="d-flex justify-content-around">
+                       <div class="pl-3">Asignar Parámetros a analista</div>
+                   </b-row>
+                   <button type="button" class="close" aria-label="Close" @click="close()">
+                       <span aria-hidden="true" style="color:white">&times;</span>
+                   </button>
+               </template>
+               <b-row>
+                   <b-col>
+                       <b-form-group label="Seleccione un parámetro">
+                           <b-form-select v-model="parametroSeleccionadoIngreso" :options="TodasopcionesParametro" text-field="nombre_parametro" value-field="id_parametro" @change="agregar(filaSeleccionada)"></b-form-select>
+                       </b-form-group>
+                   </b-col>
+                   
+                   <b-col>
+                       <b-form-group label="Seleccione una metodologia">
+                           <b-form-select v-model="metodologiaSeleccionadoIngreso" :options="opcionesMetodologia" text-field="nombre_metodologia" value-field="id_metodologia" @change="agregar(filaSeleccionada)"></b-form-select>
+                       </b-form-group>
+                   </b-col>  
+               </b-row>
+
+               <b-row v-if="filaSeleccionada && filaSeleccionada.PYM.length > 0" class="mt-3">
+                   <b-col>
+                       <b-form-group label="Parámetros Seleccionados:">
+                           <div v-for="(objeto, index) in filaSeleccionada.PYM" :key="index" class="d-flex align-items-center objetos-item mb-3">
+                               <b-input readonly :value="objeto.parametro" class="mr-2"></b-input>
+                               <b-input readonly :value="objeto.metodologia" class="mr-2"></b-input>                                     
+                               <b-button variant="danger" @click="eliminarElementoPYM(filaSeleccionada, index)" class="ml-2">
+                                   <b-icon-trash-fill></b-icon-trash-fill>
+                               </b-button>
+                           </div>
+                       </b-form-group>
+                   </b-col>
+               </b-row>
+           
+               <b-alert variant="danger" :show="alertaDuplicado" dismissible @dismissed="alertaDuplicado = false">
+                   El Parametro ya se encuentra agregado.
+               </b-alert>
+           
+               <b-alert variant="success" :show="alertaExito" dismissible @dismissed="alertaExito = false">
+                   Parámetro agregado con éxito!
+               </b-alert>
+               <!-- //////////////////////////////////////////MODAL-FOOTER////////////////////////////////////////////////////////////////////////////////// -->
+               <template #modal-footer="{ close }">                        
+                   <b-button @click="close()" variant="primary" size="xl" class="float-right reactive-button" style="font-weight:bold">
+                     Cerrar
+                   </b-button>
+               </template>
+           </b-modal>
+         </div>
+
+
+
+</template>
+
+
 
 <script>
-  export default {
-    data() {
-      return {
-        parametrosOptions: [],
-        metodologiasOptions: [],
-        identificacion: '',
-        orden: 0,
-        identificacionesArray: [],
-        parametrosArray: [],
-        metodologiasArray: [],
-        tablaItems: [],
-        id_eliminado: [],
-        submuestrasID : []
 
-        
-      };
-    },
+import ElementosService from '@/helpers/api-services/Elementos.service';
 
-    props: {
-      nMuestras: {
-        type: String,
-        default: '',
-      },
+export default {
+data() {
+return {
+ parametrosOptions: [],
+   metodologiasOptions: [],
+   identificacion: '',
+   orden: 0,
+   identificacionesArray: [],
+   parametros_metodologias: [],
+   TodasopcionesParametro: [],
+   objetossubSeleccionados: [],
+   parametroSeleccionado: '',
+   metodologiaSeleccionada: '',
+   opcionesMetodologia: [],
+   alertaDuplicado: false,
+       alertaExito: false,
+       alertaExiste: false,
+       alertaNOexiste: false,
+       metodologiaDeshabilitada: true,
+       parametroSeleccionadoIngreso: '',
+       filaSeleccionada: null,
+       metodologiaSeleccionadoIngreso: '',
+       metodologiasData: [],
+       index: null,
+       eliminar: []
+   
+   
+};
+},
 
-      objetosSeleccionados: {
-        type: Array,    
-      },
+props: {
+nMuestras: {
+ type: String,
+ default: '',
+},
+objetosSeleccionados: {
+ type: Array,
+},
+identificaciones: {
+ type: Array,
+},
+sub: {
+  type: Array
+},
+},
 
-      identificaciones: {
-        type: Array
-      },
-
-      id_submuestra:{
-        type: Array
-      },
-
-      parametros : {
-        type: Array
-      },
-
-      metodologias : {
-        type: Array
-      }
-    },
-
-    mounted() {
-      
-      this.$refs.modal.$on('show', () => {
-        if (this.id_submuestra.length > 0) {
-          this.submuestrasID = JSON.parse(JSON.stringify(this.id_submuestra));          
-          console.log('Id_submuestras recibidas:', this.submuestrasID);          
-        }
-        if (this.identificaciones.length > 0) {
-          this.identificacionesArray = JSON.parse(JSON.stringify(this.identificaciones));          
-          console.log('Identificaciones recibidas:', this.identificacionesArray);          
-        }
-        if (this.parametros.length > 0){
-          this.parametrosArray = this.parametros;
-          console.log("Nombres Parametro Recibidos:", this.parametrosArray)
-        }
-        if (this.metodologias.length > 0){
-          this.metodologiasArray = this.metodologias;
-          console.log("Nombres metodologia Recibidas:", this.metodologiasArray)
-        }
-        this.calcularTablaItems();
-      });
-    },
-
-    watch: {
-      objetosSeleccionados: {
-        handler(nuevosObjetosSeleccionados) {
-          const parametrosSet = new Set(nuevosObjetosSeleccionados.map(p => p.parametro));
-          const metodologiasSet = new Set(nuevosObjetosSeleccionados.map(m => m.metodologia));
-          this.parametrosOptions = [...parametrosSet];
-          this.metodologiasOptions = [...metodologiasSet];
-          console.log("objs selecc: ", this.objetosSeleccionados)
-          this.calcularTablaItems();          
-          
-        },
-        immediate: true
-        
-      }
-      
-    },
-
-    computed: {          
-
-      tablaFields() {
-        const fields = [
-          { key: 'id_submuestra', label: 'Id', thClass: 'text-center', tdClass: 'item-center' },
-          { key: 'orden', label: 'Orden', thClass: 'text-center', tdClass: 'text-center', editable: true },
-          { key: 'identificacion', label: 'Identificación', thClass: 'text-center', tdClass: 'item-center' },
-          
-        ];
-
-        if (this.objetosSeleccionados.length > 0) {
-          fields.push({ key: 'parametros_previos', label: 'Parámetros previos', thClass: 'text-center', tdClass: 'item-center' });
-          fields.push({ key: 'parametros', label: 'Parámetros', thClass: 'text-center', tdClass: 'item-center' });
-          fields.push({ key: 'metodologias_previas', label: 'Metodologías previas', thClass: 'text-center', tdClass: 'item-center'});
-          fields.push({ key: 'metodologias', label: 'Metodologías', thClass: 'text-center', tdClass: 'item-center'});
-          fields.push({ key: 'accion', label: 'Acción', thClass: 'text-center', tdClass: 'item-center'})
-        }
-        return fields;
-      },
-
-      opciones() {
-        return this.objetosSeleccionados;
-      },    
-
-      mostrarMensaje() {
-        return this.parametrosOptions.length === 0;
-      },
-    },
-
-    methods: {
-      guardarFormulario() {
-        const datosIngresados = this.tablaItems.map((item) => {
-          const parametroSeleccionado = this.objetosSeleccionados.find(obj => obj.parametro === item.parametros);
-          const metodologiaSeleccionada = this.objetosSeleccionados.find(obj => obj.metodologia === item.metodologias);
-          const id_parametro = parametroSeleccionado ? parametroSeleccionado.id_parametro : null;
-          const id_metodologia = metodologiaSeleccionada ? metodologiaSeleccionada.id_metodologia : null;    
-          
-          return {
-            id_submuestra: item.id_submuestra,
-            identificador: item.identificacion,
-            orden: item.orden,            
-            id_parametro: id_parametro,
-            id_metodologia: id_metodologia
-          };
-        });  
-
-        console.log("dato a enviar: ", datosIngresados);
-        this.$emit('datosIngresados', datosIngresados);
-        this.$emit('identificacionEliminada', this.id_eliminado)
-        
-
-        this.$refs.modal.hide();
-      },
-      
-      calcularTablaItems() {
+mounted(){
+this.$refs.modal.$on('show', () => {
+ if (this.identificaciones.length > 0){
+   this.identificacionesArray = JSON.parse(JSON.stringify(this.identificaciones));
+   console.log('Identificaciones recibidas: ', this.identificacionesArray);
+ }
+});
+this.obtenerParametro();
+},
+watch: {
+objetosSeleccionados:{
+ handler(nuevosObjetosSeleccionados) {
+     const parametrosSet = new Set(nuevosObjetosSeleccionados.map(p => p.parametro));
+     const metodologiasSet = new Set(nuevosObjetosSeleccionados.map(m => m.metodologia));
+     this.parametrosOptions = [...parametrosSet];
+     this.metodologiasOptions = [...metodologiasSet];
+   },
+   immediate: true
+},
+parametroSeleccionadoIngreso: function (newParametro) {
+       if (newParametro) {
+           this.actualizarMetodologias();
+           this.metodologiaDeshabilitada = false; // Habilita el input 
+       } else {
+           this.metodologiaDeshabilitada = true;
+       }
+   },
+},
+computed: {
+  tablaItems() {
     const items = [];
-    for (let i = 1; i <= parseInt(this.nMuestras); i++) {
-      const id_submuestra = this.submuestrasID[i - 1] || '';
-      const identificacion = this.identificacionesArray[i - 1] || '';
-      const parametroPrevio = this.parametrosArray[i - 1] || '';
-      const metodologiaPrevia = this.metodologiasArray[i - 1] || '';
+    const submuestras = this.sub; // Reemplaza 'tuArrayDeDatos' con el nombre de tu array de datos
+    console.log("computando :", submuestras)
 
-      // Find the default parametro and metodologia values for the current row
-      let defaultParametro = '';
-      let defaultMetodologia = '';
-      if (this.objetosSeleccionados.length > 0) {
-        const defaultSelected = this.objetosSeleccionados[i - 1];
-        if (defaultSelected && defaultSelected.parametro) {
-          defaultParametro = defaultSelected.parametro;
-        }
-        if (defaultSelected && defaultSelected.metodologia) {
-          defaultMetodologia = defaultSelected.metodologia;
-        }
-      }
+    for (let i = 0; i < submuestras.length; i++) {
+      const submuestra = submuestras[i];
+      const identificacion = submuestra.identificador || ''; // Reemplaza 'identificador' con la propiedad correspondiente a la identificación en tu objeto
 
       items.push({
-        orden: i,
-        id_submuestra,
+        orden: i + 1,
         identificacion,
-        parametros_previos: parametroPrevio,
-        parametros: defaultParametro,
-        metodologias_previas: metodologiaPrevia,
-        metodologias: defaultMetodologia, // Set the default value for "metodologias"
+        id_submuestra: submuestra.id_submuestra,        
+        PYM: submuestra.PYM 
       });
     }
-    this.tablaItems = items; // Update the property with the updated elements for the table
+    return items;
   },
+  tablaFields() {
+    const fields = [
+      { key: 'orden', label: 'Orden', thClass: 'text-center', tdClass: 'text-center', editable: true },
+      { key: 'identificacion', label: 'Identificación', thClass: 'text-center', tdClass: 'item-center' },
+    ];
+    if (this.sub.length > 0) { // Reemplaza 'tuArrayDeDatos' con el nombre de tu array de datos
+      fields.push({ key: 'PYM', label: 'Parámetros y metodologías', thClass: 'text-center', tdClass: 'item-center' });
+      fields.push({ key: 'accion', label: 'Acción', thClass: 'text-center', tdClass: 'item-center' });
+    }
+    return fields;
+  },      
+},
 
-      eliminarFila(index) {
-        const filaEliminada = this.tablaItems[index]; // Guardar la fila eliminada en una variable
+methods: {
+ guardarFormulario() {
+ const datosIngresados = this.tablaItems.map((item) => {        
 
-        // Eliminar la fila de la tabla
-        this.tablaItems.splice(index, 1);
+   // Capturamos los id_parametro e id_metodologia del PYM
+   const PYM = item.PYM.map(pymItem => ({
+     id_parametro : pymItem.id_parametro,
+     id_metodologia : pymItem.id_metodologia
+   }));              
 
-        // Eliminar los datos de parámetros previos y metodologías previas de la fila eliminada
-        filaEliminada.parametros_previos = '';
-        filaEliminada.metodologias_previas = '';
+   return {
+      id_submuestra: item.id_submuestra,
+      identificador: item.identificacion,
+      orden: item.orden,     
+      parametros_agregar: PYM
+              
+   };
+ });
 
-        // Hacer lo que necesites con la identificación de la fila eliminada
-        const identificacionEliminada = filaEliminada.identificacion;
-        console.log('Identificación eliminada:', identificacionEliminada);
+ console.log("dato a enviar: ", datosIngresados);
 
-        const submuestraEliminada = filaEliminada.id_submuestra;
-        console.log('Id_submuestra eliminada:', submuestraEliminada);
+ this.$emit('datosIngresados', datosIngresados);
+ this.$emit('eliminados', this.eliminar);
+ 
+},
+eliminarElementoPYM(filaSeleccionada, index) {
+  // Obtenemos el elemento eliminado antes de hacer el slice
+  const elementoEliminado = filaSeleccionada.PYM[index];
 
-        this.id_eliminado.push(submuestraEliminada);
-        console.log('submuestra a eliminar:', this.id_eliminado);
-      }
+  // Guardamos el id_submuestra en una variable para usarlo más adelante
+  const id_submuestra = filaSeleccionada.id_submuestra;
+
+  const orden = filaSeleccionada.orden;
+
+  // Hacemos un slice del array PYM para eliminar el elemento en el índice dado
+  filaSeleccionada.PYM = [...filaSeleccionada.PYM.slice(0, index), ...filaSeleccionada.PYM.slice(index + 1)];
+
+  // Agregamos el elemento eliminado junto con el id_submuestra a la lista de eliminados
+  this.eliminar.push({ id_submuestra, orden, ...elementoEliminado });
+
+  console.log("Elemento eliminado: ", elementoEliminado);
+  console.log("Elementos Eliminados: ", this.eliminar);
+},
 
 
-    },  
-  };
-</script>  
+abrirParam(row) {
+  this.filaSeleccionada = row;
+  this.$bvModal.show('modal-Agregar-P');
+  console.log("fila", this.filaSeleccionada);
+},
+
+onModalShown() {
+  this.alertaExito = false;
+  this.alertaDuplicado = false;
+},
+  
+obtenerParametro() {
+ ElementosService.obtenerParametros().then((response) => {
+   if (response.data != null && response.status === 200) {
+     console.log("Obteniendo Parametros: ", response.data);
+     // Almacenar los datos en metodologiasData
+     this.metodologiasData = response.data.map(item => ({
+         id_parametro: item.id_parametro,
+         nombre_parametro: item.nombre_parametro,
+         metodologias: item.metodologias.map(metodologia => ({
+             id_metodologia: metodologia.id_metodologia,
+             nombre_metodologia: metodologia.nombre_metodologia
+         }))
+     }));
+     this.opcionesMet = this.metodologiasData.flatMap(met => met.metodologias);
+     console.log("Metodologia opc: ", this.opcionesMet);
+     console.log("Metodologia Data: ", this.metodologiasData)
+     this.opcionesParametro = response.data.map(item => item.nombre_parametro);
+     this.TodasopcionesParametro = response.data.map(item => ({ 
+       id_parametro: item.id_parametro,
+       nombre_parametro: item.nombre_parametro
+     }));
+     console.log("opcion", this.opcionesParametro)
+   }
+ });
+},
+ 
+agregarObjetosSeleccionados() {
+ if (this.parametroSeleccionado && this.metodologiaSeleccionada) {
+   const ParamExistente = this.objetossubSeleccionados.find(objeto => objeto.parametro === this.parametroSeleccionado);
+   const MetExistente = this.objetossubSeleccionados.find(objeto => objeto.metodologia === this.metodologiaSeleccionada);
+   if (ParamExistente && MetExistente) {
+     this.alertaDuplicado = true;
+     this.parametroSeleccionado = '';
+     this.metodologiaSeleccionada = '';
+     this.alertaExito = false;
+   } else {
+     const parametroData = this.metodologiasData.find(item => item.nombre_parametro === this.parametroSeleccionado);
+     const metodologiaCompleta = parametroData.metodologias.find(metodologia => metodologia.nombre_metodologia === this.metodologiaSeleccionada);
+     console.log("parametroData:", parametroData)
+     console.log("metodologiaCompleta:", metodologiaCompleta)
+     this.objetossubSeleccionados.push({
+         id_parametro: parametroData.id_parametro,
+         parametro: this.parametroSeleccionado,
+         metodologia: metodologiaCompleta.nombre_metodologia,
+         id_metodologia: metodologiaCompleta.id_metodologia
+     });
+     this.parametros_agregar.push({
+         id_parametro: parametroData.id_parametro,
+         id_metodologia: metodologiaCompleta.id_metodologia,
+     });
+     console.log("las matrices ahn guardado lo siguiente: ", this.parametros_agregar)
+     this.parametroSeleccionado = '';
+     this.metodologiaSeleccionada = '';
+     this.alertaDuplicado = false;
+     this.alertaExito = true;
+   }
+ }
+},
+
+agregar(filaSeleccionada) {
+
+ if( this.parametroSeleccionadoIngreso && this.metodologiaSeleccionadoIngreso){
+   console.log("objetos seleccionados: ", this.parametroSeleccionadoIngreso , this.metodologiaSeleccionadoIngreso)
+   const ParamExistente = this.filaSeleccionada.PYM.find(objeto => objeto.id_parametro === this.parametroSeleccionadoIngreso);
+   const MetExistente = this.filaSeleccionada.PYM.find(objeto => objeto.metodologia === this.metodologiaSeleccionadoIngreso);
+   
+   if (ParamExistente && MetExistente) {
+     this.alertaDuplicado = true;
+     this.parametroSeleccionadoIngreso = '';
+     this.metodologiaSeleccionadaIngreso = '';
+     this.alertaExito = false;
+     console.log("duplicados", ParamExistente , MetExistente)
+   }else{
+     const parametroData = this.metodologiasData.find(item => item.id_parametro === this.parametroSeleccionadoIngreso);
+     const metodologiaCompleta = parametroData.metodologias.find(metodologia => metodologia.nombre_metodologia === this.metodologiaSeleccionadoIngreso);
+     console.log("parametroData:", parametroData)
+     console.log("metodologiaCompleta:", metodologiaCompleta)
+     const nuevoElemento = {
+ id_parametro: this.parametroSeleccionadoIngreso,
+ id_metodologia: metodologiaCompleta.id_metodologia,
+ parametro: parametroData.nombre_parametro,
+ metodologia: metodologiaCompleta.nombre_metodologia,
+};
+
+// Llamamos al método para agregar el nuevo elemento a la fila seleccionada
+this.agregarElementoPYM(filaSeleccionada, nuevoElemento);
+
+     console.log("nueva fila : ", filaSeleccionada.PYM)
+     this.alertaExito = true;
+     this.alertaDuplicado = false;
+     this.parametroSeleccionadoIngreso = '';
+     this.metodologiaSeleccionadaIngreso = '';  
+
+   }
+ }                 
+     
+},
+
+agregarElementoPYM(filaSeleccionada, nuevoElemento) {
+  // Copiar
+  const nuevoPYM = [...filaSeleccionada.PYM];
+
+  // Agregar
+  nuevoPYM.push(nuevoElemento);
+
+  // Asignar
+  filaSeleccionada.PYM = nuevoPYM;
+},
+ actualizarMetodologias() {
+     const parametro = this.parametroSeleccionadoIngreso;
+     // Buscar el objeto correspondiente al parámetro seleccionado en metodologiasData
+     console.log("Metodologia Data 2: ", this.metodologiasData)
+     const parametroData = this.metodologiasData.find(item => item.id_parametro === parametro);
+     console.log("Parámetro seleccionado:", parametro);
+     console.log("Objeto del parámetro seleccionado:", parametroData);
+     console.log("Metodologías del parámetro seleccionado:", parametroData.metodologias);
+     this.metodologias = parametroData.metodologias
+     console.log("Metodologías den array:", this.metodologias);
+     this.opcionesMetodologia = this.metodologias.map(item => item.nombre_metodologia);
+     console.log("opciones Metodologia:", this.opcionesMetodologia);
+     /*if (parametroData.metodologias.length > 0) {
+       // Obtener las metodologías asociadas al parámetro seleccionado
+       const metodologias = parametroData.metodologias[0].metodologias;
+       console.log("Metodologías asociadas al parámetro seleccionado:", metodologias);
+       // Obtener solo los nombres de las metodologías
+       this.opcionesMetodologia = metodologias.map(item => item.nombre_metodologia);
+     } else {
+       this.opcionesMetodologia = []; // No se encontraron metodologías para el parámetro seleccionado
+     }*/
+ },
+},  
+};
+</script> 

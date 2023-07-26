@@ -2,7 +2,7 @@
     <div>
   
         <!-- <validation-observer ref="form"> -->
-          <modal_cantidadMuestra :n-muestras="nMuestras" :objetosSeleccionados="objetosSeleccionados" @datosIngresados="capturarDatos" @identificacionEliminada="identificadores" :identificaciones="identificacion" :id_submuestra="id_submuestra" :parametros="prevP" :metodologias="prevM" />
+          <modal_cantidadMuestra :n-muestras="nMuestras" :objetosSeleccionados="objetosSeleccionados" :sub="sub" @datosIngresados="capturarDatos" @eliminados="SubEliminadas" @identificacionEliminada="identificadores" :identificaciones="identificacion" :id_submuestra="id_submuestra" :parametros="prevP" :metodologias="prevM" />
           
             <modal_agregarMetodologia/>
             <modal_agregarParametro/>
@@ -55,48 +55,48 @@
                                                         </ValidationProvider>
                                                     </b-col>
   
-                                                    <b-col class="col-6">
-                                                        <ValidationProvider name="rut" rules="required|rut"
-                                                            v-slot="validationContext">
-                                                            <label for="input-live">Rut solicitante:</label>
-                                                            <div class="d-flex align-items-center ">
-                                                                <b-input-group size="sm">
-                                                                    <b-form-input id="input-live" v-model="rut"
-                                                                        :state="getValidationState(validationContext)"
-                                                                        @input="buscar">
-                                                                    </b-form-input>                                                                
-                                                                  </b-input-group>
-                                                            </div>
-                                                            <b-form-invalid-feedback>{{ validationContext.errors[0]
-                                                            }}</b-form-invalid-feedback>
-                                                        </ValidationProvider>
+                                                    <b-col class="col-6">                                                       
   
                                                         <b-alert :show="dismissCountDown" dismissible fade variant="danger"
                                                             @dismiss-count-down="countDownChanged">
                                                             El rut del solicitante no está registrado en la base de datos
                                                         </b-alert>
   
-                                                        <ValidationProvider name="Nombre empresa" rules="required" v-slot="validationContext">
-                                                              <label for="input-live">Nombre empresa:</label>                                                            
-                                                              <b-form-select v-model="rut_empresa"  
-                                                              :state="getValidationState(validationContext)" 
-                                                              text-field="nombre_empresa" 
-                                                              value-field="rut_empresa" 
-                                                              @input="actualizarOpcionesDireccion">
-                                                              <option v-for="opcion in opcionesEmpresa" :key="opcion.rut_empresa" :value="opcion.rut_empresa">
-                                                              {{ opcion.nombre_empresa }}</option></b-form-select>                                                                                                                                               
-                                                              <b-form-invalid-feedback>{{ validationContext.errors[0] }}</b-form-invalid-feedback>
+                                                        <ValidationProvider name="rut" rules="required"
+                                                            v-slot="validationContext">
+                                                            <label for="input-live">Nombre empresa:</label>
+                                                            <div class="d-flex align-items-center ">
+                                                                <b-input-group >
+                                                                    <b-form-select id="input-live" v-model="solicitante"                                                                        
+                                                                        :state="getValidationState(validationContext)"
+                                                                        :options="opcionesEmpresa"                                                                        
+                                                                        text-field="nombre_empresa" value-field="rut_empresa"                                                                      
+                                                                        >
+                                                                    </b-form-select>
+
+                                                                    <b-input-group-append>
+                                                                        <b-button class=" lsa-orange"                                                                            
+                                                                            @click="actualizarSelectedEmpresa()">
+                                                                            <b-icon icon="search"></b-icon>
+                                                                        </b-button>
+                                                                    </b-input-group-append>
+                                                                </b-input-group>
+                                                            </div>
+                                                            <b-form-invalid-feedback>{{ validationContext.errors[0]
+                                                            }}</b-form-invalid-feedback>
                                                         </ValidationProvider>
   
-                                                        <ValidationProvider name="Dirección Cliente" rules="required" v-slot="validationContext">
-                                                              <label for="input-live">Dirección empresa:</label>
-                                                              <b-form-select id="input-live" v-model="direccion" :state="getValidationState(validationContext)" text-field="direccionConCiudad" value-field="id_ciudad">
-                                                                  <option v-for="opcion in opcionesDireccion" :key="opcion.id_ciudad" :value="opcion.id_ciudad">
-                                                                      {{ opcion.direccionConCiudad }} 
-                                                                  </option>
-                                                              </b-form-select>
-                                                              <b-form-invalid-feedback>{{ validationContext.errors[0] }}</b-form-invalid-feedback>
-                                                          </ValidationProvider>
+                                                        <ValidationProvider name="Dirección Cliente" rules="required"
+                                                            v-slot="validationContext">
+                                                            <label for="input-live">Dirección empresa:</label>
+                                                            <b-form-select id="input-live"
+                                                                v-model="direccion" :options="opcionesDireccion"
+                                                                :state="getValidationState(validationContext)"
+                                                                text-field="direccionConCiudad" value-field="id_ciudad">
+                                                            </b-form-select>
+                                                            <b-form-invalid-feedback>{{ validationContext.errors[0]
+                                                            }}</b-form-invalid-feedback>
+                                                        </ValidationProvider>
                                                     </b-col>
                                                 </b-row>
                                             </b-card>
@@ -371,27 +371,33 @@
                                                 <b-row>
                                                     <b-col class="col-6">
                                                       <b-form-group label="Seleccione una norma">
+                                                        <b-input-group>
                                                         <b-form-select v-model="norma" 
-                                                        text-field="nombre_norma"
-                                                        value-field="id_norma" 
-                                                        @change="obtenerTablasNormas">
-                                                        <option v-for="opcion in opcionesNorma" 
-                                                        :key="opcion.id_norma" 
-                                                        :value="opcion.id_norma">
-                                                        {{opcion.nombre_norma}}</option></b-form-select>
+                                                            text-field="nombre_norma"
+                                                            value-field="id_norma" 
+                                                            @change="obtenerTablasNormas">
+                                                            <option v-for="opcion in opcionesNorma" 
+                                                            :key="opcion.id_norma" 
+                                                            :value="opcion.id_norma">
+                                                            {{opcion.nombre_norma}}</option>
+                                                        </b-form-select>
+                                                        <b-input-group-append>
+                                                                <b-button size="sm" class="lsa-orange reactive-button"
+                                                                    style="aspect-ratio:1;"
+                                                                    @click="PushParametrosMetodologias()">
+                                                                    <b-icon style="color:white"
+                                                                        icon="box-arrow-in-down-left"></b-icon>
+                                                                </b-button>
+                                                            </b-input-group-append>
+                                                        </b-input-group>
                                                       </b-form-group>
                                                     </b-col>
   
                                                     <b-col class="col-6">
-                                                      <b-form-group label="Seleccione una tabla">
-                                                        <b-form-select v-model="tabla" 
-                                                          value-field="id_tabla" 
-                                                          text-field="nombre_tabla" 
-                                                          @input="actualizarParametrosTabla">
-                                                          <option v-for="opcion in opcionesTabla" 
-                                                          :key="opcion.id_tabla.toString()" 
-                                                          :value="opcion.id_tabla">
-                                                          {{ opcion.nombre_tabla }}</option></b-form-select>
+                                                        <b-form-group label="Seleccione una tabla">
+                                                            <b-form-select :disabled="!norma" v-model="tabla"
+                                                                :options="opcionesTabla" value-field="id"
+                                                                @change="actualizarParametrosTabla"></b-form-select>
                                                         </b-form-group>
                                                     </b-col>
                                                 </b-row>
@@ -410,7 +416,7 @@
   
                                                             <b-input-group-append>
                                                                 <b-button size="sm" class="lsa-orange reactive-button"
-                                                                    style="aspect-ratio:1; border: none"
+                                                                    style="aspect-ratio:1;"
                                                                     v-b-modal.modal-Agregar-Opciones>
                                                                     <b-icon style="color:white"
                                                                         icon="plus-circle-fill"></b-icon>
@@ -469,7 +475,7 @@
                                             <b-col class="col-12">
                                                 <b-row class="d-flex justify-content-end">
   
-                                                    <strong style="padding-left:30px">parámetros de muestras</strong>
+                                                    <strong style="padding-left:30px">Parámetros de muestras</strong>
                                                 </b-row>
                                             </b-col>
                                         </template>
@@ -913,7 +919,9 @@ export default {
             empleados_originales: [],
             emp: [],
             diferentes: [],
-            empleadosNuevos: []
+            empleadosNuevos: [],
+            sub : [],
+            empleadosAgrupados: []
         };
     },
 
@@ -935,7 +943,7 @@ export default {
             console.log("Obteniedo detalles",response.data)
             this.datos = response.data;
             this.RellenarForm(response.data);
-            this.buscar();             
+                        
             
             
             const parametros = response.data.parametros_metodologias;
@@ -961,7 +969,7 @@ export default {
             }
             console.log("param en sistema: ", this.objetosSeleccionados)
             this.obtenerTablasNormas();
-            this.actualizarParametrosTabla();
+            //this.actualizarParametrosTabla();
 
 
 
@@ -985,7 +993,9 @@ export default {
 
         this.obtenerMatriz(), 
         
-        this.obtenerNormas(),     
+        this.obtenerNormas(), 
+        
+        this.obtenerEmpresas(),
         
         
         
@@ -1047,27 +1057,27 @@ export default {
         },
 
         tabla: function (nuevoValor) {
-            const tablaSeleccionada = this.tablaArray.find(tabla => tabla.id_tabla === nuevoValor);
-            console.log("entrando al watcher: ", tablaSeleccionada)
+            const tablaSeleccionada = this.tablasProcesadas.find(tabla => tabla.nombre_tabla === nuevoValor);
             if (tablaSeleccionada) {
-              const idTabla = tablaSeleccionada.id_tabla;
-              console.log("ID de tabla seleccionada:", idTabla);
-              this.id_tabla = idTabla;
-              this.parametroDeshabilitado = false;
+                const idTabla = tablaSeleccionada.id_tablas[0]; // Suponiendo que solo haya una id_tabla por cada nombre_tabla
+                console.log("ID de tabla seleccionada:", idTabla);
+                this.id_tabla = idTabla
+                this.parametroDeshabilitado = false;
             } else {
-              this.parametroDeshabilitado = true;
+                this.parametroDeshabilitado = true;
             }
         },
-               /* direccion(newValue) {
+        direccion(newValue) {
             const direccionSeleccionada = this.opcionesDireccion.find(opcion => opcion.id_ciudad === newValue);
             if (direccionSeleccionada) {
                 const direccion = direccionSeleccionada.direccion;
-                console.log("Dirección seleccionada:", direccion);                
+                console.log("Dirección seleccionada:", direccion);
+                // Realiza cualquier otra acción necesaria con la dirección seleccionada
                 this.direccion_empresa = direccion;
             } else {
                 console.log("No se encontró la dirección seleccionada.");
             }
-        },*/
+        },
     },
 
     methods: {
@@ -1111,7 +1121,16 @@ export default {
             }
           }
           return '';
-        },      
+        }, 
+        
+        obtenerEmpresas () {
+            MuestraService.obtenerEmpresas().then((response) => {
+                console.log("obteniendo empresas",response.data)
+                const empresas = response.data;
+                this.opcionesEmpresa = empresas;
+            })
+
+        },
 
         onModalShown() {
             this.alertaExito = false;
@@ -1506,40 +1525,7 @@ if(this.telefonos_agregar === this.telefonos_agregarOG){
 
         },
 
-        buscar(){
-
-            const data = {
-                rut_solicitante: this.rut
-            };
-
-            MuestraService.obtenerDetallesSolicitante(data).then((response) =>{
-                if(response.data != null && response.status === 200){
-                    console.log("obteniendo detalles", response.data.detalles_empresas)
-                    const empresasSolicitante = response.data.detalles_empresas.map(empresas => ({
-                        nombre_empresa: empresas.nombre_empresa,
-                        rut_empresa: empresas.rut_empresa
-                    }))
-                    console.log("empresas Solicitante: ", empresasSolicitante)
-                    this.opcionesEmpresa = empresasSolicitante;
-                    console.log("opciones empresas : ", this.opcionesEmpresa)
-
-                    const empresasDirecciones = response.data.detalles_empresas.map(empresas => ({
-                        nombre_empresa: empresas.nombre_empresa,
-                        rut_empresa: empresas.rut_empresa,
-                        nombre_ciudad: empresas.nombre_ciudad,
-                        id_ciudad: empresas.id_ciudad,
-                        direccion: empresas.direccion,
-                    }));
-                    console.log("empresas Solicitante: ", empresasDirecciones)
-                    this.empresasDirecciones = empresasDirecciones;
-
-                }
-                this.actualizarOpcionesDireccion()
-                this.detallesCotizaciones();
-            })           
-            console.log("rut:", data)         
-
-        },      
+            
 
         actualizarOpcionesDireccion() {
             // Filtrar las direcciones correspondientes a la empresa seleccionada
@@ -1677,48 +1663,65 @@ if(this.telefonos_agregar === this.telefonos_agregarOG){
             })
         },*/
 
-        /*actualizarSelectedEmpresa() {
+        actualizarSelectedEmpresa() {
 
-            console.log("entre a la funcion selected empresa")
-            const empresaSeleccionada = this.opcionesEmpresa.find(empresa =>
-                empresa.rut_empresa === this.rut_empresa
-            );
-            if (empresaSeleccionada) {
-                this.selectedEmpresa.id_ciudad = empresaSeleccionada.id_ciudad;
-                this.selectedEmpresa.nombre_ciudad = empresaSeleccionada.nombre_ciudad;
-                this.selectedEmpresa.direccion = empresaSeleccionada.direccion;
-                this.opcionesDireccion = empresaSeleccionada.id_ciudad.map((idCiudad, index) => ({
-                    id_ciudad: idCiudad,
-                    direccion: empresaSeleccionada.direccion[index],
-                    direccionConCiudad: `${empresaSeleccionada.nombre_ciudad[index]} / ${empresaSeleccionada.direccion[index]}`
-                }));
-                const nombreEmpresaSeleccionada = empresaSeleccionada.nombre_empresa;
-                console.log("Nombre de la empresa seleccionada: ", nombreEmpresaSeleccionada);
-                this.nombre_empresa = nombreEmpresaSeleccionada;
-                console.log("Nombre_empresa: ", this.nombre_empresa);
+console.log("empresa:", this.solicitante)
+const nombreEmpresa = this.opcionesEmpresa.find(objeto => objeto.rut_empresa === this.solicitante);
+console.log("empresa:", nombreEmpresa)
+let nombreEmpresaEncontrada = "";
+if (nombreEmpresa) {
+nombreEmpresaEncontrada = nombreEmpresa.nombre_empresa;
+this.nombre_empresa = nombreEmpresaEncontrada;
+}
 
-                const RUTEmpresaSeleccionada = empresaSeleccionada.rut_empresa;
-                console.log("RUT de la empresa seleccionada: ", RUTEmpresaSeleccionada);
-                this.rut_empresa = RUTEmpresaSeleccionada;
-            }
-        },*/
+console.log("Nombre de la empresa encontrada:", nombreEmpresaEncontrada);
 
-        /*generarFechaHoraActual() {
-                const now = new Date();
-                const dia = now.getDate().toString().padStart(2, '0');
-                const mes = (now.getMonth() + 1).toString().padStart(2, '0');
-                const anio = now.getFullYear().toString();
-                this.fecha = `${dia}/${mes}/${anio}`;
-                this.hora = now.toLocaleTimeString();
-            },*/
+
+MuestraService.obtenerEmpresas().then((response) => {
+    console.log("obteniendo empresas",response.data)
+    const empresas = response.data;
+    const direccion = empresas.flatMap(direccion => direccion.ciudades_direcciones);
+    console.log("direccion : ", direccion)
+
+    
+const direccionCiudad = direccion.map(c => c.direccion);
+const nombre_ciudad = direccion.map(c => c.nombre_ciudad);
+    this.opcionesDireccion = direccion.map(opc => ({
+    id_ciudad: opc.id_ciudad,
+    nombre_ciudad: opc.nombre_ciudad,
+    direccion: opc.direccion,
+    direccionConCiudad: `${nombre_ciudad} / ${direccionCiudad}`               
+
+}))
+console.log("opciondes direccion : ", direccionCiudad);
+});
+const data = {
+    rut_empresa: this.solicitante
+};
+   
+MuestraService.obtenerCotizacionEmpresa(data).then((response) => {
+    if (response.data != null && response.status === 200){
+        console.log("cotizaciones: ", response.data)
+        this.opcionesCotizacion = response.data.map(cotizacion => ({
+            id_cotizacion: cotizacion.id_cotizacion,
+            nombre_original_documento: cotizacion.nombre_original_documento,
+            idconNombre: `${cotizacion.id_cotizacion} - ${cotizacion.nombre_original_documento}`
+            
+        }))
+        console.log("Opc. cotizaciones: ", this.opcionesCotizacion)
+    }  
+})   
+
+
+
+
+},
 
         agregar() {
-            console.log("abirnedo modal")
-            
-            
-                this.alertaExito = false;
+            console.log("abirnedo modal");                       
+            this.alertaExito = false;
             this.alertaDuplicado = false;
-            this.$bvModal.show('modal-cantidad')
+            this.$bvModal.show('modal-cantidad');
         },
 
         agregarObjetosSeleccionados() {
@@ -2002,7 +2005,8 @@ if(this.telefonos_agregar === this.telefonos_agregarOG){
 
             // Array para cada columna
             const identificacionArray = [];
-            const ordenArray = [];            
+            const ordenArray = [];
+            const parametrosAgregar = [];            
             const idparametros = [];
             const idmetodologias = [];
             const submuestraArray = [];  
@@ -2015,6 +2019,7 @@ if(this.telefonos_agregar === this.telefonos_agregarOG){
                 ordenArray.push(objeto.orden);               
                 idmetodologias.push(objeto.id_metodologia);
                 idparametros.push(objeto.id_parametro);
+                parametrosAgregar.push(objeto.parametros_agregar);
                                
             });            
 
@@ -2022,41 +2027,54 @@ if(this.telefonos_agregar === this.telefonos_agregarOG){
                 submuestraArray.push({
                     id_submuestra: objeto.id_submuestra,
                     identificador: objeto.identificador,
-                    orden: objeto.orden,
-                    id_parametro: objeto.id_parametro,
-                    id_metodologia: objeto.id_metodologia
-                                });
+                    orden: objeto.orden,                    
+                    parametros_agregar: objeto.parametros_agregar
+                });
             });
 
             console.log("submuestra_original: ", this.submuestrasOG)            
-            console.log("submuestras: ", submuestraArray)                       
+            console.log("submuestras: ", submuestraArray) 
+            
+            const submuestraArrayTransformado = submuestraArray.map(submuestra => {
+  const parametros = submuestra.parametros_agregar.map(parametro => ({
+    id_submuestra: submuestra.id_submuestra,
+    identificador: submuestra.identificador,
+    orden: submuestra.orden,
+    id_parametro: parametro.id_parametro,
+    id_metodologia: parametro.id_metodologia,
+    
+  }));
+  return parametros;
+}).flat();
+
+console.log("submuestraArrayTransformado:", submuestraArrayTransformado);
 
             for (let i = 0; i < this.submuestrasOG.length; i++) {
-                const elementoRepetido = submuestraArray.find(objeto => (
-                  objeto.identificador === this.submuestrasOG[i].identificador &&
-                  objeto.orden === this.submuestrasOG[i].orden &&
-                  objeto.id_parametro === this.submuestrasOG[i].id_parametro &&
-                  objeto.id_metodologia === this.submuestrasOG[i].id_metodologia
-                ));
+  const elementoRepetido = submuestraArrayTransformado.find(objeto => (
+    objeto.identificador === this.submuestrasOG[i].identificador &&
+    objeto.orden === this.submuestrasOG[i].orden &&
+    JSON.stringify(objeto.id_parametro) === JSON.stringify(this.submuestrasOG[i].id_parametro)
+  ));
 
-                if (elementoRepetido) {
-                  console.log("elemento repetido:", elementoRepetido);
-                }
-            }
+  if (elementoRepetido) {
+    console.log("Elemento repetido:", elementoRepetido);
+  }
+}
 
-            const elementosNoRepetidos = submuestraArray.filter(objeto => (
-                !this.submuestrasOG.some(elemento => (
-                    elemento.identificador === objeto.identificador &&
-                    elemento.orden === objeto.orden &&
-                    elemento.id_parametro === objeto.id_parametro &&
-                    elemento.id_metodologia === objeto.id_metodologia
-                ))
-                
-            ));
 
-            console.log("elementos no repetidos:", elementosNoRepetidos);
 
-            this.submuestra_agregar = this.submuestrasOG;            
+const elementosNoRepetidos = submuestraArrayTransformado.filter(objeto => (
+  !this.submuestrasOG.some(elemento => (
+    elemento.identificador === objeto.identificador &&
+    elemento.orden === objeto.orden &&
+    JSON.stringify(objeto.id_parametro) === JSON.stringify(elemento.id_parametro)
+  ))
+));
+
+console.log("elementos no repetidos:", elementosNoRepetidos);
+
+
+                  
             
 
             elementosNoRepetidos.forEach(objeto => {
@@ -2070,6 +2088,17 @@ if(this.telefonos_agregar === this.telefonos_agregarOG){
             });
             
             console.log("submuestras_agregar: ", this.submuestra_agregar)
+            
+        },
+
+        SubEliminadas(datos){
+            console.log("datos capturados a eliminar:", datos);
+
+            this.submuestra_eliminar = datos;
+
+            console.log("submuestras a eliminar:", this.submuestra_eliminar);
+
+
             
         },
 
@@ -2117,96 +2146,115 @@ if(this.telefonos_agregar === this.telefonos_agregarOG){
                 if (response.data != null && response.status === 200) {
                     console.log("Obteniendo tablas via norma:", response.data);
 
-                    const tablaArray = [];
-                    // Iterar sobre la respuesta y agrupar las tablas por id_tabla
-                    response.data.forEach(tabla => {
-                      const tablaExistente = tablaArray.find(t => t.id_tabla === tabla.id_tabla);
-                    
-                      if (tablaExistente) {
-                        // Si ya existe una tabla con el mismo id_tabla, agregar los datos correspondientes
-                        tablaExistente.parametros.push({
-                          id_parametro: tabla.id_parametro,
-                          nombre_parametro: tabla.nombre_parametro
-                        });
-                    
-                        tablaExistente.metodologias.push({
-                          id_metodologia: tabla.id_metodologia,
-                          nombre_metodologia: tabla.nombre_metodologia
-                        });
-                      } else {
-                        // Si no existe una tabla con el mismo id_tabla, crear un nuevo objeto
-                        const nuevaTabla = {
-                          id_tabla: tabla.id_tabla,
-                          nombre_tabla: tabla.nombre_tabla,
-                          parametros: [
-                            {
-                              id_parametro: tabla.id_parametro,
-                              nombre_parametro: tabla.nombre_parametro
-                            }
-                          ],
-                          metodologias: [
-                            {
-                              id_metodologia: tabla.id_metodologia,
-                              nombre_metodologia: tabla.nombre_metodologia
-                            }
-                          ]
-                        };
-                        tablaArray.push(nuevaTabla);
-                        this.opcionesTabla = tablaArray
+                    // Almacena las tablas agrupadas por nombre
+                    const tablasAgrupadas = {};
 
-                    console.log("opciones tabla: ",this.opcionesTabla)
-                      }
+                    // agrupar las tablas por nombre
+                    response.data.forEach((tabla) => {
+                        const nombreTabla = tabla.nombre_tabla;
+                        const nombreParametro = tabla.nombre_parametro;
+                        const idParametro = tabla.id_parametro;
+                        const idMetodologia = tabla.id_metodologia;
+                        const nombreMetodologia = tabla.nombre_metodologia;
+
+                        // Verificar si la tabla ya está en el objeto tablasAgrupadas
+                        if (!tablasAgrupadas[nombreTabla]) {
+                            // Si la tabla no existe, crear un nuevo objeto con el nombre de la tabla
+                            tablasAgrupadas[nombreTabla] = {
+                                nombre_tabla: nombreTabla,
+                                id_tablas: [],
+                                parametros: [],
+                                id_parametro: [],
+                                id_metodologia: [],
+                                metodologias: []
+
+                            };
+                        }
+                        // Agregar el id_tabla y el nombre_parametro a la tabla correspondiente en tablasAgrupadas
+                        tablasAgrupadas[nombreTabla].id_tablas.push(tabla.id_tabla);
+                        tablasAgrupadas[nombreTabla].parametros.push(nombreParametro);
+                        tablasAgrupadas[nombreTabla].id_parametro.push(idParametro);
+                        tablasAgrupadas[nombreTabla].id_metodologia.push(idMetodologia);
+                        tablasAgrupadas[nombreTabla].metodologias.push(nombreMetodologia)
+
+
                     });
+                    // convertir  en un array
+                    const tablasProcesadas = Object.values(tablasAgrupadas);
 
-                    console.log(tablaArray);
-                    this.tablaArray = tablaArray;
-                    
+                    console.log("Tablas procesadas:", tablasProcesadas);
+
+                    // Asignar las tablas procesadas a opcionesTabla
+                    this.opcionesTabla = tablasProcesadas.map((tabla) => tabla.nombre_tabla);
+
+                    // Asignar tablasProcesadas a this.tablasProcesadas
+                    this.tablasProcesadas = tablasProcesadas;
+
+                                    
                 }
             });
         },
 
-        actualizarParametrosTabla() {
-            const tablaSeleccionada = this.tabla;
-            console.log("Tabla seleccionada:", tablaSeleccionada);    
+        PushParametrosMetodologias() {
             
-            if (tablaSeleccionada) {
-              const idTabla = tablaSeleccionada;
-              console.log("ID de tabla seleccionada:", idTabla);
-              this.id_tabla = idTabla;
-              this.parametroDeshabilitado = false;
-            } else {
-              this.parametroDeshabilitado = true;
+            function esDuplicado(parametrosYMetodologias, parametro, metodologia) {
+                return parametrosYMetodologias.some((item) => item.parametro === parametro && item.metodologia === metodologia);
             }
 
-            const tablaEncontrada = this.tablaArray.find(tabla => tabla.id_tabla === tablaSeleccionada);
-            this.tablaE = tablaEncontrada            
+            let parametrosYMetodologias = [];
 
-            if (tablaEncontrada) {
-                console.log("tabla encontrada: ", tablaEncontrada)
-              const parametros = tablaEncontrada.parametros.map(parametro => ({
-                id_parametro: parametro.id_parametro,
-                nombre_parametro: parametro.nombre_parametro
-              }));
-          
-              const metodologias = tablaEncontrada.metodologias.map(metodologia => ({
-                id_metodologia: metodologia.id_metodologia,
-                nombre_metodologia: metodologia.nombre_metodologia
-              }));
-              console.log("metodologias de la tabla seleccionada: ", metodologias)
-               this.met = metodologias;
-          
-              this.parametrosTablaSeleccionada = parametros;
-              this.opcionesParametro = parametros.map(parametro => parametro.nombre_parametro);
-              this.opcionesMetodologiaTabla = metodologias.map(metodologia => metodologia.nombre_metodologia);                           
-              
+            // Recorrer cada tabla procesada
+            for (const tabla of this.tablasProcesadas) {
+                // Recuperar los arrays de id_parametro y metodologias de la tabla actual
+                const idParametro = tabla.id_parametro;
+                const parametros = tabla.parametros;
+                const metodologias = tabla.metodologias;
+                const idMetodologias = tabla.id_metodologia;
+                
+                // Agregar los parámetros y metodologías de la tabla actual a la variable principal
+                for (let i = 0; i < parametros.length; i++) {
+                    const parametro = parametros[i];
+                    const metodologia = metodologias[i];
+                    const id_parametro = idParametro[i];
+                    const id_metodologia = idMetodologias[i];
+                    
+                    // Verificar si el parámetro y la metodología ya existen en la variable "parametrosYMetodologias"
+                    if (!esDuplicado(parametrosYMetodologias, parametro, metodologia)) {
+                        parametrosYMetodologias.push({
+                            id_parametro: id_parametro,
+                            parametro: parametro,
+                            metodologia: metodologia,
+                            id_metodologia: id_metodologia
+                        });
+                    }
+                }
+            }
+            console.log("parametros y metodologias de las tablas: ", parametrosYMetodologias);
+            // Asegurarnos de no agregar duplicados a "this.objetosSeleccionados"
+            const objetosNoDuplicados = parametrosYMetodologias.filter((item) => !esDuplicado(this.objetosSeleccionados, item.parametro, item.metodologia));
+            this.objetosSeleccionados.push(...objetosNoDuplicados); 
+            const IDNoDuplicados = parametrosYMetodologias.filter((item) => !esDuplicado(this.objetosSeleccionados, item.id_parametro, item.id_metodologia));
+            this.parametros_agregar.push(...IDNoDuplicados);        
+                   
+        },
+
+        actualizarParametrosTabla() {
+            const tablaSeleccionada = this.tabla;
+            // Buscar la tabla seleccionada en tablasProcesadas
+            const tablaProcesada = this.tablasProcesadas.find(tabla => tabla.nombre_tabla === tablaSeleccionada);
+
+            if (tablaProcesada) {
+                const parametrosUnicos = Array.from(new Set(tablaProcesada.parametros)); // Eliminar duplicados
+                this.parametrosTablaSeleccionada = parametrosUnicos.map(parametro => ({
+                    nombre_parametro: parametro
+                }));
+                this.opcionesParametro = parametrosUnicos;
             } else {
-              this.parametrosTablaSeleccionada = [];
-              this.opcionesParametro = [];
-              this.opcionesMetodologiaTabla = [];
-            }        
-        
-            console.log("Parámetros de la tabla seleccionada:", this.parametrosTablaSeleccionada);
-            
+                // Si la tabla seleccionada no se encuentra en tablasProcesadas, limpiar los parámetros
+                this.parametrosTablaSeleccionada = [];
+                this.opcionesParametro = [];
+            }
+            console.log("param", this.parametrosTablaSeleccionada);
         },
 
         actualizarMetodologiasTabla(){
@@ -2297,15 +2345,18 @@ if(this.telefonos_agregar === this.telefonos_agregarOG){
         this.idParamOG = response.submuestras.map((idP) => idP.id_parametro);
         this.idMetOG = response.submuestras.map((idM) => idM.id_metodologia);
         this.normaOG = response.id_norma;
-        this.tablaOG = response.id_tabla; 
-        this.submuestrasOG = response.submuestras.map(submuestra => ({
-            id_submuestra: submuestra.id_submuestra,
-            identificador:submuestra.identificador,
-            orden: submuestra.orden,
-            id_parametro:submuestra.id_parametro,  
-            id_metodologia:submuestra.id_metodologia,           
-                      
-        }));
+        //this.tablaOG = response.id_tabla; 
+        this.submuestrasOG = response.submuestras.map(sub => ({
+  id_submuestra: sub.id_submuestra,
+  identificador: sub.identificador,
+  orden: sub.orden,
+  id_parametro: sub.id_parametro,
+  id_metodologia: sub.id_metodologia
+}));
+
+// Convertir los objetos reactivos en objetos planos
+this.submuestrasOG = JSON.parse(JSON.stringify(this.submuestrasOG));
+
         this.subMuestra = response.submuestras.map(submuestra=> ({
             identificador: submuestra.identificador,
             id_metodologia: submuestra.id_metodologia,
@@ -2317,7 +2368,47 @@ if(this.telefonos_agregar === this.telefonos_agregarOG){
         console.log("empleados: ", this.empleados)
         this.empleadosOG = response.empleados;
         this.parametros_metodologias = response.parametros_metodologias;
-        console.log("parámetros_metodologias: ", this.parametros_metodologias)
+        console.log("parámetros_metodologias: ", this.parametros_metodologias);
+        this.sub = response.submuestras.reduce((result, current) => {
+  const index = result.findIndex((item) => item.id_submuestra === current.id_submuestra);
+  const PYMObj = {
+    metodologia: current.nombre_metodologia,
+    parametro: current.nombre_parametro,
+    id_metodologia: current.id_metodologia,
+    id_parametro: current.id_parametro,
+  };
+  if (index === -1) {
+    result.push({
+      RUM: current.RUM,
+      detalle_metodologia: [current.detalle_metodologia],
+      id_metodologia: [current.id_metodologia],
+      id_parametro: [current.id_parametro],
+      id_submuestra: current.id_submuestra,
+      identificador: current.identificador,
+      orden: current.orden,
+      PYM: [PYMObj], // Agregamos el array PYM con el primer objeto PYM
+    });
+  } else {
+    result[index].detalle_metodologia.push(current.detalle_metodologia);
+    result[index].id_metodologia.push(current.id_metodologia);
+    result[index].id_parametro.push(current.id_parametro);
+    result[index].PYM.push(PYMObj); // Agregamos el objeto PYM al array PYM existente
+  }
+
+  return result;
+}, []);
+
+console.log("sub:", this.sub);
+
+this.sub = this.sub.map(sub => ({
+    id_submuestra: sub.id_submuestra,
+    orden: sub.orden,
+    identificador: sub.identificador,
+    PYM: sub.PYM
+    
+}))
+
+console.log("sub:", this.sub);
 
 
             //TAB RECEPCIONISTA
@@ -2351,7 +2442,7 @@ if(this.telefonos_agregar === this.telefonos_agregarOG){
 
             //TAB PARAMETROS
         this.norma = response.id_norma;
-        this.tabla = response.id_tabla;
+        //this.tabla = response.id_tabla;
 
 
             //TAB ASIGNACIÓN
@@ -2366,8 +2457,34 @@ if(this.telefonos_agregar === this.telefonos_agregarOG){
             fecha_entrega: empleados.fecha_entrega
 
         }));
+        
+        const empleadosAgrupados = response.empleados.reduce((grupo, empleado) => {
+  const { rut_empleado } = empleado;
 
-                  
+  const clave = rut_empleado;
+  if (!grupo[clave]) {
+    grupo[clave] = {
+      RUM: empleado.RUM,
+      estado: empleado.estado,
+      fecha_entrega: empleado.fecha_entrega,
+      id_parametro: [empleado.id_parametro],
+      nombre_parametro: [empleado.nombre_parametro],
+      orden_de_analisis: empleado.orden_de_analisis,
+      rut_empleado: rut_empleado
+    };
+  } else {
+    grupo[clave].id_parametro.push(empleado.id_parametro);
+    grupo[clave].nombre_parametro.push(empleado.nombre_parametro);
+  }
+
+  return grupo;
+}, {});
+
+// Convertir el objeto de empleados agrupados en un array
+const empleadosAgrupadosArray = Object.values(empleadosAgrupados);
+
+console.log("Empleados agrupados:", empleadosAgrupadosArray);
+this.empleadosAgrupados = empleadosAgrupadosArray
            
         },       
 

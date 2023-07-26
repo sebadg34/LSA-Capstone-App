@@ -70,15 +70,12 @@
 
                                                                     <b-input-group-append>
                                                                         <b-button class=" lsa-orange reactive-button"
-                                                                            style="aspect-ratio: 1; border:none"
+                                                                            
                                                                             @click="actualizarSelectedEmpresa()">
                                                                             <b-icon icon="search"></b-icon>
                                                                         </b-button>
-
                                                                     </b-input-group-append>
-
                                                                 </b-input-group>
-
                                                             </div>
                                                             <b-form-invalid-feedback>{{ validationContext.errors[0]
                                                             }}</b-form-invalid-feedback>
@@ -150,47 +147,35 @@
                                                                 validationContext.errors[0] }}</b-form-invalid-feedback>
                                                         </ValidationProvider>
 
-                                                        <ValidationProvider name="fechaI" rules="required"
-                                                            v-slot="validationContext">
+                                                        
                                                             <label for="input-live">Fecha de muestreo:</label>
                                                             <b-form-datepicker
                                                                 :date-format-options="{ year: 'numeric', month: '2-digit', day: '2-digit' }"
                                                                 id="input-live" v-model="fecha"
-                                                                aria-describedby="input-live-help fechaI-live-feedback"
-                                                                :state="getValidationState(validationContext)"
-                                                                placeholder="Seleccione fecha"></b-form-datepicker>
-                                                            <b-form-invalid-feedback id="fechaI-live-feedback">{{
-                                                                validationContext.errors[0] }}
-                                                            </b-form-invalid-feedback>
-                                                        </ValidationProvider>
+                                                                :min="currentDate"
+                                                                aria-describedby="input-live-help fechaI-live-feedback"                                                                
+                                                                placeholder="Seleccione fecha">
+                                                            </b-form-datepicker>
+                                                            
 
-                                                        <ValidationProvider name="hora" rules="required"
-                                                            v-slot="validationContext">
+                                                       
+                                                            
                                                             <label for="input-time">Hora de muestreo:</label>
                                                             <b-form-timepicker id="input-time" v-model="hora"
-                                                                :state="getValidationState(validationContext)"
+                                                                
                                                                 aria-describedby="input-live-help horaI-live-feedback"
                                                                 placeholder="Ingrese hora"></b-form-timepicker>
-                                                            <b-form-invalid-feedback id="horaI-live-feedback">{{
-                                                                validationContext.errors[0] }}
-                                                            </b-form-invalid-feedback>
-                                                        </ValidationProvider>
+                                                           
 
 
-                                                        <ValidationProvider name="entrega" rules="required"
-                                                            v-slot="validationContext"><label
-                                                                for="input-live">Fecha de Entrega:</label>
+                                                            <label for="input-live">Fecha de Entrega:</label>
                                                             <b-form-datepicker
                                                                 :date-format-options="{ year: 'numeric', month: '2-digit', day: '2-digit' }"
-                                                                :state="getValidationState(validationContext)"
+                                                                
                                                                 id="input-live" v-model="fechaEntrega"
                                                                 placeholder="Seleccione fecha"
                                                                 :min="currentDate"></b-form-datepicker>
-
-                                                            <b-form-invalid-feedback id="entrega-live-feedback">{{
-                                                                validationContext.errors[0] }}
-                                                            </b-form-invalid-feedback>
-                                                        </ValidationProvider>
+                                                          
 
                                                         <ValidationProvider name="Cotizacion" rules="required" v-slot="validationContext">
                                                             <label for="input-live">Cotización:</label>
@@ -354,34 +339,30 @@
 
                                             <b-card>
                                                 <b-row>
-                                                    <b-col class="col-6">
-                                                        <ValidationProvider name="norma" rules="required"
-                                                            v-slot="validationContext">
+                                                    <b-col class="col-6">                                                       
                                                             <b-form-group label="Seleccione una norma">
                                                                 <b-input-group>
-                                                                <b-form-select v-model="norma" 
-                                                                :options="opcionesNorma"
-                                                                placeholder="Seleccione una norma"
-                                                                :state="getValidationState(validationContext)" 
-                                                                text-field="nombre" value-field="id"   
-                                                                @change="obtenerTablasNormas"></b-form-select>
-                                                                                                                        
-                                                            <b-input-group-append>
-                                                                <b-button size="sm" class="lsa-orange reactive-button"
-                                                                    style="aspect-ratio:1; border: none"
-                                                                    @click="PushParametrosMetodologias()">
-                                                                    <b-icon style="color:white"
-                                                                        icon="box-arrow-in-down-left"></b-icon>
-                                                                </b-button>
-                                                            </b-input-group-append>
+                                                                    <b-form-select v-model="norma" 
+                                                                    :options="opcionesNorma"
+                                                                    placeholder="Seleccione una norma"                                                                 
+                                                                    text-field="nombre" value-field="id"   
+                                                                    @change="obtenerTablasNormas"></b-form-select>
+                                                                                                                            
+                                                                    <b-input-group-append>
+                                                                        <b-button size="sm" class="lsa-orange reactive-button"
+                                                                            style="aspect-ratio:1; border: none"
+                                                                            @click="PushParametrosMetodologias()">
+                                                                            <b-icon style="color:white"
+                                                                                icon="box-arrow-in-down-left">
+                                                                            </b-icon>
+                                                                        </b-button>
+                                                                    </b-input-group-append>
                                                             
-                                                            </b-input-group>
-
-                                                                <b-form-invalid-feedback id="norma-live-feedback">{{
-                                                                    validationContext.errors[0] }}</b-form-invalid-feedback>
+                                                                </b-input-group>
+                                                                
                                                             </b-form-group>
 
-                                                        </ValidationProvider>
+                                                        
                                                     </b-col>
 
                                                     <b-col class="col-6">
@@ -828,7 +809,7 @@ export default {
             this.dismissCountDown = dismissCountDown
         },
 
-        buscarYagregar() {
+        /*buscarYagregar() {
             SolicitanteService.obtenerTodosSolicitantes().then((response) => {
                 if (response.data != null && response.status === 200) {
                     this.solicitante = response.data;
@@ -844,7 +825,7 @@ export default {
                     this.dismissCountDown = this.dismissSecs
                 }
             })
-        },
+        },*/
 
         detallesSolicitante() {
             console.log("rut a obtener: ", this.rutSolicitante)
@@ -986,14 +967,10 @@ console.log("Nombre de la empresa encontrada:", nombreEmpresaEncontrada);
         },
 
         agregar() {
-            console.log("abirnedo modal")
-            this.submuestra_agregar = [{
-                identificacion: '',
-                orden: '',
-            }],
-                this.alertaExito = false;
+            console.log("abirnedo modal");            
+            this.alertaExito = false;
             this.alertaDuplicado = false;
-            this.$bvModal.show('modal-cantidad')
+            this.$bvModal.show('modal-cantidad');
         },
 
         detallesCotizaciones(){

@@ -219,10 +219,7 @@ export default {
           fields.push({ key: 'PYM', label: 'Parámetros y metodologías', thClass: 'text-center', tdClass: 'item-center' });
           fields.push({ key: 'accion', label: 'Acción', thClass: 'text-center', tdClass: 'item-center' });
         }
-
-    return fields;
-        
-        
+        return fields;          
       },      
     },
 

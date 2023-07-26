@@ -70,7 +70,7 @@ const obtenerObservaciones = async (RUM) => {
 
  const obtenerDatosMuestra = async (RUM) => {
     try {
-         const response = await axios.get(apiUrl + "/muestras/" + RUM);
+         const response = await axios.get(apiUrl + "/ingreso-muestra/detallesMuestra/" + RUM);
          console.log(response);
          if(response.status == 200){
              return response;
