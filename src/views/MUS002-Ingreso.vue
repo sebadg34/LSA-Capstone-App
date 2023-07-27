@@ -60,26 +60,20 @@
                                                         <b-alert :show="dismissCountDown" dismissible fade variant="danger"
                                                             @dismiss-count-down="countDownChanged">
                                                             El rut del solicitante no está registrado en la base de datos
-                                                        </b-alert>
+                                                        </b-alert>                                                
   
                                                         <ValidationProvider name="rut" rules="required"
                                                             v-slot="validationContext">
                                                             <label for="input-live">Nombre empresa:</label>
                                                             <div class="d-flex align-items-center ">
-                                                                <b-input-group >
+                                                                <b-input-group>
                                                                     <b-form-select id="input-live" v-model="solicitante"                                                                        
                                                                         :state="getValidationState(validationContext)"
                                                                         :options="opcionesEmpresa"                                                                        
-                                                                        text-field="nombre_empresa" value-field="rut_empresa"                                                                      
+                                                                        text-field="nombre_empresa" value-field="rut_empresa"
+                                                                        @input="actualizarSelectedEmpresa()"                                                                     
                                                                         >
-                                                                    </b-form-select>
-
-                                                                    <b-input-group-append>
-                                                                        <b-button class=" lsa-orange"                                                                            
-                                                                            @click="actualizarSelectedEmpresa()">
-                                                                            <b-icon icon="search"></b-icon>
-                                                                        </b-button>
-                                                                    </b-input-group-append>
+                                                                    </b-form-select>                                                                    
                                                                 </b-input-group>
                                                             </div>
                                                             <b-form-invalid-feedback>{{ validationContext.errors[0]
@@ -90,9 +84,14 @@
                                                             v-slot="validationContext">
                                                             <label for="input-live">Dirección empresa:</label>
                                                             <b-form-select id="input-live"
-                                                                v-model="direccion" :options="opcionesDireccion"
+                                                                v-model="direccion" 
                                                                 :state="getValidationState(validationContext)"
                                                                 text-field="direccionConCiudad" value-field="id_ciudad">
+                                                                
+                                                                <option v-for="opcion in opcionesDireccion" :key="opcion.id_ciudad" :value="opcion.id_ciudad">
+                                                                    {{ opcion.direccionConCiudad }} 
+                                                                </option>
+
                                                             </b-form-select>
                                                             <b-form-invalid-feedback>{{ validationContext.errors[0]
                                                             }}</b-form-invalid-feedback>
@@ -261,7 +260,9 @@
   
                                                         <ValidationProvider name="Cotizacion" rules="required" v-slot="validationContext">
                                                             <label class="mt-1" for="input-live">Cotización:</label>
-                                                            <b-form-select id="input-live" v-model="cotizacion" :options="opcionesCotizacion" text-field="idconNombre" value-field="id_cotizacion" aria-describedby="input-live-help Cotizacion-live-feedback" :state="getValidationState(validationContext)"></b-form-select> 
+                                                            <b-form-select id="input-live" v-model="cotizacion" text-field="idconNombre" value-field="id_cotizacion" aria-describedby="input-live-help Cotizacion-live-feedback" :state="getValidationState(validationContext)">
+                                                                <option v-for="opcion in opcionesCotizacion" :key="opcion.id_cotizacion" :value="opcion.id_cotizacion">
+                                                              {{ opcion.idconNombre }}</option></b-form-select> 
                                                             <b-form-invalid-feedback id="Cotizacion-live-feedback">{{validationContext.errors[0]}}</b-form-invalid-feedback>
                                                         </ValidationProvider>  
   
@@ -469,13 +470,15 @@
                                     </b-tab>
   
                                     <b-tab title="Asignar parámetros a muestras">
-                                        <strong> Asignar parámetros a muestras</strong>
+                                                                            
   
                                         <template #title>
                                             <b-col class="col-12">
                                                 <b-row class="d-flex justify-content-end">
+                                                    <b-icon icon="arrow-right-short"></b-icon>
+                                                    
   
-                                                    <strong style="padding-left:30px">Parámetros de muestras</strong>
+                                                    <strong style="padding-left:30px"> Asignar parámetros a muestras</strong>
                                                 </b-row>
                                             </b-col>
                                         </template>
@@ -491,9 +494,18 @@
                                         </b-card>
                                     </b-tab>
                                   <b-tab title="Asignar analista">
+                                    <template #title>
+                                            <b-col class="col-12">
+                                                <b-row class="d-flex justify-content-end">
+                                                    <b-icon icon="arrow-right-short"></b-icon>                                                
+  
+                                                    <strong style="padding-left:146px"> Asignar analista</strong>
+                                                </b-row>
+                                            </b-col>
+                                        </template>
   
                                       <b-card>
-                                      <b-table :items="EmpleadosArray" :fields="tableFields">                                               
+                                      <b-table :items="empleadosAgrupados" :fields="tableFields">                                               
   
                                           <template #cell(rut_empleado)="row">
                                               <b-form-select v-model="row.item.rut_empleado" :options="formattedOpcionesAnalista" value-field="rut_empleado" text-field="nombreCompleto"></b-form-select>
@@ -535,7 +547,10 @@
                                               </b-dropdown>
                                           </template>
                                       </b-table>
-                                      <b-button @click="agregarFila">+</b-button>
+                                      <b-button size="sm" class="lsa-orange reactive-button"
+                                                                    style="aspect-ratio:1;" @click="agregarFila"><b-icon style="color:white"
+                                                                        icon="plus-circle-fill"></b-icon></b-button>
+                                      
                                       </b-card>
                                   </b-tab>
   
@@ -921,7 +936,8 @@ export default {
             diferentes: [],
             empleadosNuevos: [],
             sub : [],
-            empleadosAgrupados: []
+            empleadosAgrupados: [],
+            empleadosDesagrupados: []
         };
     },
 
@@ -984,7 +1000,7 @@ export default {
             rut_empleado: analista.rut_empleado,
             nombreCompleto: `${analista.nombre} ${analista.apellido}`
           }));
-        },        
+        },      
     },
 
     mounted() {           
@@ -995,10 +1011,7 @@ export default {
         
         this.obtenerNormas(), 
         
-        this.obtenerEmpresas(),
-        
-        
-        
+        this.obtenerEmpresas(),       
 
         PersonalService.obtenerTodosPersonal().then((response) => {
             console.log(response.data);
@@ -1067,6 +1080,7 @@ export default {
                 this.parametroDeshabilitado = true;
             }
         },
+
         direccion(newValue) {
             const direccionSeleccionada = this.opcionesDireccion.find(opcion => opcion.id_ciudad === newValue);
             if (direccionSeleccionada) {
@@ -1138,7 +1152,7 @@ export default {
         },
 
         agregarFila() {
-            this.EmpleadosArray.push({
+            this.empleadosAgrupados.push({ //empleadosAgrupados
                 RUM: this.RUM,
                 estado: 'Sin iniciar',                
                 orden_de_analisis: null,
@@ -1150,35 +1164,91 @@ export default {
         },
 
         eliminarFila(fila) {
-          const index = this.EmpleadosArray.indexOf(fila);
-          if (index !== -1) {
-            if (fila.id_parametro === '' || fila.rut_empleado === null) {
-              this.EmpleadosArray.splice(index, 1);
-            } else {
-              // Convertir el campo id_parametro a un objeto único si es un array
-              const idParametroUnico = Array.isArray(fila.id_parametro) ? fila.id_parametro[0] : fila.id_parametro;
-              const nombreParametroUnico = Array.isArray(fila.nombre_parametro) ? fila.nombre_parametro[0] : fila.nombe_parametro;
-            
-              // Crear un nuevo objeto empleado con el campo id_parametro transformado
-              const empleadoConParametroUnico = {
-                ...fila,
-                id_parametro: idParametroUnico,
-                nombre_parametro: nombreParametroUnico
-              };
-          
-              this.empleados_eliminar.push(empleadoConParametroUnico);
-              this.EmpleadosArray.splice(index, 1);
-            }
+  const index = this.empleadosAgrupados.indexOf(fila);
+  if (index !== -1) {
+    if (fila.id_parametro === '' || fila.rut_empleado === null) {
+      this.empleadosAgrupados.splice(index, 1);
+    } else {
+      const idParametroUnico = Array.isArray(fila.id_parametro) ? fila.id_parametro[0] : fila.id_parametro;
+      const nombreParametroUnico = Array.isArray(fila.nombre_parametro) ? fila.nombre_parametro[0] : fila.nombe_parametro;
+      
+      const empleadoConParametroUnico = {
+        ...fila,
+        id_parametro: idParametroUnico,
+        nombre_parametro: nombreParametroUnico
+      };
+      
+      // Verificar si el objeto está presente en this.empleados
+      const empleadoEncontrado = this.empleados.find((empleado) => {
+        return this.sonObjetosIguales(empleado, empleadoConParametroUnico);
+      });
+      
+      if (empleadoEncontrado) {
+        this.empleados_eliminar.push(empleadoConParametroUnico);
+        this.empleadosAgrupados.splice(index, 1);
+      } else {
+        console.log("La eliminación será solo visual ya que el elemento no existe en la BD.");
+        this.empleadosAgrupados.splice(index, 1);
+        // No hacemos el push a this.empleados_eliminar
+      }
+    }
+    console.log("empleados eliminados: ", this.empleados_eliminar);
+  }
+},
 
-            console.log("eliminar empleados: ", this.empleados_eliminar);
-          }
-        },
+// Función para verificar si dos objetos son iguales
+sonObjetosIguales(objeto1, objeto2) {
+  const keys1 = Object.keys(objeto1);
+  const keys2 = Object.keys(objeto2);
+
+  if (keys1.length !== keys2.length) {
+    return false;
+  }
+
+  for (const key of keys1) {
+    if (objeto1[key] !== objeto2[key]) {
+      return false;
+    }
+  }
+
+  return true;
+},
+
+
 
         
-        eliminarParametro(filaSeleccionada, index) {
-            filaSeleccionada.id_parametro.splice(index, 1); 
-            filaSeleccionada.nombre_parametro.splice(index, 1);   
-        },
+eliminarParametro(filaSeleccionada, index) {
+  const parametroEliminado = {
+    RUM: filaSeleccionada.RUM,
+    estado: filaSeleccionada.estado,
+    fecha_entrega: filaSeleccionada.fecha_entrega,
+    id_parametro: filaSeleccionada.id_parametro[index],
+    nombre_parametro: filaSeleccionada.nombre_parametro[index],
+    orden_de_analisis: filaSeleccionada.orden_de_analisis,
+    rut_empleado: filaSeleccionada.rut_empleado,
+  };
+
+  // Verificar si el objeto parametroEliminado existe en this.empleados
+  const parametroEncontrado = this.empleados.find((empleado) => {
+    return this.sonObjetosIguales(empleado, parametroEliminado);
+  });
+
+  if (parametroEncontrado) {
+    filaSeleccionada.id_parametro.splice(index, 1); 
+    filaSeleccionada.nombre_parametro.splice(index, 1); 
+
+    console.log("parametro eliminado: ", parametroEliminado);
+    this.empleados_eliminar.push(parametroEliminado);
+    console.log("empleados_eliminar: ", this.empleados_eliminar);
+  } else {
+    console.log("La eliminación del parámetro será solo visual ya que no existe en la BD.");
+    filaSeleccionada.id_parametro.splice(index, 1); 
+    filaSeleccionada.nombre_parametro.splice(index, 1);
+  }
+},
+
+
+
 
         countDownChanged(dismissCountDown) {
             this.dismissCountDown = dismissCountDown
@@ -1223,7 +1293,7 @@ export default {
         },
 
         empleadosCoinciden(){
-            for (var i = 0; i < this.EmpleadosArray.length; i++) {
+            for (var i = 0; i < this.EmpleadosArray.length; i++) { //empleadosAgrupados
                 var empleado = this.EmpleadosArray[i];
                 console.log("empleados for: ", empleado)
                 var idParametros = empleado.id_parametro;                
@@ -1289,7 +1359,18 @@ export default {
 
             console.log("Objetos empleaods que no coinciden:", this.empleados_objeto);
 
-            const empleados_original = this.emp.map((empleado, index) => ({
+            //this.empleados_agregar.push(...this.empleados_objeto)
+
+            console.log("Objetos empleados agregar:", this.empleados_agregar);          
+
+            console.log("empleadosDesagrupados nuevos:", this.empleadosDesagrupados);
+
+            console.log("empleados:", this.empleados);
+
+
+
+
+            const empleados_original = this.empleados.map((empleado, index) => ({
   ...empleado,
   id_aux: index + 1 // El índice + 1 se usará como id_aux autoincremental
 }));
@@ -1298,13 +1379,15 @@ console.log("empleados en BD: ",empleados_original);
 
 
 
-this.empleadosNuevos = this.empleados_agregar.map(empleados => ({
+this.empleadosNuevos = this.empleadosDesagrupados.map(empleados => ({
             rut_empleado: empleados.rut_empleado,
             orden_de_analisis: empleados.orden_de_analisis,
             id_parametro: empleados.id_parametro,
+            nombre_parametro: empleados.nombre_parametro,
             fecha_entrega: empleados.fecha_entrega
 
         }));
+        
 
         const nuevoArray = this.empleadosNuevos.map(empleado => {
   // Creamos un nuevo objeto con las mismas propiedades del objeto original
@@ -1328,7 +1411,9 @@ console.log(" nuevo array empleados: ", nuevoArray)
   id_aux: index + 1 // El índice + 1 se usará como id_aux autoincremental
 }));
 
+
 console.log("nuevos empleados: ",empleados);
+
 
 // Función para comparar dos empleados por su id_aux
 function compararEmpleadosPorIdAux(empleado1, empleado2) {
@@ -1354,10 +1439,14 @@ const empleadosDiferentes = empleados.filter(empleado => {
   if (!empleadoCorrespondiente) {
     return true;
   }
+  console.log("empleado correspondiente: ", empleadoCorrespondiente);
 
   // Comparar las propiedades restantes para asegurarse de que son iguales
   return !compararEmpleadosPorPropiedades(empleado, empleadoCorrespondiente);
+  
+  
 });
+
 
 console.log("Empleados diferentes:", empleadosDiferentes);
 this.empleados_agregar = [];
@@ -1373,12 +1462,6 @@ empleadosDiferentes.forEach(empleado => {
   console.log("empleados eliminar: ",this.empleados_eliminar)
 
 });
-
-
-
-
-
-
 
 
         },
@@ -1437,7 +1520,29 @@ if(this.telefonos_agregar === this.telefonos_agregarOG){
         
 
         repetido(){
-            const elementosNoRepetidos = this.EmpleadosArray.filter(objeto => (
+
+
+            // Desagrupar los elementos dentro del array empleadosAgrupados
+const empleadosDesagrupados = this.empleadosAgrupados.flatMap(empleado => {
+  const empleadosIndividuales = empleado.id_parametro.map((idParametro, index) => ({
+    RUM: empleado.RUM,
+    estado: empleado.estado,
+    fecha_entrega: empleado.fecha_entrega,
+    id_parametro: idParametro,
+    nombre_parametro: empleado.nombre_parametro[index],
+    orden_de_analisis: empleado.orden_de_analisis,
+    rut_empleado: empleado.rut_empleado,
+  }));
+
+  return empleadosIndividuales;
+});
+
+// Ahora empleadosDesagrupados contendrá los 8 elementos desagrupados
+console.log("empleados desagrupados: ", empleadosDesagrupados);
+
+this.empleadosDesagrupados = empleadosDesagrupados;
+
+            const elementosNoRepetidos = this.empleadosAgrupados.filter(objeto => (
                 !this.empleadosOG.some(elemento => (
                   elemento.RUM === objeto.RUM &&
                   elemento.rut_empleado === objeto.rut_empleado &&
@@ -1480,54 +1585,49 @@ if(this.telefonos_agregar === this.telefonos_agregarOG){
         obs(){
             console.log(this.observacionesOG);           
 
-             if (this.observacionesOG.length === 0) {
+            if (this.observacionesOG.length === 0) {
                 this.nuevaobs = [{
                   fecha_observacion: '',
                   hora_observacion: '',
                   observaciones: this.observaciones,
-                }];
-
-                
+                }];                
                 console.log("primero: ",this.nuevaobs)                
                
-            }else{
-            const fechaObs = this.observacionesOG[0].fecha_observacion;
-            console.log("fecha observacion: ", fechaObs)  
-            
-            const partesFecha = fechaObs.split("/");
-            const dia = partesFecha[0];
-            const mes = partesFecha[1];
-            const anio = partesFecha[2];
-                    
-            // Formatear la fecha en "yyyy-mm-dd"
-            const fechaFormateada = `${anio}/${mes}/${dia}`;
-            console.log(fechaFormateada);
+            }   
+            else{
+                const fechaObs = this.observacionesOG[0].fecha_observacion;
+                console.log("fecha observacion: ", fechaObs)  
+                
+                const partesFecha = fechaObs.split("/");
+                const dia = partesFecha[0];
+                const mes = partesFecha[1];
+                const anio = partesFecha[2];
 
-            const horaObs = this.observacionesOG[0].hora_observacion;
-            console.log("fecha observacion: ", horaObs)
+                // Formatear la fecha en "yyyy-mm-dd"
+                const fechaFormateada = `${anio}/${mes}/${dia}`;
+                console.log(fechaFormateada);
 
-            const observaciones = [{
-                fecha_observacion: fechaObs,
-                hora_observacion: horaObs,  
-                observaciones: this.observaciones,             
-                          
-            }]
+                const horaObs = this.observacionesOG[0].hora_observacion;
+                console.log("fecha observacion: ", horaObs)
 
-            if (observaciones === this.observacionesOG){
-                this.nuevaobs = []
-            }else{
+                const observaciones = [{
+                    fecha_observacion: fechaObs,
+                    hora_observacion: horaObs,  
+                    observaciones: this.observaciones,             
 
-                this.nuevaobs = observaciones;
-                console.log("obs nueva: ",observaciones)
-            }  
-            
-        }
+                }]
 
-        },
+                if (observaciones === this.observacionesOG){
+                    this.nuevaobs = []
+                }else{
 
-            
+                    this.nuevaobs = observaciones;
+                    console.log("obs nueva: ",observaciones)
+                }              
+            }
+        },            
 
-        actualizarOpcionesDireccion() {
+        /*actualizarOpcionesDireccion() {
             // Filtrar las direcciones correspondientes a la empresa seleccionada
             console.log(this.rut_empresa);
             console.log("opciones direccion: ", this.opcionesDireccion);
@@ -1557,7 +1657,7 @@ if(this.telefonos_agregar === this.telefonos_agregarOG){
                 
               }
             }
-        },
+        },/*
 
         /*buscarYagregar() {            
             SolicitanteService.obtenerTodosSolicitantes().then((response) => {
@@ -1665,57 +1765,55 @@ if(this.telefonos_agregar === this.telefonos_agregarOG){
 
         actualizarSelectedEmpresa() {
 
-console.log("empresa:", this.solicitante)
-const nombreEmpresa = this.opcionesEmpresa.find(objeto => objeto.rut_empresa === this.solicitante);
-console.log("empresa:", nombreEmpresa)
-let nombreEmpresaEncontrada = "";
-if (nombreEmpresa) {
-nombreEmpresaEncontrada = nombreEmpresa.nombre_empresa;
-this.nombre_empresa = nombreEmpresaEncontrada;
-}
+            console.log("empresa:", this.solicitante)
+            const nombreEmpresa = this.opcionesEmpresa.find(objeto => objeto.rut_empresa === this.solicitante);
+            console.log("empresa:", nombreEmpresa)
+            let nombreEmpresaEncontrada = "";
+            if (nombreEmpresa) {
+            nombreEmpresaEncontrada = nombreEmpresa.nombre_empresa;
+            this.nombre_empresa = nombreEmpresaEncontrada;
+            }
 
-console.log("Nombre de la empresa encontrada:", nombreEmpresaEncontrada);
+            console.log("Nombre de la empresa encontrada:", nombreEmpresaEncontrada);
 
 
-MuestraService.obtenerEmpresas().then((response) => {
-    console.log("obteniendo empresas",response.data)
-    const empresas = response.data;
-    const direccion = empresas.flatMap(direccion => direccion.ciudades_direcciones);
-    console.log("direccion : ", direccion)
-
-    
-const direccionCiudad = direccion.map(c => c.direccion);
-const nombre_ciudad = direccion.map(c => c.nombre_ciudad);
-    this.opcionesDireccion = direccion.map(opc => ({
-    id_ciudad: opc.id_ciudad,
-    nombre_ciudad: opc.nombre_ciudad,
-    direccion: opc.direccion,
-    direccionConCiudad: `${nombre_ciudad} / ${direccionCiudad}`               
-
-}))
-console.log("opciondes direccion : ", direccionCiudad);
-});
-const data = {
-    rut_empresa: this.solicitante
-};
-   
-MuestraService.obtenerCotizacionEmpresa(data).then((response) => {
-    if (response.data != null && response.status === 200){
-        console.log("cotizaciones: ", response.data)
-        this.opcionesCotizacion = response.data.map(cotizacion => ({
-            id_cotizacion: cotizacion.id_cotizacion,
-            nombre_original_documento: cotizacion.nombre_original_documento,
-            idconNombre: `${cotizacion.id_cotizacion} - ${cotizacion.nombre_original_documento}`
+            MuestraService.obtenerEmpresas().then((response) => {
+                console.log("obteniendo empresas",response.data)
+                const empresas = response.data;
+                const direccion = empresas.flatMap(direccion => direccion.ciudades_direcciones);
+                console.log("direccion : ", direccion)
             
-        }))
-        console.log("Opc. cotizaciones: ", this.opcionesCotizacion)
-    }  
-})   
 
+                const direccionCiudad = direccion.map(c => c.direccion);
+                const nombre_ciudad = direccion.map(c => c.nombre_ciudad);
+                this.opcionesDireccion = direccion.map(opc => ({
+                    id_ciudad: opc.id_ciudad,
+                    nombre_ciudad: opc.nombre_ciudad,
+                    direccion: opc.direccion,
+                    direccionConCiudad: `${nombre_ciudad} / ${direccionCiudad}`               
+                
+                }))
+                console.log("opciones direccion : ", direccionCiudad);
+                this.direccion_empresa = direccionCiudad.toString();
+            });
+            const data = {
+                rut_empresa: this.solicitante
+            };
 
+            MuestraService.obtenerCotizacionEmpresa(data).then((response) => {
+                if (response.data != null && response.status === 200){
+                    console.log("cotizaciones: ", response.data)
+                    this.opcionesCotizacion = response.data.map(cotizacion => ({
+                        id_cotizacion: cotizacion.id_cotizacion,
+                        nombre_original_documento: cotizacion.nombre_original_documento,
+                        idconNombre: `${cotizacion.id_cotizacion} - ${cotizacion.nombre_original_documento}`
 
-
-},
+                    }))
+                    console.log("Opc. cotizaciones: ", this.opcionesCotizacion)
+                    this.id_cotizacion = response.data.flatMap(id => id.id_cotizacion)
+                } 
+            })
+        },
 
         agregar() {
             console.log("abirnedo modal");                       
@@ -2431,6 +2529,7 @@ console.log("sub:", this.sub);
         this.prioridad = response.prioridad;
         this.cotizacion = response.id_cotizacion;
         
+        
 
             //TAB TRANSPORTISTA
         this.transportistaRut = response.rut_transportista;
@@ -2458,9 +2557,10 @@ console.log("sub:", this.sub);
 
         }));
         
+        // Supongamos que tienes un array de empleados llamado "response.empleados" que contiene todos los datos
+
         const empleadosAgrupados = response.empleados.reduce((grupo, empleado) => {
   const { rut_empleado } = empleado;
-
   const clave = rut_empleado;
   if (!grupo[clave]) {
     grupo[clave] = {
@@ -2483,8 +2583,12 @@ console.log("sub:", this.sub);
 // Convertir el objeto de empleados agrupados en un array
 const empleadosAgrupadosArray = Object.values(empleadosAgrupados);
 
+// Ordenar el array "empleadosAgrupadosArray" por la propiedad "orden_de_analisis"
+empleadosAgrupadosArray.sort((a, b) => a.orden_de_analisis - b.orden_de_analisis);
+
 console.log("Empleados agrupados:", empleadosAgrupadosArray);
-this.empleadosAgrupados = empleadosAgrupadosArray
+this.empleadosAgrupados = empleadosAgrupadosArray;
+
            
         },       
 
@@ -2502,7 +2606,7 @@ this.empleadosAgrupados = empleadosAgrupadosArray
                                
                 const matricesFiltradas = this.parametros_agregar.slice(1);
                 //const submuestraFiltrada = this.submuestra_agregar.slice(1);
-                const submuestra_eliminar = this.submuestra_eliminar.slice(1);
+                //const submuestra_eliminar = this.submuestra_eliminar.slice(1);
                 
                 
                 var data = {
@@ -2511,7 +2615,7 @@ this.empleadosAgrupados = empleadosAgrupadosArray
                     rut_empleado: this.recepcionistaRUT,
                     nombre_empresa: this.nombre_empresa,
                     id_ciudad: this.direccion,
-                    direccion_empresa: this.direccion_empresa,
+                    direccion_empresa: this.direccion_empresa,                    
                     rut_solicitante: this.rut,
                     muestreado_por: this.muestreado,
                     cantidad_muestras: this.nMuestras,
@@ -2538,7 +2642,7 @@ this.empleadosAgrupados = empleadosAgrupadosArray
                     id_norma: this.norma,
                     id_tabla: this.id_tabla,
                     submuestras_agregar: this.submuestra_agregar,
-                    submuestras_eliminar: submuestra_eliminar,
+                    submuestras_eliminar: this.submuestra_eliminar,
                     telefonos_eliminar: this.telefonos_eliminar,
                     parametros_eliminar: this.parametros_eliminar,
                     id_cotizacion: this.cotizacion,
