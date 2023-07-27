@@ -151,8 +151,7 @@
                                                             <label for="input-live">Fecha de muestreo:</label>
                                                             <b-form-datepicker
                                                                 :date-format-options="{ year: 'numeric', month: '2-digit', day: '2-digit' }"
-                                                                id="input-live" v-model="fecha"
-                                                                :min="currentDate"
+                                                                id="input-live" v-model="fecha"                                                                
                                                                 aria-describedby="input-live-help fechaI-live-feedback"                                                                
                                                                 placeholder="Seleccione fecha">
                                                             </b-form-datepicker>
@@ -946,6 +945,8 @@ console.log("Nombre de la empresa encontrada:", nombreEmpresaEncontrada);
                         
                     }))
                     console.log("Opc. cotizaciones: ", this.opcionesCotizacion)
+                    this.id_cotizacion = response.data.map(id => id.id_cotizacion)
+                    console.log("id. cotizacion: ", this.id_cotizacion)
                 }  
             })   
 

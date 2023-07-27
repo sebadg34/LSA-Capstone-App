@@ -19,28 +19,30 @@
      <b-form-input v-model="row.item.identificacion" placeholder="Ingrese la identificación de la muestra"></b-form-input>
    </template>        
    <template #cell(PYM)="row">
-     <b-list-group>
-       <!-- Utilizamos la directiva 'v-b-toggle' para habilitar la funcionalidad de colapsar -->
-       <!-- Establecemos 'visible' en true para el primer elemento del grupo -->
-       <b-list-group-item v-b-toggle.collapse-pym :visible="row.item.PYM.length > 0">
-         <strong>{{ row.item.PYM[0].parametro }}</strong> - {{ row.item.PYM[0].metodologia }}
-       </b-list-group-item>
-       <!-- Agregamos un colapsable 'b-collapse' al grupo con el ID 'collapse-pym' -->
-       <b-collapse id="collapse-pym">
-         <!-- Iteramos sobre el resto de elementos del array 'row.item.PYM' -->
-         <!-- Mostramos el parámetro y la metodología de cada elemento -->
-         <template v-for="item in row.item.PYM.slice(1)">
-           <b-list-group-item :key="item.id_parametro">
-             <strong>{{ item.parametro }}</strong> - {{ item.metodologia }}
-           </b-list-group-item>
-         </template>
-         <!-- Si 'row.item.PYM' está vacío o no es un array, mostramos un mensaje -->
-         <template v-if="!Array.isArray(row.item.PYM) || row.item.PYM.length === 0">
-           <b-list-group-item>No se encontraron datos</b-list-group-item>
-         </template>
-       </b-collapse>
-     </b-list-group>
-   </template>
+  <b-list-group>
+    <!-- Utilizamos la directiva 'v-b-toggle' para habilitar la funcionalidad de colapsar -->
+    <!-- Establecemos 'visible' en true solo para el colapsable actual -->
+    <b-list-group-item v-b-toggle="'collapse-pym-' + row.index" :visible="row.item.PYM.length > 0">
+      <strong>{{ row.item.PYM[0].parametro }}</strong> - {{ row.item.PYM[0].metodologia }}
+      <b-icon style="position:absolute; right:0px; top:25%; color: #949494" icon="caret-down-fill"></b-icon>
+    </b-list-group-item>
+    <!-- Agregamos un colapsable 'b-collapse' al grupo con un ID único basado en el índice de la fila -->
+    <b-collapse :id="'collapse-pym-' + row.index">
+      <!-- Iteramos sobre el resto de elementos del array 'row.item.PYM' -->
+      <!-- Mostramos el parámetro y la metodología de cada elemento -->
+      <template v-for="item in row.item.PYM.slice(1)">
+        <b-list-group-item :key="item.id_parametro">
+          <strong>{{ item.parametro }}</strong> - {{ item.metodologia }}
+        </b-list-group-item>
+      </template>
+      <!-- Si 'row.item.PYM' está vacío o no es un array, mostramos un mensaje -->
+      <template v-if="!Array.isArray(row.item.PYM) || row.item.PYM.length === 0">
+        <b-list-group-item>No se encontraron datos</b-list-group-item>
+      </template>
+    </b-collapse>
+  </b-list-group>
+</template>
+
    <template #cell(accion)="row">
      <b-dropdown right size="sm" variant="link" toggle-class="text-decoration-none" no-caret>
          <template #button-content>
