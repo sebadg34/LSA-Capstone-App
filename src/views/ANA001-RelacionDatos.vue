@@ -12,30 +12,31 @@
     <div class="row justify-content-start" style="padding-top:20px; padding-bottom:10px;">
       <b-col class="col-12">
 
-
-        <b-button @click="administrarMatriz" style="font-weight: bold; font-size: 18px; "
+        <b-button @click="administrarNorma" style="border-radius: 15px; font-weight: bold; font-size: 18px;"
+          class="lsa-light-blue reactive-button mb-2 mt-2 mr-2">
+          Administrar Norma
+          <b-icon icon="journals"></b-icon>
+        </b-button>
+        
+        <b-button @click="administrarMatriz" style="border-radius: 15px; font-weight: bold; font-size: 18px;"
           class="lsa-light-blue reactive-button mb-2 mt-2 mr-2">
           Administrar Matriz
           <b-icon icon="journals"></b-icon>
         </b-button>
 
-        <b-button @click="administrarParametro" style=" font-weight: bold; font-size: 18px; "
+        <b-button @click="administrarParametro" style="border-radius: 15px; font-weight: bold; font-size: 18px;"
           class="lsa-light-blue reactive-button mb-2 mt-2 mr-2">
           Administrar Parámetro
           <b-icon icon="journals"></b-icon>
         </b-button>
 
-        <b-button @click="administrarMetodologia" style="font-weight: bold; font-size: 18px; "
+        <b-button @click="administrarMetodologia" style="border-radius: 15px; font-weight: bold; font-size: 18px;"
           class="lsa-light-blue reactive-button mb-2 mt-2 mr-2">
           Administrar Metodología
           <b-icon icon="journals"></b-icon>
         </b-button>
 
-        <b-button @click="administrarNorma" style=" font-weight: bold; font-size: 18px; "
-          class="lsa-light-blue reactive-button mb-2 mt-2 mr-2">
-          Administrar Norma
-          <b-icon icon="journals"></b-icon>
-        </b-button>
+       
 
 
       </b-col>

@@ -139,6 +139,10 @@
                                 <b-icon icon="file-earmark-arrow-down" aria-hidden="true" class="mr-2"></b-icon>
                                 Ingresar resultados análisis
                             </b-dropdown-item>
+                            <b-dropdown-item @click="ingresarMuestraLaboratorio(row.item)">
+                                <b-icon icon="file-earmark-arrow-down" aria-hidden="true" class="mr-2"></b-icon>
+                                Ingresar muestra laboratorio
+                            </b-dropdown-item>
                             <b-dropdown-item @click="abrirEditarPersonal(row.item)">
                                 <b-icon icon="file-earmark-arrow-down" aria-hidden="true" class="mr-2"></b-icon>Descargar
                                 informe
@@ -432,10 +436,16 @@ export default {
             this.muestraData = data;
             this.$bvModal.show('modal-completar-analisis-supervisor');
         },
+        
         abrirIngresarResultados(data) {
             console.log(data)
             this.resultadosData = data;
             this.$bvModal.show('modal-ingresar-resultados-supervisor');
+        },
+        ingresarMuestraLaboratorio(data) {
+            console.log(data)
+            this.resultadosData = data;
+            this.$router.push({ path: '/ingmueslab', query: { RUM: data.RUM} })
         },
 
 
@@ -443,7 +453,6 @@ export default {
             // Aquí pones la lógica para mostrar los detalles de la muestra seleccionada
             window.location.href = "https://www.youtube.com";
         },
-
         Ingresar() {
             // Aquí pones la lógica para mostrar los detalles de la muestra seleccionada
             window.location.href = "https://www.youtube.com";
