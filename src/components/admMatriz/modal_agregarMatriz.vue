@@ -14,9 +14,9 @@
 
     <!-- ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// -->
 
-    <ValidationProvider name="nombre matriz" rules="required" v-slot="validationContext">
+    <ValidationProvider name="nombre de la matriz" rules="required" v-slot="validationContext">
       <label for="input-live">Nombre de la matriz:</label>
-      <b-form-input id="input-live" v-model="Nombre" :state="getValidationState(validationContext)" placeholder="Ingrese nombre de la matriz..." ></b-form-input>
+      <b-form-input id="input-live" v-model="Nombre" :state="getValidationState(validationContext)" placeholder="Ingrese el nombre de la matriz." ></b-form-input>
       <b-form-invalid-feedback>{{ validationContext.errors[0] }}</b-form-invalid-feedback>
     </ValidationProvider>
 
@@ -24,24 +24,24 @@
     <b-row>
 
         <b-col>
-            <b-form-group label="Seleccione un parámetro">
-                <b-form-select v-model="parametroSeleccionado" :options="opcionesParametro" placeholder="Seleccione un Parámetro" @change="agregarObjetosSeleccionados"></b-form-select>
+            <b-form-group label="Seleccione un parámetro:">
+                <b-form-select v-model="parametroSeleccionado" :options="opcionesParametro" placeholder="Seleccione un parámetro." @change="agregarObjetosSeleccionados"></b-form-select>
             </b-form-group>
         </b-col>
 
         <b-col>
-            <b-form-group label="Seleccione una metodología">
-                <b-form-select v-model="metodologiaSeleccionada" :options="opcionesMetodologia" placeholder="Seleccione una metodología" :disabled="metodologiaDeshabilitada" @change="agregarObjetosSeleccionados"></b-form-select>
+            <b-form-group label="Seleccione una metodología:">
+                <b-form-select v-model="metodologiaSeleccionada" :options="opcionesMetodologia" placeholder="Seleccione una metodología." :disabled="metodologiaDeshabilitada" @change="agregarObjetosSeleccionados"></b-form-select>
             </b-form-group>
         </b-col>
 
     </b-row>
     <b-alert variant="danger" :show="sinParametro" dismissible @dismissed="sinParametro = false">
-          Falta parámetro asignado para crear la matriz.
+          Falta asignar un(os) parámetro(s) para crear la matriz.
         </b-alert>
     <b-row v-if="objetosSeleccionados.length > 0" class="mt-3">
         <b-col>
-            <b-form-group label="Parámetros Seleccionados:">
+            <b-form-group label="Parárametro(s) y metodología(s) seleccionadas:">
                 <div v-for="(objetos, index) in objetosSeleccionados" :key="index" class="d-flex align-items-center objetos-item mb-3">
                     <b-input readonly :value="objetos.parametro" class="mr-2"></b-input>
                     <b-input readonly :value="objetos.metodologia" class="mr-2"></b-input>
@@ -54,7 +54,7 @@
     </b-row>
 
     <b-alert variant="danger" :show="alertaDuplicado" dismissible @dismissed="alertaDuplicado = false">
-        Los Parametros y Metodologias ya se encuentran agregados
+        Los parámetros y metodologías ya se encuentran agregados.
     </b-alert>
 
     
@@ -244,7 +244,7 @@ export default {
                         console.log(response)
                         if (response != null) {
                             if (response.status == 200) {
-                                this.$bvToast.toast(`Creación de la matriz exitosa`, {
+                                this.$bvToast.toast(`Creación de la matriz exitosa.`, {
                                     title: 'Éxito',
                                     toaster: 'b-toaster-top-center',
                                     solid: true,

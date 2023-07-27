@@ -8,7 +8,7 @@
         <b-row align-h="start" style="padding-top:30px;">
             <b-col class="col-6">
                 <div style="font-size:2rem; font-weight: bold; color: var(--lsa-blue)">
-                    Sistema administración de usuarios
+                    Sistema de administración de usuarios
                 </div>
             </b-col>
         </b-row>
