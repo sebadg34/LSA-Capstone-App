@@ -55,8 +55,13 @@
    </template>      
  </b-table>
 </div> 
+
+<b-alert variant="success" :show="guardadoExitoso" dismissible @dismissed="guardadoExitoso = false">
+  Se han guardado los datos con éxito.
+</b-alert>
 <template #modal-footer="{ close }" >
  <b-button @click="guardarFormulario()" variant="primary" size="xl" class="float-right reactive-button" style="font-weight:bold">Guardar</b-button>
+ 
  <b-button @click="close()" variant="primary" size="xl" class="float-right reactive-button" style="font-weight:bold">
    Cerrar
  </b-button>
@@ -115,7 +120,10 @@
                    </b-button>
                </template>
            </b-modal>
+           
          </div>
+
+         
 
 
 
@@ -130,30 +138,29 @@ import ElementosService from '@/helpers/api-services/Elementos.service';
 export default {
 data() {
 return {
- parametrosOptions: [],
-   metodologiasOptions: [],
-   identificacion: '',
-   orden: 0,
-   identificacionesArray: [],
-   parametros_metodologias: [],
-   TodasopcionesParametro: [],
-   objetossubSeleccionados: [],
-   parametroSeleccionado: '',
-   metodologiaSeleccionada: '',
-   opcionesMetodologia: [],
-   alertaDuplicado: false,
-       alertaExito: false,
-       alertaExiste: false,
-       alertaNOexiste: false,
-       metodologiaDeshabilitada: true,
-       parametroSeleccionadoIngreso: '',
-       filaSeleccionada: null,
-       metodologiaSeleccionadoIngreso: '',
-       metodologiasData: [],
-       index: null,
-       eliminar: []
-   
-   
+  parametrosOptions: [],
+  metodologiasOptions: [],
+  identificacion: '',
+  orden: 0,
+  identificacionesArray: [],
+  parametros_metodologias: [],
+  TodasopcionesParametro: [],
+  objetossubSeleccionados: [],
+  parametroSeleccionado: '',
+  metodologiaSeleccionada: '',
+  opcionesMetodologia: [],
+  alertaDuplicado: false,
+  alertaExito: false,
+  alertaExiste: false,
+  alertaNOexiste: false,
+  metodologiaDeshabilitada: true,
+  parametroSeleccionadoIngreso: '',
+  filaSeleccionada: null,
+  metodologiaSeleccionadoIngreso: '',
+  metodologiasData: [],
+  index: null,
+  eliminar: [],
+  guardadoExitoso: false, 
 };
 },
 
@@ -234,49 +241,55 @@ computed: {
 },
 
 methods: {
- guardarFormulario() {
- const datosIngresados = this.tablaItems.map((item) => {        
+  guardarFormulario() {
+  const datosIngresados = this.tablaItems.map((item) => {        
 
    // Capturamos los id_parametro e id_metodologia del PYM
-   const PYM = item.PYM.map(pymItem => ({
-     id_parametro : pymItem.id_parametro,
-     id_metodologia : pymItem.id_metodologia
-   }));              
+    const PYM = item.PYM.map(pymItem => ({
+      id_parametro : pymItem.id_parametro,
+      id_metodologia : pymItem.id_metodologia
+    }));         
 
-   return {
+    return {
       id_submuestra: item.id_submuestra,
       identificador: item.identificacion,
       orden: item.orden,     
-      parametros_agregar: PYM
-              
-   };
- });
+      parametros_agregar: PYM              
+    };
+  });
 
  console.log("dato a enviar: ", datosIngresados);
 
+
  this.$emit('datosIngresados', datosIngresados);
  this.$emit('eliminados', this.eliminar);
+
+ this.guardadoExitoso = true;
  
 },
+
 eliminarElementoPYM(filaSeleccionada, index) {
   // Obtenemos el elemento eliminado antes de hacer el slice
   const elementoEliminado = filaSeleccionada.PYM[index];
 
-  // Guardamos el id_submuestra en una variable para usarlo más adelante
-  const id_submuestra = filaSeleccionada.id_submuestra;
-
-  const orden = filaSeleccionada.orden;
+  // Guardamos los valores específicos que deseas mostrar en variables
+  const id_metodologia = elementoEliminado.id_metodologia;
+  const id_parametro = elementoEliminado.id_parametro;
+  const id_submuestra = filaSeleccionada.id_submuestra;  
 
   // Hacemos un slice del array PYM para eliminar el elemento en el índice dado
   filaSeleccionada.PYM = [...filaSeleccionada.PYM.slice(0, index), ...filaSeleccionada.PYM.slice(index + 1)];
 
-  // Agregamos el elemento eliminado junto con el id_submuestra a la lista de eliminados
-  this.eliminar.push({ id_submuestra, orden, ...elementoEliminado });
+  // Agregamos solo los datos específicos a la lista de eliminados
+  this.eliminar.push({ id_submuestra, id_parametro, id_metodologia  });
 
+  console.log("id_submuestra: ", id_submuestra);
+  console.log("id_parametro: ", id_parametro);
+  console.log("id_metodologia: ", id_metodologia);  
+  
   console.log("Elemento eliminado: ", elementoEliminado);
-  console.log("Elementos Eliminados: ", this.eliminar);
+  console.log("Parametros Eliminados de la submuestra: ", this.eliminar);
 },
-
 
 abrirParam(row) {
   this.filaSeleccionada = row;
@@ -367,10 +380,10 @@ agregar(filaSeleccionada) {
      console.log("parametroData:", parametroData)
      console.log("metodologiaCompleta:", metodologiaCompleta)
      const nuevoElemento = {
- id_parametro: this.parametroSeleccionadoIngreso,
- id_metodologia: metodologiaCompleta.id_metodologia,
- parametro: parametroData.nombre_parametro,
- metodologia: metodologiaCompleta.nombre_metodologia,
+     id_parametro: this.parametroSeleccionadoIngreso,
+     id_metodologia: metodologiaCompleta.id_metodologia,
+     parametro: parametroData.nombre_parametro,
+     metodologia: metodologiaCompleta.nombre_metodologia,
 };
 
 // Llamamos al método para agregar el nuevo elemento a la fila seleccionada

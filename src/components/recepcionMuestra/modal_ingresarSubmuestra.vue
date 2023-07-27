@@ -50,9 +50,14 @@
                    <b-icon icon="clipboard" aria-hidden="true" class="mr-2"></b-icon>Administrar parámetros
               </b-dropdown-item>                                                                                                                    
           </b-dropdown>
-        </template>      
+        </template> 
+        
+        
       </b-table>
     </div> 
+    <b-alert variant="success" :show="guardadoExitoso" dismissible @dismissed="guardadoExitoso = false">
+  Se han guardado los datos con éxito.
+</b-alert>
     <template #modal-footer="{ close }" >
       <b-button @click="guardarFormulario()" variant="primary" size="xl" class="float-right reactive-button" style="font-weight:bold">Guardar</b-button>
       <b-button @click="close()" variant="primary" size="xl" class="float-right reactive-button" style="font-weight:bold">
@@ -149,6 +154,7 @@ export default {
             metodologiaSeleccionadoIngreso: '',
             metodologiasData: [],
             index: null,
+            guardadoExitoso: false,
         
         
     };
@@ -175,6 +181,7 @@ export default {
       }
     });
     this.obtenerParametro();
+    
   },
   watch: {
     objetosSeleccionados:{
@@ -245,6 +252,8 @@ export default {
       console.log("dato a enviar: ", datosIngresados);
 
       this.$emit('datosIngresados', datosIngresados);
+
+      this.guardadoExitoso = true;
       this.$refs.mod.hide();
     },
     eliminarElementoPYM(filaSeleccionada, index) {

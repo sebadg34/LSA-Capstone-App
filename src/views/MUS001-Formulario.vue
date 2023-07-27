@@ -4,9 +4,8 @@
         <!-- <validation-observer ref="form"> -->
         <modal_ingresarSubmuestra :n-muestras="nMuestras" :objetosSeleccionados="objetosSeleccionados"
             @datosIngresados="capturarDatos" :identificaciones="identificacion" />
-        <modal_agregarMetodologia />
-        <modal_agregarParametro />
-        <modal_resumen :resumen-data="resumenData" />
+            <modal_agregarMetodologia/>
+            <modal_agregarParametro/>
         <div>
 
             <b-card no-body>
@@ -61,16 +60,17 @@
                                                             v-slot="validationContext">
                                                             <label for="input-live">Nombre empresa:</label>
                                                             <div class="d-flex align-items-center ">
-                                                                <b-input-group>
-                                                                    <b-form-select id="input-live" v-model="solicitante"
+                                                                <b-input-group >
+                                                                    <b-form-select id="input-live" v-model="solicitante"                                                                        
                                                                         :state="getValidationState(validationContext)"
-                                                                        :options="opcionesEmpresa"
-                                                                        text-field="nombre_empresa"
-                                                                        value-field="rut_empresa">
+                                                                        :options="opcionesEmpresa"                                                                        
+                                                                        text-field="nombre_empresa" value-field="rut_empresa"                                                                      
+                                                                        >
                                                                     </b-form-select>
 
                                                                     <b-input-group-append>
                                                                         <b-button class=" lsa-orange reactive-button"
+                                                                            
                                                                             @click="actualizarSelectedEmpresa()">
                                                                             <b-icon icon="search"></b-icon>
                                                                         </b-button>
@@ -84,13 +84,14 @@
                                                         <b-alert :show="dismissCountDown" dismissible fade variant="danger"
                                                             @dismiss-count-down="countDownChanged">
                                                             El rut del solicitante no está registrado en la base de datos
-                                                        </b-alert>
+                                                        </b-alert>                                                        
 
                                                         <ValidationProvider name="Dirección Cliente" rules="required"
                                                             v-slot="validationContext">
                                                             <label for="input-live">Dirección empresa:</label>
-                                                            <b-form-select id="input-live" v-model="direccion"
-                                                                :options="opcionesDireccion"
+                                                            <b-form-select id="input-live"
+                                                                v-model="direccion" :options="opcionesDireccion"
+                                                                :disabled="direccionDeshabilitado"
                                                                 :state="getValidationState(validationContext)"
                                                                 text-field="direccionConCiudad" value-field="id_ciudad">
                                                             </b-form-select>
@@ -130,16 +131,7 @@
                                                                     <b-form-input id="nMuestras-input" v-model="nMuestras"
                                                                         :state="getValidationState(validationContext)"
                                                                         aria-describedby="nMuestras-live-feedback"></b-form-input>
-                                                                    <b-input-group-append>
-                                                                        <b-button style="aspect-ratio: 1; border:none"
-                                                                            :disabled="!nMuestras"
-                                                                            class="lsa-orange reactive-button"
-                                                                            @click="agregar()" variant="secondary"
-                                                                            size="md">
-                                                                            <b-icon class="mt-1"
-                                                                                icon="plus-circle-fill"></b-icon>
-                                                                        </b-button>
-                                                                    </b-input-group-append>
+                                                                    
                                                                 </b-input-group>
 
                                                             </div>
@@ -147,44 +139,40 @@
                                                                 validationContext.errors[0] }}</b-form-invalid-feedback>
                                                         </ValidationProvider>
 
+                                                        
+                                                            <label for="input-live">Fecha de muestreo:</label>
+                                                            <b-form-datepicker
+                                                                :date-format-options="{ year: 'numeric', month: '2-digit', day: '2-digit' }"
+                                                                id="input-live" v-model="fecha"                                                                
+                                                                aria-describedby="input-live-help fechaI-live-feedback"                                                                
+                                                                placeholder="Seleccione fecha">
+                                                            </b-form-datepicker>
+                                                            
 
-                                                        <label for="input-live">Fecha de muestreo:</label>
-                                                        <b-form-datepicker
-                                                            :date-format-options="{ year: 'numeric', month: '2-digit', day: '2-digit' }"
-                                                            id="input-live" v-model="fecha" :min="currentDate"
-                                                            aria-describedby="input-live-help fechaI-live-feedback"
-                                                            placeholder="Seleccione fecha">
-                                                        </b-form-datepicker>
-
-
-
-
-                                                        <label for="input-time">Hora de muestreo:</label>
-                                                        <b-form-timepicker id="input-time" v-model="hora"
-                                                            aria-describedby="input-live-help horaI-live-feedback"
-                                                            placeholder="Ingrese hora"></b-form-timepicker>
-
-
-
-                                                        <label for="input-live">Fecha de Entrega:</label>
-                                                        <b-form-datepicker
-                                                            :date-format-options="{ year: 'numeric', month: '2-digit', day: '2-digit' }"
-                                                            id="input-live" v-model="fechaEntrega"
-                                                            placeholder="Seleccione fecha"
-                                                            :min="currentDate"></b-form-datepicker>
+                                                       
+                                                            
+                                                            <label for="input-time">Hora de muestreo:</label>
+                                                            <b-form-timepicker id="input-time" v-model="hora"
+                                                                
+                                                                aria-describedby="input-live-help horaI-live-feedback"
+                                                                placeholder="Ingrese hora"></b-form-timepicker>
+                                                           
 
 
-                                                        <ValidationProvider name="Cotizacion" rules="required"
-                                                            v-slot="validationContext">
+                                                            <label for="input-live">Fecha de Entrega:</label>
+                                                            <b-form-datepicker
+                                                                :date-format-options="{ year: 'numeric', month: '2-digit', day: '2-digit' }"
+                                                                
+                                                                id="input-live" v-model="fechaEntrega"
+                                                                placeholder="Seleccione fecha"
+                                                                :min="currentDate"></b-form-datepicker>
+                                                          
+
+                                                        <ValidationProvider name="Cotizacion" rules="required" v-slot="validationContext">
                                                             <label for="input-live">Cotización:</label>
-                                                            <b-form-select id="input-live" v-model="cotizacion"
-                                                                :options="opcionesCotizacion" text-field="idconNombre"
-                                                                value-field="id_cotizacion"
-                                                                aria-describedby="input-live-help Cotizacion-live-feedback"
-                                                                :state="getValidationState(validationContext)"></b-form-select>
-                                                            <b-form-invalid-feedback
-                                                                id="Cotizacion-live-feedback">{{ validationContext.errors[0] }}</b-form-invalid-feedback>
-                                                        </ValidationProvider>
+                                                            <b-form-select id="input-live" v-model="cotizacion" :options="opcionesCotizacion" text-field="idconNombre" value-field="id_cotizacion" aria-describedby="input-live-help Cotizacion-live-feedback" :state="getValidationState(validationContext)"></b-form-select> 
+                                                            <b-form-invalid-feedback id="Cotizacion-live-feedback">{{validationContext.errors[0]}}</b-form-invalid-feedback>
+                                                        </ValidationProvider> 
                                                     </b-col>
 
                                                     <b-col class="col-6">
@@ -230,15 +218,14 @@
                                                             <label for="input-live">Temperatura (°C):</label>
                                                             <div class="d-flex align-items-center">
                                                                 <b-input-group size="sm">
-                                                                    <b-form-input id="Temperatura-input"
-                                                                        v-model="Temperatura"
+                                                                    <b-form-input id="Temperatura-input" v-model="Temperatura"
                                                                         :state="getValidationState(validationContext)"
-                                                                        aria-describedby="Temperatura-live-feedback"></b-form-input>
+                                                                        aria-describedby="Temperatura-live-feedback"></b-form-input>                                                                  
                                                                 </b-input-group>
                                                             </div>
                                                             <b-form-invalid-feedback id="Temperatura-live-feedback">{{
                                                                 validationContext.errors[0] }}</b-form-invalid-feedback>
-                                                        </ValidationProvider>
+                                                        </ValidationProvider>                                                        
 
                                                         <label for="input-live">Observaciones:</label>
                                                         <b-form-textarea id="input-live" v-model="observaciones" rows="1"
@@ -271,7 +258,7 @@
                                                         <label for="input-live">Rut:</label>
                                                         <b-form-input id="transportistaRut-input" class="mb-1"
                                                             v-model="transportistaRut"
-                                                            aria-describedby="transportistaRut-live-feedback"></b-form-input>
+                                                            aria-describedby="transportistaRut-live-feedback"></b-form-input>                                                        
 
                                                         <label for="input-live">Telefono Movil:</label>
 
@@ -343,29 +330,30 @@
 
                                             <b-card>
                                                 <b-row>
-                                                    <b-col class="col-6">
-                                                        <b-form-group label="Seleccione una norma">
-                                                            <b-input-group>
-                                                                <b-form-select v-model="norma" :options="opcionesNorma"
-                                                                    placeholder="Seleccione una norma" text-field="nombre"
-                                                                    value-field="id"
+                                                    <b-col class="col-6">                                                       
+                                                            <b-form-group label="Seleccione una norma">
+                                                                <b-input-group>
+                                                                    <b-form-select v-model="norma" 
+                                                                    :options="opcionesNorma"
+                                                                    placeholder="Seleccione una norma"                                                                 
+                                                                    text-field="nombre" value-field="id"   
                                                                     @change="obtenerTablasNormas"></b-form-select>
+                                                                                                                            
+                                                                    <b-input-group-append>
+                                                                        <b-button size="sm" class="lsa-orange reactive-button"
+                                                                            style="aspect-ratio:1; border: none"
+                                                                            @click="PushParametrosMetodologias()">
+                                                                            <b-icon style="color:white"
+                                                                                icon="box-arrow-in-down-left">
+                                                                            </b-icon>
+                                                                        </b-button>
+                                                                    </b-input-group-append>
+                                                            
+                                                                </b-input-group>
+                                                                
+                                                            </b-form-group>
 
-                                                                <b-input-group-append>
-                                                                    <b-button size="sm" class="lsa-orange reactive-button"
-                                                                        style="aspect-ratio:1; border: none"
-                                                                        @click="PushParametrosMetodologias()">
-                                                                        <b-icon style="color:white"
-                                                                            icon="box-arrow-in-down-left">
-                                                                        </b-icon>
-                                                                    </b-button>
-                                                                </b-input-group-append>
-
-                                                            </b-input-group>
-
-                                                        </b-form-group>
-
-
+                                                        
                                                     </b-col>
 
                                                     <b-col class="col-6">
@@ -447,6 +435,7 @@
                                         <template #title>
                                             <b-col class="col-12">
                                                 <b-row class="d-flex justify-content-end">
+                                                    <b-icon icon="arrow-right-short"></b-icon> 
 
                                                     <strong style="padding-left:30px">Parámetros de muestras</strong>
                                                 </b-row>
@@ -465,13 +454,6 @@
                                     </b-tab>
 
                                 </b-col>
-                                <div style="position:absolute; left:20px; bottom:15px; width:45%">
-                                    <b-button pill @click="abrirResumen()" variant="primary" size="md"
-                                        class="reactive-button lsa-light-blue"
-                                        style="font-weight:bold; margin-top:30px; position:absolute; width:50%; right:0px">
-                                        Resumen
-                                    </b-button>
-                                </div>
                                 <div style="position:absolute; right:20px; bottom:15px; width:45%">
                                     <b-row class=" d-flex justify-content-between">
                                         <b-col class="col-6">
@@ -484,7 +466,6 @@
                                         </b-col>
 
                                     </b-row>
-
 
                                     <b-button @click="enviarFormulario()" variant="primary" size="xl"
                                         class="reactive-button lsa-light-blue"
@@ -526,7 +507,7 @@
                     <b-col>
                         <label>Seleccione un parámetro</label>
                         <b-input-group>
-
+                            
                             <b-form-select v-model="parametroSeleccionado" :options="TodasopcionesParametro"
                                 placeholder="Seleccione un Parámetro" @change="agregarObjetosSeleccionados"></b-form-select>
                             <b-input-group-append>
@@ -542,7 +523,7 @@
                     <b-col>
                         <label>Seleccione una metodología</label>
                         <b-input-group>
-
+                           
                             <b-form-select v-model="metodologiaSeleccionada" :options="opcionesMetodologia"
                                 placeholder="Seleccione una metodología" :disabled="metodologiaDeshabilitada"
                                 @change="agregarObjetosSeleccionados"></b-form-select>
@@ -585,7 +566,6 @@ import PersonalService from '@/helpers/api-services/Personal.service';
 //import EmpresaService from '@/helpers/api-services/Empresa.service';
 import SolicitanteService from '@/helpers/api-services/Solicitante.service';
 
-import modal_resumen from '@/components/recepcionMuestra/modal-ResumenMuestra.vue';
 import modal_agregarParametro from '@/components/recepcionMuestra/modal_agregarParametro.vue';
 import modal_agregarMetodologia from '@/components/recepcionMuestra/modal_agregarMetodologia.vue';
 import {
@@ -599,7 +579,6 @@ import {
 export default {
 
     components: {
-        modal_resumen,
         modal_ingresarSubmuestra,
         modal_agregarMetodologia,
         modal_agregarParametro
@@ -688,6 +667,7 @@ export default {
             opcionesMetodologia: [],
             metodologiaDeshabilitada: true,
             parametroDeshabilitado: true,
+            direccionDeshabilitado: true,
             metodologias: [],
             metodologiasData: [],
             parametros_agregar: [{
@@ -708,8 +688,7 @@ export default {
             revisado: false,
             opcionesCotizacion: [],
             cotizacion: '',
-            opcionesEmpresa: [],
-            resumenData: {}
+            opcionesEmpresa: []
 
         };
     },
@@ -730,7 +709,7 @@ export default {
 
         this.obtenerMatriz(),
 
-            this.obtenerEmpresas(),
+        this.obtenerEmpresas(),
 
             this.obtenerNormas(),
 
@@ -742,8 +721,8 @@ export default {
                 }
             });
 
-
-
+            
+       
     },
 
     watch: {
@@ -796,57 +775,6 @@ export default {
     },
 
     methods: {
-        async abrirResumen() {
-
-            //const datosValidos = await this.validarFormularios();
-            const datosValidos = true;
-            if (!datosValidos) {
-                this.$bvToast.toast(`Faltan datos a llenar para mostrar resumen.`, {
-                                title: 'Datos faltantes',
-                                toaster: 'b-toaster-top-center',
-                                solid: true,
-                                variant: "warning",
-                                appendToast: true
-                            })
-                return;
-            } else {
-
-                const matricesFiltradas = this.parametros_agregar.slice(1);
-                var data = {
-                    rut_empresa: this.solicitante,
-                    rut_empleado: this.recepcionistaRUT,
-                    nombre_empresa: this.nombre_empresa,
-                    id_ciudad: this.direccion,
-                    id_cotizacion: this.cotizacion,
-                    direccion_empresa: this.direccion_empresa,
-                    rut_solicitante: this.rut,
-                    muestreado_por: this.muestreado,
-                    cantidad_muestras: this.nMuestras,
-                    prioridad: this.prioridad,
-                    temperatura_transporte: this.Temperatura,
-                    fecha_entrega: this.fechaEntrega,
-                    fecha_muestreo: this.fecha,
-                    hora_muestreo: this.hora,
-                    rut_transportista: this.transportistaRut,
-                    nombre_transportista: this.transportista,
-                    patente_vehiculo: this.patente,
-                    telefonos_agregar: this.telefonos_agregar,
-                    estado: 'Recepcionado',
-                    observaciones: this.observaciones,
-                    parametros_agregar: matricesFiltradas.map(matriz => ({
-                        id_parametro: matriz.id_parametro,
-                        id_metodologia: matriz.id_metodologia,
-                    })),
-                    id_matriz: this.TipoMatriz,
-                    id_norma: this.norma,
-                    id_tabla: this.id_tabla,
-                    submuestras_agregar: this.submuestra_agregar
-                }
-                this.resumenData = data;
-                this.$bvModal.show('modal-resumen-recepcion');
-            }
-
-        },
         getValidationState({
             dirty,
             validated,
@@ -954,9 +882,9 @@ export default {
             })
         },
 
-        obtenerEmpresas() {
+        obtenerEmpresas () {
             MuestraService.obtenerEmpresas().then((response) => {
-                console.log("obteniendo empresas", response.data)
+                console.log("obteniendo empresas",response.data)
                 const empresas = response.data;
                 this.opcionesEmpresa = empresas;
             })
@@ -967,56 +895,56 @@ export default {
 
         actualizarSelectedEmpresa() {
 
+            this.direccionDeshabilitado = false;
             console.log("empresa:", this.solicitante)
             const nombreEmpresa = this.opcionesEmpresa.find(objeto => objeto.rut_empresa === this.solicitante);
             console.log("empresa:", nombreEmpresa)
             let nombreEmpresaEncontrada = "";
             if (nombreEmpresa) {
-                nombreEmpresaEncontrada = nombreEmpresa.nombre_empresa;
-                this.nombre_empresa = nombreEmpresaEncontrada;
+              nombreEmpresaEncontrada = nombreEmpresa.nombre_empresa;
+              this.nombre_empresa = nombreEmpresaEncontrada;
             }
 
             console.log("Nombre de la empresa encontrada:", nombreEmpresaEncontrada);
 
 
             MuestraService.obtenerEmpresas().then((response) => {
-                console.log("obteniendo empresas", response.data)
+                console.log("obteniendo empresas",response.data)
                 const empresas = response.data;
                 const direccion = empresas.flatMap(direccion => direccion.ciudades_direcciones);
                 console.log("direccion : ", direccion)
 
-
-                const direccionCiudad = direccion.map(c => c.direccion);
-                const nombre_ciudad = direccion.map(c => c.nombre_ciudad);
+                
+            const direccionCiudad = direccion.map(c => c.direccion);
+            const nombre_ciudad = direccion.map(c => c.nombre_ciudad);
                 this.opcionesDireccion = direccion.map(opc => ({
-                    id_ciudad: opc.id_ciudad,
-                    nombre_ciudad: opc.nombre_ciudad,
-                    direccion: opc.direccion,
-                    direccionConCiudad: `${nombre_ciudad} / ${direccionCiudad}`
+                id_ciudad: opc.id_ciudad,
+                nombre_ciudad: opc.nombre_ciudad,
+                direccion: opc.direccion,
+                direccionConCiudad: `${nombre_ciudad} / ${direccionCiudad}`               
 
-                }))
-                console.log("opciondes direccion : ", direccionCiudad);
+            }))
+            console.log("opciondes direccion : ", direccionCiudad);
             });
             const data = {
                 rut_empresa: this.solicitante
             };
-
+               
             MuestraService.obtenerCotizacionEmpresa(data).then((response) => {
-                if (response.data != null && response.status === 200) {
+                if (response.data != null && response.status === 200){
                     console.log("cotizaciones: ", response.data)
                     this.opcionesCotizacion = response.data.map(cotizacion => ({
                         id_cotizacion: cotizacion.id_cotizacion,
                         nombre_original_documento: cotizacion.nombre_original_documento,
                         idconNombre: `${cotizacion.id_cotizacion} - ${cotizacion.nombre_original_documento}`
-
+                        
                     }))
                     console.log("Opc. cotizaciones: ", this.opcionesCotizacion)
-                }
+                    this.id_cotizacion = response.data.map(id => id.id_cotizacion)
+                    console.log("id. cotizacion: ", this.id_cotizacion)
+                }  
             })
-
-
-
-
+            
         },
 
         /*generarFechaHoraActual() {
@@ -1032,27 +960,27 @@ export default {
         },
 
         agregar() {
-            console.log("abirnedo modal");
+            console.log("abirnedo modal");            
             this.alertaExito = false;
             this.alertaDuplicado = false;
             this.$bvModal.show('modal-cantidad');
         },
 
-        detallesCotizaciones() {
+        detallesCotizaciones(){
             const data = {
                 rut_empresa: this.solicitante
             };
             SolicitanteService.CotizacionSolicitante(data).then((response) => {
-                if (response.data != null && response.status === 200) {
+                if (response.data != null && response.status === 200){
                     console.log("cotizaciones: ", response.data)
                     this.opcionesCotizacion = response.data.map(cotizacion => ({
                         id_cotizacion: cotizacion.id_cotizacion,
                         nombre_original_documento: cotizacion.nombre_original_documento,
                         idconNombre: `${cotizacion.id_cotizacion} - ${cotizacion.nombre_original_documento}`
-
+                        
                     }))
                     console.log("Opc. cotizaciones: ", this.opcionesCotizacion)
-                }
+                }  
             })
         },
 
@@ -1172,7 +1100,7 @@ export default {
                 this.submuestra_agregar.push({
                     identificador: objeto.identificacion,
                     orden: objeto.orden,
-                    parametros_agregar: objeto.parametros_agregar
+                    parametros_agregar : objeto.parametros_agregar
                 });
             });
             console.log("submuestra_agregar:", this.submuestra_agregar);
@@ -1267,13 +1195,13 @@ export default {
                     // Asignar tablasProcesadas a this.tablasProcesadas
                     this.tablasProcesadas = tablasProcesadas;
 
-
+                                    
                 }
             });
         },
 
         PushParametrosMetodologias() {
-
+            
             function esDuplicado(parametrosYMetodologias, parametro, metodologia) {
                 return parametrosYMetodologias.some((item) => item.parametro === parametro && item.metodologia === metodologia);
             }
@@ -1287,14 +1215,14 @@ export default {
                 const parametros = tabla.parametros;
                 const metodologias = tabla.metodologias;
                 const idMetodologias = tabla.id_metodologia;
-
+                
                 // Agregar los parámetros y metodologías de la tabla actual a la variable principal
                 for (let i = 0; i < parametros.length; i++) {
                     const parametro = parametros[i];
                     const metodologia = metodologias[i];
                     const id_parametro = idParametro[i];
                     const id_metodologia = idMetodologias[i];
-
+                    
                     // Verificar si el parámetro y la metodología ya existen en la variable "parametrosYMetodologias"
                     if (!esDuplicado(parametrosYMetodologias, parametro, metodologia)) {
                         parametrosYMetodologias.push({
@@ -1309,10 +1237,10 @@ export default {
             console.log("parametros y metodologias de las tablas: ", parametrosYMetodologias);
             // Asegurarnos de no agregar duplicados a "this.objetosSeleccionados"
             const objetosNoDuplicados = parametrosYMetodologias.filter((item) => !esDuplicado(this.objetosSeleccionados, item.parametro, item.metodologia));
-            this.objetosSeleccionados.push(...objetosNoDuplicados);
+            this.objetosSeleccionados.push(...objetosNoDuplicados); 
             const IDNoDuplicados = parametrosYMetodologias.filter((item) => !esDuplicado(this.objetosSeleccionados, item.id_parametro, item.id_metodologia));
-            this.parametros_agregar.push(...IDNoDuplicados);
-
+            this.parametros_agregar.push(...IDNoDuplicados);        
+                   
         },
 
         actualizarParametrosTabla() {

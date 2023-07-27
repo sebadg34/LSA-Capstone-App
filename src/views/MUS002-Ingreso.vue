@@ -326,11 +326,7 @@
   
                                                         </b-input-group>
                                                         <div v-if="telefonos_agregar.length === 0">
-                                                            No se han agregado teléfonos.
-                                                            <b-button size="sm" class="lsa-green reactive-button"
-                                                                style="aspect-ratio:1; border: none" @click="addInput">
-                                                                <b-icon class="mt-1" icon="plus-circle-fill"></b-icon>
-                                                            </b-button>
+                                                            No se han agregado teléfonos.                                                            
                                                         </div>
   
                                                     </b-col>
@@ -495,14 +491,14 @@
                                     </b-tab>
                                   <b-tab title="Asignar analista">
                                     <template #title>
-                                            <b-col class="col-12">
-                                                <b-row class="d-flex justify-content-end">
-                                                    <b-icon icon="arrow-right-short"></b-icon>                                                
-  
-                                                    <strong style="padding-left:146px"> Asignar analista</strong>
-                                                </b-row>
-                                            </b-col>
-                                        </template>
+                                        <b-col class="col-12">
+                                            <b-row class="d-flex justify-content-end">
+                                                <b-icon icon="arrow-right-short"></b-icon>                       
+
+                                                <strong style="padding-left:146px"> Asignar analista</strong>
+                                            </b-row>
+                                        </b-col>
+                                    </template>
   
                                       <b-card>
                                       <b-table :items="empleadosAgrupados" :fields="tableFields">                                               
@@ -937,7 +933,8 @@ export default {
             empleadosNuevos: [],
             sub : [],
             empleadosAgrupados: [],
-            empleadosDesagrupados: []
+            empleadosDesagrupados: [],
+            parametro_submuestra_eliminar: []
         };
     },
 
@@ -1164,91 +1161,85 @@ export default {
         },
 
         eliminarFila(fila) {
-  const index = this.empleadosAgrupados.indexOf(fila);
-  if (index !== -1) {
-    if (fila.id_parametro === '' || fila.rut_empleado === null) {
-      this.empleadosAgrupados.splice(index, 1);
-    } else {
-      const idParametroUnico = Array.isArray(fila.id_parametro) ? fila.id_parametro[0] : fila.id_parametro;
-      const nombreParametroUnico = Array.isArray(fila.nombre_parametro) ? fila.nombre_parametro[0] : fila.nombe_parametro;
-      
-      const empleadoConParametroUnico = {
-        ...fila,
-        id_parametro: idParametroUnico,
-        nombre_parametro: nombreParametroUnico
-      };
-      
-      // Verificar si el objeto está presente en this.empleados
-      const empleadoEncontrado = this.empleados.find((empleado) => {
-        return this.sonObjetosIguales(empleado, empleadoConParametroUnico);
-      });
-      
-      if (empleadoEncontrado) {
-        this.empleados_eliminar.push(empleadoConParametroUnico);
-        this.empleadosAgrupados.splice(index, 1);
-      } else {
-        console.log("La eliminación será solo visual ya que el elemento no existe en la BD.");
-        this.empleadosAgrupados.splice(index, 1);
-        // No hacemos el push a this.empleados_eliminar
-      }
-    }
-    console.log("empleados eliminados: ", this.empleados_eliminar);
-  }
-},
+          const index = this.empleadosAgrupados.indexOf(fila);
+          if (index !== -1) {
+            if (fila.id_parametro === '' || fila.rut_empleado === null) {
+              this.empleadosAgrupados.splice(index, 1);
+            } else {
+              const idParametroUnico = Array.isArray(fila.id_parametro) ? fila.id_parametro[0] : fila.id_parametro;
+              const nombreParametroUnico = Array.isArray(fila.nombre_parametro) ? fila.nombre_parametro[0] : fila.nombe_parametro;
+            
+              const empleadoConParametroUnico = {
+                ...fila,
+                id_parametro: idParametroUnico,
+                nombre_parametro: nombreParametroUnico
+              };
 
-// Función para verificar si dos objetos son iguales
-sonObjetosIguales(objeto1, objeto2) {
-  const keys1 = Object.keys(objeto1);
-  const keys2 = Object.keys(objeto2);
+              // Verificar si el objeto está presente en this.empleados
+              const empleadoEncontrado = this.empleados.find((empleado) => {
+                return this.sonObjetosIguales(empleado, empleadoConParametroUnico);
+              });
 
-  if (keys1.length !== keys2.length) {
-    return false;
-  }
+              if (empleadoEncontrado) {
+                this.empleados_eliminar.push(empleadoConParametroUnico);
+                this.empleadosAgrupados.splice(index, 1);
+              } else {
+                console.log("La eliminación será solo visual ya que el elemento no existe en la BD.");
+                this.empleadosAgrupados.splice(index, 1);
+                // No hacemos el push a this.empleados_eliminar
+              }
+            }
+            console.log("empleados eliminados: ", this.empleados_eliminar);
+          }
+        },
 
-  for (const key of keys1) {
-    if (objeto1[key] !== objeto2[key]) {
-      return false;
-    }
-  }
-
-  return true;
-},
-
-
-
+        // Función para verificar si dos objetos son iguales
+        sonObjetosIguales(objeto1, objeto2) {
+          const keys1 = Object.keys(objeto1);
+          const keys2 = Object.keys(objeto2);
         
-eliminarParametro(filaSeleccionada, index) {
-  const parametroEliminado = {
-    RUM: filaSeleccionada.RUM,
-    estado: filaSeleccionada.estado,
-    fecha_entrega: filaSeleccionada.fecha_entrega,
-    id_parametro: filaSeleccionada.id_parametro[index],
-    nombre_parametro: filaSeleccionada.nombre_parametro[index],
-    orden_de_analisis: filaSeleccionada.orden_de_analisis,
-    rut_empleado: filaSeleccionada.rut_empleado,
-  };
-
-  // Verificar si el objeto parametroEliminado existe en this.empleados
-  const parametroEncontrado = this.empleados.find((empleado) => {
-    return this.sonObjetosIguales(empleado, parametroEliminado);
-  });
-
-  if (parametroEncontrado) {
-    filaSeleccionada.id_parametro.splice(index, 1); 
-    filaSeleccionada.nombre_parametro.splice(index, 1); 
-
-    console.log("parametro eliminado: ", parametroEliminado);
-    this.empleados_eliminar.push(parametroEliminado);
-    console.log("empleados_eliminar: ", this.empleados_eliminar);
-  } else {
-    console.log("La eliminación del parámetro será solo visual ya que no existe en la BD.");
-    filaSeleccionada.id_parametro.splice(index, 1); 
-    filaSeleccionada.nombre_parametro.splice(index, 1);
-  }
-},
-
-
-
+          if (keys1.length !== keys2.length) {
+            return false;
+          }
+      
+          for (const key of keys1) {
+            if (objeto1[key] !== objeto2[key]) {
+              return false;
+            }
+          }
+      
+          return true;
+        },
+        
+        eliminarParametro(filaSeleccionada, index) {
+          const parametroEliminado = {
+            RUM: filaSeleccionada.RUM,
+            estado: filaSeleccionada.estado,
+            fecha_entrega: filaSeleccionada.fecha_entrega,
+            id_parametro: filaSeleccionada.id_parametro[index],
+            nombre_parametro: filaSeleccionada.nombre_parametro[index],
+            orden_de_analisis: filaSeleccionada.orden_de_analisis,
+            rut_empleado: filaSeleccionada.rut_empleado,
+          };
+      
+          // Verificar si el objeto parametroEliminado existe en this.empleados
+          const parametroEncontrado = this.empleados.find((empleado) => {
+            return this.sonObjetosIguales(empleado, parametroEliminado);
+          });
+      
+          if (parametroEncontrado) {
+            filaSeleccionada.id_parametro.splice(index, 1); 
+            filaSeleccionada.nombre_parametro.splice(index, 1); 
+        
+            console.log("parametro eliminado: ", parametroEliminado);
+            this.empleados_eliminar.push(parametroEliminado);
+            console.log("empleados_eliminar: ", this.empleados_eliminar);
+          } else {
+            console.log("La eliminación del parámetro será solo visual ya que no existe en la BD.");
+            filaSeleccionada.id_parametro.splice(index, 1); 
+            filaSeleccionada.nombre_parametro.splice(index, 1);
+          }
+        },
 
         countDownChanged(dismissCountDown) {
             this.dismissCountDown = dismissCountDown
@@ -1287,9 +1278,7 @@ eliminarParametro(filaSeleccionada, index) {
         
             console.log('Parámetro agregado a la fila:', filaSeleccionada);
             console.log("nuevo array empleado: ", this.EmpleadosArray);
-            console.log("empleadoOG: ", this.empleadosOG);
-            
-            
+            console.log("empleadoOG: ", this.empleadosOG);           
         },
 
         empleadosCoinciden(){
@@ -1371,137 +1360,117 @@ eliminarParametro(filaSeleccionada, index) {
 
 
             const empleados_original = this.empleados.map((empleado, index) => ({
-  ...empleado,
-  id_aux: index + 1 // El índice + 1 se usará como id_aux autoincremental
-}));
+              ...empleado,
+              id_aux: index + 1 // El índice + 1 se usará como id_aux autoincremental
+            }));
 
-console.log("empleados en BD: ",empleados_original);
+            console.log("empleados en BD: ",empleados_original);
 
 
 
-this.empleadosNuevos = this.empleadosDesagrupados.map(empleados => ({
-            rut_empleado: empleados.rut_empleado,
-            orden_de_analisis: empleados.orden_de_analisis,
-            id_parametro: empleados.id_parametro,
-            nombre_parametro: empleados.nombre_parametro,
-            fecha_entrega: empleados.fecha_entrega
+            this.empleadosNuevos = this.empleadosDesagrupados.map(empleados => ({
+                rut_empleado: empleados.rut_empleado,
+                orden_de_analisis: empleados.orden_de_analisis,
+                id_parametro: empleados.id_parametro,
+                nombre_parametro: empleados.nombre_parametro,
+                fecha_entrega: empleados.fecha_entrega
 
-        }));
-        
+            }));        
 
-        const nuevoArray = this.empleadosNuevos.map(empleado => {
-  // Creamos un nuevo objeto con las mismas propiedades del objeto original
-  const nuevoEmpleado = {
-    ...empleado,
-  };
-
-  // Verificamos si el campo 'id_parametro' es un array
-  if (Array.isArray(empleado.id_parametro)) {
-    // Asignamos el primer valor del array 'id_parametro' al campo 'id_parametro' del nuevo objeto
-    nuevoEmpleado.id_parametro = empleado.id_parametro[0];
-  }
-
-  return nuevoEmpleado;
-  
-});
-console.log(" nuevo array empleados: ", nuevoArray)
+            const nuevoArray = this.empleadosNuevos.map(empleado => {
+            // Creamos un nuevo objeto con las mismas propiedades del objeto original
+                const nuevoEmpleado = {
+                    ...empleado,
+                };
+              // Verificamos si el campo 'id_parametro' es un array
+              if (Array.isArray(empleado.id_parametro)) {
+                // Asignamos el primer valor del array 'id_parametro' al campo 'id_parametro' del nuevo objeto
+                nuevoEmpleado.id_parametro = empleado.id_parametro[0];
+              }          
+              return nuevoEmpleado;
+            });
+            
+            console.log(" nuevo array empleados: ", nuevoArray)
 
             const empleados = nuevoArray.map((empleado, index) => ({
-  ...empleado,
-  id_aux: index + 1 // El índice + 1 se usará como id_aux autoincremental
-}));
+                ...empleado,
+                id_aux: index + 1 // El índice + 1 se usará como id_aux autoincremental
+            }));
+
+            console.log("nuevos empleados: ",empleados);
+
+            // Función para comparar dos empleados por su id_aux
+            function compararEmpleadosPorIdAux(empleado1, empleado2) {
+              return empleado1.id_aux === empleado2.id_aux;
+            }
+
+            // Función para comparar dos empleados por sus propiedades restantes (fecha_entrega, rut_empleado, id_parametro)
+            function compararEmpleadosPorPropiedades(empleado1, empleado2) {
+              return (
+                empleado1.rut_empleado === empleado2.rut_empleado &&
+                empleado1.orden_de_analisis === empleado2.orden_de_analisis &&
+                empleado1.id_parametro === empleado2.id_parametro &&
+                empleado1.fecha_entrega === empleado2.fecha_entrega   
+              );
+            }
+
+            // Filtrar los empleados diferentes
+            const empleadosDiferentes = empleados.filter(empleado => {
+              // Buscar el empleado correspondiente en empleados_original con el mismo id_aux
+              const empleadoCorrespondiente = empleados_original.find(e => compararEmpleadosPorIdAux(empleado, e));
+            
+              // Si no se encontró el empleado en empleados_original, significa que es diferente
+              if (!empleadoCorrespondiente) {
+                return true;
+              }
+              console.log("empleado correspondiente: ", empleadoCorrespondiente);
+          
+              // Comparar las propiedades restantes para asegurarse de que son iguales
+              return !compararEmpleadosPorPropiedades(empleado, empleadoCorrespondiente);
 
 
-console.log("nuevos empleados: ",empleados);
+            });
 
+            console.log("Empleados diferentes:", empleadosDiferentes);
+            this.empleados_agregar = [];
+            this.empleados_agregar.push(...empleadosDiferentes);
 
-// Función para comparar dos empleados por su id_aux
-function compararEmpleadosPorIdAux(empleado1, empleado2) {
-  return empleado1.id_aux === empleado2.id_aux;
-}
-
-// Función para comparar dos empleados por sus propiedades restantes (fecha_entrega, rut_empleado, id_parametro)
-function compararEmpleadosPorPropiedades(empleado1, empleado2) {
-  return (
-    empleado1.rut_empleado === empleado2.rut_empleado &&
-    empleado1.orden_de_analisis === empleado2.orden_de_analisis &&
-    empleado1.id_parametro === empleado2.id_parametro &&
-    empleado1.fecha_entrega === empleado2.fecha_entrega   
-  );
-}
-
-// Filtrar los empleados diferentes
-const empleadosDiferentes = empleados.filter(empleado => {
-  // Buscar el empleado correspondiente en empleados_original con el mismo id_aux
-  const empleadoCorrespondiente = empleados_original.find(e => compararEmpleadosPorIdAux(empleado, e));
-
-  // Si no se encontró el empleado en empleados_original, significa que es diferente
-  if (!empleadoCorrespondiente) {
-    return true;
-  }
-  console.log("empleado correspondiente: ", empleadoCorrespondiente);
-
-  // Comparar las propiedades restantes para asegurarse de que son iguales
-  return !compararEmpleadosPorPropiedades(empleado, empleadoCorrespondiente);
-  
-  
-});
-
-
-console.log("Empleados diferentes:", empleadosDiferentes);
-this.empleados_agregar = [];
-this.empleados_agregar.push(...empleadosDiferentes);
-
-console.log("Nuevos Empleados agregar:", this.empleados_agregar);
-
-// Mostrar el objeto correspondiente en empleados_original para cada empleado en empleadosDiferentes
-empleadosDiferentes.forEach(empleado => {
-  const empleadoCorrespondiente = empleados_original.find(e => compararEmpleadosPorIdAux(empleado, e));
-  console.log("Objeto en empleados_original:", empleadoCorrespondiente);
-  this.empleados_eliminar.push(empleadoCorrespondiente)
-  console.log("empleados eliminar: ",this.empleados_eliminar)
-
-});
-
-
+            console.log("Nuevos Empleados agregar:", this.empleados_agregar);
+            // Mostrar el objeto correspondiente en empleados_original para cada empleado en empleadosDiferentes
+            empleadosDiferentes.forEach(empleado => {
+              const empleadoCorrespondiente = empleados_original.find(e => compararEmpleadosPorIdAux(empleado, e));
+              console.log("Objeto en empleados_original:", empleadoCorrespondiente);
+              this.empleados_eliminar.push(empleadoCorrespondiente)
+              console.log("empleados eliminar: ",this.empleados_eliminar)            
+            });
         },
 
         mapeotelefono() {
             this.telefonos_agregarOG = this.telefonos_agregarOG.map(fono => ({
-  telefono_transportista: fono.telefono_transportista
-}));
-console.log("telefono_transportista nuevo:", this.telefonos_agregarOG);
+                telefono_transportista: fono.telefono_transportista
+            }));
+            console.log("telefono_transportista nuevo:", this.telefonos_agregarOG);
         },
 
 
-        telefonosCoinciden() {
+        /*telefonosCoinciden() {
+            if(this.telefonos_agregar === this.telefonos_agregarOG) {
+                console.log("coindicen", this.telefonos_agregarOG)
+            }
+            else {
+                console.log("NO coindicen", this.telefonos_agregar)    
+            }
 
-            
-
-if(this.telefonos_agregar === this.telefonos_agregarOG){
-
-    console.log("coindicen", this.telefonos_agregarOG)
-}else{
-
-    console.log("NO coindicen", this.telefonos_agregar)
-    
-}
-
-
-
-
-            /*const elementosNoRepetidos = submuestraArray.filter(objeto => (
+            const elementosNoRepetidos = submuestraArray.filter(objeto => (
                 !this.submuestrasOG.some(elemento => (
                     elemento.identificador === objeto.identificador &&
                     elemento.orden === objeto.orden &&
                     elemento.id_parametro === objeto.id_parametro &&
                     elemento.id_metodologia === objeto.id_metodologia
-                ))
-                
+                ))                
             ));
 
-            console.log("elementos no repetidos:", elementosNoRepetidos);
-            
+            console.log("elementos no repetidos:", elementosNoRepetidos);            
 
             elementosNoRepetidos.forEach(objeto => {
               this.submuestra_agregar.push({
@@ -1512,36 +1481,28 @@ if(this.telefonos_agregar === this.telefonos_agregarOG){
               });
             });
             
-            console.log("submuestras_agregar: ", this.submuestra_agregar)*/
-            
-},
-
-
-        
+            console.log("submuestras_agregar: ", this.submuestra_agregar)            
+        },*/       
 
         repetido(){
-
-
             // Desagrupar los elementos dentro del array empleadosAgrupados
-const empleadosDesagrupados = this.empleadosAgrupados.flatMap(empleado => {
-  const empleadosIndividuales = empleado.id_parametro.map((idParametro, index) => ({
-    RUM: empleado.RUM,
-    estado: empleado.estado,
-    fecha_entrega: empleado.fecha_entrega,
-    id_parametro: idParametro,
-    nombre_parametro: empleado.nombre_parametro[index],
-    orden_de_analisis: empleado.orden_de_analisis,
-    rut_empleado: empleado.rut_empleado,
-  }));
+            const empleadosDesagrupados = this.empleadosAgrupados.flatMap(empleado => {
+              const empleadosIndividuales = empleado.id_parametro.map((idParametro, index) => ({
+                RUM: empleado.RUM,
+                estado: empleado.estado,
+                fecha_entrega: empleado.fecha_entrega,
+                id_parametro: idParametro,
+                nombre_parametro: empleado.nombre_parametro[index],
+                orden_de_analisis: empleado.orden_de_analisis,
+                rut_empleado: empleado.rut_empleado,
+              }));          
+              return empleadosIndividuales;
+            });
 
-  return empleadosIndividuales;
-});
+            // Ahora empleadosDesagrupados contendrá los 8 elementos desagrupados
+            console.log("empleados desagrupados: ", empleadosDesagrupados);
 
-// Ahora empleadosDesagrupados contendrá los 8 elementos desagrupados
-console.log("empleados desagrupados: ", empleadosDesagrupados);
-
-this.empleadosDesagrupados = empleadosDesagrupados;
-
+            this.empleadosDesagrupados = empleadosDesagrupados;
             const elementosNoRepetidos = this.empleadosAgrupados.filter(objeto => (
                 !this.empleadosOG.some(elemento => (
                   elemento.RUM === objeto.RUM &&
@@ -1567,10 +1528,9 @@ this.empleadosDesagrupados = empleadosDesagrupados;
             });
 
             console.log("empleados_agregar:", this.empleados_agregar);
-
         },
 
-        modificado(){
+        /*modificado(){
             const empleadoModificadoString = JSON.stringify(this.EmpleadosArray);
             const haSidoModificado = !this.empleadosOG.some(elemento => {
               const elementoString = JSON.stringify(elemento);
@@ -1580,7 +1540,7 @@ this.empleadosDesagrupados = empleadosDesagrupados;
             
             console.log("modificaod:",haSidoModificado)
             
-        },
+        },*/
 
         obs(){
             console.log(this.observacionesOG);           
@@ -1591,8 +1551,7 @@ this.empleadosDesagrupados = empleadosDesagrupados;
                   hora_observacion: '',
                   observaciones: this.observaciones,
                 }];                
-                console.log("primero: ",this.nuevaobs)                
-               
+                console.log("primero: ",this.nuevaobs)              
             }   
             else{
                 const fechaObs = this.observacionesOG[0].fecha_observacion;
@@ -1613,14 +1572,12 @@ this.empleadosDesagrupados = empleadosDesagrupados;
                 const observaciones = [{
                     fecha_observacion: fechaObs,
                     hora_observacion: horaObs,  
-                    observaciones: this.observaciones,             
-
+                    observaciones: this.observaciones,
                 }]
 
                 if (observaciones === this.observacionesOG){
                     this.nuevaobs = []
                 }else{
-
                     this.nuevaobs = observaciones;
                     console.log("obs nueva: ",observaciones)
                 }              
@@ -1950,13 +1907,12 @@ this.empleadosDesagrupados = empleadosDesagrupados;
                 
                     this.parametrosAnalista.push({ 
                         id_parametro: parametroData.id_parametro,
-                        parametro: this.parametroSeleccionadoIngreso, });             
+                        parametro: this.parametroSeleccionadoIngreso, });        
                 
                     this.alertaDuplicado = false;
                     console.log("parametros analista: ", this.parametrosAnalista)
                 }
-            }            
-            
+            }           
         },
         
 
@@ -2134,46 +2090,39 @@ this.empleadosDesagrupados = empleadosDesagrupados;
             console.log("submuestras: ", submuestraArray) 
             
             const submuestraArrayTransformado = submuestraArray.map(submuestra => {
-  const parametros = submuestra.parametros_agregar.map(parametro => ({
-    id_submuestra: submuestra.id_submuestra,
-    identificador: submuestra.identificador,
-    orden: submuestra.orden,
-    id_parametro: parametro.id_parametro,
-    id_metodologia: parametro.id_metodologia,
-    
-  }));
-  return parametros;
-}).flat();
+              const parametros = submuestra.parametros_agregar.map(parametro => ({
+                id_submuestra: submuestra.id_submuestra,
+                identificador: submuestra.identificador,
+                orden: submuestra.orden,
+                id_parametro: parametro.id_parametro,
+                id_metodologia: parametro.id_metodologia,                
+              }));
+              return parametros;
+            }).flat();
 
-console.log("submuestraArrayTransformado:", submuestraArrayTransformado);
+            console.log("submuestraArrayTransformado:", submuestraArrayTransformado);
 
-            for (let i = 0; i < this.submuestrasOG.length; i++) {
-  const elementoRepetido = submuestraArrayTransformado.find(objeto => (
-    objeto.identificador === this.submuestrasOG[i].identificador &&
-    objeto.orden === this.submuestrasOG[i].orden &&
-    JSON.stringify(objeto.id_parametro) === JSON.stringify(this.submuestrasOG[i].id_parametro)
-  ));
+                        for (let i = 0; i < this.submuestrasOG.length; i++) {
+              const elementoRepetido = submuestraArrayTransformado.find(objeto => (
+                objeto.identificador === this.submuestrasOG[i].identificador &&
+                objeto.orden === this.submuestrasOG[i].orden &&
+                JSON.stringify(objeto.id_parametro) === JSON.stringify(this.submuestrasOG[i].id_parametro)
+              ));
+                        
+              if (elementoRepetido) {
+                console.log("Elemento repetido:", elementoRepetido);
+              }
+            }
 
-  if (elementoRepetido) {
-    console.log("Elemento repetido:", elementoRepetido);
-  }
-}
+            const elementosNoRepetidos = submuestraArrayTransformado.filter(objeto => (
+              !this.submuestrasOG.some(elemento => (
+                elemento.identificador === objeto.identificador &&
+                elemento.orden === objeto.orden &&
+                JSON.stringify(objeto.id_parametro) === JSON.stringify(elemento.id_parametro)
+              ))
+            ));
 
-
-
-const elementosNoRepetidos = submuestraArrayTransformado.filter(objeto => (
-  !this.submuestrasOG.some(elemento => (
-    elemento.identificador === objeto.identificador &&
-    elemento.orden === objeto.orden &&
-    JSON.stringify(objeto.id_parametro) === JSON.stringify(elemento.id_parametro)
-  ))
-));
-
-console.log("elementos no repetidos:", elementosNoRepetidos);
-
-
-                  
-            
+            console.log("elementos no repetidos:", elementosNoRepetidos);           
 
             elementosNoRepetidos.forEach(objeto => {
               this.submuestra_agregar.push({
@@ -2192,12 +2141,9 @@ console.log("elementos no repetidos:", elementosNoRepetidos);
         SubEliminadas(datos){
             console.log("datos capturados a eliminar:", datos);
 
-            this.submuestra_eliminar = datos;
+            this.parametro_submuestra_eliminar = datos;
 
-            console.log("submuestras a eliminar:", this.submuestra_eliminar);
-
-
-            
+            console.log("parametros de submuestras a eliminar:", this.parametro_submuestra_eliminar);            
         },
 
         obtenerMatriz() {
@@ -2265,7 +2211,6 @@ console.log("elementos no repetidos:", elementosNoRepetidos);
                                 id_parametro: [],
                                 id_metodologia: [],
                                 metodologias: []
-
                             };
                         }
                         // Agregar el id_tabla y el nombre_parametro a la tabla correspondiente en tablasAgrupadas
@@ -2274,8 +2219,6 @@ console.log("elementos no repetidos:", elementosNoRepetidos);
                         tablasAgrupadas[nombreTabla].id_parametro.push(idParametro);
                         tablasAgrupadas[nombreTabla].id_metodologia.push(idMetodologia);
                         tablasAgrupadas[nombreTabla].metodologias.push(nombreMetodologia)
-
-
                     });
                     // convertir  en un array
                     const tablasProcesadas = Object.values(tablasAgrupadas);
@@ -2286,9 +2229,7 @@ console.log("elementos no repetidos:", elementosNoRepetidos);
                     this.opcionesTabla = tablasProcesadas.map((tabla) => tabla.nombre_tabla);
 
                     // Asignar tablasProcesadas a this.tablasProcesadas
-                    this.tablasProcesadas = tablasProcesadas;
-
-                                    
+                    this.tablasProcesadas = tablasProcesadas;                                    
                 }
             });
         },
@@ -2332,8 +2273,7 @@ console.log("elementos no repetidos:", elementosNoRepetidos);
             const objetosNoDuplicados = parametrosYMetodologias.filter((item) => !esDuplicado(this.objetosSeleccionados, item.parametro, item.metodologia));
             this.objetosSeleccionados.push(...objetosNoDuplicados); 
             const IDNoDuplicados = parametrosYMetodologias.filter((item) => !esDuplicado(this.objetosSeleccionados, item.id_parametro, item.id_metodologia));
-            this.parametros_agregar.push(...IDNoDuplicados);        
-                   
+            this.parametros_agregar.push(...IDNoDuplicados);                  
         },
 
         actualizarParametrosTabla() {
@@ -2363,34 +2303,33 @@ console.log("elementos no repetidos:", elementosNoRepetidos);
             if (parametroSeleccionado) {
                 console.log("parametro Seleccionado: ", parametroSeleccionado)                  
                 
-              const metodologiasdelparametroseleccionado = this.metodologiasData.find(p => p.nombre_parametro === parametroSeleccionado.nombre_parametro);              
+                const metodologiasdelparametroseleccionado = this.metodologiasData.find(p => p.nombre_parametro === parametroSeleccionado.nombre_parametro);              
 
-              if(metodologiasdelparametroseleccionado){
+                if(metodologiasdelparametroseleccionado){
 
-                console.log("nombre parametro encontrado:", metodologiasdelparametroseleccionado)
+                    console.log("nombre parametro encontrado:", metodologiasdelparametroseleccionado)
 
-                const metodologiaEncontrada = metodologiasdelparametroseleccionado.metodologias
+                    const metodologiaEncontrada = metodologiasdelparametroseleccionado.metodologias
 
-                if (metodologiaEncontrada){
-                    console.log("metodologias totales del parametro encontrado:", metodologiaEncontrada)
+                    if (metodologiaEncontrada){
+                        console.log("metodologias totales del parametro encontrado:", metodologiaEncontrada)
 
-                    console.log("met:", this.met.map(n => n.nombre_metodologia))
+                        console.log("met:", this.met.map(n => n.nombre_metodologia))
 
-                    const opcionesM = metodologiaEncontrada.find(m => m.nombre_metodologia)                    
+                        const opcionesM = metodologiaEncontrada.find(m => m.nombre_metodologia)                    
 
-                    console.log("opcion encontrada: ", opcionesM)                    
+                        console.log("opcion encontrada: ", opcionesM)                    
 
-                    this.opcionesMetodologiaTabla = [];
+                        this.opcionesMetodologiaTabla = [];
 
-                    this.opcionesMetodologiaTabla.push({
-                        nombre_metodologia: opcionesM.nombre_metodologia
-               
-                    });
+                        this.opcionesMetodologiaTabla.push({
+                            nombre_metodologia: opcionesM.nombre_metodologia
+                        
+                        });
 
-                    console.log("opcion metodologia en tabla: ", this.opcionesMetodologiaTabla);
-                }
-              }         
-              
+                        console.log("opcion metodologia en tabla: ", this.opcionesMetodologiaTabla);
+                    }
+                }            
             } 
         },
 
@@ -2421,176 +2360,170 @@ console.log("elementos no repetidos:", elementosNoRepetidos);
 
         RellenarForm(response) {            
             //info anterior
-        this.RUM = response.RUM;
-        this.nombre_empresa = response.nombre_empresa;
-        this.direccionOG = response.direccion_empresa;       
-        this.rutOG = response.rut_solicitante;
-        this.recepcionistaOG = response.rut_empleado;
-        this.nMuestrasOG = response.cantidad_muestras.toString();
-        this.fechaOG = response.fecha_muestreo;
-        this.horaOG = response.hora_muestreo;
-        this.fechaEntregaOG = response.fecha_entrega;
-        this.TipoMatrizOG = response.id_matriz;
-        this.muestreadoOG = response.muestreado_por;
-        this.observacionesOG = response.observaciones
-        this.prioridadOG = response.prioridad;
-        this.transportistaRutOG = response.rut_transportista;
-        this.transportistaOG = response.nombre_transportista;                       
-        this.TemperaturaOG = response.temperatura_transporte;
-        this.patenteOG = response.patente_vehiculo;
-        this.telefonos_agregarOG = response.telefonos_transportista;
-        this.mapeotelefono(),
-        this.idParamOG = response.submuestras.map((idP) => idP.id_parametro);
-        this.idMetOG = response.submuestras.map((idM) => idM.id_metodologia);
-        this.normaOG = response.id_norma;
-        //this.tablaOG = response.id_tabla; 
-        this.submuestrasOG = response.submuestras.map(sub => ({
-  id_submuestra: sub.id_submuestra,
-  identificador: sub.identificador,
-  orden: sub.orden,
-  id_parametro: sub.id_parametro,
-  id_metodologia: sub.id_metodologia
-}));
+            this.RUM = response.RUM;
+            this.nombre_empresa = response.nombre_empresa;
+            this.direccionOG = response.direccion_empresa;       
+            this.rutOG = response.rut_solicitante;
+            this.recepcionistaOG = response.rut_empleado;
+            this.nMuestrasOG = response.cantidad_muestras.toString();
+            this.fechaOG = response.fecha_muestreo;
+            this.horaOG = response.hora_muestreo;
+            this.fechaEntregaOG = response.fecha_entrega;
+            this.TipoMatrizOG = response.id_matriz;
+            this.muestreadoOG = response.muestreado_por;
+            this.observacionesOG = response.observaciones
+            this.prioridadOG = response.prioridad;
+            this.transportistaRutOG = response.rut_transportista;
+            this.transportistaOG = response.nombre_transportista;                       
+            this.TemperaturaOG = response.temperatura_transporte;
+            this.patenteOG = response.patente_vehiculo;
+            this.telefonos_agregarOG = response.telefonos_transportista;
+            this.mapeotelefono(),
+            this.idParamOG = response.submuestras.map((idP) => idP.id_parametro);
+            this.idMetOG = response.submuestras.map((idM) => idM.id_metodologia);
+            this.normaOG = response.id_norma;
+            //this.tablaOG = response.id_tabla; 
+            this.submuestrasOG = response.submuestras.map(sub => ({
+                id_submuestra: sub.id_submuestra,
+                identificador: sub.identificador,
+                orden: sub.orden,
+                id_parametro: sub.id_parametro,
+                id_metodologia: sub.id_metodologia
+            }));
 
-// Convertir los objetos reactivos en objetos planos
-this.submuestrasOG = JSON.parse(JSON.stringify(this.submuestrasOG));
+            // Convertir los objetos reactivos en objetos planos
+            this.submuestrasOG = JSON.parse(JSON.stringify(this.submuestrasOG));
 
-        this.subMuestra = response.submuestras.map(submuestra=> ({
-            identificador: submuestra.identificador,
-            id_metodologia: submuestra.id_metodologia,
-            id_parametro: submuestra.id_parametro,
-            orden: submuestra.orden,
-            analistasSeleccionados: [],
-        }));        
-        this.empleados = response.empleados;
-        console.log("empleados: ", this.empleados)
-        this.empleadosOG = response.empleados;
-        this.parametros_metodologias = response.parametros_metodologias;
-        console.log("parámetros_metodologias: ", this.parametros_metodologias);
-        this.sub = response.submuestras.reduce((result, current) => {
-  const index = result.findIndex((item) => item.id_submuestra === current.id_submuestra);
-  const PYMObj = {
-    metodologia: current.nombre_metodologia,
-    parametro: current.nombre_parametro,
-    id_metodologia: current.id_metodologia,
-    id_parametro: current.id_parametro,
-  };
-  if (index === -1) {
-    result.push({
-      RUM: current.RUM,
-      detalle_metodologia: [current.detalle_metodologia],
-      id_metodologia: [current.id_metodologia],
-      id_parametro: [current.id_parametro],
-      id_submuestra: current.id_submuestra,
-      identificador: current.identificador,
-      orden: current.orden,
-      PYM: [PYMObj], // Agregamos el array PYM con el primer objeto PYM
-    });
-  } else {
-    result[index].detalle_metodologia.push(current.detalle_metodologia);
-    result[index].id_metodologia.push(current.id_metodologia);
-    result[index].id_parametro.push(current.id_parametro);
-    result[index].PYM.push(PYMObj); // Agregamos el objeto PYM al array PYM existente
-  }
+            this.subMuestra = response.submuestras.map(submuestra=> ({
+                identificador: submuestra.identificador,
+                id_metodologia: submuestra.id_metodologia,
+                id_parametro: submuestra.id_parametro,
+                orden: submuestra.orden,
+                analistasSeleccionados: [],
+            }));        
+            this.empleados = response.empleados;
+            console.log("empleados: ", this.empleados)
+            this.empleadosOG = response.empleados;
+            this.parametros_metodologias = response.parametros_metodologias;
+            console.log("parámetros_metodologias: ", this.parametros_metodologias);
+            this.sub = response.submuestras.reduce((result, current) => {
+                const index = result.findIndex((item) => item.id_submuestra === current.id_submuestra);
+                const PYMObj = {
+                    metodologia: current.nombre_metodologia,
+                    parametro: current.nombre_parametro,
+                    id_metodologia: current.id_metodologia,
+                    id_parametro: current.id_parametro,
+                };
+                if (index === -1) {
+                    result.push({
+                        RUM: current.RUM,
+                        detalle_metodologia: [current.detalle_metodologia],
+                        id_metodologia: [current.id_metodologia],
+                        id_parametro: [current.id_parametro],
+                        id_submuestra: current.id_submuestra,
+                        identificador: current.identificador,
+                        orden: current.orden,
+                        PYM: [PYMObj], // Agregamos el array PYM con el primer objeto PYM
+                    });
+                } 
+                else {
+                    result[index].detalle_metodologia.push(current.detalle_metodologia);
+                    result[index].id_metodologia.push(current.id_metodologia);
+                    result[index].id_parametro.push(current.id_parametro);
+                    result[index].PYM.push(PYMObj); // Agregamos el objeto PYM al array PYM existente
+                }
+                return result;
+            }, []);
 
-  return result;
-}, []);
+            console.log("sub:", this.sub);
 
-console.log("sub:", this.sub);
+            this.sub = this.sub.map(sub => ({
+                id_submuestra: sub.id_submuestra,
+                orden: sub.orden,
+                identificador: sub.identificador,
+                PYM: sub.PYM
+            }))
+            console.log("sub:", this.sub);
 
-this.sub = this.sub.map(sub => ({
-    id_submuestra: sub.id_submuestra,
-    orden: sub.orden,
-    identificador: sub.identificador,
-    PYM: sub.PYM
-    
-}))
+                //TAB RECEPCIONISTA
+            this.rut = response.rut_solicitante;
+            this.solicitante = response.rut_empresa;
+            this.direccion = response.id_ciudad;
 
-console.log("sub:", this.sub);
-
-
-            //TAB RECEPCIONISTA
-        this.rut = response.rut_solicitante;
-        this.solicitante = response.rut_empresa;
-        this.direccion = response.id_ciudad;
-
-        this.rut_empresa = response.rut_empresa;
-        this.datosCargados = true;
-        
-        
-            //TAB MUESTRA
-        this.nMuestras = response.cantidad_muestras.toString();
-        this.fecha = response.fecha_muestreo;
-        this.hora = response.hora_muestreo;
-        this.fechaEntrega = response.fecha_entrega;
-        this.TipoMatriz = response.id_matriz;
-        this.muestreado = response.muestreado_por;
-        this.observaciones = response.observaciones.map(obs => obs.observaciones).join("\n");
-        this.prioridad = response.prioridad;
-        this.cotizacion = response.id_cotizacion;
-        
-        
-
-            //TAB TRANSPORTISTA
-        this.transportistaRut = response.rut_transportista;
-        this.transportista = response.nombre_transportista;                       
-        this.Temperatura = response.temperatura_transporte;
-        this.patente = response.patente_vehiculo;
-        this.telefonos_agregar = response.telefonos_transportista;  
-            
-
-            //TAB PARAMETROS
-        this.norma = response.id_norma;
-        //this.tabla = response.id_tabla;
+            this.rut_empresa = response.rut_empresa;
+            this.datosCargados = true;
 
 
-            //TAB ASIGNACIÓN
-        this.identificacion = response.submuestras.map((id) => id.identificador);    
-        this.id_submuestra = response.submuestras.map((id) => id.id_submuestra);
-        console.log("id de las submuestras: ", this.id_submuestra);
+                //TAB MUESTRA
+            this.nMuestras = response.cantidad_muestras.toString();
+            this.fecha = response.fecha_muestreo;
+            this.hora = response.hora_muestreo;
+            this.fechaEntrega = response.fecha_entrega;
+            this.TipoMatriz = response.id_matriz;
+            this.muestreado = response.muestreado_por;
+            this.observaciones = response.observaciones.map(obs => obs.observaciones).join("\n");
+            this.prioridad = response.prioridad;
+            this.cotizacion = response.id_cotizacion;       
 
-        this.emp = response.empleados.map(empleados => ({
-            rut_empleado: empleados.rut_empleado,
-            orden_de_analisis: empleados.orden_de_analisis,
-            id_parametro: empleados.id_parametro,
-            fecha_entrega: empleados.fecha_entrega
 
-        }));
-        
-        // Supongamos que tienes un array de empleados llamado "response.empleados" que contiene todos los datos
+                //TAB TRANSPORTISTA
+            this.transportistaRut = response.rut_transportista;
+            this.transportista = response.nombre_transportista;                       
+            this.Temperatura = response.temperatura_transporte;
+            this.patente = response.patente_vehiculo;
+            this.telefonos_agregar = response.telefonos_transportista;  
 
-        const empleadosAgrupados = response.empleados.reduce((grupo, empleado) => {
-  const { rut_empleado } = empleado;
-  const clave = rut_empleado;
-  if (!grupo[clave]) {
-    grupo[clave] = {
-      RUM: empleado.RUM,
-      estado: empleado.estado,
-      fecha_entrega: empleado.fecha_entrega,
-      id_parametro: [empleado.id_parametro],
-      nombre_parametro: [empleado.nombre_parametro],
-      orden_de_analisis: empleado.orden_de_analisis,
-      rut_empleado: rut_empleado
-    };
-  } else {
-    grupo[clave].id_parametro.push(empleado.id_parametro);
-    grupo[clave].nombre_parametro.push(empleado.nombre_parametro);
-  }
 
-  return grupo;
-}, {});
+                //TAB PARAMETROS
+            this.norma = response.id_norma;
+            //this.tabla = response.id_tabla;
 
-// Convertir el objeto de empleados agrupados en un array
-const empleadosAgrupadosArray = Object.values(empleadosAgrupados);
 
-// Ordenar el array "empleadosAgrupadosArray" por la propiedad "orden_de_analisis"
-empleadosAgrupadosArray.sort((a, b) => a.orden_de_analisis - b.orden_de_analisis);
+                //TAB ASIGNACIÓN
+            this.identificacion = response.submuestras.map((id) => id.identificador);    
+            this.id_submuestra = response.submuestras.map((id) => id.id_submuestra);
+            console.log("id de las submuestras: ", this.id_submuestra);
 
-console.log("Empleados agrupados:", empleadosAgrupadosArray);
-this.empleadosAgrupados = empleadosAgrupadosArray;
+            this.emp = response.empleados.map(empleados => ({
+                rut_empleado: empleados.rut_empleado,
+                orden_de_analisis: empleados.orden_de_analisis,
+                id_parametro: empleados.id_parametro,
+                fecha_entrega: empleados.fecha_entrega
 
-           
-        },       
+            }));
+
+            // Supongamos que tienes un array de empleados llamado "response.empleados" que contiene todos los datos
+
+            const empleadosAgrupados = response.empleados.reduce((grupo, empleado) => {
+                const { rut_empleado } = empleado;
+                const clave = rut_empleado;
+                if (!grupo[clave]) {
+                    grupo[clave] = {
+                        RUM: empleado.RUM,
+                        estado: empleado.estado,
+                        fecha_entrega: empleado.fecha_entrega,
+                        id_parametro: [empleado.id_parametro],
+                        nombre_parametro: [empleado.nombre_parametro],
+                        orden_de_analisis: empleado.orden_de_analisis,
+                        rut_empleado: rut_empleado
+                    };
+                } 
+                else {
+                    grupo[clave].id_parametro.push(empleado.id_parametro);
+                    grupo[clave].nombre_parametro.push(empleado.nombre_parametro);
+                }      
+                return grupo;
+            }, {});
+
+            // Convertir el objeto de empleados agrupados en un array
+            const empleadosAgrupadosArray = Object.values(empleadosAgrupados);
+
+            // Ordenar el array "empleadosAgrupadosArray" por la propiedad "orden_de_analisis"
+            empleadosAgrupadosArray.sort((a, b) => a.orden_de_analisis - b.orden_de_analisis);
+
+            console.log("Empleados agrupados:", empleadosAgrupadosArray);
+            this.empleadosAgrupados = empleadosAgrupadosArray;           
+        },          
 
         async enviarFormulario() {
             const datosValidos = await this.validarFormularios();
@@ -2642,7 +2575,8 @@ this.empleadosAgrupados = empleadosAgrupadosArray;
                     id_norma: this.norma,
                     id_tabla: this.id_tabla,
                     submuestras_agregar: this.submuestra_agregar,
-                    submuestras_eliminar: this.submuestra_eliminar,
+                    //submuestras_eliminar: this.submuestra_eliminar,
+                    parametro_submuestra_eliminar: this.parametro_submuestra_eliminar,
                     telefonos_eliminar: this.telefonos_eliminar,
                     parametros_eliminar: this.parametros_eliminar,
                     id_cotizacion: this.cotizacion,
