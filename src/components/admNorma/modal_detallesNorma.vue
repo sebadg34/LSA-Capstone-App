@@ -4,7 +4,7 @@
         <!-- Emulate built in modal header close button action -->
 
         <b-row class="d-flex justify-content-around">
-            <div class="pl-3">Detalles norma</div>
+            <div class="pl-3">Detalles de la norma</div>
 
         </b-row>
 
@@ -16,13 +16,13 @@
     <b-col>
         <b-row>
             <div>
-                <span style="font-weight:bold; margin-right:20px"> Nombre norma:</span> <span>{{this.nombre_norma}}</span>
+                <span style="font-weight:bold; margin-right:20px"> Nombre de la norma:</span> <span>{{this.nombre_norma}}</span>
             </div>
         </b-row>
         <div class="pt-3"/>
         <b-row>
             <div>
-                <span style="font-weight:bold; margin-right:20px"> Nombre matriz: </span> <span>{{this.nombre_matriz}}</span>
+                <span style="font-weight:bold; margin-right:20px"> Nombre de la matriz: </span> <span>{{this.nombre_matriz}}</span>
             </div>
         </b-row>
 

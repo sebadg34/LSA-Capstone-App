@@ -3,7 +3,7 @@
     <template #modal-header="{ close }">
         <!-- Emulate built in modal header close button action -->
         <b-row class="d-flex justify-content-around">
-            <div class="pl-3">Editar Norma</div>
+            <div class="pl-3">Editar norma</div>
         </b-row>
         <button type="button" class="close" aria-label="Close" @click="close()">
             <span aria-hidden="true" style="color:white">&times;</span>
@@ -14,14 +14,14 @@
     <div>
         <b-row>
             <b-col cols="4">
-                <b-form-group label="Nombre de la Norma">
+                <b-form-group label="Nombre de la norma:">
                     <b-form-input v-model="nombre_norma"></b-form-input>
                 </b-form-group>
             </b-col>
 
             <b-col cols="4">
-                <b-form-group label="Seleccione una Matriz">
-                    <b-form-select v-model="matrizSeleccionada" @change="matrizCambiada" placeholder="Seleccione una Matriz">
+                <b-form-group label="Seleccione una matriz:">
+                    <b-form-select v-model="matrizSeleccionada" @change="matrizCambiada" placeholder="Seleccione una matriz">
                         <option v-for="opcion in opcionesMatriz" :key="opcion.id_matriz" :value="opcion.id_matriz">{{
                                 opcion.nombre_matriz }}</option>
                     </b-form-select>
@@ -136,7 +136,7 @@
             </b-form-group>
         </b-col>
         <b-col>
-            <b-button :disabled="!tablaSeleccionada" @click="agregarTablaNorma" block class="lsa-light-blue" style="font-weight:bold">agregar tabla seleccionada a norma</b-button>
+            <b-button :disabled="!tablaSeleccionada" @click="agregarTablaNorma" block class="lsa-light-blue" style="font-weight:bold">Agregar tabla seleccionada a la norma</b-button>
         </b-col>
     </b-row>
 
@@ -224,7 +224,7 @@
             </button>
         </template>
 
-        <b-form-group label="Nombre de la tabla">
+        <b-form-group label="Nombre de la tabla:">
             <b-form-input v-model="nuevoNombreTabla"></b-form-input>
         </b-form-group>
         <template #modal-footer>
@@ -246,7 +246,7 @@
     <template #modal-footer>
         <div class="d-flex justify-content-center">
             <b-button @click="enviarFormulario()" variant="primary" size="xl" class="reactive-button" style="font-weight:bold; padding-top: 10px;">
-                Editar norma
+                Guardar cambios
             </b-button>
         </div>
     </template>

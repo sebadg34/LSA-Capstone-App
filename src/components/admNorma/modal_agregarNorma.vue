@@ -14,7 +14,7 @@
         <div>
             <b-row>
                 <b-col cols="12">
-                    <b-form-group label="Nombre de la norma">
+                    <b-form-group label="Nombre de la norma:">
                         <b-form-input v-model="nombre_norma"></b-form-input>
                     </b-form-group>
                 </b-col>
@@ -215,7 +215,7 @@
             </b-col>
             <b-col>
                 <b-button :disabled="!tablaSeleccionada" @click="agregarTablaNorma" block class="lsa-light-blue"
-                    style="font-weight:bold">agregar tabla seleccionada a norma</b-button>
+                    style="font-weight:bold">Agregar tabla seleccionada a la norma</b-button>
             </b-col>
         </b-row>
 
@@ -601,8 +601,8 @@ export default {
             ElementosService.agregarNorma(data).then((response) => {
                 if (response.status == 200) {
                     this.reiniciarDatos();
-                    this.$bvToast.toast(`Creación de norma exitosa`, {
-                        title: 'Exito',
+                    this.$bvToast.toast(`Creación de norma exitosa.`, {
+                        title: 'Éxito',
                         toaster: 'b-toaster-top-center',
                         solid: true,
                         variant: "success",

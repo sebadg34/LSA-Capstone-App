@@ -3,7 +3,7 @@
     <b-row style="padding-top:30px; margin-left: 15px; ">
       <b-col class="col-6">
         <div style="font-size:2rem; font-weight: bold; color: var(--lsa-blue)">
-          Administración de Elementos de la Muestra
+          Administración de elementos de la muestra
         </div>
       </b-col>
     </b-row>
@@ -14,30 +14,27 @@
 
         <b-button @click="administrarNorma" style="border-radius: 15px; font-weight: bold; font-size: 18px;"
           class="lsa-light-blue reactive-button mb-2 mt-2 mr-2">
-          Administrar Norma
+          Administrar norma
           <b-icon icon="journals"></b-icon>
         </b-button>
         
         <b-button @click="administrarMatriz" style="border-radius: 15px; font-weight: bold; font-size: 18px;"
           class="lsa-light-blue reactive-button mb-2 mt-2 mr-2">
-          Administrar Matriz
+          Administrar matriz
           <b-icon icon="journals"></b-icon>
         </b-button>
 
         <b-button @click="administrarParametro" style="border-radius: 15px; font-weight: bold; font-size: 18px;"
           class="lsa-light-blue reactive-button mb-2 mt-2 mr-2">
-          Administrar Parámetro
+          Administrar parámetro
           <b-icon icon="journals"></b-icon>
         </b-button>
 
         <b-button @click="administrarMetodologia" style="border-radius: 15px; font-weight: bold; font-size: 18px;"
           class="lsa-light-blue reactive-button mb-2 mt-2 mr-2">
-          Administrar Metodología
+          Administrar metodología
           <b-icon icon="journals"></b-icon>
         </b-button>
-
-       
-
 
       </b-col>
 
