@@ -1,4 +1,4 @@
-
+<template>
     <b-modal id="modal-editar-norma" :title="`Agregar Metodologia`" size="xl">
         <template #modal-header="{ close }">
             <!-- Emulate built in modal header close button action -->
@@ -54,7 +54,6 @@
                                             @click="borrarParametroSeleccionado(parametroSeleccionado)" variant="danger">
                                             <b-icon icon="trash-fill"></b-icon>
                                         </b-button>
-
 
                                     </b-col>
 
@@ -112,32 +111,6 @@
         </div>
         <hr />
         <b-row>
-
-            <b-col cols="4">
-                <b-form-group label="Nombre de la norma:">
-                    <b-form-input v-model="nombre_norma"></b-form-input>
-                </b-form-group>
-            </b-col>
-
-            <b-col cols="4">
-                <b-form-group label="Seleccione una matriz:">
-                    <b-form-select v-model="matrizSeleccionada" @change="matrizCambiada" placeholder="Seleccione una matriz">
-                        <option v-for="opcion in opcionesMatriz" :key="opcion.id_matriz" :value="opcion.id_matriz">{{
-                                opcion.nombre_matriz }}</option>
-                    </b-form-select>
-                </b-form-group>
-            </b-col>
-        </b-row>
-    </div>
-    <hr />
-    <b-row>
-        <b-col cols="4">
-            <b-form-group>
-                <b-card no-body header="Tablas: ">
-                    <template #header>
-                        <b-col>
-                            <b-row class="d-flex justify-content-between align-items-center" style="height:30px">
-                                <div style="font-weight:bold">Tabla:</div>
 
 
             <b-col cols="6">
@@ -215,7 +188,6 @@
                                 class="metodo-option d-flex justify-content-between">
                                 <span>{{ metodo.nombre_metodologia }}</span>
 
-
                                 <div>
                                     <b-popover placement="topleft"
                                         :target="'button-' + metodo.id_metodologia + '-' + metodo.id_parametro"
@@ -223,7 +195,7 @@
                                         <template v-if="metodo.detalle_metodologia != null">{{ metodo.detalle_metodologia
                                         }}</template>
                                         <template v-else>
-                                            <div>La metodología no cuenta con una descripción actualmente.</div
+                                            <div>La metodología no cuenta con una descripción actualmente.</div>
                                         </template>
                                     </b-popover>
                                     <b-button class="boton-ojo-metodo"
@@ -238,7 +210,6 @@
                                     </b-button>
                                 </div>
 
-
                             </b-list-group-item>
 
                         </b-list-group>
@@ -252,6 +223,21 @@
             </b-col>
         </b-row>
 
+        <!--
+    <b-row v-if="parametrosSeleccionados.length > -1 && tablaSeleccionada !== ''" class="mt-3">
+      <b-col>
+        <b-form-group label="Parámetros Seleccionados:">
+          <div v-for="(parametro, index) in tablasPametros[tablaSeleccionada]" :key="parametro.id_parametro"
+            class="d-flex align-items-center objetos-item mb-3">
+            <b-input readonly :value="parametro.nombre_parametro" class="mr-2"></b-input>
+            <b-button variant="danger" @click="eliminarParametroTabla(index)" class="ml-2">
+              <b-icon-trash-fill></b-icon-trash-fill>
+            </b-button>
+          </div>
+        </b-form-group>
+      </b-col>
+    </b-row>
+-->
         <br />
         <div v-if="matrices_seleccionadas">
             <div v-for="matriz in matrices_seleccionadas" :key="matriz.id_matriz">
@@ -368,23 +354,21 @@
             </template>
         </b-modal>
 
-       
-
-    <b-alert variant="danger" :show="alertaDuplicado" dismissible @dismissed="alertaDuplicado = false">
-        Los parámetros ya se encuentran agregados a la tabla.
-    </b-alert>
-    <b-alert variant="danger" :show="alertaTablaDuplicada" dismissible @dismissed="alertaDuplicado = false">
-        La tabla ya se encuentra agregada a la norma.
-    </b-alert>
-    <template #modal-footer>
-        <div class="d-flex justify-content-center">
-            <b-button @click="enviarFormulario()" variant="primary" size="xl" class="reactive-button" style="font-weight:bold; padding-top: 10px;">
-                Guardar cambios
-            </b-button>
-        </div>
-    </template>
-</b-modal>
-
+        <b-alert variant="danger" :show="alertaDuplicado" dismissible @dismissed="alertaDuplicado = false">
+            Los parámetros ya se encuentran agregados a la tabla.
+        </b-alert>
+        <b-alert variant="danger" :show="alertaTablaDuplicada" dismissible @dismissed="alertaDuplicado = false">
+            La tabla ya se encuentra agregada a la norma.
+        </b-alert>
+        <template #modal-footer>
+            <div class="d-flex justify-content-center">
+                <b-button @click="enviarFormulario()" variant="primary" size="xl" class="reactive-button"
+                    style="font-weight:bold; padding-top: 10px;">
+                    Agregar norma
+                </b-button>
+            </div>
+        </template>
+    </b-modal>
 </template>
 
 <script>
