@@ -2533,7 +2533,7 @@ export default {
             } else {
                 this.repetido();
                 this.empleadosCoinciden();
-                this.telefonosCoinciden();
+                //this.telefonosCoinciden();
                 this.obs();
                 
                                
