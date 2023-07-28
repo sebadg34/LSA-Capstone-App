@@ -379,6 +379,7 @@ export default {
     data() {
 
         return {
+            id_norma: '',
             nombre_norma: '',
             id_matriz: '',
             tablas_agregar_db: [],
@@ -592,7 +593,6 @@ export default {
             if(matrizAntigua != null){
             if(tabla.id_tabla != null){
                 this.tablas_eliminar.push({
-                    id_matriz: matriz.id_matriz,
                     id_tabla: tabla.id_tabla
                 })
             }else{
@@ -751,7 +751,7 @@ export default {
                     tabla.tabla.parametros.forEach((parametro) => {
                         parametro.metodologias.forEach((metodo) => {
                             tabla_aux.push({
-                            nombre_tabla: tabla.nombre_tabla,
+                            nombre_tabla: tabla.tabla.nombre_tabla,
                             id_parametro: parametro.id_parametro,
                             id_metodologia: metodo.id_metodologia
                         })
@@ -791,6 +791,7 @@ export default {
 
 
             var data = {
+                id_norma: this.id_norma,
                 nombre_norma: this.nombre_norma,
                 matrices_agregar: matrices_seleccionadas_aux,
                 matrices_eliminar: this.matrices_eliminar,
