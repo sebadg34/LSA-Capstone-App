@@ -1,7 +1,6 @@
 <template>
 <b-modal centered id="modal-editar-dias-disponibles" ref="modal" title="Modificar días disponibles" size="lg">
-    <validation-observer ref="form">
-        <template #modal-header="{ close }">
+    <template #modal-header="{ close }">
             <!-- Emulate built in modal header close button action -->
 
             <b-row class="d-flex justify-content-around">
@@ -13,14 +12,15 @@
                 <span aria-hidden="true" style="color:white">&times;</span>
             </button>
         </template>
+    <validation-observer ref="form">
+        
 
         <b-col class="col-8 mx-auto">
 
             <br />
             <b-row class="d-flex justify-content-between">
 
-                <div>Días de vacaciones:
-                </div>
+                <div style="font-weight:bold">Días de vacaciones:</div>
                 <div>
                     <ValidationProvider name="días vacaciones" rules="required|numeric" v-slot="validationContext">
 
@@ -33,8 +33,7 @@
                 </div>
             </b-row>
             <b-row class="d-flex justify-content-between">
-                <div>Días administrativos:
-                </div>
+                <div style="font-weight:bold">Días administrativos:</div>
                 <div>
                     <ValidationProvider name="días administrativos" rules="required|numeric" v-slot="validationContext">
 
@@ -108,7 +107,7 @@ export default {
                     disponibilidadService.editarDiasDisponibles(data).then((response) => {
                         console.log(response)
                         if(response.status == 200){
-                            this.$bvToast.toast(`Cambio de dias disponibles realizado con exito`, {
+                            this.$bvToast.toast(`Cambio de días disponibles realizado con éxito.`, {
                                     title: 'Exito',
                                     toaster: 'b-toaster-top-center',
                                     solid: true,
@@ -116,9 +115,9 @@ export default {
                                     appendToast: true
                                 })
                             this.$emit('refrescar');
-                            this.$bvModal.hide('modal-editar-fechas');
+                            this.$bvModal.hide('modal-editar-dias-disponibles');
                         }else{
-                            this.$bvToast.toast(`Error al cambiar dias disponibles`, {
+                            this.$bvToast.toast(`Error al cambiar los días disponibles.`, {
                                 title: 'Error',
                                 toaster: 'b-toaster-top-center',
                                 solid: true,

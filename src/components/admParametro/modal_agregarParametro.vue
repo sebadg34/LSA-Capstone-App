@@ -16,19 +16,19 @@
 
         <ValidationProvider name="nombre del parámetro" rules="required" v-slot="validationContext">
             <label for="input-live">Nombre del parámetro:</label>
-            <b-form-input id="input-live" v-model="Nombre" :state="getValidationState(validationContext)" placeholder="Ingrese nombre del parámetro"></b-form-input>
+            <b-form-input id="input-live" v-model="Nombre" :state="getValidationState(validationContext)" placeholder="Ingrese el nombre del parámetro."></b-form-input>
             <b-form-invalid-feedback>{{ validationContext.errors[0] }}</b-form-invalid-feedback>
         </ValidationProvider>
 <br/>
         <b-row>
             <b-col>
                 <b-form-group label="Asignar una metodología">
-                    <b-form-select v-model="metodologiaAsignada" :options="opcionesMetodologia" placeholder="Seleccione un Analista" @change="agregarMetodologiaSeleccionada"></b-form-select>
+                    <b-form-select v-model="metodologiaAsignada" :options="opcionesMetodologia" placeholder="Seleccione una metodología:" @change="agregarMetodologiaSeleccionada"></b-form-select>
                 </b-form-group>
             </b-col>
         </b-row>
         <b-alert variant="danger" :show="sinMetodologia" dismissible @dismissed="sinMetodologia = false">
-          Falta metodología asignada para crear el parámetro.
+            Falta metodología asignada para crear el parámetro.
         </b-alert>
         <hr/>
         <b-row v-if="metodologiaSeleccionada.length > 0" class="mt-3">
@@ -164,7 +164,7 @@ export default {
                         console.log(response)
                         if (response != null) {
                             if (response.status == 200) {
-                                this.$bvToast.toast(`La creación del parámetro ha sido exitosa`, {
+                                this.$bvToast.toast(`La creación del parámetro ha sido exitosa.`, {
                                     title: 'Éxito',
                                     toaster: 'b-toaster-top-center',
                                     solid: true,
@@ -181,7 +181,7 @@ export default {
                                     this.$refs.modal.hide()
                             }
                         } else {
-                            this.$bvToast.toast(`Error al agregar el parámetro.!`, {
+                            this.$bvToast.toast(`Error al agregar el parámetro.`, {
                                 title: 'Error',
                                 toaster: 'b-toaster-top-center',
                                 solid: true,

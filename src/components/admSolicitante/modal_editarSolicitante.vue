@@ -6,7 +6,7 @@
             <!-- Emulate built in modal header close button action -->
 
             <b-row class="d-flex justify-content-around">
-                <div class="pl-3">Editar Solicitante</div>
+                <div class="pl-3">Editar solicitante</div>
 
             </b-row>
 
@@ -27,7 +27,7 @@
                     </b-form-invalid-feedback>
                 </ValidationProvider>
                 <label for="input-live">Primer apellido:</label>
-                <ValidationProvider name="primerapellido" rules="required" v-slot="validationContext">
+                <ValidationProvider name="primer apellido" rules="required" v-slot="validationContext">
 
                     <b-form-input size="sm" id="primerapellido-input" class="mb-1" v-model="Primer_apellido" :state="getValidationState(validationContext)" aria-describedby="primerapellido-live-feedback"></b-form-input>
 
@@ -36,7 +36,7 @@
                     </b-form-invalid-feedback>
                 </ValidationProvider>
                 <label for="input-live">Segundo apellido:</label>
-                <ValidationProvider name="segundoapellido" rules="required" v-slot="validationContext">
+                <ValidationProvider name="segundo apellido" rules="required" v-slot="validationContext">
 
                     <b-form-input size="sm" id="segundoapellido-input" class="mb-1" v-model="Segundo_apellido" :state="getValidationState(validationContext)" aria-describedby="segundoapellido-live-feedback"></b-form-input>
 
@@ -47,8 +47,8 @@
 
             </b-col>
             <b-col class="col-4">
-                <label for="input-live">Rut:</label>
-                <ValidationProvider name="rut" rules="required|rut" v-slot="validationContext">
+                <label for="input-live">RUT:</label>
+                <ValidationProvider name="RUT" rules="required|rut" v-slot="validationContext">
 
                     <b-form-input size="sm" id="rut-input" disabled class="mb-1" v-model="Rut" :state="getValidationState(validationContext)" aria-describedby="rut-live-feedback"></b-form-input>
 
@@ -56,8 +56,8 @@
                         validationContext.errors[0] }}
                     </b-form-invalid-feedback>
                 </ValidationProvider>
-                <label for="input-live">Telefono Movil:</label>
-                <ValidationProvider name="Nro. movil" rules="required|numeric|min:8|max:15" v-slot="validationContext">
+                <label for="input-live">Teléfono móvil:</label>
+                <ValidationProvider name="teléfono móvil" rules="required|numeric|min:8|max:15" v-slot="validationContext">
                     <b-input-group size="sm" class="mb-1">
 
                         <b-input-group-prepend is-text>
@@ -70,7 +70,7 @@
                     </b-input-group>
 
                 </ValidationProvider>
-                <ValidationProvider name="correo" rules="required|email" v-slot="validationContext">
+                <ValidationProvider name="correo electrónico" rules="required|email" v-slot="validationContext">
                     <label for="input-live">Correo electrónico:</label>
                     <b-form-input size="sm" class="mb-1" id="input-live" :state="getValidationState(validationContext)" v-model="Correo" aria-describedby="input-live-help correo-live-feedback" placeholder="" trim></b-form-input>
                     <b-form-invalid-feedback id="correo-live-feedback">{{
@@ -80,7 +80,7 @@
             </b-col>
             <b-col class="col-4">
                 <label for="input-live">Fono proveedores:</label>
-                <ValidationProvider name="nombre" rules="required|numeric|min:8|max:15" v-slot="validationContext">
+                <ValidationProvider name="fono proveedores" rules="required|numeric|min:8|max:15" v-slot="validationContext">
                     <b-input-group size="sm" class="mb-1">
                         <b-input-group-prepend is-text>
                             +56 9
@@ -92,7 +92,7 @@
                     </b-form-invalid-feedback>
                 </ValidationProvider>
                 <label for="input-live">Dir. pago proveedores:</label>
-                <ValidationProvider name="apellido" rules="required" v-slot="validationContext">
+                <ValidationProvider name="dirección de pago de proveedores" rules="required" v-slot="validationContext">
 
                     <b-form-input size="sm" id="primerapellido-input" class="mb-1" v-model="Contacto_proveedores" :state="getValidationState(validationContext)" aria-describedby="primerapellido-live-feedback"></b-form-input>
 
@@ -101,7 +101,7 @@
                     </b-form-invalid-feedback>
                 </ValidationProvider>
                 <label for="input-live">Dir. envío factura:</label>
-                <ValidationProvider name="apellido" rules="required" v-slot="validationContext">
+                <ValidationProvider name="dirección de envío de factura" rules="required" v-slot="validationContext">
 
                     <b-form-input size="sm" id="rsegundoapellidout-input" class="mb-1" v-model="Direccion_factura" :state="getValidationState(validationContext)" aria-describedby="segundoapellido-live-feedback"></b-form-input>
 
@@ -122,7 +122,7 @@
             </b-col>
             <b-col class="col-4">
 
-                <label for="input-live">Ciudad empresa:</label>
+                <label for="input-live">Ciudad:</label>
                 <b-form-select :disabled="EmpresaSeleccionada ? false : true" aria-describedby="cargo-live-feedback" class="mb-1" v-model="CiudadSeleccionada" text-field="nombre_ciudad" :options="Ciudades">
 
                 </b-form-select>
@@ -136,7 +136,7 @@
             </b-col>
             <b-col class="col-3">
                 <ValidationProvider name="cargo" rules="required" v-slot="validationContext">
-                    <label for="input-live">Tipo cliente:</label>
+                    <label for="input-live">Tipo de cliente:</label>
                     <b-form-select aria-describedby="cargo-live-feedback" :state="getValidationState(validationContext)" class="mb-1" v-model="Tipo" :options="tipos"></b-form-select>
                     <b-form-invalid-feedback id="cargo-live-feedback">{{
                         validationContext.errors[0] }}
@@ -166,7 +166,7 @@
         <template #modal-footer>
             <b-overlay :show="Cargando" rounded opacity="0.6" spinner-small spinner-variant="primary" class="d-inline-block">
                 <b-button @click="enviarFormulario()" variant="primary" size="xl" class="float-right reactive-button" style="font-weight:bold">
-                    Crear y Guardar
+                    Guardar cambios
                 </b-button>
             </b-overlay>
         </template>
@@ -418,7 +418,7 @@ export default {
                         this.Cargando = false;
                         if (response != null) {
                             if (response.status == 200) {
-                                this.$bvToast.toast(`Edición de solicitante exitosa`, {
+                                this.$bvToast.toast(`Edición de solicitante exitosa.`, {
                                     title: 'Exito',
                                     toaster: 'b-toaster-top-center',
                                     solid: true,
@@ -429,7 +429,7 @@ export default {
                             }
                             this.$bvModal.hide('modal-editar-solicitante')
                         } else {
-                            this.$bvToast.toast(`Error al editar solicitante`, {
+                            this.$bvToast.toast(`Error al editar solicitante.`, {
                                 title: 'Error',
                                 toaster: 'b-toaster-top-center',
                                 solid: true,

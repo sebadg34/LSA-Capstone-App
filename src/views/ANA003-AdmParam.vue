@@ -3,7 +3,7 @@
     <b-row style="padding-top:30px; ">
         <b-col class="col-6">
             <div style="font-size:2rem; font-weight: bold; color: var(--lsa-blue)">
-                Administración de Parámetros
+                Administración de parámetros
             </div>
         </b-col>
     </b-row>
@@ -17,7 +17,7 @@
             <b-col class="col-4">
                 <b-row>
                     <b-button v-b-modal.modal-Agregar-Parametro style="border-radius: 15px; font-weight: bold; font-size: 18px; " class="lsa-light-blue reactive-button">
-                        Agregar Parámetro
+                        Agregar parámetro
                         <b-icon icon="journals"></b-icon>
                     </b-button>
                 </b-row>
@@ -54,7 +54,7 @@
                     <div class="text-center lsa-light-blue-text my-2 row">
                         <div class="col">
 
-                            <div style=" color:gray"> No hay parámetros registrados para mostrar</div>
+                            <div style=" color:gray"> No hay parámetros registrados para mostrar.</div>
                         </div>
 
                     </div>
@@ -73,7 +73,7 @@
                             <b-icon style="height: 80%; width: 80%; align-parametros: center;" icon="three-dots" variant="dark" aria-hidden="true"></b-icon>
                         </template>
                         <b-dropdown-item v-if="row" @click="DetallesParametro(row.item)">
-                            <b-icon icon="file-earmark-medical" aria-hidden="true" class="mr-2"></b-icon>Ver Detalles
+                            <b-icon icon="file-earmark-medical" aria-hidden="true" class="mr-2"></b-icon>Ver detalles
                         </b-dropdown-item>
                         <b-dropdown-item v-if="row" @click="EditarParametro(row.item)">
                             <b-icon icon="pencil-square" aria-hidden="true" class="mr-2"></b-icon>Editar
@@ -120,15 +120,17 @@ export default {
             nombreFiltro: "",
             fields: [{
                     key: 'nombre_parametro',
-                    label: 'Nombre',
+                    label: 'Nombre del parámetro',
                     thClass: 'text-center',
-                    tdClass: 'text-center'
+                    tdClass: 'text-center',
+                    sortable: true
                 },
                 {
                     key: 'nombreMetodologia',
-                    label: 'Metodología',
+                    label: 'Nombre de la metodología',
                     thClass: 'text-center',
-                    tdClass: 'text-center'
+                    tdClass: 'text-center',
+                    sortable: true
                 },
                 {
                     key: 'Accion',

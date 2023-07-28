@@ -2,7 +2,7 @@
     <div>
 
         <!-- <validation-observer ref="form"> -->
-        <modal_cantidadMuestra :n-muestras="nMuestras" :objetosSeleccionados="objetosSeleccionados"
+        <modal_ingresarSubmuestra :n-muestras="nMuestras" :objetosSeleccionados="objetosSeleccionados"
             @datosIngresados="capturarDatos" :identificaciones="identificacion" />
             <modal_agregarMetodologia/>
             <modal_agregarParametro/>
@@ -56,26 +56,26 @@
                                                     </b-col>
 
                                                     <b-col class="col-6">
-                                                        <ValidationProvider name="rut" rules="required|rut"
+                                                        <ValidationProvider name="rut" rules="required"
                                                             v-slot="validationContext">
-                                                            <label for="input-live">Rut solicitante:</label>
+                                                            <label for="input-live">Nombre empresa:</label>
                                                             <div class="d-flex align-items-center ">
-                                                                <b-input-group size="sm">
-                                                                    <b-form-input id="input-live" v-model="rut"
-                                                                        :state="getValidationState(validationContext)">
-                                                                    </b-form-input>
+                                                                <b-input-group >
+                                                                    <b-form-select id="input-live" v-model="solicitante"                                                                        
+                                                                        :state="getValidationState(validationContext)"
+                                                                        :options="opcionesEmpresa"                                                                        
+                                                                        text-field="nombre_empresa" value-field="rut_empresa"                                                                      
+                                                                        >
+                                                                    </b-form-select>
 
                                                                     <b-input-group-append>
                                                                         <b-button class=" lsa-orange reactive-button"
-                                                                            style="aspect-ratio: 1; border:none"
-                                                                            @click="buscarYagregar()">
+                                                                            
+                                                                            @click="actualizarSelectedEmpresa()">
                                                                             <b-icon icon="search"></b-icon>
                                                                         </b-button>
-
                                                                     </b-input-group-append>
-
                                                                 </b-input-group>
-
                                                             </div>
                                                             <b-form-invalid-feedback>{{ validationContext.errors[0]
                                                             }}</b-form-invalid-feedback>
@@ -84,25 +84,14 @@
                                                         <b-alert :show="dismissCountDown" dismissible fade variant="danger"
                                                             @dismiss-count-down="countDownChanged">
                                                             El rut del solicitante no está registrado en la base de datos
-                                                        </b-alert>
-
-                                                        <ValidationProvider name="solicitante" rules="required"
-                                                            v-slot="validationContext">
-                                                            <label for="input-live">Nombre empresa:</label>
-                                                            <b-form-select :disabled="!rutSolicitante" v-model="solicitante"
-                                                                :state="getValidationState(validationContext)"
-                                                                :options="opcionesClientes" value-field="rut_empresa"
-                                                                text-field="nombre_empresa"
-                                                                @input="actualizarSelectedEmpresa"></b-form-select>
-                                                            <b-form-invalid-feedback>{{ validationContext.errors[0]
-                                                            }}</b-form-invalid-feedback>
-                                                        </ValidationProvider>
+                                                        </b-alert>                                                        
 
                                                         <ValidationProvider name="Dirección Cliente" rules="required"
                                                             v-slot="validationContext">
                                                             <label for="input-live">Dirección empresa:</label>
-                                                            <b-form-select :disabled="!rut_empresa" id="input-live"
+                                                            <b-form-select id="input-live"
                                                                 v-model="direccion" :options="opcionesDireccion"
+                                                                :disabled="direccionDeshabilitado"
                                                                 :state="getValidationState(validationContext)"
                                                                 text-field="direccionConCiudad" value-field="id_ciudad">
                                                             </b-form-select>
@@ -142,16 +131,7 @@
                                                                     <b-form-input id="nMuestras-input" v-model="nMuestras"
                                                                         :state="getValidationState(validationContext)"
                                                                         aria-describedby="nMuestras-live-feedback"></b-form-input>
-                                                                    <b-input-group-append>
-                                                                        <b-button style="aspect-ratio: 1; border:none"
-                                                                            :disabled="!nMuestras"
-                                                                            class="lsa-orange reactive-button"
-                                                                            @click="agregar()" variant="secondary"
-                                                                            size="md">
-                                                                            <b-icon class="mt-1"
-                                                                                icon="plus-circle-fill"></b-icon>
-                                                                        </b-button>
-                                                                    </b-input-group-append>
+                                                                    
                                                                 </b-input-group>
 
                                                             </div>
@@ -159,46 +139,40 @@
                                                                 validationContext.errors[0] }}</b-form-invalid-feedback>
                                                         </ValidationProvider>
 
-                                                        <ValidationProvider name="fechaI" rules="required"
-                                                            v-slot="validationContext">
-                                                            <label class="mt-1" for="input-live">Fecha de muestreo:</label>
+                                                        
+                                                            <label for="input-live">Fecha de muestreo:</label>
                                                             <b-form-datepicker
                                                                 :date-format-options="{ year: 'numeric', month: '2-digit', day: '2-digit' }"
-                                                                id="input-live" v-model="fecha"
-                                                                aria-describedby="input-live-help fechaI-live-feedback"
-                                                                :state="getValidationState(validationContext)"
-                                                                placeholder="Seleccione fecha"></b-form-datepicker>
-                                                            <b-form-invalid-feedback id="fechaI-live-feedback">{{
-                                                                validationContext.errors[0] }}
-                                                            </b-form-invalid-feedback>
-                                                        </ValidationProvider>
+                                                                id="input-live" v-model="fecha"                                                                
+                                                                aria-describedby="input-live-help fechaI-live-feedback"                                                                
+                                                                placeholder="Seleccione fecha">
+                                                            </b-form-datepicker>
+                                                            
 
-                                                        <ValidationProvider name="hora" rules="required"
-                                                            v-slot="validationContext">
-                                                            <label class="mt-1" for="input-time">Hora de muestreo:</label>
+                                                       
+                                                            
+                                                            <label for="input-time">Hora de muestreo:</label>
                                                             <b-form-timepicker id="input-time" v-model="hora"
-                                                                :state="getValidationState(validationContext)"
+                                                                
                                                                 aria-describedby="input-live-help horaI-live-feedback"
                                                                 placeholder="Ingrese hora"></b-form-timepicker>
-                                                            <b-form-invalid-feedback id="horaI-live-feedback">{{
-                                                                validationContext.errors[0] }}
-                                                            </b-form-invalid-feedback>
-                                                        </ValidationProvider>
+                                                           
 
 
-                                                        <ValidationProvider name="entrega" rules="required"
-                                                            v-slot="validationContext"><label class="mt-1"
-                                                                for="input-live">Fecha de Entrega:</label>
+                                                            <label for="input-live">Fecha de Entrega:</label>
                                                             <b-form-datepicker
-                                                                :state="getValidationState(validationContext)"
+                                                                :date-format-options="{ year: 'numeric', month: '2-digit', day: '2-digit' }"
+                                                                
                                                                 id="input-live" v-model="fechaEntrega"
                                                                 placeholder="Seleccione fecha"
                                                                 :min="currentDate"></b-form-datepicker>
+                                                          
 
-                                                            <b-form-invalid-feedback id="entrega-live-feedback">{{
-                                                                validationContext.errors[0] }}
-                                                            </b-form-invalid-feedback>
-                                                        </ValidationProvider>
+                                                        <ValidationProvider name="Cotizacion" rules="required" v-slot="validationContext">
+                                                            <label for="input-live">Cotización:</label>
+                                                            <b-form-select id="input-live" v-model="cotizacion" :options="opcionesCotizacion" text-field="idconNombre" value-field="id_cotizacion" aria-describedby="input-live-help Cotizacion-live-feedback" :state="getValidationState(validationContext)"></b-form-select> 
+                                                            <b-form-invalid-feedback id="Cotizacion-live-feedback">{{validationContext.errors[0]}}</b-form-invalid-feedback>
+                                                        </ValidationProvider> 
                                                     </b-col>
 
                                                     <b-col class="col-6">
@@ -217,7 +191,7 @@
                                                         <ValidationProvider name="prioridad" rules="required"
                                                             v-slot="validationContext">
                                                             <label for="input-live">Prioridad:</label>
-                                                            <b-form-select class="mt-1" id="input-live" v-model="prioridad"
+                                                            <b-form-select id="input-live" v-model="prioridad"
                                                                 :options="opcionesPrioridad"
                                                                 aria-describedby="input-live-help prioridad-live-feedback"
                                                                 :state="getValidationState(validationContext)"></b-form-select>
@@ -228,7 +202,7 @@
 
                                                         <ValidationProvider name="TipoMatriz" rules="required"
                                                             v-slot="validationContext">
-                                                            <label class="mt-1" for="input-live">Tipo de Matriz:</label>
+                                                            <label for="input-live">Tipo de Matriz:</label>
                                                             <b-form-select id="input-live" v-model="TipoMatriz"
                                                                 :options="opcionesMatriz"
                                                                 aria-describedby="input-live-help TipoMatriz-live-feedback"
@@ -239,7 +213,21 @@
                                                                 validationContext.errors[0] }}</b-form-invalid-feedback>
                                                         </ValidationProvider>
 
-                                                        <label class="mt-1" for="input-live">Observaciones:</label>
+                                                        <ValidationProvider name="Temperatura" rules="required"
+                                                            v-slot="validationContext">
+                                                            <label for="input-live">Temperatura (°C):</label>
+                                                            <div class="d-flex align-items-center">
+                                                                <b-input-group size="sm">
+                                                                    <b-form-input id="Temperatura-input" v-model="Temperatura"
+                                                                        :state="getValidationState(validationContext)"
+                                                                        aria-describedby="Temperatura-live-feedback"></b-form-input>                                                                  
+                                                                </b-input-group>
+                                                            </div>
+                                                            <b-form-invalid-feedback id="Temperatura-live-feedback">{{
+                                                                validationContext.errors[0] }}</b-form-invalid-feedback>
+                                                        </ValidationProvider>                                                        
+
+                                                        <label for="input-live">Observaciones:</label>
                                                         <b-form-textarea id="input-live" v-model="observaciones" rows="1"
                                                             aria-describedby="input-live-help observaciones-live-feedback"></b-form-textarea>
                                                     </b-col>
@@ -270,12 +258,7 @@
                                                         <label for="input-live">Rut:</label>
                                                         <b-form-input id="transportistaRut-input" class="mb-1"
                                                             v-model="transportistaRut"
-                                                            aria-describedby="transportistaRut-live-feedback"></b-form-input>
-
-                                                        <label for="input-live">Temperatura de transporte:</label>
-                                                        <b-form-input class="mb-1" id="input-live" v-model="Temperatura"
-                                                            aria-describedby="input-live-help Temperatura-live-feedback"
-                                                            placeholder="Ingrese temperatura en C°" trim></b-form-input>
+                                                            aria-describedby="transportistaRut-live-feedback"></b-form-input>                                                        
 
                                                         <label for="input-live">Telefono Movil:</label>
 
@@ -347,20 +330,30 @@
 
                                             <b-card>
                                                 <b-row>
-                                                    <b-col class="col-6">
-                                                        <ValidationProvider name="norma" rules="required"
-                                                            v-slot="validationContext">
+                                                    <b-col class="col-6">                                                       
                                                             <b-form-group label="Seleccione una norma">
-                                                                <b-form-select
-                                                                    :state="getValidationState(validationContext)"
-                                                                    v-model="norma" :options="opcionesNorma"
-                                                                    text-field="nombre" value-field="id"
+                                                                <b-input-group>
+                                                                    <b-form-select v-model="norma" 
+                                                                    :options="opcionesNorma"
+                                                                    placeholder="Seleccione una norma"                                                                 
+                                                                    text-field="nombre" value-field="id"   
                                                                     @change="obtenerTablasNormas"></b-form-select>
-                                                                <b-form-invalid-feedback id="norma-live-feedback">{{
-                                                                    validationContext.errors[0] }}</b-form-invalid-feedback>
+                                                                                                                            
+                                                                    <b-input-group-append>
+                                                                        <b-button size="sm" class="lsa-orange reactive-button"
+                                                                            style="aspect-ratio:1; border: none"
+                                                                            @click="PushParametrosMetodologias()">
+                                                                            <b-icon style="color:white"
+                                                                                icon="box-arrow-in-down-left">
+                                                                            </b-icon>
+                                                                        </b-button>
+                                                                    </b-input-group-append>
+                                                            
+                                                                </b-input-group>
+                                                                
                                                             </b-form-group>
 
-                                                        </ValidationProvider>
+                                                        
                                                     </b-col>
 
                                                     <b-col class="col-6">
@@ -442,8 +435,9 @@
                                         <template #title>
                                             <b-col class="col-12">
                                                 <b-row class="d-flex justify-content-end">
+                                                    <b-icon icon="arrow-right-short"></b-icon> 
 
-                                                    <strong style="padding-left:30px">parámetros de muestras</strong>
+                                                    <strong style="padding-left:30px">Parámetros de muestras</strong>
                                                 </b-row>
                                             </b-col>
                                         </template>
@@ -566,7 +560,7 @@
 
 <script>
 import MuestraService from '@/helpers/api-services/Muestra.Service';
-import modal_cantidadMuestra from '@/components/recepcionMuestra/modal_cantidadMuestra.vue';
+import modal_ingresarSubmuestra from '@/components/recepcionMuestra/modal_ingresarSubmuestra.vue';
 import ElementosService from '@/helpers/api-services/Elementos.service';
 import PersonalService from '@/helpers/api-services/Personal.service';
 //import EmpresaService from '@/helpers/api-services/Empresa.service';
@@ -581,10 +575,11 @@ import {
     isLoggedIn
 } from "@/helpers/api-services/Auth.service";
 
+
 export default {
 
     components: {
-        modal_cantidadMuestra,
+        modal_ingresarSubmuestra,
         modal_agregarMetodologia,
         modal_agregarParametro
     },
@@ -672,6 +667,7 @@ export default {
             opcionesMetodologia: [],
             metodologiaDeshabilitada: true,
             parametroDeshabilitado: true,
+            direccionDeshabilitado: true,
             metodologias: [],
             metodologiasData: [],
             parametros_agregar: [{
@@ -689,7 +685,10 @@ export default {
             muestra_incompleto: true,
             transportista_incompleto: true,
             parametros_incompleto: true,
-            revisado: false
+            revisado: false,
+            opcionesCotizacion: [],
+            cotizacion: '',
+            opcionesEmpresa: []
 
         };
     },
@@ -710,6 +709,8 @@ export default {
 
         this.obtenerMatriz(),
 
+        this.obtenerEmpresas(),
+
             this.obtenerNormas(),
 
             PersonalService.obtenerTodosPersonal().then((response) => {
@@ -719,14 +720,9 @@ export default {
                     console.log("Los recepcionistas son: ", this.recepcionistas);
                 }
             });
-        /*EmpresaService.obtenerTodasEmpresa().then((response) => {
-            console.log(response.data);
-            if (response != null) {
-                this.empresas = response.data;
-                this.opcionesClientes = this.empresas.map((empresa) => empresa.nombre_empresa);
-                console.log("Los clientes son: ", this.opcionesClientes);
-            }
-        });*/
+
+            
+       
     },
 
     watch: {
@@ -806,7 +802,7 @@ export default {
             this.dismissCountDown = dismissCountDown
         },
 
-        buscarYagregar() {
+        /*buscarYagregar() {
             SolicitanteService.obtenerTodosSolicitantes().then((response) => {
                 if (response.data != null && response.status === 200) {
                     this.solicitante = response.data;
@@ -822,7 +818,7 @@ export default {
                     this.dismissCountDown = this.dismissSecs
                 }
             })
-        },
+        },*/
 
         detallesSolicitante() {
             console.log("rut a obtener: ", this.rutSolicitante)
@@ -886,28 +882,69 @@ export default {
             })
         },
 
-        actualizarSelectedEmpresa() {
-            const empresaSeleccionada = this.opcionesClientes.find(empresa =>
-                empresa.rut_empresa === this.solicitante
-            );
-            if (empresaSeleccionada) {
-                this.selectedEmpresa.id_ciudad = empresaSeleccionada.id_ciudad;
-                this.selectedEmpresa.nombre_ciudad = empresaSeleccionada.nombre_ciudad;
-                this.selectedEmpresa.direccion = empresaSeleccionada.direccion;
-                this.opcionesDireccion = empresaSeleccionada.id_ciudad.map((idCiudad, index) => ({
-                    id_ciudad: idCiudad,
-                    direccion: empresaSeleccionada.direccion[index],
-                    direccionConCiudad: `${empresaSeleccionada.nombre_ciudad[index]} / ${empresaSeleccionada.direccion[index]}`
-                }));
-                const nombreEmpresaSeleccionada = empresaSeleccionada.nombre_empresa;
-                console.log("Nombre de la empresa seleccionada: ", nombreEmpresaSeleccionada);
-                this.nombre_empresa = nombreEmpresaSeleccionada;
-                console.log("Nombre_empresa: ", this.nombre_empresa);
+        obtenerEmpresas () {
+            MuestraService.obtenerEmpresas().then((response) => {
+                console.log("obteniendo empresas",response.data)
+                const empresas = response.data;
+                this.opcionesEmpresa = empresas;
+            })
 
-                const RUTEmpresaSeleccionada = empresaSeleccionada.rut_empresa;
-                console.log("RUT de la empresa seleccionada: ", RUTEmpresaSeleccionada);
-                this.rut_empresa = RUTEmpresaSeleccionada;
+        },
+
+
+
+        actualizarSelectedEmpresa() {
+
+            this.direccionDeshabilitado = false;
+            console.log("empresa:", this.solicitante)
+            const nombreEmpresa = this.opcionesEmpresa.find(objeto => objeto.rut_empresa === this.solicitante);
+            console.log("empresa:", nombreEmpresa)
+            let nombreEmpresaEncontrada = "";
+            if (nombreEmpresa) {
+              nombreEmpresaEncontrada = nombreEmpresa.nombre_empresa;
+              this.nombre_empresa = nombreEmpresaEncontrada;
             }
+
+            console.log("Nombre de la empresa encontrada:", nombreEmpresaEncontrada);
+
+
+            MuestraService.obtenerEmpresas().then((response) => {
+                console.log("obteniendo empresas",response.data)
+                const empresas = response.data;
+                const direccion = empresas.flatMap(direccion => direccion.ciudades_direcciones);
+                console.log("direccion : ", direccion)
+
+                
+            const direccionCiudad = direccion.map(c => c.direccion);
+            const nombre_ciudad = direccion.map(c => c.nombre_ciudad);
+                this.opcionesDireccion = direccion.map(opc => ({
+                id_ciudad: opc.id_ciudad,
+                nombre_ciudad: opc.nombre_ciudad,
+                direccion: opc.direccion,
+                direccionConCiudad: `${nombre_ciudad} / ${direccionCiudad}`               
+
+            }))
+            console.log("opciondes direccion : ", direccionCiudad);
+            });
+            const data = {
+                rut_empresa: this.solicitante
+            };
+               
+            MuestraService.obtenerCotizacionEmpresa(data).then((response) => {
+                if (response.data != null && response.status === 200){
+                    console.log("cotizaciones: ", response.data)
+                    this.opcionesCotizacion = response.data.map(cotizacion => ({
+                        id_cotizacion: cotizacion.id_cotizacion,
+                        nombre_original_documento: cotizacion.nombre_original_documento,
+                        idconNombre: `${cotizacion.id_cotizacion} - ${cotizacion.nombre_original_documento}`
+                        
+                    }))
+                    console.log("Opc. cotizaciones: ", this.opcionesCotizacion)
+                    this.id_cotizacion = response.data.map(id => id.id_cotizacion)
+                    console.log("id. cotizacion: ", this.id_cotizacion)
+                }  
+            })
+            
         },
 
         /*generarFechaHoraActual() {
@@ -921,15 +958,30 @@ export default {
         verificarValidacionTab(value) {
             console.log(value)
         },
+
         agregar() {
-            console.log("abirnedo modal")
-            this.submuestra_agregar = [{
-                identificacion: '',
-                orden: '',
-            }],
-                this.alertaExito = false;
+            console.log("abirnedo modal");            
+            this.alertaExito = false;
             this.alertaDuplicado = false;
-            this.$bvModal.show('modal-cantidad')
+            this.$bvModal.show('modal-cantidad');
+        },
+
+        detallesCotizaciones(){
+            const data = {
+                rut_empresa: this.solicitante
+            };
+            SolicitanteService.CotizacionSolicitante(data).then((response) => {
+                if (response.data != null && response.status === 200){
+                    console.log("cotizaciones: ", response.data)
+                    this.opcionesCotizacion = response.data.map(cotizacion => ({
+                        id_cotizacion: cotizacion.id_cotizacion,
+                        nombre_original_documento: cotizacion.nombre_original_documento,
+                        idconNombre: `${cotizacion.id_cotizacion} - ${cotizacion.nombre_original_documento}`
+                        
+                    }))
+                    console.log("Opc. cotizaciones: ", this.opcionesCotizacion)
+                }  
+            })
         },
 
         agregarObjetosSeleccionados() {
@@ -1042,13 +1094,13 @@ export default {
                 idmetodologias.push(objeto.id_metodologia);
                 metodologiasArray.push(objeto.metodologias);
             });
+            this.submuestra_agregar = [];
 
             datos.forEach((objeto) => {
                 this.submuestra_agregar.push({
                     identificador: objeto.identificacion,
                     orden: objeto.orden,
-                    id_parametro: objeto.id_parametro,
-                    id_metodologia: objeto.id_metodologia
+                    parametros_agregar : objeto.parametros_agregar
                 });
             });
             console.log("submuestra_agregar:", this.submuestra_agregar);
@@ -1093,6 +1145,7 @@ export default {
         },
 
         obtenerTablasNormas() {
+
             const idNormaSeleccionada = this.norma;
             ElementosService.obtenerTablasNorma(idNormaSeleccionada).then((response) => {
                 if (response.data != null && response.status === 200) {
@@ -1105,6 +1158,9 @@ export default {
                     response.data.forEach((tabla) => {
                         const nombreTabla = tabla.nombre_tabla;
                         const nombreParametro = tabla.nombre_parametro;
+                        const idParametro = tabla.id_parametro;
+                        const idMetodologia = tabla.id_metodologia;
+                        const nombreMetodologia = tabla.nombre_metodologia;
 
                         // Verificar si la tabla ya está en el objeto tablasAgrupadas
                         if (!tablasAgrupadas[nombreTabla]) {
@@ -1113,11 +1169,20 @@ export default {
                                 nombre_tabla: nombreTabla,
                                 id_tablas: [],
                                 parametros: [],
+                                id_parametro: [],
+                                id_metodologia: [],
+                                metodologias: []
+
                             };
                         }
                         // Agregar el id_tabla y el nombre_parametro a la tabla correspondiente en tablasAgrupadas
                         tablasAgrupadas[nombreTabla].id_tablas.push(tabla.id_tabla);
                         tablasAgrupadas[nombreTabla].parametros.push(nombreParametro);
+                        tablasAgrupadas[nombreTabla].id_parametro.push(idParametro);
+                        tablasAgrupadas[nombreTabla].id_metodologia.push(idMetodologia);
+                        tablasAgrupadas[nombreTabla].metodologias.push(nombreMetodologia)
+
+
                     });
                     // convertir  en un array
                     const tablasProcesadas = Object.values(tablasAgrupadas);
@@ -1129,8 +1194,53 @@ export default {
 
                     // Asignar tablasProcesadas a this.tablasProcesadas
                     this.tablasProcesadas = tablasProcesadas;
+
+                                    
                 }
             });
+        },
+
+        PushParametrosMetodologias() {
+            
+            function esDuplicado(parametrosYMetodologias, parametro, metodologia) {
+                return parametrosYMetodologias.some((item) => item.parametro === parametro && item.metodologia === metodologia);
+            }
+
+            let parametrosYMetodologias = [];
+
+            // Recorrer cada tabla procesada
+            for (const tabla of this.tablasProcesadas) {
+                // Recuperar los arrays de id_parametro y metodologias de la tabla actual
+                const idParametro = tabla.id_parametro;
+                const parametros = tabla.parametros;
+                const metodologias = tabla.metodologias;
+                const idMetodologias = tabla.id_metodologia;
+                
+                // Agregar los parámetros y metodologías de la tabla actual a la variable principal
+                for (let i = 0; i < parametros.length; i++) {
+                    const parametro = parametros[i];
+                    const metodologia = metodologias[i];
+                    const id_parametro = idParametro[i];
+                    const id_metodologia = idMetodologias[i];
+                    
+                    // Verificar si el parámetro y la metodología ya existen en la variable "parametrosYMetodologias"
+                    if (!esDuplicado(parametrosYMetodologias, parametro, metodologia)) {
+                        parametrosYMetodologias.push({
+                            id_parametro: id_parametro,
+                            parametro: parametro,
+                            metodologia: metodologia,
+                            id_metodologia: id_metodologia
+                        });
+                    }
+                }
+            }
+            console.log("parametros y metodologias de las tablas: ", parametrosYMetodologias);
+            // Asegurarnos de no agregar duplicados a "this.objetosSeleccionados"
+            const objetosNoDuplicados = parametrosYMetodologias.filter((item) => !esDuplicado(this.objetosSeleccionados, item.parametro, item.metodologia));
+            this.objetosSeleccionados.push(...objetosNoDuplicados); 
+            const IDNoDuplicados = parametrosYMetodologias.filter((item) => !esDuplicado(this.objetosSeleccionados, item.id_parametro, item.id_metodologia));
+            this.parametros_agregar.push(...IDNoDuplicados);        
+                   
         },
 
         actualizarParametrosTabla() {
@@ -1177,18 +1287,20 @@ export default {
         },
         async enviarFormulario() {
 
+
             const datosValidos = await this.validarFormularios();
 
             if (!datosValidos) {
                 return;
             } else {
                 const matricesFiltradas = this.parametros_agregar.slice(1);
-                const parametrosFiltrados = this.submuestra_agregar.slice(1);
+                //const parametrosFiltrados = this.submuestra_agregar.slice(1);
                 var data = {
-                    rut_empresa: this.rut_empresa,
+                    rut_empresa: this.solicitante,
                     rut_empleado: this.recepcionistaRUT,
                     nombre_empresa: this.nombre_empresa,
                     id_ciudad: this.direccion,
+                    id_cotizacion: this.cotizacion,
                     direccion_empresa: this.direccion_empresa,
                     rut_solicitante: this.rut,
                     muestreado_por: this.muestreado,
@@ -1211,7 +1323,7 @@ export default {
                     id_matriz: this.TipoMatriz,
                     id_norma: this.norma,
                     id_tabla: this.id_tabla,
-                    submuestras_agregar: parametrosFiltrados
+                    submuestras_agregar: this.submuestra_agregar
                 }
 
                 console.log("data a enviar", data)

@@ -14,7 +14,7 @@
         <div>
             <b-row>
                 <b-col cols="12">
-                    <b-form-group label="Nombre de la norma">
+                    <b-form-group label="Nombre de la norma:">
                         <b-form-input v-model="nombre_norma"></b-form-input>
                     </b-form-group>
                 </b-col>
@@ -60,7 +60,7 @@
 
                             </template>
                             <b-form-select class="form-control" name="opciones" :select-size="5"
-                                v-model="matrizSeleccionada" :options="opcionesMatriz" @change="matrizSeleccionadaCambiada">
+                                v-model="matrizSeleccionada" :options="opcionesMatriz">
 
                             </b-form-select>
                         </b-card>
@@ -215,7 +215,7 @@
             </b-col>
             <b-col>
                 <b-button :disabled="!tablaSeleccionada" @click="agregarTablaNorma" block class="lsa-light-blue"
-                    style="font-weight:bold">agregar tabla seleccionada a norma</b-button>
+                    style="font-weight:bold">Agregar tabla seleccionada a la norma</b-button>
             </b-col>
         </b-row>
 
@@ -402,6 +402,7 @@ export default {
     mounted() {
 
         this.obtenerMatriz();
+        this.cargarParametros();
     },
 
     methods: {
@@ -418,7 +419,7 @@ export default {
             this.tablaSeleccionada.parametros = this.tablaSeleccionada.parametros.filter(param => param.id_parametro != parametro.id_parametro);
             this.parametroSeleccionado = "";
         },
-        
+
         // Reiniciar cuando se cambia la matriz
         reiniciarDatosParcial() {
             this.tablas_agregar = [];
@@ -621,8 +622,8 @@ export default {
             ElementosService.agregarNorma(data).then((response) => {
                 if (response.status == 200) {
                     this.reiniciarDatos();
-                    this.$bvToast.toast(`Creación de norma exitosa`, {
-                        title: 'Exito',
+                    this.$bvToast.toast(`Creación de norma exitosa.`, {
+                        title: 'Éxito',
                         toaster: 'b-toaster-top-center',
                         solid: true,
                         variant: "success",
@@ -633,39 +634,29 @@ export default {
                 }
             })
         },
-        cargarParametrosMatriz(value) {
-            var data = {
-                id_matriz: value
-            }
-            ElementosService.obtenerDetallesMatriz(data).then((response) => {
+        cargarParametros() {
+          
+
+            ElementosService.obtenerParametros().then((response) => {
                 console.log("detalles matriz", response);
                 if (response.data != null && response.status == 200) {
                     for (var i = 0; i < response.data.length; i++) {
-                        var parametroExistente = this.parametrosMatriz.find(param => param.id_parametro == response.data[i].id_parametro);
+                        const parametroExistente = this.parametrosMatriz.find(param => param.id_parametro == response.data[i].id_parametro);
 
                         if (parametroExistente == null) {
                             var parametroAgregar = {
                                 nombre_parametro: response.data[i].nombre_parametro,
                                 id_parametro: response.data[i].id_parametro,
-
                             }
 
                             this.parametrosMatriz.push({
                                 value: parametroAgregar,
                                 id_parametro: response.data[i].id_parametro,
                                 text: response.data[i].nombre_parametro,
-                                metodologias: [{
-                                    nombre_metodologia: response.data[i].nombre_metodologia,
-                                    id_metodologia: response.data[i].id_metodologia,
-                                    detalle_metodologia: response.data[i].detalle_metodologia,
-                                }]
+                                metodologias: response.data[i].metodologias
                             })
                         } else {
-                            parametroExistente.metodologias.push({
-                                nombre_metodologia: response.data[i].nombre_metodologia,
-                                id_metodologia: response.data[i].id_metodologia,
-                                detalle_metodologia: response.data[i].detalle_metodologia,
-                            })
+                            parametroExistente.metodologias = response.data[i].metodologias;
                         }
 
                     }
@@ -677,11 +668,7 @@ export default {
         mostrarModalAgregarTabla() {
             this.$bvModal.show('modal-agregar-tabla');
         },
-        matrizSeleccionadaCambiada() {
-            this.parametrosMatriz = [];
-            this.opcionesParametro = [];
-            this.cargarParametrosMatriz(this.matrizSeleccionada.id_matriz)
-        },
+        
         tablaSeleccionadaCambiada() {
             console.log('Tabla seleccionada:', this.tablaSeleccionada);
             // Realiza las acciones adicionales que necesites

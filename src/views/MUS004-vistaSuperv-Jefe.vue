@@ -219,8 +219,7 @@ MostrarFonos(row){
 IngresarMuestraLab(row){
   this.RUM = row.item.RUM;
   console.log('el rum es: '+ this.RUM)
-  this.$router.push(`/IngMuesLab?RUM=${this.RUM}`);
-  
+  this.$router.push(`/IngMuesLab?RUM=${this.RUM}`);  
 },
 
 MarcarAnalisis(row){

@@ -27,19 +27,19 @@
                     </b-list-group-item>
             <b-list-group-item style="padding:10px" class="col-2 d-flex justify-content-center">
                         <div>
-                            N° Cotización
+                            N° cotización
                         </div>
                        
                     </b-list-group-item>
             <b-list-group-item style="padding:10px" class="col-3 d-flex justify-content-center">
                         <div>
-                            Nombre Archivo
+                            Nombre del archivo
                         </div>
                        
                     </b-list-group-item>  
                     <b-list-group-item style="padding:10px" class="col-3 d-flex justify-content-center">
                         <div>
-                        Fecha emisión
+                            Fecha de emisión
                         </div>
                        
                     </b-list-group-item>
@@ -55,7 +55,7 @@
                     <div class="text-center lsa-light-blue-text my-2 row">
                         <div class="col">
                             <b-icon icon="file-earmark-break" animation="fade" variant="secondary"></b-icon>
-                        <div style="font-weight:bold; color:gray">No hay cotizaciones registradas por mostrar</div>
+                        <div style="font-weight:bold; color:gray">No hay cotizaciones registradas para mostrar.</div>
                         </div>
                     
                     </div>
@@ -85,7 +85,7 @@
                     </b-list-group-item>
                 <b-list-group-item style="padding:10px" class="col-2 d-flex justify-content-center">
                         <div>
-                            {{ file.id_cotizacion }}
+                            {{ file.numero_cotizacion }}
                         </div>
                        
                     </b-list-group-item>
@@ -164,7 +164,7 @@ export default {
             solicitanteService.eliminarCotizacion(file).then((response) =>{
                 this.BorrandoArchivo = false;
                 if(response.status == 200){
-                    this.$bvToast.toast(`Cotización borrada exitosamente`, {
+                    this.$bvToast.toast(`Cotización borrada exitosamente.`, {
                         title: 'Exito',
                         toaster: 'b-toaster-top-center',
                         solid: true,
@@ -219,7 +219,7 @@ solicitanteService.obtenerDetallesCompletosSolicitante(this.userData.rut_solicit
             solicitanteService.agregarCotizacion(formData).then((response) => {
                 console.log(response);
                 if (response.request.status == 200) {
-                    this.$bvToast.toast(`Guardado de cotización exitoso`, {
+                    this.$bvToast.toast(`Guardado de cotización exitoso.`, {
                         title: 'Exito',
                         toaster: 'b-toaster-top-center',
                         solid: true,

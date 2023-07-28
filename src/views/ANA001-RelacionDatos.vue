@@ -3,7 +3,7 @@
     <b-row style="padding-top:30px; margin-left: 15px; ">
       <b-col class="col-6">
         <div style="font-size:2rem; font-weight: bold; color: var(--lsa-blue)">
-          Administración de Elementos de la Muestra
+          Administración de elementos de la muestra
         </div>
       </b-col>
     </b-row>
@@ -12,31 +12,29 @@
     <div class="row justify-content-start" style="padding-top:20px; padding-bottom:10px;">
       <b-col class="col-12">
 
-
-        <b-button @click="administrarMatriz" style="font-weight: bold; font-size: 18px; "
+        <b-button @click="administrarNorma" style="border-radius: 15px; font-weight: bold; font-size: 18px;"
           class="lsa-light-blue reactive-button mb-2 mt-2 mr-2">
-          Administrar Matriz
+          Administrar norma
+          <b-icon icon="journals"></b-icon>
+        </b-button>
+        
+        <b-button @click="administrarMatriz" style="border-radius: 15px; font-weight: bold; font-size: 18px;"
+          class="lsa-light-blue reactive-button mb-2 mt-2 mr-2">
+          Administrar matriz
           <b-icon icon="journals"></b-icon>
         </b-button>
 
-        <b-button @click="administrarParametro" style=" font-weight: bold; font-size: 18px; "
+        <b-button @click="administrarParametro" style="border-radius: 15px; font-weight: bold; font-size: 18px;"
           class="lsa-light-blue reactive-button mb-2 mt-2 mr-2">
-          Administrar Parámetro
+          Administrar parámetro
           <b-icon icon="journals"></b-icon>
         </b-button>
 
-        <b-button @click="administrarMetodologia" style="font-weight: bold; font-size: 18px; "
+        <b-button @click="administrarMetodologia" style="border-radius: 15px; font-weight: bold; font-size: 18px;"
           class="lsa-light-blue reactive-button mb-2 mt-2 mr-2">
-          Administrar Metodología
+          Administrar metodología
           <b-icon icon="journals"></b-icon>
         </b-button>
-
-        <b-button @click="administrarNorma" style=" font-weight: bold; font-size: 18px; "
-          class="lsa-light-blue reactive-button mb-2 mt-2 mr-2">
-          Administrar Norma
-          <b-icon icon="journals"></b-icon>
-        </b-button>
-
 
       </b-col>
 
@@ -44,7 +42,18 @@
     <div style="height:25px"></div>
     <div class="row justify-content-center">
       <div class="col-10">
-        <b-table :items="items" :fields="fields" :per-page="perPage" :current-page="currentPage" responsive>
+        <b-table  show-empty :busy="loading" :items="items" :fields="fields" :per-page="perPage" :current-page="currentPage" responsive>
+        
+
+                <template #table-busy>
+                    <div class="text-center lsa-orange-text my-2">
+                        <b-spinner class="align-middle"></b-spinner>
+                        <strong> Cargando...</strong>
+                    </div>
+                </template>
+        
+        
+        
           <template #cell(Accion)="row">
 
             <b-dropdown right size="sm" variant="link" toggle-class="text-decoration-none" no-caret>
@@ -123,6 +132,7 @@ export default {
       modalDetallesData: {},
       currentPage: 1,
       perPage: 10,
+      loading:false,
     };
   },
 
@@ -160,6 +170,7 @@ export default {
     },
 
     ObtenerRelacionDatos() {
+      this.loading = true;
       ElementosService.obtenerRelacion().then((response) => {
         const items = response.data.map((item) => {
           let nombre = '';
@@ -178,6 +189,7 @@ export default {
           items[i].parametros = response.data[i].parametros
         }
         this.items = items;
+        this.loading = false;
         console.log(this.items)
       });
     },

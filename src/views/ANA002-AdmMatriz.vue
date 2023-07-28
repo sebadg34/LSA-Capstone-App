@@ -3,7 +3,7 @@
     <b-row style="padding-top:30px; ">
         <b-col class="col-6">
             <div style="font-size:2rem; font-weight: bold; color: var(--lsa-blue)">
-                Administración de Matrices
+                Administración de matrices
             </div>
         </b-col>
     </b-row>
@@ -18,7 +18,7 @@
                 <b-col class="col-4">
                     <b-row>
                         <b-button v-b-modal.modal-Agregar-Matriz style="border-radius: 15px; font-weight: bold; font-size: 18px; min-width: 250px;" class="lsa-light-blue reactive-button">
-                            Agregar Matriz
+                            Agregar matriz
                             <b-icon icon="journals"></b-icon>
                         </b-button>
                     </b-row>
@@ -53,7 +53,7 @@
                 <template #empty>
                     <div class="text-center lsa-light-blue-text my-2 row">
                         <div class="col">
-                            <div style=" color:gray"> No hay matrices registradas para mostrar</div>
+                            <div style=" color:gray"> No hay matrices registradas para mostrar.</div>
                         </div>
                     </div>
                 </template>
@@ -82,7 +82,7 @@
                             <b-icon style="height: 80%; width: 80%; align-items: center;" icon="three-dots" variant="dark" aria-hidden="true"></b-icon>
                         </template>
                         <b-dropdown-item v-if="row" @click="DetallesMatriz(row.item)">
-                            <b-icon icon="file-earmark-medical" aria-hidden="true" class="mr-2"></b-icon>Ver Detalles
+                            <b-icon icon="file-earmark-medical" aria-hidden="true" class="mr-2"></b-icon>Ver detalles
                         </b-dropdown-item>
                         <b-dropdown-item v-if="row" @click="ActualizarMatriz(row.item)">
                             <b-icon icon="pencil-square" aria-hidden="true" class="mr-2"></b-icon>Editar
@@ -116,15 +116,17 @@ export default {
         return {
             fields: [{
                     key: 'nombre_matriz',
-                    label: 'Nombre',
+                    label: 'Nombre de la matriz',
                     thClass: 'text-center',
-                    tdClass: 'text-center'
+                    tdClass: 'text-center',
+                    sortable: true
                 },
                 {
                     key: 'nombreParametro',
-                    label: 'Parámetro',
+                    label: 'Parámetro(s)',
                     thClass: 'text-center',
-                    tdClass: 'text-center'
+                    tdClass: 'text-center',
+                    sortable: true
                 },
                 {
                     key: 'Accion',

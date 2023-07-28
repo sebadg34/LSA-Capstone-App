@@ -6,7 +6,7 @@
             <!-- Emulate built in modal header close button action -->
 
             <b-row class="d-flex justify-content-around">
-                <div class="pl-3">Detalles Solicitante</div>
+                <div class="pl-3">Detalles del solicitante</div>
 
             </b-row>
 
@@ -19,7 +19,7 @@
                 <b-row class="d-flex justify-content-center">
                     <b-col style="font-weight:bold" class="col-4">
                         <div v-if="this.Nombre_empresa"> Empresa:</div>
-                        <div v-if="this.Ciudad_empresa"> Ciudad Empresa:</div>
+                        <div v-if="this.Ciudad_empresa"> Ciudad:</div>
                         <div> Rut:</div>
                         <div> Nombre:</div>
                         <div> Primer apellido:</div>
@@ -55,10 +55,10 @@
         <br />
         <b-list-group horizontal style="font-weight: bold;">
             <b-list-group-item style="width:30%" class="d-flex align-items-center justify-content-center">
-                Empresas
+                Empresa(s)
             </b-list-group-item>
             <b-list-group-item style="width:70%" class="d-flex align-items-center justify-content-center">
-                Ciudades de empresa
+                Ciudad(es)
             </b-list-group-item>
         </b-list-group>
 

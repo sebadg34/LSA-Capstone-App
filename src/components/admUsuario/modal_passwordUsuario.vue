@@ -137,7 +137,7 @@ export default {
                         console.log(response)
                         if (response != null) {
                             if (response.status == 200) {
-                                this.$bvToast.toast(`la contraseña ha sido actualizada`, {
+                                this.$bvToast.toast(`La contraseña ha sido actualizada.`, {
                                     title: 'Exito',
                                     toaster: 'b-toaster-top-center',
                                     solid: true,
@@ -149,7 +149,7 @@ export default {
                             }
                             
                         } else {
-                            this.$bvToast.toast(`Error al cambiar contraseña`, {
+                            this.$bvToast.toast(`Error al cambiar la contraseña.`, {
                                 title: 'Error',
                                 toaster: 'b-toaster-top-center',
                                 solid: true,

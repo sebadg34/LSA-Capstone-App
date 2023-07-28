@@ -37,7 +37,7 @@
                         </b-form-invalid-feedback>
                     </ValidationProvider>
                     <ValidationProvider name="confirmación de contraseña" rules="required"  v-slot="validationContext" vid="password_nueva_confirmacion">
-                        <label for="contraseña-nueva-confirmacion">Confirme contraseña nueva:</label>
+                        <label for="contraseña-nueva-confirmacion">Confirme la contraseña nueva:</label>
                         <b-form-input type="password" size="sm" class="mb-1" id="contraseña-nueva-confirmacion" :state="getValidationState(validationContext)"
                             v-model="password_nueva_confirmacion" aria-describedby="input-live-help" placeholder=""
                             trim></b-form-input>
@@ -117,7 +117,7 @@ export default {
                         console.log(response)
                         if (response != null) {
                             if (response.status == 200) {
-                                this.$bvToast.toast(`la contraseña ha sido actualizada`, {
+                                this.$bvToast.toast(`La contraseña ha sido actualizada.`, {
                                     title: 'Exito',
                                     toaster: 'b-toaster-top-center',
                                     solid: true,
@@ -129,7 +129,7 @@ export default {
                             }
                             
                         } else {
-                            this.$bvToast.toast(`Error al cambiar contraseña`, {
+                            this.$bvToast.toast(`Error al cambiar la contraseña.`, {
                                 title: 'Error',
                                 toaster: 'b-toaster-top-center',
                                 solid: true,

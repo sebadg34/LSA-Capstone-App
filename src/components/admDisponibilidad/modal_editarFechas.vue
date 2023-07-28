@@ -1,7 +1,6 @@
 <template>
 <b-modal centered id="modal-editar-fechas" ref="modal" title="Modificar fechas" size="lg">
-    <validation-observer ref="form">
-        <template #modal-header="{ close }">
+    <template #modal-header="{ close }">
             <!-- Emulate built in modal header close button action -->
 
             <b-row class="d-flex justify-content-around">
@@ -13,44 +12,48 @@
                 <span aria-hidden="true" style="color:white">&times;</span>
             </button>
         </template>
+    <validation-observer ref="form">
+        
 
+        
         <b-col class="col-6 mx-auto">
             <div style="font-weight:bold">
-                Dias totales posibles:
-                <span>{{ this.DiasTotablesAsignables }}</span>
+                Días totales posibles:
+                <span v-if="this.DiasTotablesAsignables != null">{{ this.DiasTotablesAsignables }}</span>
+                <span v-else>0</span>
             </div>
             <br/>
             <div style="font-weight:bold">
-                Dias disponibles:
+                Días disponibles:
                 <span v-if="this.DiasDisponibles == null">0</span>
                 <span v-else>{{ this.DiasDisponibles }}</span>
             </div>
             <div v-if="this.FechaInicio != null && this.FechaTermino != null" style="font-weight:bold">
-                Dias vacaciones actuales:
+                Días de vacaciones actuales:
                 <span v-if="this.diasVacacionesActuales <= this.DiasTotablesAsignables">{{ this.diasVacacionesActuales }}</span>
                 <span v-else style="color: red">{{ this.diasVacacionesActuales }}
-                <div>El numero de vacaciones no puede superar los dias totales disponibles</div>
+                <div>El número de días de vacaciones no puede superar los dias totales disponibles.</div>
                 </span>
             </div>
 
             <br />
             <b-row class="d-flex justify-content-between">
 
-                <div>Fecha inicio:
+                <div>Fecha de inicio:
                 </div>
 
                 <ValidationProvider name="fecha inicio" rules="required" v-slot="validationContext">
-                    <b-form-datepicker @input="revisarFecha" :min="hoy" @context="onContextInicio" :date-format-options="{ year: 'numeric', month: '2-digit', day: '2-digit' }" placeholder="seleccione fecha" :state="getValidationState(validationContext)" v-model="FechaInicio" id="datepicker-dateformat2" locale="es"></b-form-datepicker>
+                    <b-form-datepicker @input="revisarFecha" :min="hoy" @context="onContextInicio" :date-format-options="{ year: 'numeric', month: '2-digit', day: '2-digit' }" placeholder="Seleccione una fecha" :state="getValidationState(validationContext)" v-model="FechaInicio" id="datepicker-dateformat2" locale="es"></b-form-datepicker>
                     <b-form-invalid-feedback id="fecha-live-feedback">{{
                        validationContext.errors[0] }}
                     </b-form-invalid-feedback>
                 </ValidationProvider>
             </b-row>
             <b-row class="d-flex justify-content-between">
-                <div>Fecha término:
+                <div>Fecha de término:
                 </div>
                 <ValidationProvider name="fecha termino" rules="required" v-slot="validationContext">
-                    <b-form-datepicker :min="FechaInicio=='' ? hoy : fechaInicioMasUno " @context="onContextTermino" :date-format-options="{ year: 'numeric', month: '2-digit', day: '2-digit' }" placeholder="seleccione fecha" :state="getValidationState(validationContext)" v-model="FechaTermino" id="datepicker-dateformat" locale="es"></b-form-datepicker>
+                    <b-form-datepicker :min="FechaInicio=='' ? hoy : fechaInicioMasUno " @context="onContextTermino" :date-format-options="{ year: 'numeric', month: '2-digit', day: '2-digit' }" placeholder="Seleccione una fecha" :state="getValidationState(validationContext)" v-model="FechaTermino" id="datepicker-dateformat" locale="es"></b-form-datepicker>
                     <b-form-invalid-feedback id="fecha-live-feedback">{{
                        validationContext.errors[0] }}
                     </b-form-invalid-feedback>
@@ -93,7 +96,7 @@ export default {
     computed: {
         hoy(){
             const todayDate = new Date()
-            todayDate.setDate(todayDate.getDate() + 1)
+            todayDate.setDate(todayDate.getDate())
             return todayDate;
         },
         fechaInicioMasUno(){
@@ -108,7 +111,7 @@ export default {
             var d2 = new Date(this.FechaTermino);
             var diff = d2.getTime() - d1.getTime();
 
-            var daydiff = diff / (1000 * 60 * 60 * 24);
+            var daydiff = (diff / (1000 * 60 * 60 * 24)) +1;
             return daydiff;
             }else{
                 return 0;
@@ -129,7 +132,7 @@ export default {
             var d2 = new Date(this.FechaTermino);
             var diff = d2.getTime() - d1.getTime();
 
-            var daydiff = diff / (1000 * 60 * 60 * 24);
+            var daydiff = (diff / (1000 * 60 * 60 * 24)) +1;
             this.DiasTotablesAsignables = this.DiasDisponibles + daydiff;
             }else{
                 this.DiasTotablesAsignables = this.DiasDisponibles;
@@ -177,7 +180,7 @@ export default {
                     disponibilidadService.editarFechas(data).then((response) => {
                         console.log("respuesta axios", response)
                         if (response.request.status == 200) {
-                            this.$bvToast.toast(`Cambio de fechas exitosa`, {
+                            this.$bvToast.toast(`Cambio de fechas exitoso.`, {
                                 title: 'Exito',
                                 toaster: 'b-toaster-top-center',
                                 solid: true,
@@ -187,7 +190,7 @@ export default {
                             this.$emit('refrescar');
                             this.$bvModal.hide('modal-editar-fechas');
                         } else {
-                            this.$bvToast.toast(`Error al cambiar fechas`, {
+                            this.$bvToast.toast(`Error al cambiar las fechas.`, {
                                 title: 'Error',
                                 toaster: 'b-toaster-top-center',
                                 solid: true,
@@ -210,8 +213,8 @@ export default {
             CargandoArchivos: false,
             busy: false,
             Archivo: null,
-            FechaInicio: "",
-            FechaTermino: "",
+            FechaInicio: null,
+            FechaTermino: null,
             FechaInicioFormatted: "",
             FechaTerminoFormatted: "",
         }

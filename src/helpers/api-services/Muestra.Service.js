@@ -1,4 +1,4 @@
-import axios from "axios";
+
 import config from '@/../public/config.json'
 import {
     crearApi
@@ -10,7 +10,8 @@ const apiUrl = config.BASE_URL_SIS_API;
 
 const ingresarMuestra = async (data) => {
     try {  
-        const response = await axios.post(apiUrl + "/recepcion-muestra", data,);
+        const instanciaApi = await crearApi();
+        const response = await instanciaApi.post(apiUrl + "/recepcion-muestra", data,);
         console.log(response);
         return response;
     } catch (error) {
@@ -21,7 +22,8 @@ const ingresarMuestra = async (data) => {
 
 const obtenerMuestras = async () => {
    try {
-        const response = await axios.get(apiUrl + "/muestras");
+    const instanciaApi = await crearApi();
+    const response = await instanciaApi.get(apiUrl + "/muestras");
             console.log(response);
         if(response.status == 200){
             return response;
@@ -35,9 +37,28 @@ const obtenerMuestras = async () => {
     }
 };
 
+
+const obtenerEmpresas = async () => {
+    try {
+        const instanciaApi = await crearApi();
+        const response = await instanciaApi.get(apiUrl + "/recepcion-muestra/empresa-ciudades-direcciones");
+             console.log(response);
+         if(response.status == 200){
+             return response;
+         }else{
+             return;
+         }
+         
+     } catch (error) {
+         console.log(error);
+         return;
+     }
+ };
+
 const obtenerObservaciones = async (RUM) => {
     try {
-         const response = await axios.get(apiUrl + "/muestras/" + RUM + "/observaciones");
+        const instanciaApi = await crearApi();
+     const response = await instanciaApi.get(apiUrl + "/muestras/" + RUM + "/observaciones");
          console.log(response);
          if(response.status == 200){
              return response;
@@ -53,7 +74,8 @@ const obtenerObservaciones = async (RUM) => {
 
  const obtenerDatosMuestra = async (RUM) => {
     try {
-         const response = await axios.get(apiUrl + "/muestras/" + RUM);
+        const instanciaApi = await crearApi();
+        const response = await instanciaApi.get(apiUrl + "/ingreso-muestra/detallesMuestra/" + RUM);
          console.log(response);
          if(response.status == 200){
              return response;
@@ -67,9 +89,12 @@ const obtenerObservaciones = async (RUM) => {
      }
  };
 
+ 
+
  const obtenerTelefono = async (RUM) => {
     try {
-         const response = await axios.get(apiUrl + "/muestras/" + RUM + "/telefonos");
+        const instanciaApi = await crearApi();
+     const response = await instanciaApi.get(apiUrl + "/muestras/" + RUM + "/telefonos");
          console.log(response);
          if(response.status == 200){
              return response;
@@ -86,7 +111,8 @@ const obtenerObservaciones = async (RUM) => {
  const actualizarMuestra = async (data) => {
     try {
         console.log("DATA: ", data.RUM);
-        const response = await axios.put(apiUrl + "/muestras/" + data.RUM + "/update", data);
+        const instanciaApi = await crearApi();
+        const response = await instanciaApi.put(apiUrl + "/ingreso-muestra", data);
         
         console.log(response);
         
@@ -104,7 +130,8 @@ const obtenerObservaciones = async (RUM) => {
 
 const completarMuestra = async (RUM) => {
     try {
-        const response = await axios.put(apiUrl + "/muestras/" + RUM + "/completar");
+        const instanciaApi = await crearApi();
+     const response = await instanciaApi.put(apiUrl + "/muestras/" + RUM + "/completar");
         console.log(response);
         if (response.status == 200) {
             return response;
@@ -119,7 +146,8 @@ const completarMuestra = async (RUM) => {
 
 const rehacerMuestra = async (RUM) => {
     try {
-        const response = await axios.put(apiUrl + "/muestras/" + RUM + "/rehacer");
+        const instanciaApi = await crearApi();
+     const response = await instanciaApi.put(apiUrl + "/muestras/" + RUM + "/rehacer");
         console.log(response);
         if (response.status == 200) {
             return response;
@@ -135,7 +163,8 @@ const rehacerMuestra = async (RUM) => {
 
 const calcularDiasTranscurridos = async (RUM) => {
     try {
-      const response = await axios.get(apiUrl + "/muestras/" + RUM + "/dias-transcurridos");
+        const instanciaApi = await crearApi();
+        const response = await instanciaApi.get(apiUrl + "/muestras/" + RUM + "/dias-transcurridos");
       console.log(response);
       if (response.status == 200) {        
         return response; 
@@ -150,7 +179,8 @@ const calcularDiasTranscurridos = async (RUM) => {
 
 const obtenerNombreEmpleados = async () => {
     try {
-         const response = await axios.get(apiUrl + '/nombres-empleados');
+        const instanciaApi = await crearApi();
+     const response = await instanciaApi.get(apiUrl + '/nombres-empleados');
              console.log(response);
          if(response.status == 200){
              return response;
@@ -181,6 +211,41 @@ const obtenerNombreEmpleados = async () => {
     }
 };
 
+const obtenerDireccionEmpresa = async (data) => {
+    try {
+        const instanciaApi = await crearApi();
+        const response = await instanciaApi.get("/recepcion-muestra/empresa-ciudades/" + data.rut_empresa);
+            console.log(response);
+        if(response.status == 200){
+            return response;
+        }else{
+            return;
+        }
+        
+    } catch (error) {
+        console.log(error);
+        return;
+    }
+};
+
+const obtenerCotizacionEmpresa = async (data) => {
+    try {
+        const instanciaApi = await crearApi();
+        const response = await instanciaApi.get("/recepcion-muestra/cotizaciones/" + data.rut_empresa);
+            console.log(response);
+        if(response.status == 200){
+            return response;
+        }else{
+            return;
+        }
+        
+    } catch (error) {
+        console.log(error);
+        return;
+    }
+};
+
+
 
   
  
@@ -195,7 +260,10 @@ export default {
     calcularDiasTranscurridos,
     obtenerNombreEmpleados,
     actualizarMuestra,
-    obtenerDetallesSolicitante
+    obtenerDetallesSolicitante,
+    obtenerDireccionEmpresa,
+    obtenerCotizacionEmpresa,
+    obtenerEmpresas
 
 
 };

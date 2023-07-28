@@ -1,276 +1,421 @@
 <template>
-    <div>     
-  <!-- Filtrador-->
+  <div>
 
-  
-  
+    <ModalObservaciones :detalles-data="this.observacionesData" />
+    <ModalDetalleMuestra :detalles-data="this.detallesData" />
+    <ModalCompletarTarea :muestra-data="this.muestraData" />
+    <!-- Inicio tabla -->
 
-  <!-- Fin Filtrador-->   
-  
-  <b-row style="padding-top:30px; ">
-        <b-col class="col-6">
-            <div style="font-size:2rem; font-weight: bold; color: var(--lsa-blue)">
-                Administración de Muestras
-            </div>
-        </b-col>
+    <b-row align-h="start" style="padding-top:30px;">
+      <b-col class="col-6">
+        <div style="font-size:2rem; font-weight: bold; color: var(--lsa-blue)">
+          Administración de Muestras
+        </div>
+      </b-col>
     </b-row>
 
-   
+    <b-row class="justify-content-center">
 
-  <ModalObservaciones :muestra-data="this.modalData" @modal-cerrado="onModalCerrado"></ModalObservaciones>
-  <ModalDetalleMuestra :detalles-data="this.detallesData"/> 
-  <modal_analistaDesignado/>
-  <modal_rehacerAnalisis/>
-  <!-- Inicio tabla -->  
+      <b-col class="col-10">
 
-  <div class="row justify-content-center">
-        <div class="col-10"> 
-  <b-table fixed :items="items" :fields="fields" :per-page="perPage" :current-page="currentPage">   
-    
-    <template #cell(prioridad)="row">
+        <b-row style="padding-top:30px; padding-bottom:10px">
+          <b-col class="col-5">
 
-      <span v-if="row.item.prioridad == 'Normal'" style="text-transform:uppercase; color:green; font-weight: bold;">Normal</span>
-      <span v-if="row.item.prioridad == 'Alta'" style="text-transform:uppercase; color:red; font-weight: bold;">Alta</span>
-      <span v-if="row.item.prioridad == 'Urgente'" style="text-transform:uppercase; color:rebeccapurple; font-weight: bold;">Urgente</span>    
-</template>
+          </b-col>
+          <b-col class="col-7">
+            <b-row align-h="end">
+              <b-col class="col-12">
+                <b-form-group>
 
-  <template #cell(Acción)="row">   
-    
-    <b-dropdown right size="sm" variant="link" toggle-class="text-decoration-none" no-caret>
-      <template #button-content>
-          <b-icon style="height: 80%; width: 80%; align-items: center;" icon="three-dots" variant="dark" aria-hidden="true"></b-icon>
-      </template>
-      
-      <b-dropdown-item v-for="opcion in generarOpcionesEstado(row.item.estado)" :key="opcion.value">
-        
-        <b-dropdown-item @click="DetalleMuestra(row)" v-if="opcion.text === 'Detalle muestra'" :key="opcion.value">            
-          <b-icon icon="file-earmark-medical" aria-hidden="true" class="mr-2"></b-icon>Ver Detalles          
-        </b-dropdown-item>
+                  <b-input-group>
+                    <b-input-group-prepend is-text>
+                      <b-icon icon="search"></b-icon>
+                    </b-input-group-prepend>
+                    <b-form-input placeholder="RUM de muestra..." id="rum-filtro" v-model="rumFiltro">
+                    </b-form-input>
+                    <b-form-select placeholder="Prioridad" v-model="prioridadFiltro" id="prioridad-filtro"
+                      :options="prioridadOpciones" />
+                    <b-form-select placeholder="Estado" v-model="estadoFiltro" id="estado-filtro"
+                      :options="estadosOpciones" />
 
-        <b-dropdown-item @click="MostrarObservaciones(row)" v-if="opcion.text === 'Observaciones'" :key="opcion.value">
-          <b-icon icon="menu-down" aria-hidden="true" class="mr-2"></b-icon>Observaciones     
-        </b-dropdown-item>
+                    <b-button-group style="margin-left:10px; margin-right:20px">
+                      <b-button class="reactive-button lsa-blue" @click="filtrarTabla">Filtrar</b-button>
+                      <b-button class="reactive-button lsa-orange" @click="borrarFiltro">Quitar</b-button>
+                    </b-button-group>
+                  </b-input-group>
 
-        <b-dropdown-item @click="IngresarMuestraLab(row)" v-if="opcion.text === 'Ingresar muestra a lab.'" :key="opcion.value">          
-          <b-icon icon="capslock-fill" aria-hidden="true" class="mr-2"></b-icon>Ingresar Muestra a Laboratorio
-        </b-dropdown-item>
+                </b-form-group>
+              </b-col>
+            </b-row>
+          </b-col>
+          <!--
+  
+                  <b-col lg="6" class="my-1">
+                      <b-form-group label-cols-sm="3" label-align-sm="right" label-size="md" class="mb-0">
+  
+                          <b-input-group size="md">
+                              <b-input-group-prepend is-text>
+                                  <b-icon icon="search"></b-icon>
+  
+                              </b-input-group-prepend>
+                              <b-form-input id="filter-input" v-model="filter" type="search" placeholder="Escriba rut, nombre, etc. para filtrar"></b-form-input>
+                              <b-input-group-append>
+                                  <b-button style="font-weight:bold" class="lsa-blue" :disabled="!filter" @click="filter = ''">Limpiar filtro</b-button>
+                              </b-input-group-append>
+                          </b-input-group>
+                      </b-form-group>
+                  </b-col>
+                  -->
+        </b-row>
+      </b-col>
 
-        <b-dropdown-item @click="Analista(row)" v-if="opcion.text === 'Analista Designado'" :key="opcion.value">
-          <b-icon icon="file-earmark-person-fill" aria-hidden="true" class="mr-2"></b-icon>Analista Designado
-        </b-dropdown-item>
+      <b-col class="col-10">
+        <b-table show-empty :busy="loading" :items="muestrasFiltradas" :fields="fields" :per-page="perPage"
+          :current-page="currentPage">
 
-        <b-dropdown-item @click="Descargar(row)" v-if="opcion.text === 'Descargar Informe'" :key="opcion.value">
-          <b-icon icon="file-earmark-pdf-fill" aria-hidden="true" class="mr-2"></b-icon>Descargar Informe
-        </b-dropdown-item>       
+          <template #empty>
+            <div class="text-center lsa-light-blue-text my-2 row">
+              <div class="col">
+                <div style=" color:gray"> No hay muestras registradas para mostrar</div>
+              </div>
 
-        <b-dropdown-item @click="Ingresar(row)" v-if="opcion.text === 'Ingresar resultados de análisis'" :key="opcion.value">
-          <b-icon icon="file-earmark-font" aria-hidden="true" class="mr-2"></b-icon>Ingresar Resultados de Análisis           
-        </b-dropdown-item>
+            </div>
+          </template>
+          <template #table-busy>
+            <div class="text-center lsa-orange-text my-2">
+              <b-spinner class="align-middle"></b-spinner>
+              <strong> Cargando...</strong>
+            </div>
+          </template>
 
-        <b-dropdown-item @click="AdministrarCartas(row)" v-if="opcion.text === 'Administrar cartas de control'" :key="opcion.value">
-          <b-icon icon="markdown" aria-hidden="true" class="mr-2"></b-icon> Administrar Cartas de Control          
-        </b-dropdown-item>
+          <template #cell(solicitante)="row">
 
-        <b-dropdown-item @click="RehacerAnalisis(row)" v-if="opcion.text === 'Rehacer Análisis'" :key="opcion.value">
-          <b-icon icon="journal-minus" aria-hidden="true" class="mr-2"></b-icon> Rehacer Análisis           
-        </b-dropdown-item>        
+            <span>{{ row.item.solicitante[0].nombre + " " + row.item.solicitante[0].primer_apellido }}</span>
+          </template>
+          <template #cell(matriz)="row">
 
-        <b-dropdown-item @click="MarcarAnalisis(row)" v-if="opcion.text === 'Marcar Analisis como completado'" :key="opcion.value">
-          <b-icon icon="clipboard-check" aria-hidden="true" class="mr-2"></b-icon> Marcar Análisis como Completado         
-        </b-dropdown-item>  
+            <span>{{ row.item.matriz[0].nombre_matriz }}</span>
+          </template>
 
-      </b-dropdown-item>
-    </b-dropdown>
-  </template>
-</b-table>   
-<b-pagination v-model="currentPage" :total-rows="rows" :per-page="perPage" align="right"></b-pagination>
+          <template #cell(prioridad)="row">
 
-</div>
-</div>
+            <span v-if="row.item.prioridad == 'Normal'"
+              style="text-transform:uppercase; color:green; font-weight: bold;">Normal</span>
+            <span v-if="row.item.prioridad == 'Alta'"
+              style="text-transform:uppercase; color:red; font-weight: bold;">Alta</span>
+            <span v-if="row.item.prioridad == 'Urgente'"
+              style="text-transform:uppercase; color:rebeccapurple; font-weight: bold;">Urgente</span>
+          </template>
 
+          <template #cell(accion)="row">
 
+            <b-dropdown right size="sm" variant="link" toggle-class="text-decoration-none" no-caret>
+              <template #button-content>
+                <b-icon style="height: 80%; width: 80%; align-items: center;" icon="three-dots" variant="dark"
+                  aria-hidden="true"></b-icon>
+              </template>
+
+              <b-dropdown-item @click="abrirDetallesMuestra(row.item)">
+                <b-icon icon="file-earmark-medical" aria-hidden="true" class="mr-2"></b-icon>Ver detalles
+
+              </b-dropdown-item>
+              <b-dropdown-item @click="MostrarObservaciones(row.item)">
+                <b-icon icon="check2-square" aria-hidden="true" class="mr-2"></b-icon>Observaciones
+              </b-dropdown-item>
+              <b-dropdown-item v-if="row.item.estado != 'Finalizado' " @click="abrirCompletarTarea(row.item)">
+                <b-icon icon="file-earmark-arrow-down" aria-hidden="true" class="mr-2"></b-icon>Marcar tarea como completado
+              </b-dropdown-item>
+
+            </b-dropdown>
+          </template>
+
+          <template #custom-foot>
+            <b-tr>
+              <b-th colspan="9" style="background-color:rgb(235, 235, 235); border-radius:0px 0px 20px 20px; padding:1px"
+                v-if="filtrando">
+                <div>
+                  <b-icon icon="filter" animation="fade" variant="secondary" scale="0.8"></b-icon>
+                  <div style="font-weight:bold; color:gray"> Resultados filtrados</div>
+                </div>
+              </b-th>
+            </b-tr>
+          </template>
+        </b-table>
+        <b-pagination v-model="currentPage" :total-rows="rows" :per-page="perPage" align="right"></b-pagination>
+
+      </b-col>
+
+    </b-row>
 
   </div>
 </template>
-
+  
 <script>
+import ModalObservaciones from '@/components/admMuestras-quimicos/modal_observacionesMuestra-quimico.vue';
 
-
-import ModalObservaciones from '../ModalObservaciones.vue'
-import MuestraService from '@/helpers/api-services/Muestra.Service';
-import ModalDetalleMuestra from '@/components/admMuestras/modal_detallesMuestra.vue';
-import modal_analistaDesignado from '@/components/admMuestras/modal_analistaDesignado.vue';
-import modal_rehacerAnalisis from '@/components/admMuestras/modal_rehacerAnalisis.vue';
-
+import MuestraQuimicoService from '@/helpers/api-services/Muestra-quimicos.service';
+import ModalCompletarTarea from '@/components/admMuestras-quimicos/modal_completarTarea-quimico.vue';
+import ModalDetalleMuestra from '@/components/admMuestras-quimicos/modal_detallesMuestra-quimico.vue';
 export default {
   data() {
     return {
-      
-      RUM: '',     
+
+      RUM: '',
       obtenerObservaciones: this.obtenerObservaciones,
-      modalData: {},     
+      modalData: {},
       observaciones: '',
       currentPage: 1,
-      perPage: 10,     
-      items: [],      
-      opcionesEstado: [
-      
-        { text: 'Recepcionado', value: 'Recepcionado' },
-        { text: 'En Análisis', value: 'En Análisis' },
-        { text: 'Finalizado', value: 'Finalizado' },      
+      perPage: 10,
+      prioridadFiltro: null,
+      estadoFiltro: null,
+      rumFiltro: "",
+      filtrando: false,
+      loading: false,
+      muestrasFiltradas: [],
+      muestras: [],
+      opcionesEstado: [{
+        text: 'Recepcionado',
+        value: 'Recepcionado'
+      },
+      {
+        text: 'En análisis',
+        value: 'En análisis'
+      },
+      {
+        text: 'Finalizado',
+        value: 'Finalizado'
+      },
       ],
-      fields: [
-        { key: 'RUM', label: 'RUM' },
-        //{ key: 'matriz', label: 'Matriz' },
-        //{ key: 'nombre_norma', label: 'Norma' },
-        { key: 'Parámetro(s)', label: 'Parametros(s)' },
-        { key: 'Metodología', label: 'Metodología' },
-        //{ key: 'fecha_ingreso', label: 'Fecha ingreso' },
-        //{ key: 'fecha_entrega', label: 'Fecha Entrega' },
-        //{ key: 'hora_ingreso', label: 'Hora Ingreso' },
-        { key: 'Dias', label: 'Días Transcurridos',},
-        { key: 'prioridad', label: 'Prioridad'},
-        { key: 'estado', label: 'Estado' },
-        { key: 'Acción', label: 'Acción' }, 
-      ],         
+      fields: [{
+        key: 'RUM',
+        label: 'RUM'
+      },
+      {
+        key: 'fecha_entrega',
+        label: 'Fecha entrega',
+        sortable: true
+      },
+      {
+        key: 'matriz',
+        label: 'Matriz',
+        sortable: true
+      },
+      {
+        key: 'estado',
+        label: 'Estado',
+        sortable: true
+      },
+      {
+        key: 'prioridad',
+        label: 'Prioridad',
+        sortable: true
+      },
+      {
+        key: 'accion',
+        label: 'Acción'
+      }
+      ],
       prioridades: ['Normal', 'Alta', 'Urgente'],
-      estados: ['Recepcionado', 'En Análisis', 'Finalizado'],
+      estadosOpciones: [{
+        value: null,
+        text: 'Seleccione un estado',
+        disabled: true
+      },
+      {
+        value: 'Recepcionado',
+        text: 'Recepcionado'
+      },
+      {
+        value: 'En Análisis',
+        text: 'En Análisis'
+      },
+      {
+        value: 'Finalizado',
+        text: 'Finalizado'
+      },
+      {
+        value: null,
+        text: '---'
+      }
+      ],
+      prioridadOpciones: [{
+        value: null,
+        text: 'Seleccione una prioridad',
+        disabled: true
+      },
+      {
+        value: 'Normal',
+        text: 'Normal'
+      },
+      {
+        value: 'Alta',
+        text: 'Alta'
+      },
+      {
+        value: 'Urgente',
+        text: 'Urgente'
+      },
+      {
+        value: null,
+        text: '---'
+      }
+      ],
       prioridad: '',
-      detallesData: {}         
-     }
+      detallesData: {},
+      observacionesData: {},
+      muestraData: {}
+    }
   },
   computed: {
-      rows() {
-        return this.items.length
-      }
-    },
+    rows() {
+      return this.muestrasFiltradas.length
+    }
+  },
 
   components: {
     ModalObservaciones,
     ModalDetalleMuestra,
-    modal_analistaDesignado,
-    modal_rehacerAnalisis
-},
-  methods: {    
-  obtenerMuestras() {
-    console.log("Obteniendo Muestras: ")     
-      MuestraService.obtenerMuestras().then((response)=>{
+    ModalCompletarTarea
+  },
+  methods: {
+    borrarFiltro() {
+      this.estadoFiltro = null;
+      this.prioridadFiltro = null;
+
+      this.rumFiltro = "";
+      this.filtrarTabla();
+    },
+    filtrarTabla() {
+
+      let estado_filtro = this.estadoFiltro;
+      let prioridad_filtro = this.prioridadFiltro;
+      this.muestrasFiltradas = this.muestras;
+      if (estado_filtro != null) {
+        this.muestrasFiltradas = this.muestrasFiltradas.filter(muestra => muestra.estado == estado_filtro);
+      }
+      if (prioridad_filtro != null) {
+        this.muestrasFiltradas = this.muestrasFiltradas.filter(muestra => muestra.prioridad.toLowerCase().includes(prioridad_filtro.toLowerCase()));
+      }
+      if (this.rumFiltro) {
+        this.muestrasFiltradas = this.muestrasFiltradas.filter(muestra => muestra.RUM == this.rumFiltro);
+      }
+
+      if (this.rumFiltro == "" && estado_filtro == null && prioridad_filtro == null) {
+        this.muestrasFiltradas = this.muestras;
+        this.filtrando = false;
+        return;
+      } else {
+        this.filtrando = true;
+      }
+    },
+    obtenerMuestras() {
+      this.loading = true;
+      console.log("Obteniendo Muestras: ")
+      MuestraQuimicoService.obtenerMuestras().then((response) => {
         if (response.data != null && response.status === 200) {
-        this.items = response.data
+          this.muestras = response.data
+          this.muestrasFiltradas = this.muestras;
+          console.log("muestras!!",this.muestrasFiltradas)
+          this.loading = false;
         }
-        })             
-    },   
-
-    generarOpcionesEstado(estado) {
-  switch (estado) {
-    case 'Recepcionado':
-      return [               
-        { text: 'Observaciones', value: 'observaciones' },        
-        { text: 'Ingresar muestra a lab.', value: 'Ingresar muestra a lab.' }
-      ];
-    case 'En Análisis':
-      return [
-        { text: 'Detalle muestra', value: 'Detalle Muestra' },
-        { text: 'Observaciones', value: 'Observaciones' },
-        { text: 'Analista Designado', value: 'Analista Designado' },
-        { text: 'Marcar Analisis como completado', value: 'marcar_completado' },
-        { text: 'Ingresar resultados de análisis', value: 'Ingresar resultados de análisis' },
-        { text: 'Descargar Informe', value: 'Descargar Informe' },
-        { text: 'Administrar cartas de control', value: 'Administrar cartas de control' },
-      ];
-    case 'Finalizado':
-      return [        
-        { text: 'Detalle muestra', value: 'Detalle Muestra' },
-        { text: 'Observaciones', value: 'observaciones' },
-        { text: 'Analista Designado', value: 'Analista Designado' },
-        { text: 'Descargar Informe', value: 'Descargar Informe' },
-        { text: 'Rehacer Análisis', value: 'Rehacer Análisis' }
-      ];
-    default:
-      return [
-        { text: 'Seleccionar opción', value: '' } // Opción en blanco
-      ];
-  }
-},
-
-  onModalCerrado() {
-      this.showModal = false   
+      })
     },
 
-  MostrarObservaciones(row) {  
-  this.RUM = row.item.RUM;     
-  MuestraService.obtenerObservaciones(this.RUM).then((response)=>{    
-    console.log(response); 
-    if (response.data != null){
-      console.log(response.data);         
-      this.modalData = response.data[0]        
-      this.$bvModal.show('modal-observaciones');
-    }
-  }); 
-},
+    generarOpcionesEstado(estado) {
+      switch (estado) {
+        case 'Recepcionado':
+          return [{
+            text: 'Detalle muestra',
+            value: 'Detalle Muestra'
+          },
+          {
+            text: 'Observaciones',
+            value: 'Observaciones'
+          },
+          {
+            text: 'Descargar Informe',
+            value: 'Descargar Informe'
+          },
+          ];
+        case 'En Análisis':
+          return [{
+            text: 'Detalle muestra',
+            value: 'Detalle Muestra'
+          },
+          {
+            text: 'Observaciones',
+            value: 'Observaciones'
+          },
+          {
+            text: 'Descargar Informe',
+            value: 'Descargar Informe'
+          },
+          ];
+        case 'Finalizado':
+          return [{
+            text: 'Detalle muestra',
+            value: 'Detalle Muestra'
+          },
+          {
+            text: 'Observaciones',
+            value: 'observaciones'
+          },
+          {
+            text: 'Descargar Informe',
+            value: 'Descargar Informe'
+          },
+          ];
+        default:
+          return [{
+            text: 'Seleccionar opción',
+            value: ''
+          } // Opción en blanco
+          ];
+      }
+    },
 
-MostrarFonos(row){
-  this.RUM = row.item.RUM;
-  MuestraService.obtenerFonos(this.RUM).then((response)=>{
-    console.log(response)
-  })
-},
+    onModalCerrado() {
+      this.showModal = false
+    },
 
-IngresarMuestraLab(row){
-  this.RUM = row.item.RUM;
-  console.log('el rum es: '+ this.RUM)
-  this.$router.push(`/IngMuesLab?RUM=${this.RUM}`);
+
+
+
+    MostrarObservaciones(data) {
+      console.log(data)
+      this.observacionesData = data;
+      this.$bvModal.show('modal-observaciones-muestra-quimico');
+    },
+
+    abrirDetallesMuestra(data) {
+      console.log(data)
+      this.detallesData = data;
+      this.$bvModal.show('modal-detalle-muestra-quimico');
+    },
+    abrirCompletarTarea(data) {
+      console.log(data)
+      this.muestraData = data;
+      this.$bvModal.show('modal-completar-tarea-quimico');
+    },
+
   
-},
+    Descargar() {
+      // Aquí pones la lógica para mostrar los detalles de la muestra seleccionada
+      window.location.href = "https://www.youtube.com";
+    },
 
-MarcarAnalisis(row){
-  this.RUM = row.item.RUM;
-  console.log('El Rum es: ' + this.RUM)
-  MuestraService.completarMuestra(this.RUM)
+    Ingresar() {
+      // Aquí pones la lógica para mostrar los detalles de la muestra seleccionada
+      window.location.href = "https://www.youtube.com";
+    },
+    AdministrarCartas() {
+      window.location.href = "https://www.youtube.com";
+    },
 
-},
-
-RehacerAnalisis(row){
-  this.RUM = row.item.RUM;
-  console.log('El Rum es: ' + this.RUM)  
-  this.$bvModal.show('modal-rehacer-analisis');
-},
-
-DetalleMuestra(row) {
-  this.RUM = row.item.RUM;
-  console.log('El Rum es: ' + this.RUM)
-  MuestraService.obtenerDatosMuestra(this.RUM).then((response)=>{    
-    console.log(response); 
-    if (response.data != null){
-      console.log( response.data);           
-      this.detallesData = response.data        
-      this.$bvModal.show('modal-detalle-muestra');
-    }
-  });  
-},
-
-Analista(row) {
-  this.RUM = row.item.RUM;
-  console.log('El Rum es: ' + this.RUM)
-  this.$bvModal.show('modal-analista-designado');
-},
-
-Descargar() {
-    // Aquí pones la lógica para mostrar los detalles de la muestra seleccionada
-    window.location.href = "https://www.youtube.com";
-},
-
-Ingresar() {
-    // Aquí pones la lógica para mostrar los detalles de la muestra seleccionada
-    window.location.href = "https://www.youtube.com";
-},
-AdministrarCartas(){
-  window.location.href = "https://www.youtube.com";
- },
- 
-},  
-mounted() {
-    this.obtenerMuestras();       
+  },
+  mounted() {
+    this.obtenerMuestras();
   }
 }
 </script>
+  

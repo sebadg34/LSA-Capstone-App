@@ -1,10 +1,13 @@
 <template>
-  <b-modal id="modal-observaciones-finanzas" :title="`Detalles de la muestra ${RUM}`" size="lg" @hidden="onHidden">
+  <b-modal id="modal-observaciones-muestra-finanzas" :title="`Observaciones de la muestra ${RUM}`" size="xl"
+    @hidden="onHidden">
+
+    <modalAgregarObservacion @refrescar="obtenerObservaciones(RUM)" :muestra-data="muestraData"/>
 
     <template #modal-header="{ close }">
       <!-- Emulate built in modal header close button action -->
       <b-row class="d-flex justify-content-around">
-        <div class="pl-3">Detalles de la muestra</div>
+        <div class="pl-3">Observaciones de la muestra</div>
       </b-row>
 
       <button type="button" class="close" aria-label="Close" @click="close()">
@@ -14,80 +17,73 @@
 
     <div class="p-3">
       <b-col class="col-12">
-
+<b-row  class="d-flex justify-content-between" style="padding:20px">
         <b-col class="col-3">
-        <b-row style="border: 1px solid var(--lsa-light-gray); padding:4px; border-radius:5px">
-              <b-col class="col-6" style="font-weight:bold; "> RUM: </b-col>
-              <b-col class="col-6">{{ RUM }}</b-col>
-            </b-row>
-          </b-col>
-<br/>
-        <b-row class="pb-2">
-          
-          <b-col class="col-6">
-           
-            <b-row style="border-bottom: 1px solid var(--lsa-light-gray); padding:3px">
-              <b-col class="col-7" style="font-weight:bold;"> Nombre solicitante: </b-col>
-              <b-col class="col-5">{{ nombre_solicitante }}</b-col>
-            </b-row>
-
-            <b-row style="border-bottom: 1px solid var(--lsa-light-gray); padding:3px">
-              <b-col class="col-7" style="font-weight:bold;"> Empresa: </b-col>
-              <b-col class="col-5">{{ nombre_empresa }}</b-col>
-            </b-row>
-
-            <b-row style="border-bottom: 1px solid var(--lsa-light-gray); padding:3px">
-              <b-col class="col-7" style="font-weight:bold;"> Ciudad empresa: </b-col>
-              <b-col class="col-5">{{ ciudad_empresa }}</b-col>
-            </b-row>
-
-            <b-row style="border-bottom: 1px solid var(--lsa-light-gray); padding:3px">
-              <b-col class="col-7" style="font-weight:bold;"> Dirección empresa: </b-col>
-              <b-col class="col-5">{{ direccion_empresa }}</b-col>
-            </b-row>
-           
-          </b-col>
-
-          <b-col class="col-6">
-            <b-row style="border-bottom: 1px solid var(--lsa-light-gray); padding:3px">
-              <b-col class="col-7" style="font-weight:bold;"> Número de muestras: </b-col>
-              <b-col class="col-5">{{ numero_muestras }}</b-col>
-            </b-row>
-            <b-row style="border-bottom: 1px solid var(--lsa-light-gray); padding:3px">
-              <b-col class="col-7" style="font-weight:bold;"> matriz: </b-col>
-              <b-col class="col-5">{{ matriz }}</b-col>
-            </b-row>
-            <b-row style="border-bottom: 1px solid var(--lsa-light-gray); padding:3px">
-              <b-col class="col-7" style="font-weight:bold;"> Norma: </b-col>
-              <b-col class="col-5">{{ norma }}</b-col>
-            </b-row>
-            <b-row style="border-bottom: 1px solid var(--lsa-light-gray); padding:3px">
-              <b-col class="col-7" style="font-weight:bold;"> Muestreado por: </b-col>
-              <b-col class="col-5">{{ muestreador }}</b-col>
-            </b-row>
-           
-
-          </b-col>
+          <b-row style="border: 1px solid var(--lsa-light-gray); padding:4px; border-radius:5px">
+            <b-col class="col-6" style="font-weight:bold; "> RUM: </b-col>
+            <b-col class="col-6">{{ RUM }}</b-col>
+          </b-row>
+        </b-col>
+        <b-button @click="abrirAgregarObservacion" pill style="border: none" class="lsa-orange reactive-button">
+                                Agregar
+                                <b-icon icon="pencil-square"></b-icon>
+                            </b-button>
+                          </b-row>
+        <br />
+        <b-row class="pb-2 pl-3">
+          Observaciones: 
         </b-row>
-<br/>
-    
-<br/>
-        <b-row style="border-bottom: 1px solid var(--lsa-light-gray);">
-              <b-col class="col-7" style="font-weight:bold;"> Fecha de entrega: </b-col>
-              <b-col class="col-5">{{ fecha_entrega }}</b-col>
-            </b-row>
-
-            <b-row style="border-bottom: 1px solid var(--lsa-light-gray);">
-              <b-col class="col-7" style="font-weight:bold;"> Tipo de pago: </b-col>
-              <b-col class="col-5">{{ tipo_pago }}</b-col>
-            </b-row>
-            <b-row style="border-bottom: 1px solid var(--lsa-light-gray);">
-              <b-col class="col-7" style="font-weight:bold;"> Valor neto: </b-col>
-              <b-col class="col-5">{{ valor_neto }}</b-col>
-            </b-row>
+       
+        <b-list-group horizontal style="font-weight: bold;" >
+          <b-list-group-item class="d-flex align-items-center justify-content-center" style="width:40%;padding-top:3px; padding-bottom:3px">Analista</b-list-group-item>
+          <b-list-group-item class="d-flex align-items-center justify-content-center" style="width:30%;padding-top:3px; padding-bottom:3px">Fecha ingreso</b-list-group-item>
+          <b-list-group-item class="d-flex align-items-center justify-content-center" style="width:30%;padding-top:3px; padding-bottom:3px">Hora ingreso</b-list-group-item>
+        </b-list-group>
+        <b-list-group>
+          <b-list-group-item v-if="cargandoObservaciones"
+            class="d-flex align-items-center justify-content-center lsa-orange-text" style="height:100px">
+            <div>
+              <b-spinner class="align-middle"></b-spinner>
+              <strong> Cargando...</strong>
+            </div>
+          </b-list-group-item>
+          <b-list-group-item v-for="(observacion,index) in this.observaciones" :key="index" horizontal class="mb-3" style="border: solid 2px var(--lsa-light-gray)">
+           <b-row style="border-bottom:1px solid var(--lsa-light-gray);margin-bottom:10px;" class="d-flex justify-content-around align-items-center">
+            <div class="d-flex align-items-center justify-content-center" style="width:40%;">
+              {{ observacion.nombre + " " + observacion.apellido }}
+            </div>
+            <div class="d-flex align-items-center justify-content-center"  style="width:30%;">
+              {{ observacion.fecha_observacion }}
+            </div>
+            <div class="d-flex align-items-center justify-content-center" style="width:30%;">
+              {{ observacion.hora_observacion }}
+            </div>
+           </b-row>
+           <b-row style=" min-height: 50px;" class="d-flex justify-content-center">
+            <b-col class="col-10">
+              <div>
+             <strong>Observación:</strong> {{  " " +  observacion.observaciones}}
+            </div>
+            </b-col>
+           
             
+           </b-row>
+         
+          </b-list-group-item>
+
+        </b-list-group>
+
+        <br />
+      
       </b-col>
+      <br />
+     
     </div>
+
+   
+    
+
+
 
     <template #modal-footer="{ close }">
       <b-button @click="close()" variant="primary" size="xl" class="float-right reactive-button" style="font-weight:bold">
@@ -98,38 +94,56 @@
 </template>
 
 <script>
-import MuestraGerenteService from '@/helpers/api-services/Muestra-gerente.service';
-
+import MuestraFinanzasService from '@/helpers/api-services/Muestra-finanzas.service';
+import modalAgregarObservacion from '@/components/admMuestras-finanzas/modal_agregarObservacion-finanzas.vue';
 export default {
+  components: {
+    modalAgregarObservacion
+  },
   props: {
-    muestraData: Object
+    detallesData: Object
   },
   data() {
     return {
 
       RUM: '',
+      loading: false,
+      cargandoObservaciones: false,
+      observaciones: [],
+      muestraData: {}
 
     }
   },
   methods: {
+    abrirAgregarObservacion(){
+      this.muestraData = {
+        RUM: this.RUM
+      }
+      this.$bvModal.show('modal-agregar-observacion-finanzas');
+    },
     obtenerObservaciones(rum) {
-      MuestraGerenteService.obtenerObservaciones(rum).then((response) => {
-        console.log(response)
+      this.observaciones = [];
+      this.cargandoObservaciones = true;
+      MuestraFinanzasService.obtenerObservaciones(rum).then((response) => {
         if (response != null) {
           if (response.status == 200 && response.data != null) {
-           // const detalles = response.data;
-            console.log('detalles de muestra', response.data);
-          }
+            const observacionesData = response.data;
 
-        } else {
-          this.$bvToast.toast(`Error al obtener detalles de muestra`, {
-            title: 'Error',
-            toaster: 'b-toaster-top-center',
-            solid: true,
-            variant: "warning",
-            appendToast: true
-          })
-          this.cargandoDirecciones = false;
+
+            this.observaciones = observacionesData;
+            this.cargandoObservaciones = false;
+
+
+          } else {
+            this.$bvToast.toast(`Error al obtener observaciones de muestra`, {
+              title: 'Error',
+              toaster: 'b-toaster-top-center',
+              solid: true,
+              variant: "warning",
+              appendToast: true
+            })
+            this.cargandoObservaciones = false;
+          }
         }
       })
     },
@@ -138,11 +152,12 @@ export default {
     }
   },
   watch: {
-    muestraData: {
+    detallesData: {
       handler() {
-        console.log("detallesData actualizada", this.muestraData)
+       
+       
+        this.RUM = this.detallesData.RUM;
 
-        this.RUM = this.muestraData.RUM;
         this.obtenerObservaciones(this.RUM);
       }
     }

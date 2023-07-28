@@ -3,7 +3,7 @@
 <b-modal id="modal-Editar-Metodologia" ref="modal" :title="`Editar Metodologia`" size="lg">
     <template #modal-header="{ close }">
         <b-row class="d-flex justify-content-around">
-            <div class="pl-3">Editar Metodología</div>
+            <div class="pl-3">Editar metodología</div>
         </b-row>
         <button type="button" class="close" aria-label="Close" @click="close()">
             <span aria-hidden="true" style="color:white">&times;</span>
@@ -12,14 +12,14 @@
 
     <ValidationProvider name="nombre de la metodología" rules="required" v-slot="validationContext">
       <label for="input-live">Nombre de la metodología:</label>
-      <b-form-input id="input-live" v-model="Nombre" :state="getValidationState(validationContext)" placeholder="Ingrese nombre de la metodología" ></b-form-input>
+      <b-form-input id="input-live" v-model="Nombre" :state="getValidationState(validationContext)" placeholder="Ingrese nombre de la metodología." ></b-form-input>
       <b-form-invalid-feedback>{{ validationContext.errors[0] }}</b-form-invalid-feedback>
     </ValidationProvider>
 <br/>
     <ValidationProvider name="descripción" rules="max:512" v-slot="validationContext">
-      <label for="input-live">Descripción:</label>
+      <label for="input-live">Descripción de la metodología:</label>
       <b-form-textarea  rows="3"
-       id="input-live" v-model="Descripción" :state="getValidationState(validationContext)" placeholder="ingrese descripción (opcional)" ></b-form-textarea>
+       id="input-live" v-model="Descripción" :state="getValidationState(validationContext)" placeholder="Ingrese descripción (opcional)." ></b-form-textarea>
       <b-form-invalid-feedback>{{ validationContext.errors[0] }}</b-form-invalid-feedback>
     </ValidationProvider>  
     <br/>
@@ -33,9 +33,9 @@
 
     <b-row v-if="analistas_ya_seleccionados.length > 0" class="mt-3">
         <b-col>
-            <b-form-group label="Analistas seleccionados">
+            <b-form-group label="Analista(s) seleccionado(s)">
                 <div v-for="(analista, index) in analistas_ya_seleccionados" :key="index" class="d-flex align-items-center analista-item">
-                    <b-input readonly :value="analista.nombre"></b-input>
+                    <b-input readonly :value="analista.nombre + ' ' + analista.apellido"></b-input>
                     <b-button variant="danger" @click="eliminarAnalistaSeleccionado(index)" class="ml-2">
                         <b-icon-trash-fill></b-icon-trash-fill>
                     </b-button>
@@ -51,8 +51,8 @@
    
 
     <template #modal-footer>
-  <b-button @click="ActualizarMetodologia()" variant="primary" size="xl" class="reactive-button" style="font-weight:bold">
-            Editar y guardar Metodología
+        <b-button @click="ActualizarMetodologia()" variant="primary" size="xl" class="reactive-button" style="font-weight:bold">
+            Guardar cambios
         </b-button>
     </template>
 </b-modal>
@@ -124,10 +124,10 @@ export default {
                         this.rutEmpleados = this.analistas.map((analista) => analista.rut_empleado);
 
                         this.opcionesAnalista = this.analistas.filter((analista) => {
-                            return analista.rol === 'Analista Químico' || analista.rol === 'Químico';
+                            return analista.rol === 'Analista Químico' || analista.rol === 'Químico' || analista.rol == 'Supervisor(a)';
                         }).map((analista) => ({
                             value: analista,
-                            text: analista.nombre,
+                            text:  (analista.nombre + " "+ analista.apellido),
                         }));
                     }
                 })
@@ -169,6 +169,7 @@ export default {
 
                     this.analistas_ya_seleccionados.push({
                         nombre: value.nombre,
+                        apellido: value.apellido,
                         rut_empleado: value.rut_empleado
                     });
 
@@ -192,7 +193,7 @@ export default {
             ElementosService.actualizarMetodologia(data).then((response) => {
                 if (response != null) {
                     if (response.status == 200) {
-                        this.$bvToast.toast(`La metodología ha sido editada exitosamente`, {
+                        this.$bvToast.toast(`La metodología ha sido editada exitosamente.`, {
                             title: 'Éxito',
                             toaster: 'b-toaster-top-center',
                             solid: true,

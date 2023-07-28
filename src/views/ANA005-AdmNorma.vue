@@ -3,7 +3,7 @@
     <b-row style="padding-top:30px; ">
         <b-col class="col-6">
             <div style="font-size:2rem; font-weight: bold; color: var(--lsa-blue)">
-                Administración de Normas
+                Administración de normas
             </div>
         </b-col>
     </b-row>
@@ -17,7 +17,7 @@
                 <b-col class="col-4">
                     <b-row>
                         <b-button v-b-modal.modal-agregar-norma style="border-radius: 15px; font-weight: bold; font-size: 18px; " class="lsa-light-blue reactive-button">
-                            Agregar Norma
+                            Agregar norma
                             <b-icon icon="journals"></b-icon>
                         </b-button>
                     </b-row>
@@ -59,7 +59,7 @@
                     <div class="text-center lsa-light-blue-text my-2 row">
                         <div class="col">
 
-                            <div style=" color:gray"> No hay normas registradas para mostrar</div>
+                            <div style=" color:gray"> No hay normas registradas para mostrar.</div>
                         </div>
 
                     </div>
@@ -141,9 +141,10 @@ export default {
 
             fields: [{
                     key: 'nombre_norma',
-                    label: 'Nombre',
+                    label: 'Nombre de la norma',
                     thClass: 'text-center',
-                    tdClass: 'text-center'
+                    tdClass: 'text-center',
+                    sortable: true
                 },
                 {
                     key: 'matrices_norma',

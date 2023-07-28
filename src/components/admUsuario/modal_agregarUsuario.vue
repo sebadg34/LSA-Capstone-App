@@ -6,7 +6,7 @@
                 <!-- Emulate built in modal header close button action -->
 
                 <b-row class="d-flex justify-content-around">
-                    <div class="pl-3">Agregar Usuario</div>
+                    <div class="pl-3">Agregar usuario</div>
 
                 </b-row>
 
@@ -32,7 +32,7 @@
                     </ValidationProvider>
 
                     <ValidationProvider name="de apellidos" rules="required" v-slot="validationContext">
-                        <label for="input-live">Apellido:</label>
+                        <label for="input-live">Apellidos:</label>
                         <b-form-input size="sm" class="mb-1" id="apellido-input" v-model="Apellidos"
                             :state="getValidationState(validationContext)"
                             aria-describedby="input-live-help apellido-live-feedback" placeholder="" trim></b-form-input>
@@ -42,8 +42,8 @@
                     </ValidationProvider>
 
                     
-                    <ValidationProvider name="correo" rules="required|email" v-slot="validationContext">
-                        <label for="input-live">Correo:</label>
+                    <ValidationProvider name="correo electrónico" rules="required|email" v-slot="validationContext">
+                        <label for="input-live">Correo electrónico:</label>
                         <b-form-input size="sm" class="mb-1" id="input-live" :state="getValidationState(validationContext)"
                             v-model="Correo" aria-describedby="input-live-help correo-live-feedback" placeholder=""
                             trim></b-form-input>
@@ -96,7 +96,7 @@
 
                     <b-button @click="enviarFormulario()" variant="primary" size="xl" class="float-right reactive-button"
                         style="font-weight:bold">
-                        Crear y Guardar
+                        Crear y guardar
                     </b-button>
                 </b-overlay>
             </template>

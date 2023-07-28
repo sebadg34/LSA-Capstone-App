@@ -28,9 +28,9 @@
                                 <b-input-group-prepend is-text>
                                     <b-icon icon="search"></b-icon>
                                 </b-input-group-prepend>
-                                <b-form-input placeholder="Nombre usuario..." id="nombre-filtro" v-model="nombreFiltro">
+                                <b-form-input placeholder="Nombre del usuario..." id="nombre-filtro" v-model="nombreFiltro">
                                 </b-form-input>
-                                <b-form-input placeholder="Rut usuario..." id="rut-filtro" v-model="rutFiltro" trim></b-form-input>
+                                <b-form-input placeholder="RUT del usuario..." id="rut-filtro" v-model="rutFiltro" trim></b-form-input>
                                 <b-form-select placeholder="Cargo" v-model="cargoFiltro" id="cargo-filtro" :options="cargoOpciones">
                                 </b-form-select>
                                 <b-button-group style="margin-left:10px">
@@ -70,7 +70,7 @@
                     <div class="text-center lsa-light-blue-text my-2 row">
                         <div class="col">
 
-                            <div style=" color:gray"> No hay personal registrado para mostrar</div>
+                            <div style=" color:gray"> No hay personal registrado para mostrar.</div>
                         </div>
 
                     </div>
@@ -80,7 +80,7 @@
                     <div class="text-center lsa-light-blue-text my-2 row">
                         <div class="col">
                             <b-icon icon="search" animation="fade" variant="secondary"></b-icon>
-                            <div style="font-weight:bold; color:gray"> No hay resultados que coincidan con su búsqueda</div>
+                            <div style="font-weight:bold; color:gray"> No hay resultados que coincidan con su búsqueda.</div>
                         </div>
 
                     </div>
@@ -119,7 +119,7 @@
 
                         </b-dropdown-item>
                         <b-dropdown-item @click="abrirEditarFechas(row.item)">
-                            <b-icon icon="pencil" aria-hidden="true" class="mr-2"></b-icon>Modifcar fechas
+                            <b-icon icon="pencil" aria-hidden="true" class="mr-2"></b-icon>Modificar fechas
                         </b-dropdown-item>
                         <b-dropdown-item @click="abrirEditarDiasDisponibles(row.item)">
                             <b-icon icon="person-check" aria-hidden="true" class="mr-2"></b-icon>Modificar días disponibles
@@ -179,7 +179,7 @@ export default {
             cargoFiltro: null,
             cargoOpciones: [{
                     value: null,
-                    text: 'Seleccione cargo',
+                    text: 'Seleccione un cargo',
                     disabled: true
                 },
                 {
@@ -221,7 +221,7 @@ export default {
             modalFechasData: {},
             campos_tabla: [{
                     key: 'rut_empleado',
-                    label: 'Rut'
+                    label: 'RUT'
                 }, {
                     key: 'nombre',
                     label: 'Nombre',

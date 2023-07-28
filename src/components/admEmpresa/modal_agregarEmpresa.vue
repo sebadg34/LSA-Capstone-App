@@ -6,7 +6,7 @@
             <!-- Emulate built in modal header close button action -->
 
             <b-row class="d-flex justify-content-around">
-                <div class="pl-3">Agregar Cliente</div>
+                <div class="pl-3">Agregar cliente</div>
 
             </b-row>
 
@@ -17,8 +17,8 @@
 
         <b-row class="pb-2">
             <b-col class="col-6">
-                <label for="input-live">Nombre empresa:</label>
-                <ValidationProvider name="nombre" rules="required|min:2" v-slot="validationContext">
+                <label for="input-live">Nombre del cliente:</label>
+                <ValidationProvider name="nombre del cliente" rules="required|min:2" v-slot="validationContext">
 
                     <b-form-input size="sm" class="mb-1" v-model="Nombre" :state="getValidationState(validationContext)" aria-describedby="rut-live-feedback" trim></b-form-input>
 
@@ -27,7 +27,7 @@
                     </b-form-invalid-feedback>
                 </ValidationProvider>
 
-                <ValidationProvider name="nombre_abreviado" rules="required" v-slot="validationContext">
+                <ValidationProvider name="nombre abreviado" rules="required" v-slot="validationContext">
                     <label for="input-live">Nombre abreviado:</label>
                     <b-form-input size="sm" class="mb-1" id="apellido-input" v-model="Nombre_abreviado" :state="getValidationState(validationContext)" aria-describedby="input-live-help apellido-live-feedback" placeholder="" trim></b-form-input>
                     <b-form-invalid-feedback id="nombre_abreviado-live-feedback">{{
@@ -35,7 +35,7 @@
                     </b-form-invalid-feedback>
                 </ValidationProvider>
                 <label for="input-live">Correo electrónico:</label>
-                <ValidationProvider name="correo" rules="required" v-slot="validationContext">
+                <ValidationProvider name="correo electrónico" rules="required" v-slot="validationContext">
                     <b-overlay :show="Revisando_correo && validationContext.errors[0] == null" rounded opacity="0.6" spinner-small spinner-variant="primary">
                         <b-form-input @blur.native="revisarCorreoEmpresa" size="sm" class="mb-1" id="input-live" :state="getValidationState(validationContext)" v-model="Correo" aria-describedby="input-live-help nombre-live-feedback" placeholder="" trim></b-form-input>
                         <b-form-invalid-feedback id="correo-live-feedback">{{
@@ -47,9 +47,9 @@
             </b-col>
             <b-col class="col-6">
 
-                <ValidationProvider name="rut" rules="required|rut|rutSinPuntoGuion" v-slot="validationContext">
+                <ValidationProvider name="RUT" rules="required|rut|rutSinPuntoGuion" v-slot="validationContext">
 
-                    <label for="input-live">Rut:</label>
+                    <label for="input-live">RUT:</label>
                     <!--Mostrar estado cargando solo si se esta revisando rut y no hay errores de validacion (rut valido)-->
                     <b-overlay :show="Revisando_rut && validationContext.errors[0] == null" rounded opacity="0.6" spinner-small spinner-variant="primary">
                         <b-form-input size="sm" @blur.native="revisarRutEmpresa" class="mb-1" id="rut_empresa" :state="getValidationState(validationContext)" v-model="Rut" aria-describedby="input-live-help nombre-live-feedback" placeholder="" trim></b-form-input>
@@ -127,7 +127,7 @@
             <b-overlay :show="Cargando" rounded opacity="0.6" spinner-small spinner-variant="primary" class="d-inline-block">
 
                 <b-button @click="enviarFormulario()" variant="primary" size="xl" class="float-right reactive-button" style="font-weight:bold">
-                    Crear y Guardar
+                    Crear y guardar
                 </b-button>
             </b-overlay>
         </template>
@@ -286,7 +286,7 @@ export default {
                         this.Cargando = false;
                         if (response != null) {
                             if (response.status == 200) {
-                                this.$bvToast.toast(`Creación de cliente exitosa`, {
+                                this.$bvToast.toast(`Creación de cliente exitosa.`, {
                                     title: 'Exito',
                                     toaster: 'b-toaster-top-center',
                                     solid: true,
@@ -300,7 +300,7 @@ export default {
                             this.$refs.form.reset();
 
                         } else {
-                            this.$bvToast.toast(`Error al registrar cliente`, {
+                            this.$bvToast.toast(`Error al registrar cliente.`, {
                                 title: 'Error',
                                 toaster: 'b-toaster-top-center',
                                 solid: true,

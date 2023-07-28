@@ -14,18 +14,18 @@
         <b-row class="pb-2">
             <b-col class="col-12">
                 <div>
-                    <span style="font-weight:bold; padding-right:20px"> Nombre matriz: </span> <span>{{ Nombre }}</span>
+                    <span style="font-weight:bold; padding-right:20px"> Nombre de la matriz: </span> <span>{{ Nombre }}</span>
                 </div>
                 <hr />
                 <div class="pb-2">
-                    Parámetro(s) asignado(s):
+                    Parárametro(s) y metodología(s) asignadas:
 
                 </div>
 
                 <b-list-group horizontal>
-                    <b-list-group-item class="d-flex align-items-center justify-content-center" style="width:30%;font-weight: bold;">Parámetros</b-list-group-item>
+                    <b-list-group-item class="d-flex align-items-center justify-content-center" style="width:30%;font-weight: bold;">Parámetro(s)</b-list-group-item>
 
-                    <b-list-group-item class="d-flex align-items-center justify-content-center" style="width:70%;font-weight: bold;">Metodologías</b-list-group-item>
+                    <b-list-group-item class="d-flex align-items-center justify-content-center" style="width:70%;font-weight: bold;">Metodología(s)</b-list-group-item>
 
                 </b-list-group>
                 <b-list-group>
