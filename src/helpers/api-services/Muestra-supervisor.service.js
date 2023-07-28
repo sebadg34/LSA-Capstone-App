@@ -209,7 +209,7 @@ const marcarTareaComoCompletada = async (RUM) => {
  const modificarAnalistas = async (data) => {
     try {
      const instanciaApi = await crearApi();
-     const response = await instanciaApi.get("/muestras-supervisor/modificar_Analistas", data);
+     const response = await instanciaApi.put("/muestras-supervisor/modificar_Analistas", data);
              console.log(response);
          if(response.status == 200){
              return response;

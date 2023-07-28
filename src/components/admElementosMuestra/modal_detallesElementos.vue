@@ -50,7 +50,7 @@
                           <span> {{ metodo.nombre_metodologia }}</span>
 
                           <b-popover placement="lefttop"
-                            :target="'button-' + metodo.id_metodologia + '-' + metodo.id_parametro"
+                            :target="'button-' + metodo.id_metodologia + '-' + parametro.id_parametro"
                             title="Descripción metodología" triggers="focus">
 
                             <template v-if="metodo.detalle_metodologia != null">{{ metodo.detalle_metodologia
@@ -60,7 +60,7 @@
                             </template>
                           </b-popover>
                           <b-button class="boton-ojo-metodo"
-                            :id="'button-' + metodo.id_metodologia + '-' + metodo.id_parametro">
+                            :id="'button-' + metodo.id_metodologia + '-' + parametro.id_parametro">
                             <b-icon scale="0.9" icon="eye-fill" style="color:gray"></b-icon>
                           </b-button>
 

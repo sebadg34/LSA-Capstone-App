@@ -37,7 +37,10 @@
               <b-list-group-item class="d-flex justify-content-between align-items-center p-2" v-for="metodologia in listaMetodologias" :key="metodologia.id_metodologia">
                 {{ metodologia.nombre_metodologia }}
                 <b-popover placement="topleft" :target="'button-' +metodologia.id_metodologia" title="Descripción metodología" triggers="focus">
-                                        {{ metodologia.detalle_metodologia }}
+                        <template v-if=" metodologia.detalle_metodologia != null">{{ metodologia.detalle_metodologia }}</template>
+                                    <template v-else>
+                                        <div>La metodología no cuenta con una descripción actualmente.</div>
+                                    </template>
                                     </b-popover>
                                     <b-button class="boton-ojo-metodo" :id="'button-'+metodologia.id_metodologia">
                                         <b-icon scale="0.9" icon="eye-fill" style="color:gray"></b-icon>
@@ -61,7 +64,6 @@
     </template>
   </b-modal>
 </template>
-  
 <script>
  
   import ElementosService from '@/helpers/api-services/Elementos.service';

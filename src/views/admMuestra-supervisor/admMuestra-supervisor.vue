@@ -3,7 +3,7 @@
 
         <ModalObservaciones :detalles-data="this.observacionesData" />
         <ModalDetalleMuestra :detalles-data="this.detallesData" />
-        <ModalCompletarAnalisis :muestra-data="this.muestraData" />
+        <ModalCompletarAnalisis :muestra-data="this.muestraData" @refrescar="obtenerMuestras" />
         <ModalAnalistasDesignados :analista-data="this.analistaData" />
         <ModalIngresarResultados :resultados-data="this.resultadosData" />
         <!-- Inicio tabla -->
@@ -119,33 +119,38 @@
                                     variant="dark" aria-hidden="true"></b-icon>
                             </template>
 
-                            <b-dropdown-item @click="abrirDetallesMuestra(row.item)">
+                            <b-dropdown-item v-if="row.item.estado != 'Recepcionado'" @click="abrirDetallesMuestra(row.item)">
                                 <b-icon icon="file-earmark-medical" aria-hidden="true" class="mr-2"></b-icon>Ver detalles
 
                             </b-dropdown-item>
                             <b-dropdown-item @click="MostrarObservaciones(row.item)">
                                 <b-icon icon="check2-square" aria-hidden="true" class="mr-2"></b-icon>Observaciones
                             </b-dropdown-item>
-                            <b-dropdown-item v-if="row.item.estado != 'Finalizado'"
+                            <b-dropdown-item v-if="row.item.estado == 'En Análisis'"
                                 @click="abrirCompletarAnalisis(row.item)">
-                                <b-icon icon="file-earmark-arrow-down" aria-hidden="true" class="mr-2"></b-icon>Marcar
-                                análisis como completado
+                                <b-icon icon="file-earmark-arrow-down" aria-hidden="true" class="mr-2"></b-icon>
+                                Marcar análisis como completado
                             </b-dropdown-item>
-                            <b-dropdown-item @click="abrirAnalistasDesignados(row.item)">
+                            <b-dropdown-item v-if="row.item.estado != 'Recepcionado'" @click="abrirAnalistasDesignados(row.item)">
                                 <b-icon icon="file-earmark-arrow-down" aria-hidden="true" class="mr-2"></b-icon>
                                 Analistas designados
                             </b-dropdown-item>
-                            <b-dropdown-item @click="abrirIngresarResultados(row.item)">
+                            <b-dropdown-item v-if="row.item.estado == 'En Análisis'" @click="abrirIngresarResultados(row.item)">
                                 <b-icon icon="file-earmark-arrow-down" aria-hidden="true" class="mr-2"></b-icon>
                                 Ingresar resultados análisis
                             </b-dropdown-item>
-                            <b-dropdown-item @click="ingresarMuestraLaboratorio(row.item)">
+                            <b-dropdown-item v-if="row.item.estado == 'Recepcionado'" @click="ingresarMuestraLaboratorio(row.item)">
                                 <b-icon icon="file-earmark-arrow-down" aria-hidden="true" class="mr-2"></b-icon>
                                 Ingresar muestra laboratorio
                             </b-dropdown-item>
-                            <b-dropdown-item @click="abrirEditarPersonal(row.item)">
+                            <b-dropdown-item v-if="row.item.estado != 'Recepcionado'" @click="abrirEditarPersonal(row.item)">
                                 <b-icon icon="file-earmark-arrow-down" aria-hidden="true" class="mr-2"></b-icon>Descargar
                                 informe
+                            </b-dropdown-item>
+                            <b-dropdown-item v-if="row.item.estado == 'Finalizado'"
+                                >
+                                <b-icon icon="file-earmark-arrow-down" aria-hidden="true" class="mr-2"></b-icon>
+                              Rehacer análisis
                             </b-dropdown-item>
                         </b-dropdown>
                     </template>
