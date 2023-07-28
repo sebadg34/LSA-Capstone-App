@@ -11,7 +11,7 @@
              
             </template>
             <b-card-text>
-                vista titulo
+                Vista título
             </b-card-text>
 
         </b-card>

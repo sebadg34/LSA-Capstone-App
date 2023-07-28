@@ -16,7 +16,7 @@
   </b-form-group>
   
   <b-button variant="primary" class="buttons" @click="filtrarTabla">Filtrar</b-button>
-  <b-button variant="danger" class="buttons" @click="borrarFiltro">Borrar Filtro(s)</b-button>
+  <b-button variant="danger" class="buttons" @click="borrarFiltro">Borrar filtro(s)</b-button>
 
   </div> 
   <!-- Fin Filtrador-->
@@ -35,9 +35,9 @@
   <template #cell(Acción)="row">
     <b-dropdown variant="primary" size="sm" menu-class="custom-dropdown-menu" :text="'Ver opciones'">
       <b-dropdown-item v-for="opcion in generarOpcionesEstado(row.item.Estado)" :key="opcion.value">
-        <b-dropdown-item v-if="opcion.text === 'Detalle muestra'" :key="opcion.value">          
+        <b-dropdown-item v-if="opcion.text === 'Detalles de la muestra'" :key="opcion.value">          
            <!--- modal de prueba -->
-            <b-button @click="showDetalle = true">Detalle de Muestra</b-button>
+            <b-button @click="showDetalle = true">Detalles de la muestra</b-button>
             <DetalleMuestra v-if="showDetalle" :datos="datosMuestra" :RUM="RUM" @modal-cerrado="onModalCerrado"></DetalleMuestra>             
            <!---FIN modal de prueba --> 
         </b-dropdown-item>
@@ -47,9 +47,9 @@
           <ModalObservaciones v-if="showObservaciones" :datos="datosMuestra" :rum="RUM" @modal-cerrado="onModalCerrado"></ModalObservaciones>
         </b-dropdown-item>        
 
-        <b-dropdown-item v-if="opcion.text === 'Descargar Informe'" :key="opcion.value">
+        <b-dropdown-item v-if="opcion.text === 'Descargar informe'" :key="opcion.value">
           <b-button variant="link" @click="Descargar(row.item)">
-            Descargar Informe
+            Descargar informe
           </b-button>
         </b-dropdown-item>       
       </b-dropdown-item>

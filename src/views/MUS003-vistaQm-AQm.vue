@@ -16,7 +16,7 @@
   </b-form-group>
   
   <b-button variant="primary" class="buttons" @click="filtrarTabla">Filtrar</b-button>
-  <b-button variant="danger" class="buttons" @click="borrarFiltro">Borrar Filtro(s)</b-button>
+  <b-button variant="danger" class="buttons" @click="borrarFiltro">Borrar filtro(s)</b-button>
 
   </div> 
   <!-- Fin Filtrador-->
@@ -37,7 +37,7 @@
       <b-dropdown-item v-for="opcion in generarOpcionesEstado(row.item.Estado)" :key="opcion.value">
         <b-dropdown-item v-if="opcion.text === 'Detalle muestra'" :key="opcion.value">          
            <!--- modal de prueba -->
-            <b-button @click="showDetalle = true">Detalle de Muestra</b-button>
+            <b-button @click="showDetalle = true">Detalles de la muestra</b-button>
             <DetalleMuestra v-if="showDetalle" :datos="datosMuestra" :RUM="RUM" @modal-cerrado="onModalCerrado"></DetalleMuestra>             
            <!---FIN modal de prueba --> 
         </b-dropdown-item>
@@ -49,7 +49,7 @@
 
         <b-dropdown-item v-if="opcion.text === 'Marcar Analisis como completado'" :key="opcion.value">
           <b-button variant="link" @click="MarcarAnalisis(row.item)">
-            Marcar analisis como completado
+            Marcar análisis como completado
           </b-button>
         </b-dropdown-item>       
       </b-dropdown-item>

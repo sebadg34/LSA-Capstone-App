@@ -10,7 +10,7 @@
   <b-row style="padding-top:30px; ">
         <b-col class="col-6">
             <div style="font-size:2rem; font-weight: bold; color: var(--lsa-blue)">
-                Administración de Muestras
+                Administración de muestras
             </div>
         </b-col>
     </b-row>
@@ -44,7 +44,7 @@
       <b-dropdown-item v-for="opcion in generarOpcionesEstado(row.item.estado)" :key="opcion.value">
         
         <b-dropdown-item @click="DetalleMuestra(row)" v-if="opcion.text === 'Detalle muestra'" :key="opcion.value">            
-          <b-icon icon="file-earmark-medical" aria-hidden="true" class="mr-2"></b-icon>Ver Detalles          
+          <b-icon icon="file-earmark-medical" aria-hidden="true" class="mr-2"></b-icon>Ver detalles          
         </b-dropdown-item>
 
         <b-dropdown-item @click="MostrarObservaciones(row)" v-if="opcion.text === 'Observaciones'" :key="opcion.value">
@@ -52,31 +52,31 @@
         </b-dropdown-item>
 
         <b-dropdown-item @click="IngresarMuestraLab(row)" v-if="opcion.text === 'Ingresar muestra a lab.'" :key="opcion.value">          
-          <b-icon icon="capslock-fill" aria-hidden="true" class="mr-2"></b-icon>Ingresar Muestra a Laboratorio
+          <b-icon icon="capslock-fill" aria-hidden="true" class="mr-2"></b-icon>Ingresar muestra al laboratorio
         </b-dropdown-item>
 
         <b-dropdown-item @click="Analista(row)" v-if="opcion.text === 'Analista Designado'" :key="opcion.value">
-          <b-icon icon="file-earmark-person-fill" aria-hidden="true" class="mr-2"></b-icon>Analista Designado
+          <b-icon icon="file-earmark-person-fill" aria-hidden="true" class="mr-2"></b-icon>Analista designado
         </b-dropdown-item>
 
         <b-dropdown-item @click="Descargar(row)" v-if="opcion.text === 'Descargar Informe'" :key="opcion.value">
-          <b-icon icon="file-earmark-pdf-fill" aria-hidden="true" class="mr-2"></b-icon>Descargar Informe
+          <b-icon icon="file-earmark-pdf-fill" aria-hidden="true" class="mr-2"></b-icon>Descargar informe
         </b-dropdown-item>       
 
         <b-dropdown-item @click="Ingresar(row)" v-if="opcion.text === 'Ingresar resultados de análisis'" :key="opcion.value">
-          <b-icon icon="file-earmark-font" aria-hidden="true" class="mr-2"></b-icon>Ingresar Resultados de Análisis           
+          <b-icon icon="file-earmark-font" aria-hidden="true" class="mr-2"></b-icon>Ingresar los resultados del análisis           
         </b-dropdown-item>
 
         <b-dropdown-item @click="AdministrarCartas(row)" v-if="opcion.text === 'Administrar cartas de control'" :key="opcion.value">
-          <b-icon icon="markdown" aria-hidden="true" class="mr-2"></b-icon> Administrar Cartas de Control          
+          <b-icon icon="markdown" aria-hidden="true" class="mr-2"></b-icon> Administrar cartas de control          
         </b-dropdown-item>
 
         <b-dropdown-item @click="RehacerAnalisis(row)" v-if="opcion.text === 'Rehacer Análisis'" :key="opcion.value">
-          <b-icon icon="journal-minus" aria-hidden="true" class="mr-2"></b-icon> Rehacer Análisis           
+          <b-icon icon="journal-minus" aria-hidden="true" class="mr-2"></b-icon> Rehacer análisis           
         </b-dropdown-item>        
 
         <b-dropdown-item @click="MarcarAnalisis(row)" v-if="opcion.text === 'Marcar Analisis como completado'" :key="opcion.value">
-          <b-icon icon="clipboard-check" aria-hidden="true" class="mr-2"></b-icon> Marcar Análisis como Completado         
+          <b-icon icon="clipboard-check" aria-hidden="true" class="mr-2"></b-icon> Marcar análisis como completado         
         </b-dropdown-item>  
 
       </b-dropdown-item>

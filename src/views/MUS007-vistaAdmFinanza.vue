@@ -16,7 +16,7 @@
   </b-form-group>
   
   <b-button variant="primary" class="buttons" @click="filtrarTabla">Filtrar</b-button>
-  <b-button variant="danger" class="buttons" @click="borrarFiltro">Borrar Filtro(s)</b-button>
+  <b-button variant="danger" class="buttons" @click="borrarFiltro">Borrar filtro(s)</b-button>
 
   </div> 
   <!-- Fin Filtrador-->
@@ -34,9 +34,9 @@
   <template #cell(Acción)="row">
     <b-dropdown variant="primary" size="sm" menu-class="custom-dropdown-menu" :text="'Ver opciones'">
       <b-dropdown-item v-for="opcion in generarOpcionesEstado(row.item.Estado)" :key="opcion.value">
-        <b-dropdown-item v-if="opcion.text === 'Detalle muestra'" :key="opcion.value">          
+        <b-dropdown-item v-if="opcion.text === 'Detalles de la muestra'" :key="opcion.value">          
            <!--- modal de prueba -->
-            <b-button @click="showDetalle = true">Detalle de Muestra</b-button>
+            <b-button @click="showDetalle = true">Detalles de la muestra</b-button>
             <DetalleMuestra v-if="showDetalle" :datos="datosMuestra" :RUM="RUM" @modal-cerrado="onModalCerrado"></DetalleMuestra>             
            <!---FIN modal de prueba --> 
         </b-dropdown-item>
@@ -91,7 +91,7 @@ export default {
       ],
       fields: [
         { key: 'RUM', label: 'RUM' },
-        { key: 'NombreSolicitante', label: 'Nombre del Solicitante' },        
+        { key: 'NombreSolicitante', label: 'Nombre del solicitante' },        
         { key: 'Empresa', label: 'Empresa' },
         { key: 'Matriz', label: 'Matriz' },
         { key: 'ValorNeto', label: 'Valor Neto' },
@@ -132,14 +132,14 @@ generarOpcionesEstado(estado) {
       ];
     case 'En Análisis':
       return [
-        { text: 'Detalle muestra', value: 'Detalle Muestra' },
+        { text: 'Detalle muestra', value: 'Detalle de la muestra' },
         { text: 'Observaciones', value: 'Observaciones' },        
         { text: 'Agregar orden de compra', value: 'Agregar orden de compra' },
         
       ];
     case 'Finalizado':
       return [        
-        { text: 'Detalle muestra', value: 'Detalle Muestra' },
+        { text: 'Detalle muestra', value: 'Detalle de la muestra' },
         { text: 'Observaciones', value: 'Observaciones' },        
         { text: 'Agregar orden de compra', value: 'Agregar orden de compra' },        
       ];

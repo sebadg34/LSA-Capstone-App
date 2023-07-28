@@ -1,7 +1,7 @@
 <template>
   <div>
 
-   <div>VISTA Perfil</div>
+   <div>Vista del perfil</div>
 
    
   </div>

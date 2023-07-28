@@ -200,11 +200,11 @@ export default {
                     value: "Supervisor(a)",
                     text: 'Supervisor(a)'
                 },{
-                    value: "Administrador(a) de Finanza",
-                    text: 'Administrador(a) de Finanza'
+                    value: "Administrador(a) de Finanzas",
+                    text: 'Administrador(a) de Finanzas'
                 },{
-                    value: "Jefe(a) de laboratorio",
-                    text: 'Jefe(a) de laboratorio'
+                    value: "Jefe(a) de Laboratorio",
+                    text: 'Jefe(a) de Laboratorio'
                 },{
                     value: "Recepcionista",
                     text: 'Recepcionista'
@@ -232,7 +232,7 @@ export default {
                 sortable: true
                 }, {
                     key: 'dias_vacaciones_disponibles',
-                    label: 'Días de vacaciones disponible'
+                    label: 'Días de vacaciones disponibles'
                 }, {
                     key: 'periodo_vacaciones',
                     label: 'Periodo de vacaciones'

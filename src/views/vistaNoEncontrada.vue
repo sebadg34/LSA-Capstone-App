@@ -1,6 +1,6 @@
 <template>
      <p>
-           404 no se pudo encontrar la página solicitada
+           Error 404: No se pudo encontrar la página solicitada.
         </p>
   </template>
 
