@@ -138,7 +138,7 @@ export default {
                         if (response != null) {
                             if (response.status == 200) {
                                 this.$bvToast.toast(`La contraseña ha sido actualizada.`, {
-                                    title: 'Exito',
+                                    title: 'Éxito',
                                     toaster: 'b-toaster-top-center',
                                     solid: true,
                                     variant: "success",

@@ -31,7 +31,7 @@
                     <label for="input-live">Observación:</label>
                     <ValidationProvider name="observación" rules="required" v-slot="validationContext">
                         <b-form-textarea id="textarea" v-model="observacion" :state="getValidationState(validationContext)"
-                            placeholder="Ingrese observación..." rows="3" max-rows="6"></b-form-textarea>
+                            placeholder="Ingrese una observación..." rows="3" max-rows="6"></b-form-textarea>
 
                         <b-form-invalid-feedback id="fecha-live-feedback">{{
                             validationContext.errors[0] }}
@@ -115,8 +115,8 @@ export default {
                         this.busy = false;
                         console.log(response);
                         if (response.request.status == 200) {
-                            this.$bvToast.toast(`Creación de la observación ha sido exitosa`, {
-                                title: 'Exito',
+                            this.$bvToast.toast(`Creación de la observación ha sido exitosa.`, {
+                                title: 'Éxito',
                                 toaster: 'b-toaster-top-center',
                                 solid: true,
                                 variant: "success",

@@ -28,7 +28,7 @@
 
             <b-row class="d-flex justify-content-center">
                 <b-col class="col-6">
-                    <ValidationProvider name="número cotización" rules="required|numeric" v-slot="validationContext">
+                    <ValidationProvider name="número de cotización" rules="required|numeric" v-slot="validationContext">
                         <label for="input-live">Número de cotización:</label>
                         <b-form-input size="sm" class="mb-1" id="input-live" :state="getValidationState(validationContext)"
                             v-model="Numero_cotizacion" aria-describedby="input-live-help numero-live-feedback"
@@ -42,7 +42,7 @@
 
                     
                     <label for="input-live">Fecha de emisión:</label>
-                    <ValidationProvider name="fecha" rules="required" v-slot="validationContext">
+                    <ValidationProvider name="fecha de emisión" rules="required" v-slot="validationContext">
                         <b-form-datepicker :min="minDate" :max="maxDate" @context="onContext"
                             :date-format-options="{ year: 'numeric', month: '2-digit', day: '2-digit' }"
                             placeholder="Seleccione una fecha." :state="getValidationState(validationContext)" v-model="Fecha"
@@ -160,7 +160,7 @@ export default {
                         console.log(response);
                         if (response.request.status == 200) {
                             this.$bvToast.toast(`Guardado de cotización exitoso.`, {
-                                title: 'Exito',
+                                title: 'Éxito',
                                 toaster: 'b-toaster-top-center',
                                 solid: true,
                                 variant: "success",

@@ -115,8 +115,8 @@ export default {
                         this.busy = false;
                         console.log(response);
                         if (response.request.status == 200) {
-                            this.$bvToast.toast(`Creación de la observación ha sido exitosa`, {
-                                title: 'Exito',
+                            this.$bvToast.toast(`Creación de la observación ha sido exitosa.`, {
+                                title: 'Éxito',
                                 toaster: 'b-toaster-top-center',
                                 solid: true,
                                 variant: "success",

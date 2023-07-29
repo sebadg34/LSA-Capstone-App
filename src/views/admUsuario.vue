@@ -31,7 +31,7 @@
                                             <b-icon icon="person-plus-fill"></b-icon>
                                         </b-button>
                                         <b-button v-b-tooltip.hover
-                                            title="Crear cuentas de usuarios faltantes de personal y solicitante registrados en el sistema."
+                                            title="Crear las cuentas de usuarios faltantes del personal y solicitantes registrados en el sistema."
                                             @click="sincronizarUsuarios" style="font-weight: bold; font-size: 18px; "
                                             class="lsa-light-blue reactive-button">
 

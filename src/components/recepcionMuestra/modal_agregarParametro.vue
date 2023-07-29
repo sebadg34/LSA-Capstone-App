@@ -16,7 +16,7 @@
     
             <ValidationProvider name="nombre del parámetro" rules="required" v-slot="validationContext">
                 <label for="input-live">Nombre del parámetro:</label>
-                <b-form-input id="input-live" v-model="Nombre" :state="getValidationState(validationContext)" placeholder="Ingrese nombre del parámetro"></b-form-input>
+                <b-form-input id="input-live" v-model="Nombre" :state="getValidationState(validationContext)" placeholder="Ingrese nombre del parámetro."></b-form-input>
                 <b-form-invalid-feedback>{{ validationContext.errors[0] }}</b-form-invalid-feedback>
             </ValidationProvider>
     <br/>
@@ -84,7 +84,7 @@
                             console.log(response)
                             if (response != null) {
                                 if (response.status == 200) {
-                                    this.$bvToast.toast(`La creación del parámetro ha sido exitosa`, {
+                                    this.$bvToast.toast(`La creación del parámetro ha sido exitosa.`, {
                                         title: 'Éxito',
                                         toaster: 'b-toaster-top-center',
                                         solid: true,
@@ -101,7 +101,7 @@
                                         this.$refs.modal.hide()
                                 }
                             } else {
-                                this.$bvToast.toast(`Error al agregar el parámetro.!`, {
+                                this.$bvToast.toast(`Error al agregar el parámetro.`, {
                                     title: 'Error',
                                     toaster: 'b-toaster-top-center',
                                     solid: true,

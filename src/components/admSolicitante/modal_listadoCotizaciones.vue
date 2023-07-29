@@ -27,7 +27,7 @@
                     </b-list-group-item>
             <b-list-group-item style="padding:10px" class="col-2 d-flex justify-content-center">
                         <div>
-                            N° cotización
+                            N° de cotización
                         </div>
                        
                     </b-list-group-item>
@@ -165,7 +165,7 @@ export default {
                 this.BorrandoArchivo = false;
                 if(response.status == 200){
                     this.$bvToast.toast(`Cotización borrada exitosamente.`, {
-                        title: 'Exito',
+                        title: 'Éxito',
                         toaster: 'b-toaster-top-center',
                         solid: true,
                         variant: "success",
@@ -220,7 +220,7 @@ solicitanteService.obtenerDetallesCompletosSolicitante(this.userData.rut_solicit
                 console.log(response);
                 if (response.request.status == 200) {
                     this.$bvToast.toast(`Guardado de cotización exitoso.`, {
-                        title: 'Exito',
+                        title: 'Éxito',
                         toaster: 'b-toaster-top-center',
                         solid: true,
                         variant: "success",

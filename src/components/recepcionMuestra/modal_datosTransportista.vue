@@ -16,16 +16,16 @@
 
         <b-row class="pb-2">
             <b-col class="col-6">              
-                <label for="input-live">Rut:</label>
-                <ValidationProvider name="transportistaRut" rules="required|rut" v-slot="validationContext">
+                <label for="input-live">RUT:</label>
+                <ValidationProvider name="RUT del transportista" rules="required|rut" v-slot="validationContext">
                     <b-form-input id="transportistaRut-input" class="mb-1" v-model="transportistaRut" :state="getValidationState(validationContext)" aria-describedby="transportistaRut-live-feedback"></b-form-input>
                     <b-form-invalid-feedback id="transportistaRut-live-feedback">{{
                         validationContext.errors[0] }}
                     </b-form-invalid-feedback>
                 </ValidationProvider>
 
-                <label for="input-live">Telefono Movil:</label>
-                <ValidationProvider name="fono" rules="required|numeric" v-slot="validationContext">
+                <label for="input-live">Teléfono móvil:</label>
+                <ValidationProvider name="teléfono móvil" rules="required|numeric" v-slot="validationContext">
                     <b-input-group class="mb-1">
                         <b-input-group-prepend is-text>
                             +56 9
@@ -37,7 +37,7 @@
                     </b-input-group>
                 </ValidationProvider>
 
-                <ValidationProvider name="Temperatura" rules="required|numeric" v-slot="validationContext">
+                <ValidationProvider name="temperatura de la muestra" rules="required|numeric" v-slot="validationContext">
                     <label for="input-live">Temperatura de la muestra:</label>
                     <b-form-input class="mb-1" id="input-live" :state="getValidationState(validationContext)" v-model="Temperatura" aria-describedby="input-live-help Temperatura-live-feedback" placeholder="" trim></b-form-input>
                     <b-form-invalid-feedback id="Temperatura-live-feedback">{{
@@ -47,7 +47,7 @@
 
             </b-col>
             <b-col class="col-6">
-                <ValidationProvider name="transportista" rules="required" v-slot="validationContext">
+                <ValidationProvider name="nombre y apellido del transportista" rules="required" v-slot="validationContext">
                     <label for="input-live">Nombre y apellido:</label>
                     <b-form-input class="mb-1" id="input-live" :state="getValidationState(validationContext)" v-model="transportista" aria-describedby="input-live-help transportista-live-feedback" placeholder="" trim></b-form-input>
                     <b-form-invalid-feedback id="transportista-live-feedback">{{

@@ -58,7 +58,7 @@
                         validationContext.errors[0] }}
                         </b-form-invalid-feedback>
                     </b-overlay>
-                    <b-alert fade style="margin:2px; padding:2px;" class="text-center" :show="Rut_ocupado" variant="warning">El rut ya está registrado en el sistema</b-alert>
+                    <b-alert fade style="margin:2px; padding:2px;" class="text-center" :show="Rut_ocupado" variant="warning">El RUT ya está registrado en el sistema.</b-alert>
 
                 </ValidationProvider>
                 <ValidationProvider name="razón social" rules="required" v-slot="validationContext">
@@ -287,7 +287,7 @@ export default {
                         if (response != null) {
                             if (response.status == 200) {
                                 this.$bvToast.toast(`Creación de cliente exitosa.`, {
-                                    title: 'Exito',
+                                    title: 'Éxito',
                                     toaster: 'b-toaster-top-center',
                                     solid: true,
                                     variant: "success",

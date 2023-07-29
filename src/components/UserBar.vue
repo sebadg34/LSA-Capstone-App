@@ -14,10 +14,10 @@
                     <b-icon icon="person-circle" aria-hidden="true"></b-icon><span class="px-md-2">Perfil</span>
                 </b-list-group-item>
                 <b-list-group-item style="padding: 5px 0px 5px 0px" @click="abrirCambiarPassword()" class="cursorToHand  perfilButton">
-                    <b-icon icon="key-fill" aria-hidden="true"></b-icon><span class="px-md-2">Cambiar Contraseña</span>
+                    <b-icon icon="key-fill" aria-hidden="true"></b-icon><span class="px-md-2">Cambiar contraseña</span>
                 </b-list-group-item>
                 <b-list-group-item @click="logoutUser()" class="cursorToHand  logoutButton">
-                    <b-icon icon="power" aria-hidden="true"></b-icon><span class="px-md-2">Cerrar Sesión</span>
+                    <b-icon icon="power" aria-hidden="true"></b-icon><span class="px-md-2">Cerrar sesión</span>
                 </b-list-group-item>
             </b-list-group>
        
@@ -90,7 +90,7 @@ console.log('data user',this.userData)
 
            await authService.logout();
            
-           this.$root.$bvToast.toast('Sesión cerrada exitosamente', {
+           this.$root.$bvToast.toast('Sesión cerrada exitosamente.', {
                                     title: '',
                                     toaster: 'b-toaster-top-center',
                                     solid: true,

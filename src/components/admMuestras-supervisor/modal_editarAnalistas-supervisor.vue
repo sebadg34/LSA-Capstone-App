@@ -30,15 +30,15 @@
                                 <b-list-group-item class="p-3 text-center " style="width:30%;font-weight: bold;">
                                     Analista
                                 </b-list-group-item>
+                                <b-list-group-item class="p-3 text-center " style="width:15%;font-weight: bold;">
+                                    N° de orden
+                                </b-list-group-item>
                                 <b-list-group-item class="p-3 text-center " style="width:20%;font-weight: bold;">
                                     Parámetro
                                 </b-list-group-item>
                                 <b-list-group-item class="p-3 text-center " style="width:20%;font-weight: bold;">
-                                    Fecha entrega
-                                </b-list-group-item>
-                                <b-list-group-item class="p-3 text-center " style="width:15%;font-weight: bold;">
-                                    N° de orden
-                                </b-list-group-item>
+                                    Fecha de entrega
+                                </b-list-group-item>                                
                                 <b-list-group-item class="p-3 text-center " style="width:15%;font-weight: bold;">
                                     Acción
                                 </b-list-group-item>
@@ -65,6 +65,18 @@
 
 
 
+                                </b-list-group-item>
+                                <b-list-group-item class="text-center" style="width:15%">
+                                    <ValidationProvider :name="'N° orden ' + (k + 1)" rules="required"
+                                        v-slot="validationContext">
+                                        <b-form-input :state="getValidationState(validationContext)"
+                                            :placeholder="'N° orden ' + (parseInt(k) + 1)" style="height:30px" type="text"
+                                            class="form-control" v-model="analista.orden_analisis" />
+
+                                        <b-form-invalid-feedback id="ciudad-live-feedback">{{
+                                            validationContext.errors[0] }}
+                                        </b-form-invalid-feedback>
+                                    </ValidationProvider>
                                 </b-list-group-item>
                                 <b-list-group-item class="text-center" style="width:20%">
 
@@ -100,24 +112,12 @@
                                 </b-list-group-item>
                                 <b-list-group-item class="text-center" style="width:20%">
 
-                                    <ValidationProvider :name="'Fecha entrega ' + (k + 1)" rules="required"
+                                    <ValidationProvider :name="'Fecha de entrega ' + (k + 1)" rules="required"
                                         v-slot="validationContext">
-                                        <b-form-datepicker placeholder="fecha"
+                                        <b-form-datepicker placeholder="Seleccione una fecha."
                                             :state="getValidationState(validationContext)" v-model="analista.fecha_object"
                                             :id="'datepicker-' + (k + 1)"></b-form-datepicker>
                                         <b-form-invalid-feedback id="fecha-live-feedback">{{
-                                            validationContext.errors[0] }}
-                                        </b-form-invalid-feedback>
-                                    </ValidationProvider>
-                                </b-list-group-item>
-                                <b-list-group-item class="text-center" style="width:15%">
-                                    <ValidationProvider :name="'N° orden ' + (k + 1)" rules="required"
-                                        v-slot="validationContext">
-                                        <b-form-input :state="getValidationState(validationContext)"
-                                            :placeholder="'N° orden ' + (parseInt(k) + 1)" style="height:30px" type="text"
-                                            class="form-control" v-model="analista.orden_analisis" />
-
-                                        <b-form-invalid-feedback id="ciudad-live-feedback">{{
                                             validationContext.errors[0] }}
                                         </b-form-invalid-feedback>
                                     </ValidationProvider>
@@ -148,10 +148,10 @@
 
                 </div>
             </div>
-            <b-modal id="modal-Agregar-Parametros" ref="modal" :title="`Agregar parámetro a analista`" size="lg">
+            <b-modal id="modal-Agregar-Parametros" ref="modal" :title="`Agregar parámetro(s) a analista`" size="lg">
                 <template #modal-header="{ close }">
                     <b-row class="d-flex justify-content-around">
-                        <div class="pl-3">Asignar Parámetros a analista</div>
+                        <div class="pl-3">Asignar parámetro(s) a analista</div>
                     </b-row>
                     <button type="button" class="close" aria-label="Close" @click="close()">
                         <span aria-hidden="true" style="color:white">&times;</span>
@@ -159,7 +159,7 @@
                 </template>
                 <b-row>
                     <b-col>
-                        <b-form-group label="Seleccione un parámetro">
+                        <b-form-group label="Seleccione un parámetro:">
                             <b-form-select v-model="parametroSeleccionadoIngreso" :options="parametrosOpciones"
                                 text-field="nombre_parametro" value-field="id_parametro"
                                 @change="agregarParametroSeleccionado(analistaSeleccionado, parametroSeleccionadoIngreso)"></b-form-select>
@@ -169,7 +169,7 @@
 
                 <b-row v-if="analistaSeleccionado && analistaSeleccionado.parametros.length > 0" class="mt-3">
                     <b-col>
-                        <b-form-group label="Parámetros Seleccionados:">
+                        <b-form-group label="Parámetros seleccionados:">
                             <div v-for="(parametro, index) in analistaSeleccionado.parametros" :key="index"
                                 class="d-flex align-items-center objetos-item mb-3">
                                 <b-input readonly :value="parametro.nombre_parametro" class="mr-2"></b-input>
@@ -183,11 +183,11 @@
                 </b-row>
 
                 <b-alert variant="danger" :show="alertaDuplicado" dismissible @dismissed="alertaDuplicado = false">
-                    El Parametro ya se encuentra agregado.
+                    El parámetro ya se encuentra agregado.
                 </b-alert>
 
                 <b-alert variant="success" :show="alertaExito" dismissible @dismissed="alertaExito = false">
-                    Parámetro agregado con exitosamente.
+                    Parámetro agregado exitosamente.
                 </b-alert>
                 <!-- //////////////////////////////////////////MODAL-FOOTER////////////////////////////////////////////////////////////////////////////////// -->
                 <template #modal-footer="{ close }">

@@ -36,7 +36,7 @@
                                                     <b-col class="col-6">
                                                         <ValidationProvider name="Rut Recepcionista" rules="required|rut"
                                                             v-slot="validationContext">
-                                                            <label for="RutRecepcionista-input">Rut:</label>
+                                                            <label for="RutRecepcionista-input">RUT:</label>
                                                             <b-form-input id="Rut Recepcionista-input" readonly
                                                                 v-model="recepcionistaRUT"
                                                                 :state="getValidationState(validationContext)"></b-form-input>
@@ -58,7 +58,7 @@
                                                     <b-col class="col-6">
                                                         <ValidationProvider name="rut" rules="required"
                                                             v-slot="validationContext">
-                                                            <label for="input-live">Nombre empresa:</label>
+                                                            <label for="input-live">Nombre de la empresa:</label>
                                                             <div class="d-flex align-items-center ">
                                                                 <b-input-group >
                                                                     <b-form-select id="input-live" v-model="solicitante"                                                                        
@@ -83,12 +83,12 @@
 
                                                         <b-alert :show="dismissCountDown" dismissible fade variant="danger"
                                                             @dismiss-count-down="countDownChanged">
-                                                            El rut del solicitante no está registrado en la base de datos
+                                                            El RUT del solicitante no está registrado en la base de datos.
                                                         </b-alert>                                                        
 
                                                         <ValidationProvider name="Dirección Cliente" rules="required"
                                                             v-slot="validationContext">
-                                                            <label for="input-live">Dirección empresa:</label>
+                                                            <label for="input-live">Dirección de la empresa:</label>
                                                             <b-form-select id="input-live"
                                                                 v-model="direccion" :options="opcionesDireccion"
                                                                 :disabled="direccionDeshabilitado"
@@ -124,7 +124,7 @@
                                                     <b-col class="col-6">
                                                         <ValidationProvider name="nMuestras" rules="required|numeric"
                                                             v-slot="validationContext">
-                                                            <label for="input-live">N° de Muestras:</label>
+                                                            <label for="input-live">N° de muestras:</label>
                                                             <div class="d-flex align-items-center">
                                                                 <b-input-group size="sm">
 
@@ -159,7 +159,7 @@
                                                            
 
 
-                                                            <label for="input-live">Fecha de Entrega:</label>
+                                                            <label for="input-live">Fecha de entrega:</label>
                                                             <b-form-datepicker
                                                                 :date-format-options="{ year: 'numeric', month: '2-digit', day: '2-digit' }"
                                                                 
@@ -202,7 +202,7 @@
 
                                                         <ValidationProvider name="TipoMatriz" rules="required"
                                                             v-slot="validationContext">
-                                                            <label for="input-live">Tipo de Matriz:</label>
+                                                            <label for="input-live">Tipo de matriz:</label>
                                                             <b-form-select id="input-live" v-model="TipoMatriz"
                                                                 :options="opcionesMatriz"
                                                                 aria-describedby="input-live-help TipoMatriz-live-feedback"
@@ -238,7 +238,7 @@
                                     </b-tab>
 
                                     <b-tab title="Transportista">
-                                        <strong>Datos del Transportista</strong>
+                                        <strong>Datos del transportista</strong>
 
                                         <template #title>
                                             <b-col class="col-12">
@@ -246,7 +246,7 @@
                                                     <b-icon v-if="!transportista_incompleto" icon="check-square"></b-icon>
                                                     <b-icon v-else-if="revisado" icon="exclamation-square"></b-icon>
                                                     <b-icon v-else icon="arrow-right-short"></b-icon>
-                                                    <strong style="padding-left:30px">Datos del Transportista</strong>
+                                                    <strong style="padding-left:30px">Datos del transportista</strong>
                                                 </b-row>
                                             </b-col>
                                         </template>
@@ -255,12 +255,12 @@
                                             <b-card>
                                                 <b-row class="pb-2">
                                                     <b-col class="col-6">
-                                                        <label for="input-live">Rut:</label>
+                                                        <label for="input-live">RUT:</label>
                                                         <b-form-input id="transportistaRut-input" class="mb-1"
                                                             v-model="transportistaRut"
                                                             aria-describedby="transportistaRut-live-feedback"></b-form-input>                                                        
 
-                                                        <label for="input-live">Telefono Movil:</label>
+                                                        <label for="input-live">Teléfono móvil:</label>
 
                                                         <b-input-group v-for="(telefono, index) in telefonos_agregar"
                                                             :key="index" class="mb-1">
@@ -331,11 +331,11 @@
                                             <b-card>
                                                 <b-row>
                                                     <b-col class="col-6">                                                       
-                                                            <b-form-group label="Seleccione una norma">
+                                                            <b-form-group label="Seleccione una norma:">
                                                                 <b-input-group>
                                                                     <b-form-select v-model="norma" 
                                                                     :options="opcionesNorma"
-                                                                    placeholder="Seleccione una norma"                                                                 
+                                                                    placeholder="Seleccione una norma:"                                                                 
                                                                     text-field="nombre" value-field="id"   
                                                                     @change="obtenerTablasNormas"></b-form-select>
                                                                                                                             
@@ -357,7 +357,7 @@
                                                     </b-col>
 
                                                     <b-col class="col-6">
-                                                        <b-form-group label="Seleccione una tabla">
+                                                        <b-form-group label="Seleccione una tabla:">
                                                             <b-form-select :disabled="!norma" v-model="tabla"
                                                                 :options="opcionesTabla" value-field="id"
                                                                 @change="actualizarParametrosTabla"></b-form-select>
@@ -368,7 +368,7 @@
                                                 <b-row>
                                                     <b-col>
 
-                                                        <label for="input-live">Seleccione un parámetro</label>
+                                                        <label for="input-live">Seleccione un parámetro:</label>
                                                         <b-input-group>
 
                                                             <b-form-select v-model="parametroSeleccionado"
@@ -390,7 +390,7 @@
                                                     </b-col>
 
                                                     <b-col>
-                                                        <label for="input-live">Seleccione una metodología</label>
+                                                        <label for="input-live">Seleccione una metodología:</label>
                                                         <b-form-group>
                                                             <b-form-select v-model="metodologiaSeleccionada"
                                                                 :options="opcionesMetodologia"
@@ -403,7 +403,7 @@
 
                                                 <b-row v-if="objetosSeleccionados.length > 0" class="mt-3">
                                                     <b-col>
-                                                        <b-form-group label="Parámetros Seleccionados:">
+                                                        <b-form-group label="Parámetros seleccionados:">
                                                             <div v-for="(objetos, index) in objetosSeleccionados"
                                                                 :key="index"
                                                                 class="d-flex align-items-center objetos-item mb-3">
@@ -470,7 +470,7 @@
                                     <b-button @click="enviarFormulario()" variant="primary" size="xl"
                                         class="reactive-button lsa-light-blue"
                                         style="font-weight:bold; margin-top:30px; position:absolute; width:100%; right:0px">
-                                        Recepcionar Muestra
+                                        Recepcionar muestra
                                     </b-button>
                                 </div>
                             </b-row>
@@ -497,7 +497,7 @@
                 @shown="onModalShown">
                 <template #modal-header="{ close }">
                     <b-row class="d-flex justify-content-around">
-                        <div class="pl-3">Agregar Parámetros</div>
+                        <div class="pl-3">Agregar parámetros</div>
                     </b-row>
                     <button type="button" class="close" aria-label="Close" @click="close()">
                         <span aria-hidden="true" style="color:white">&times;</span>
@@ -505,11 +505,11 @@
                 </template>
                 <b-row>
                     <b-col>
-                        <label>Seleccione un parámetro</label>
+                        <label>Seleccione un parámetro:</label>
                         <b-input-group>
                             
                             <b-form-select v-model="parametroSeleccionado" :options="TodasopcionesParametro"
-                                placeholder="Seleccione un Parámetro" @change="agregarObjetosSeleccionados"></b-form-select>
+                                placeholder="Seleccione un parámetro" @change="agregarObjetosSeleccionados"></b-form-select>
                             <b-input-group-append>
                                 <b-button size="sm" class="lsa-orange reactive-button" style=" border: none"
                                     v-b-modal.modal-Agregar-Parametro>
@@ -521,7 +521,7 @@
                     </b-col>
 
                     <b-col>
-                        <label>Seleccione una metodología</label>
+                        <label>Seleccione una metodología:</label>
                         <b-input-group>
                            
                             <b-form-select v-model="metodologiaSeleccionada" :options="opcionesMetodologia"
@@ -539,11 +539,11 @@
                 </b-row>
 
                 <b-alert variant="danger" :show="alertaDuplicado" dismissible @dismissed="alertaDuplicado = false">
-                    Los Parametros y Metodologias ya se encuentran agregados
+                    Los parámetros y metodologías ya se encuentran agregados.
                 </b-alert>
 
                 <b-alert variant="success" :show="alertaExito" dismissible @dismissed="alertaExito = false">
-                    Parámetro y metodología agregada con éxito!
+                    Parámetro y metodología agregada con éxito.
                 </b-alert>
                 <!-- //////////////////////////////////////////MODAL-FOOTER////////////////////////////////////////////////////////////////////////////////// -->
                 <template #modal-footer="{ close }">
@@ -1331,8 +1331,8 @@ export default {
                     console.log(response)
                     if (response != null) {
                         if (response.status == 200) {
-                            this.$bvToast.toast(`Creación de la muestra exitosa`, {
-                                title: 'Exito',
+                            this.$bvToast.toast(`Recepción de la muestra exitosa.`, {
+                                title: 'Éxito',
                                 toaster: 'b-toaster-top-center',
                                 solid: true,
                                 variant: "success",
@@ -1359,7 +1359,7 @@ export default {
                         this.fecha = '';
                         this.hora = '';
                     } else {
-                        this.$bvToast.toast(`Error al agregar muestra`, {
+                        this.$bvToast.toast(`Error al recepcionar muestra.`, {
                             title: 'Error',
                             toaster: 'b-toaster-top-center',
                             solid: true,

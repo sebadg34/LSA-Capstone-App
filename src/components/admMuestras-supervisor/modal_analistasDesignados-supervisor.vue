@@ -6,7 +6,7 @@
     <template #modal-header="{ close }">
       <!-- Emulate built in modal header close button action -->
       <b-row class="d-flex justify-content-around">
-        <div class="pl-3">Analistas designados muestra {{ " RUM: " + RUM }}</div>
+        <div class="pl-3">Analistas designados a la muestra {{ " RUM: " + RUM }}</div>
       </b-row>
 
       <button type="button" class="close" aria-label="Close" @click="close()">
@@ -21,19 +21,19 @@
       <b-list-group-item style="padding:0px; height: 50px;">
         <b-list-group horizontal>
           <b-list-group-item class="p-3 text-center " style="width:20%;font-weight: bold;">
-            Rut
+            RUT
           </b-list-group-item>
           <b-list-group-item class="p-3 text-center " style="width:20%;font-weight: bold;">
             Nombre
           </b-list-group-item>
           <b-list-group-item class="p-3 text-center " style="width:20%;font-weight: bold;">
+            Orden de análisis
+          </b-list-group-item>
+          <b-list-group-item class="p-3 text-center " style="width:20%;font-weight: bold;">
             Parámetro
-          </b-list-group-item>
+          </b-list-group-item>          
           <b-list-group-item class="p-3 text-center " style="width:20%;font-weight: bold;">
-            Fecha entrega
-          </b-list-group-item>
-          <b-list-group-item class="p-3 text-center " style="width:20%;font-weight: bold;">
-            Número de orden
+            Fecha  de entrega
           </b-list-group-item>
         </b-list-group>
       </b-list-group-item>
@@ -55,6 +55,9 @@
           </b-list-group-item>
           <b-list-group-item class="text-center" style="width:20%">
             {{ analista.nombre + " " + analista.apellido }}
+          </b-list-group-item>
+          <b-list-group-item class="text-center" style="width:20%">
+            {{ analista.orden_analisis }}
           </b-list-group-item>
           <b-list-group-item class="text-center" style="width:20%">
 
@@ -83,10 +86,7 @@
           </b-list-group-item>
           <b-list-group-item class="text-center" style="width:20%">
             {{ analista.fecha_entrega_formateada }}
-          </b-list-group-item>
-          <b-list-group-item class="text-center" style="width:20%">
-            {{ analista.orden_analisis }}
-          </b-list-group-item>
+          </b-list-group-item>          
         </b-list-group>
       </b-list-group-item>
       

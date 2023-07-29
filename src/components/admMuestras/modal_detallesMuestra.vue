@@ -13,7 +13,7 @@
             </button>
         </template>
       <div class="p-3">
-        <p v-if="this.RUM == null">No existen detalles de la muestra o la muestra no existe!!</p>
+        <p v-if="this.RUM == null">No existen detalles de la muestra o la muestra consultada no existe.</p>
         <ul v-else>          
         </ul>
         <b-row class="pb-2">
@@ -28,13 +28,13 @@
                     Muestreado por: <span>{{this.muestreado}}</span>
                 </div>
                 <div>
-                    Fecha de Ingreso: <span>{{this.fecha}}</span>
+                    Fecha de ingreso: <span>{{this.fecha}}</span>
                 </div>
                 <div>
-                    Hora de Ingreso: <span>{{this.hora}}</span>
+                    Hora de ingreso: <span>{{this.hora}}</span>
                 </div>
                 <div>
-                    Fecha de Entrega: <span>{{this.fechaEntregaFormateada}}</span>
+                    Fecha de entrega: <span>{{this.fechaEntregaFormateada}}</span>
                 </div>
                 <div>
                     Matriz: <span>{{this.TipoMatriz}}</span>
@@ -54,13 +54,13 @@
                     Metodología: <span>{{}}</span>
                 </div>
                 <div>
-                    Analista Químico: <span>{{}}</span>
+                    Analista: <span>{{}}</span>
                 </div>
                 <div>
                     Tipo de pago: <span>{{}}</span>
                 </div>
                 <div>
-                    Valor Neto(UF): <span>{{}}</span>
+                    Valor neto (UF): <span>{{}}</span>
                 </div>
             </b-col>
         </b-row>

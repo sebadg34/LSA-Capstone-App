@@ -128,7 +128,7 @@ export default {
             },
             {
                 value: 2,
-                text: 'Jefe(a) de laboratorio'
+                text: 'Jefe(a) de Laboratorio'
             },
             {
                 value: 6,
@@ -200,8 +200,8 @@ export default {
                         console.log(response)
                         if (response != null) {
                             if (response.status == 201) {
-                                this.$bvToast.toast(`Usuario creado`, {
-                                    title: 'Exito',
+                                this.$bvToast.toast(`Usuario creado.`, {
+                                    title: 'Éxito',
                                     toaster: 'b-toaster-top-center',
                                     solid: true,
                                     variant: "success",
@@ -210,7 +210,7 @@ export default {
                                 this.$emit('refrescar');
                                 this.$bvModal.hide('modal-usuario')
                             }else if(response.status == 422){
-                            this.$bvToast.toast(`Error, la contraseña no coincide con la confirmación`, {
+                            this.$bvToast.toast(`Error, la contraseña no coincide con la confirmación.`, {
                                 title: 'Error',
                                 toaster: 'b-toaster-top-center',
                                 solid: true,
@@ -220,7 +220,7 @@ export default {
                             }
                             
                         } else {
-                            this.$bvToast.toast(`Error al crear usuario`, {
+                            this.$bvToast.toast(`Error al crear el usuario.`, {
                                 title: 'Error',
                                 toaster: 'b-toaster-top-center',
                                 solid: true,

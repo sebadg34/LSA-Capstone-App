@@ -49,7 +49,7 @@
               <b-col class="col-7">{{ numero_muestras }}</b-col>
             </b-row>
             <b-row style="border-bottom: 1px solid var(--lsa-light-gray); padding:3px">
-              <b-col class="col-5" style="font-weight:bold;"> matriz: </b-col>
+              <b-col class="col-5" style="font-weight:bold;"> Matriz: </b-col>
               <b-col class="col-7">{{ matriz.nombre_matriz }}</b-col>
             </b-row>
             <b-row style="border-bottom: 1px solid var(--lsa-light-gray); padding:3px">
@@ -135,7 +135,7 @@
 <br/>
         <b-list-group horizontal>
           <b-list-group-item class="d-flex align-items-center justify-content-center"
-            style="width:30%;font-weight: bold; padding:3px">Analistas designados(s)</b-list-group-item>
+            style="width:30%;font-weight: bold; padding:3px">Analista(s) designado(s)</b-list-group-item>
 
           <b-list-group-item  style="width:70%;padding:0px" class="d-flex align-items-center justify-content-center">
             <b-list-group style="width:100%">
@@ -281,7 +281,7 @@ this.hora_ingreso = detalles.hora_ingreso_formateada;
           }
 
         } else {
-          this.$bvToast.toast(`Error al obtener detalles de muestra`, {
+          this.$bvToast.toast(`Error al obtener detalles de muestra.`, {
             title: 'Error',
             toaster: 'b-toaster-top-center',
             solid: true,

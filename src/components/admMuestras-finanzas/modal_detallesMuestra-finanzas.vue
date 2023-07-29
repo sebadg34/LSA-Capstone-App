@@ -27,7 +27,7 @@
                 <b-col class="col-12">
 
                     <b-row style="border-bottom: 1px solid var(--lsa-light-gray); padding:3px">
-                        <b-col class="col-7" style="font-weight:bold;"> Nombre solicitante: </b-col>
+                        <b-col class="col-7" style="font-weight:bold;"> Nombre del solicitante: </b-col>
                         <b-col class="col-5">{{ nombre_solicitante + " " + apellido_solicitante }}</b-col>
                     </b-row>
 
@@ -40,11 +40,11 @@
                         <b-col class="col-5">{{ fecha_entrega }}</b-col>
                     </b-row>
                     <b-row style="border-bottom: 1px solid var(--lsa-light-gray); padding:3px">
-                        <b-col class="col-7" style="font-weight:bold;"> matriz: </b-col>
+                        <b-col class="col-7" style="font-weight:bold;"> Matriz: </b-col>
                         <b-col class="col-5">{{ matriz }}</b-col>
                     </b-row>
                     <b-row style="border-bottom: 1px solid var(--lsa-light-gray); padding:3px">
-                        <b-col class="col-7" style="font-weight:bold;"> estado: </b-col>
+                        <b-col class="col-7" style="font-weight:bold;"> Estado: </b-col>
                         <b-col class="col-5">{{ estado }}</b-col>
                     </b-row>
 
@@ -161,8 +161,8 @@ export default {
             MuestraFinanzasService.eliminarOrdenCompra(file).then((response) =>{
                 this.BorrandoArchivo = false;
                 if(response.status == 200){
-                    this.$bvToast.toast(`Orden de compra borrada exitosamente`, {
-                        title: 'Exito',
+                    this.$bvToast.toast(`Orden de compra borrada exitosamente.`, {
+                        title: 'Éxito',
                         toaster: 'b-toaster-top-center',
                         solid: true,
                         variant: "success",
@@ -199,7 +199,7 @@ export default {
                     }
 
                 } else {
-                    this.$bvToast.toast(`Error al obtener detalles de muestra`, {
+                    this.$bvToast.toast(`Error al obtener detalles de muestra.`, {
                         title: 'Error',
                         toaster: 'b-toaster-top-center',
                         solid: true,

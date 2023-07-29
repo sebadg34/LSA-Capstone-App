@@ -205,7 +205,7 @@ export default {
                         if (response != null) {
                             if (response.status == 200) {
                                 this.$bvToast.toast(`Edición de empresa exitosa.`, {
-                                    title: 'Exito',
+                                    title: 'Éxito',
                                     toaster: 'b-toaster-top-center',
                                     solid: true,
                                     variant: "success",

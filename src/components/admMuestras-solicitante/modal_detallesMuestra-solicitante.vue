@@ -31,7 +31,7 @@
               <b-col class="col-5">{{ numero_muestras }}</b-col>
             </b-row>
             <b-row style="border-bottom: 1px solid var(--lsa-light-gray); padding:3px">
-              <b-col class="col-7" style="font-weight:bold;"> matriz: </b-col>
+              <b-col class="col-7" style="font-weight:bold;"> Matriz: </b-col>
               <b-col class="col-5">{{ matriz }}</b-col>
             </b-row>
             <b-row style="border-bottom: 1px solid var(--lsa-light-gray); padding:3px">

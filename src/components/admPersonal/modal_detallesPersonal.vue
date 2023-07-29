@@ -56,7 +56,7 @@
         <br />
         <template v-if="Areas.length > 0">
             <b-list-group horizontal>
-        <b-list-group-item class="d-flex align-items-center justify-content-center" style="width:40%;font-weight: bold; padding-top: 2px;  padding-bottom: 2px;">Areas</b-list-group-item>
+        <b-list-group-item class="d-flex align-items-center justify-content-center" style="width:40%;font-weight: bold; padding-top: 2px;  padding-bottom: 2px;">Áreas</b-list-group-item>
 
         <b-list-group-item class="d-flex align-items-center justify-content-center" style="width:60%;font-weight: bold;  padding-top: 2px;  padding-bottom: 2px;">Tipos de análisis</b-list-group-item>
        
@@ -193,7 +193,7 @@ export default {
             personalService.eliminarDocumento(data).then((response) => {
                 if (response.status == 200) {
                     this.$bvToast.toast(`Archivo eliminado exitosamente.`, {
-                        title: 'Exito',
+                        title: 'Éxito',
                         toaster: 'b-toaster-top-center',
                         solid: true,
                         variant: "success",

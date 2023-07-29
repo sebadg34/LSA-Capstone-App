@@ -30,10 +30,10 @@
                         Parámetros
                     </b-col>
                     <b-col>
-                        Unidad
+                        Resultado
                     </b-col>
                     <b-col>
-                        Resultado
+                        Unidad
                     </b-col>
                     <b-col>
                         Fecha/Hora de inicio análisis
@@ -76,11 +76,11 @@
                             </ValidationProvider>
                         </b-col>
                         <b-col class="p-2">
-                            <ValidationProvider :name="'unidad ' + (k + 1)" rules="required" v-slot="validationContext">
+                            <ValidationProvider :name="'resultado ' + (k + 1)" rules="required" v-slot="validationContext">
 
                                 <b-form-input :state="getValidationState(validationContext)"
-                                    :placeholder="'unidad ' + (k + 1)" style="height:30px" type="text" class="form-control"
-                                    v-model="input.unidad" />
+                                    :placeholder="'resultado ' + (k + 1)" style="height:30px" type="text"
+                                    class="form-control" v-model="input.resultado" />
 
                                 <b-form-invalid-feedback id="analista-live-feedback">{{
                                     validationContext.errors[0] }}
@@ -88,11 +88,11 @@
                             </ValidationProvider>
                         </b-col>
                         <b-col class="p-2">
-                            <ValidationProvider :name="'resultado ' + (k + 1)" rules="required" v-slot="validationContext">
+                            <ValidationProvider :name="'unidad ' + (k + 1)" rules="required" v-slot="validationContext">
 
                                 <b-form-input :state="getValidationState(validationContext)"
-                                    :placeholder="'resultado ' + (k + 1)" style="height:30px" type="text"
-                                    class="form-control" v-model="input.resultado" />
+                                    :placeholder="'unidad ' + (k + 1)" style="height:30px" type="text" class="form-control"
+                                    v-model="input.unidad" />
 
                                 <b-form-invalid-feedback id="analista-live-feedback">{{
                                     validationContext.errors[0] }}

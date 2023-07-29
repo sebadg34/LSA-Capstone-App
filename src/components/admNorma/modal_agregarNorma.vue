@@ -74,7 +74,7 @@
                                 <b-row class="d-flex justify-content-between align-items-center" style="height:30px">
                                     <h5 style="position:absolute; top:-15px; left:-10px"><b-badge pill class="lsa-orange">2</b-badge> </h5> 
                                     <b-col class="col-4" style="padding:5px">
-                                        <div style="font-weight:bold">Tabla:</div>
+                                        <div style="font-weight:bold">Tablas:</div>
 
                                     </b-col>
                                     

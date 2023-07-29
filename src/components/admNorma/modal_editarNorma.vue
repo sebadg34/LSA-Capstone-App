@@ -76,7 +76,7 @@
                                     <h5 style="position:absolute; top:-15px; left:-10px"><b-badge pill
                                             class="lsa-orange">2</b-badge> </h5>
                                     <b-col class="col-4" style="padding:5px">
-                                        <div style="font-weight:bold">Tabla:</div>
+                                        <div style="font-weight:bold">Tablas:</div>
 
                                     </b-col>
 
@@ -219,7 +219,7 @@
             </b-col>
             <b-col>
                 <b-button :disabled="!tablaSeleccionada" @click="agregarTablaNorma" block class="lsa-light-blue"
-                    style="font-weight:bold">agregar tabla seleccionada a norma</b-button>
+                    style="font-weight:bold">Agregar tabla seleccionada a norma</b-button>
             </b-col>
         </b-row>
 
@@ -278,7 +278,7 @@
                                                 <div>{{ parametro.nombre_parametro }}</div>
                                                 <b-button
                                                     v-b-toggle="'colapse-' + parametro.id_parametro + '-' + tablaindex" pill
-                                                    class="lsa-blue">detalles <b-icon icon="journals"
+                                                    class="lsa-blue">Detalles <b-icon icon="journals"
                                                         aria-hidden="true"></b-icon>
                                                 </b-button>
                                             </b-row>
@@ -364,7 +364,7 @@
             <div class="d-flex justify-content-center">
                 <b-button @click="enviarFormulario()" variant="primary" size="xl" class="reactive-button"
                     style="font-weight:bold; padding-top: 10px;">
-                    Agregar norma
+                    Guardar cambios
                 </b-button>
             </div>
         </template>

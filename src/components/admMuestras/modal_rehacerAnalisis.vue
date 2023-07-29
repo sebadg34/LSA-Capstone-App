@@ -4,7 +4,7 @@
       <template #modal-header="{ close }">
             <!-- Emulate built in modal header close button action -->
             <b-row class="d-flex justify-content-around">
-                <div class="pl-3">Rehacer Análisis</div>
+                <div class="pl-3">Rehacer análisis</div>
             </b-row> 
             <button type="button" class="close" aria-label="Close" @click="close()">
                 <span aria-hidden="true" style="color:white">&times;</span>
@@ -13,7 +13,7 @@
 
         <div>
         <b-button variant="primary" @click="RehacerAna()">
-            Rehacer Análisis
+            Rehacer análisis
     
         </b-button>
     </div>

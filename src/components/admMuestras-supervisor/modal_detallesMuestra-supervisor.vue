@@ -43,7 +43,7 @@
           <b-col class="col-6">
 
             <b-row style="border-bottom: 1px solid var(--lsa-light-gray); padding:3px">
-              <b-col class="col-5" style="font-weight:bold;"> matriz: </b-col>
+              <b-col class="col-5" style="font-weight:bold;"> Matriz: </b-col>
               <b-col class="col-7">{{ matriz.nombre_matriz }}</b-col>
             </b-row>
             <b-row style="border-bottom: 1px solid var(--lsa-light-gray); padding:3px">
@@ -168,7 +168,7 @@
       <template #modal-header="{ close }">
         <!-- Emulate built in modal header close button action -->
         <b-row class="d-flex justify-content-around">
-          <div class="pl-3">Cambiar fecha de entega</div>
+          <div class="pl-3">Cambiar fecha de entrega</div>
         </b-row>
 
         <button type="button" class="close" aria-label="Close" @click="close()">
@@ -325,7 +325,7 @@ export default {
           }
 
         } else {
-          this.$bvToast.toast(`Error al obtener detalles de muestra`, {
+          this.$bvToast.toast(`Error al obtener los detalles de la muestra.`, {
             title: 'Error',
             toaster: 'b-toaster-top-center',
             solid: true,

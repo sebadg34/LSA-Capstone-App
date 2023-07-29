@@ -27,7 +27,7 @@
           <b-col class="col-6">
            
             <b-row style="border-bottom: 1px solid var(--lsa-light-gray); padding:3px">
-              <b-col class="col-5" style="font-weight:bold;"> Nombre solicitante: </b-col>
+              <b-col class="col-5" style="font-weight:bold;"> Nombre del solicitante: </b-col>
               <b-col class="col-7">{{ nombre_solicitante + " " + apellido_solicitante}}</b-col>
             </b-row>
 
@@ -37,12 +37,12 @@
             </b-row>
 
             <b-row style="border-bottom: 1px solid var(--lsa-light-gray); padding:3px">
-              <b-col class="col-5" style="font-weight:bold;"> Ciudad empresa: </b-col>
+              <b-col class="col-5" style="font-weight:bold;"> Ciudad de la empresa: </b-col>
               <b-col class="col-7">{{ ciudad_empresa }}</b-col>
             </b-row>
 
             <b-row style="border-bottom: 1px solid var(--lsa-light-gray); padding:3px">
-              <b-col class="col-5" style="font-weight:bold;"> Dirección empresa: </b-col>
+              <b-col class="col-5" style="font-weight:bold;"> Dirección de la empresa: </b-col>
               <b-col class="col-7">{{ direccion_empresa }}</b-col>
             </b-row>
            
@@ -54,7 +54,7 @@
               <b-col class="col-7">{{ numero_muestras }}</b-col>
             </b-row>
             <b-row style="border-bottom: 1px solid var(--lsa-light-gray); padding:3px">
-              <b-col class="col-5" style="font-weight:bold;"> matriz: </b-col>
+              <b-col class="col-5" style="font-weight:bold;"> Matriz: </b-col>
               <b-col class="col-7">{{ matriz.nombre_matriz }}</b-col>
             </b-row>
             <b-row style="border-bottom: 1px solid var(--lsa-light-gray); padding:3px">
@@ -124,7 +124,7 @@
 <br/>
         <b-list-group horizontal>
           <b-list-group-item class="d-flex align-items-center justify-content-center"
-            style="width:30%;font-weight: bold; padding:3px">Analistas designados(s)</b-list-group-item>
+            style="width:30%;font-weight: bold; padding:3px">Analista(s) designados(s)</b-list-group-item>
 
           <b-list-group-item  style="width:70%;padding:0px" class="d-flex align-items-center justify-content-center">
             <b-list-group style="width:100%">
@@ -184,7 +184,7 @@
       <template #modal-header="{ close }">
       <!-- Emulate built in modal header close button action -->
       <b-row class="d-flex justify-content-around">
-        <div class="pl-3">Cambiar fecha de entega</div>
+        <div class="pl-3">Cambiar fecha de entrega</div>
       </b-row>
 
       <button type="button" class="close" aria-label="Close" @click="close()">
@@ -335,7 +335,7 @@ export default {
           }
 
         } else {
-          this.$bvToast.toast(`Error al obtener detalles de muestra`, {
+          this.$bvToast.toast(`Error al obtener detalles de muestra.`, {
             title: 'Error',
             toaster: 'b-toaster-top-center',
             solid: true,

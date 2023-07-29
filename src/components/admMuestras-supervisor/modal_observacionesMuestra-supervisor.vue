@@ -36,8 +36,8 @@
        
         <b-list-group horizontal style="font-weight: bold;" >
           <b-list-group-item class="d-flex align-items-center justify-content-center" style="width:40%;padding-top:3px; padding-bottom:3px">Analista</b-list-group-item>
-          <b-list-group-item class="d-flex align-items-center justify-content-center" style="width:30%;padding-top:3px; padding-bottom:3px">Fecha ingreso</b-list-group-item>
-          <b-list-group-item class="d-flex align-items-center justify-content-center" style="width:30%;padding-top:3px; padding-bottom:3px">Hora ingreso</b-list-group-item>
+          <b-list-group-item class="d-flex align-items-center justify-content-center" style="width:30%;padding-top:3px; padding-bottom:3px">Fecha de ingreso</b-list-group-item>
+          <b-list-group-item class="d-flex align-items-center justify-content-center" style="width:30%;padding-top:3px; padding-bottom:3px">Hora de ingreso</b-list-group-item>
         </b-list-group>
         <b-list-group>
           <b-list-group-item v-if="cargandoObservaciones"
@@ -136,7 +136,7 @@ export default {
 
 
           } else {
-            this.$bvToast.toast(`Error al obtener observaciones de muestra`, {
+            this.$bvToast.toast(`Error al obtener las observaciones de la muestra.`, {
               title: 'Error',
               toaster: 'b-toaster-top-center',
               solid: true,

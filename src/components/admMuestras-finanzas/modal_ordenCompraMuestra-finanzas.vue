@@ -30,7 +30,7 @@
                 <b-col class="col-12">
 
                     
-                    <label for="input-live">Fecha emisión:</label>
+                    <label for="input-live">Fecha de emisión:</label>
                     <ValidationProvider name="fecha" rules="required" v-slot="validationContext">
                         <b-form-datepicker :min="minDate" :max="maxDate" @context="onContext"
                             :date-format-options="{ year: 'numeric', month: '2-digit', day: '2-digit' }"
@@ -52,7 +52,7 @@
                             :state="getValidationState(validationContext)" v-model="Archivo" id="file-large"
                             size="md"></b-form-file>
                         <b-form-invalid-feedback id="archivo-live-feedback">
-                            El archivo no puede pesar mas de 5MB
+                            El archivo no puede pesar mas de 5MB.
                         </b-form-invalid-feedback>
                         <div class="mt-3">Archivo seleccionado:
                             <b-list-group-item v-if="Archivo" style="padding:10px; font-weight: bold;"
@@ -157,8 +157,8 @@ export default {
                         this.busy = false;
                         console.log(response);
                         if (response.request.status == 200) {
-                            this.$bvToast.toast(`Guardado de cotización exitoso`, {
-                                title: 'Exito',
+                            this.$bvToast.toast(`Guardado de cotización exitoso.`, {
+                                title: 'Éxito',
                                 toaster: 'b-toaster-top-center',
                                 solid: true,
                                 variant: "success",

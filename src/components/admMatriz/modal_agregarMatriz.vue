@@ -25,13 +25,13 @@
 
         <b-col>
             <b-form-group label="Seleccione un parámetro:">
-                <b-form-select v-model="parametroSeleccionado" :options="opcionesParametro" placeholder="Seleccione un parámetro." @change="agregarObjetosSeleccionados"></b-form-select>
+                <b-form-select v-model="parametroSeleccionado" :options="opcionesParametro" placeholder="Seleccione un parámetro:" @change="agregarObjetosSeleccionados"></b-form-select>
             </b-form-group>
         </b-col>
 
         <b-col>
             <b-form-group label="Seleccione una metodología:">
-                <b-form-select v-model="metodologiaSeleccionada" :options="opcionesMetodologia" placeholder="Seleccione una metodología." :disabled="metodologiaDeshabilitada" @change="agregarObjetosSeleccionados"></b-form-select>
+                <b-form-select v-model="metodologiaSeleccionada" :options="opcionesMetodologia" placeholder="Seleccione una metodología:" :disabled="metodologiaDeshabilitada" @change="agregarObjetosSeleccionados"></b-form-select>
             </b-form-group>
         </b-col>
 

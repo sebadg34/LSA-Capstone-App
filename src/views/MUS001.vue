@@ -8,33 +8,33 @@
             <!-- Grupo de elementos del recepcionista -->
 
             <div class="col-md-4">            
-              <h1>RECEPCION</h1> 
+              <h1>Recepción de una muestra</h1> 
               <div style="display: flex; justify-content: center; align-items: center; height: 25vh;"> 
               <modal_datosRecepcion ref="modalRecepcion" @datosIngresados="capturarDatos" />            
             <b-button v-b-modal.modal-recepcion style="border-radius: 15px; font-weight: bold; font-size: 18px; " class="lsa-light-blue reactive-button">
-                Agregar Datos de Recepción
+                Agregar datos de recepción
             <b-icon icon="clipboard"></b-icon>
             </b-button>
           </div> 
             </div>            
             <!-- Grupo de elementos de la muestra -->
             <div class="col-md-4">
-              <h1> MUESTRA </h1>
+              <h1> Muestra </h1>
               <div style="display: flex; justify-content: center; align-items: center; height: 25vh;"> 
               <modal_datosMuestra ref="modalMuestra" @datosIngresados="capturardatosMuestra" />
               <b-button v-b-modal.modal-recepcionMuestra style="border-radius: 15px; font-weight: bold; font-size: 18px; " class="lsa-light-blue reactive-button">
-                Agregar Datos de la Muestra
+                Agregar datos de la muestra
               <b-icon icon="clipboard"></b-icon>
               </b-button>
               </div>              
             </div>                 
               <!-- Grupo de elementos del transportista -->
               <div class="col-md-4">
-              <h1> TRANSPORTISTA</h1>
+              <h1> Transportista</h1>
               <div style="display: flex; justify-content: center; align-items: center; height: 25vh;"> 
               <Modal_datosTransportista ref="modalTransportista" @datosIngresados="capturardatosTransportista" />
               <b-button v-b-modal.modal-recepcionTransportista style="border-radius: 15px; font-weight: bold; font-size: 18px; " class="lsa-light-blue reactive-button">
-                Agregar Datos del Transportista
+                Agregar datos del transportista
               <b-icon icon="clipboard"></b-icon>
               </b-button>   
             </div>        
@@ -42,12 +42,12 @@
           </div>              
           <div style="display: flex; justify-content: center; align-items: center; height: 25vh;">
           <b-button @click="enviarFormulario()" variant="primary" size="xl" class="reactive-button" style="font-weight:bold;">
-            Recepcionar Muestra
+            Recepcionar muestra
           </b-button>
           </div>
       </b-form>
     </div>
-    </div>muestra
+    </div>Muestra
   </validation-observer>
 </template>
 
@@ -178,8 +178,8 @@ enviarFormulario() {
                         console.log(response)
                         if (response != null) {
                             if (response.status == 200) {
-                                this.$bvToast.toast(`Creación de la muestra exitosa`, {
-                                    title: 'Exito',
+                                this.$bvToast.toast(`Recepción de la muestra exitosa.`, {
+                                    title: 'Éxito',
                                     toaster: 'b-toaster-top-center',
                                     solid: true,
                                     variant: "success",

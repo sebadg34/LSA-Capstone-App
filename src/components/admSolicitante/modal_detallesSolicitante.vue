@@ -20,7 +20,7 @@
                     <b-col style="font-weight:bold" class="col-4">
                         <div v-if="this.Nombre_empresa"> Empresa:</div>
                         <div v-if="this.Ciudad_empresa"> Ciudad:</div>
-                        <div> Rut:</div>
+                        <div> RUT:</div>
                         <div> Nombre:</div>
                         <div> Primer apellido:</div>
                         <div> Segundo apellido:</div>
@@ -29,7 +29,7 @@
                         <div> Fono pago proveedores:</div>
                         <div> Contacto pago proveedores :</div>
                         <div> Dirección de envío factura:</div>
-                        <div> Tipo cliente:</div>
+                        <div> Tipo de cliente:</div>
                     </b-col>
                     <b-col class="col-4">
                         <div>{{ this.Nombre_empresa }}</div>
@@ -162,7 +162,7 @@ export default {
                 },
                 {
                     value: 'Jefe(a) de Laboratorio',
-                    text: 'Jefe(a) de laboratorio'
+                    text: 'Jefe(a) de Laboratorio'
                 },
                 {
                     value: 'Supervisor(a)',

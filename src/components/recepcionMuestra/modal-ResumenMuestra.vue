@@ -34,7 +34,7 @@
                     <strong>RUT:</strong>  <span>test</span>
                 </div>
                 <div>
-                    <strong>Razón Social:</strong>   <span>test</span>
+                    <strong>Razón social:</strong>   <span>test</span>
                 </div>
                 <div>
                     <strong> Giro:</strong>  <span>test</span>

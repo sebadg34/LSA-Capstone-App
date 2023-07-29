@@ -1,6 +1,6 @@
 <template>
        <div>
-  <b-modal id="modal-cantidad" ref="modal" title="Cantidad de submuestras" size="xl" >
+  <b-modal id="modal-cantidad" ref="modal" title="cantidad de muestras" size="xl" >
     <template #modal-header="{ close }">
       <!-- Emulate built-in modal header close button action -->
       <b-row class="d-flex justify-content-around">
@@ -16,7 +16,7 @@
           <b-form-input v-model="row.item.orden" type="number" min="1"></b-form-input>
         </template>
         <template #cell(identificacion)="row">
-          <b-form-input v-model="row.item.identificacion" placeholder="Ingrese la identificación de la muestra"></b-form-input>
+          <b-form-input v-model="row.item.identificacion" placeholder="Ingrese la identificación de la muestra."></b-form-input>
         </template>        
         <template #cell(PYM)="row">
           <b-list-group>
@@ -36,7 +36,7 @@
               </template>
               <!-- Si 'row.item.PYM' está vacío o no es un array, mostramos un mensaje -->
               <template v-if="!Array.isArray(row.item.PYM) || row.item.PYM.length === 0">
-                <b-list-group-item>No se encontraron datos</b-list-group-item>
+                <b-list-group-item>No se encontraron datos registrados.</b-list-group-item>
               </template>
             </b-collapse>
           </b-list-group>
@@ -67,10 +67,10 @@
     
   </b-modal>
 
-  <b-modal id="modal-Agregar-Parametros" ref="mod" :title="`Agregar parámetro a analista`" size="lg">
+  <b-modal id="modal-Agregar-Parametros" ref="mod" :title="`Agregar parámetros a analistas`" size="lg">
                     <template #modal-header="{ close }">
                         <b-row class="d-flex justify-content-around">
-                            <div class="pl-3">Asignar Parámetros a analista</div>
+                            <div class="pl-3">Asignar parámetros a analistas</div>
                         </b-row>
                         <button type="button" class="close" aria-label="Close" @click="close()">
                             <span aria-hidden="true" style="color:white">&times;</span>
@@ -78,13 +78,13 @@
                     </template>
                     <b-row>
                         <b-col>
-                            <b-form-group label="Seleccione un parámetro">
+                            <b-form-group label="Seleccione un parámetro:">
                                 <b-form-select v-model="parametroSeleccionadoIngreso" :options="TodasopcionesParametro" text-field="nombre_parametro" value-field="id_parametro" @change="agregar(filaSeleccionada)"></b-form-select>
                             </b-form-group>
                         </b-col>
                         
                         <b-col>
-                            <b-form-group label="Seleccione una metodologia">
+                            <b-form-group label="Seleccione una metodología:">
                                 <b-form-select v-model="metodologiaSeleccionadoIngreso" :options="opcionesMetodologia" text-field="nombre_metodologia" value-field="id_metodologia" @change="agregar(filaSeleccionada)"></b-form-select>
                             </b-form-group>
                         </b-col>  
@@ -92,7 +92,7 @@
 
                     <b-row v-if="filaSeleccionada && filaSeleccionada.PYM.length > 0" class="mt-3">
                         <b-col>
-                            <b-form-group label="Parámetros Seleccionados:">
+                            <b-form-group label="Parámetros seleccionados:">
                                 <div v-for="(objeto, index) in filaSeleccionada.PYM" :key="index" class="d-flex align-items-center objetos-item mb-3">
                                     <b-input readonly :value="objeto.parametro" class="mr-2"></b-input>
                                     <b-input readonly :value="objeto.metodologia" class="mr-2"></b-input>                                     
@@ -105,11 +105,11 @@
                     </b-row>
                 
                     <b-alert variant="danger" :show="alertaDuplicado" dismissible @dismissed="alertaDuplicado = false">
-                        El Parametro ya se encuentra agregado.
+                        El parámetro ya se encuentra agregado.
                     </b-alert>
                 
                     <b-alert variant="success" :show="alertaExito" dismissible @dismissed="alertaExito = false">
-                        Parámetro agregado con éxito!
+                        Parámetro agregado con éxito.
                     </b-alert>
                     <!-- //////////////////////////////////////////MODAL-FOOTER////////////////////////////////////////////////////////////////////////////////// -->
                     <template #modal-footer="{ close }">                        

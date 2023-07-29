@@ -132,7 +132,7 @@ export default {
                         console.log(response);
                         if (response.request.status == 200) {
                             this.$bvToast.toast(`La tarea ha sido marcada exitosamente.`, {
-                                title: 'Exito',
+                                title: 'Éxito',
                                 toaster: 'b-toaster-top-center',
                                 solid: true,
                                 variant: "success",
@@ -141,8 +141,8 @@ export default {
                             this.$emit('refrescar');
                             this.$bvModal.hide('modal-completar-analisis-supervisor');
                         }else{
-                            this.$bvToast.toast(`Error al marcar tarea`, {
-                                title: 'Exito',
+                            this.$bvToast.toast(`Error al marcar tarea.`, {
+                                title: 'Error',
                                 toaster: 'b-toaster-top-center',
                                 solid: true,
                                 variant: "warning",

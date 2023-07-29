@@ -9,7 +9,7 @@
     <b-row align-h="start" style="padding-top:30px;">
         <b-col class="col-6">
             <div style="font-size:2rem; font-weight: bold; color: var(--lsa-blue)">
-                Administración de Muestras
+                Administración de muestras
             </div>
         </b-col>
     </b-row>
@@ -73,7 +73,7 @@
                 <template #empty>
                     <div class="text-center lsa-light-blue-text my-2 row">
                         <div class="col">
-                            <div style=" color:gray"> No hay muestras registradas para mostrar</div>
+                            <div style=" color:gray"> No hay muestras registradas para mostrar.</div>
                         </div>
 
                     </div>
@@ -186,7 +186,7 @@ export default {
 
                 {
                     key: 'solicitante',
-                    label: 'Nombre solicitante'
+                    label: 'Nombre del solicitante'
                 },
                 {
                     key: 'nombre_empresa',
@@ -194,11 +194,11 @@ export default {
                 },
                 {
                     key: 'fecha_entrega',
-                    label: 'Fecha entrega'
+                    label: 'Fecha de entrega'
                 },
                 {
                     key: 'matriz',
-                    label: 'matriz'
+                    label: 'Matriz'
                 },
                 {
                     key: 'estado',
@@ -220,7 +220,7 @@ export default {
             prioridades: ['Normal', 'Alta', 'Urgente'],
             estadosOpciones: [{
                     value: null,
-                    text: 'Seleccione un estado',
+                    text: 'Seleccione un estado:',
                     disabled: true
                 },
                 {
@@ -242,7 +242,7 @@ export default {
             ],
             prioridadOpciones: [{
                     value: null,
-                    text: 'Seleccione una prioridad',
+                    text: 'Seleccione una prioridad:',
                     disabled: true
                 },
                 {
@@ -330,7 +330,7 @@ export default {
             switch (estado) {
                 case 'Recepcionado':
                     return [{
-                            text: 'Detalle muestra',
+                            text: 'Detalles de la muestra',
                             value: 'Detalle Muestra'
                         },
                         {
@@ -338,13 +338,13 @@ export default {
                             value: 'Observaciones'
                         },
                         {
-                            text: 'Descargar Informe',
+                            text: 'Descargar informe',
                             value: 'Descargar Informe'
                         },
                     ];
                 case 'En Análisis':
                     return [{
-                            text: 'Detalle muestra',
+                            text: 'Detalles de la muestra',
                             value: 'Detalle Muestra'
                         },
                         {
@@ -352,13 +352,13 @@ export default {
                             value: 'Observaciones'
                         },
                         {
-                            text: 'Descargar Informe',
+                            text: 'Descargar informe',
                             value: 'Descargar Informe'
                         },
                     ];
                 case 'Finalizado':
                     return [{
-                            text: 'Detalle muestra',
+                            text: 'Detalles de la muestra',
                             value: 'Detalle Muestra'
                         },
                         {
@@ -366,13 +366,13 @@ export default {
                             value: 'observaciones'
                         },
                         {
-                            text: 'Descargar Informe',
+                            text: 'Descargar informe',
                             value: 'Descargar Informe'
                         },
                     ];
                 default:
                     return [{
-                            text: 'Seleccionar opción',
+                            text: 'Seleccionar opción:',
                             value: ''
                         } // Opción en blanco
                     ];

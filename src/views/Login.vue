@@ -21,7 +21,7 @@
                     <br>
 
                     <b-col sm="12" xs="12" lg="6">
-                        <b-card header-class="lsa-blue" header-tag="header" header="Ingreso sistema administración LSA" text-variant="white">
+                        <b-card header-class="lsa-blue" header-tag="header" header="Ingreso al sistema de administración del LSA" text-variant="white">
                            
                           
                                 <b-input-group class="mb-2">
@@ -50,7 +50,7 @@
 
                                 <b-button @click="enviarFormulario" id="button-interactive" class="reactive-button" type="submit" block style="font-weight: bold; font-size: 1.2rem;  background-color: var(--lsa-light-blue) !important; " pill>
                                     <b-spinner v-if="loading" small variant="primary" label="Spinning">
-                                    </b-spinner> Iniciar Sesión <b-icon icon="box-arrow-in-right" aria-hidden="true"></b-icon>
+                                    </b-spinner> Iniciar sesión <b-icon icon="box-arrow-in-right" aria-hidden="true"></b-icon>
                                 </b-button>
                             </b-overlay>
 
@@ -124,7 +124,7 @@ export default {
                             }
                          
                         }else{
-                                this.$bvToast.toast('Error al ingresar, Las credenciales de acceso son incorrectas o el usuario no está registrado en el sistema', {
+                                this.$bvToast.toast('Error al ingresar, las credenciales de acceso son incorrectas o el usuario no está registrado en el sistema.', {
                                     title: 'Error',
                                     toaster: 'b-toaster-top-center',
                                     variant:"warning",

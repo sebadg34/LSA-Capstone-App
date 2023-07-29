@@ -159,7 +159,7 @@ eliminarAnalistaSeleccionado(index) {
         if(response != null){
           if (response.status == 200) {
             this.$bvToast.toast(`Creación de la metodología exitosa.`, {
-              title: 'Exito',
+              title: 'Éxito',
               toaster: 'b-toaster-top-center',
               solid: true,
               variant: "success",

@@ -30,7 +30,7 @@
                                 validationContext.errors[0] }}
                             </b-form-invalid-feedback>
                             <b-alert fade style="margin:2px; padding:2px;" class="text-center" :show="Rut_ocupado"
-                                variant="warning">El rut ya está registrado en el sistema</b-alert>
+                                variant="warning">El RUT ya está registrado en el sistema</b-alert>
                         </b-overlay>
                     </ValidationProvider>
                     <ValidationProvider name="apellidos" rules="required|min:2" v-slot="validationContext">
@@ -66,7 +66,7 @@
                                 validationContext.errors[0] }}
                             </b-form-invalid-feedback>
                             <b-alert fade style="margin:2px; padding:2px;" class="text-center" :show="Correo_ocupado"
-                                variant="warning">El correo ya está registrado en el sistema</b-alert>
+                                variant="warning">El correo ya está registrado en el sistema.</b-alert>
                         </b-overlay>
                     </ValidationProvider>
                 </b-col>

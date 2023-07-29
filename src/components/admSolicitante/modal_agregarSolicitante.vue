@@ -146,7 +146,7 @@
             </b-col>
 
             <b-col class="col-3">
-                <ValidationProvider name="cargo" rules="required" v-slot="validationContext">
+                <ValidationProvider name="tipo de cliente" rules="required" v-slot="validationContext">
                     <label for="input-live">Tipo de cliente:</label>
                     <b-form-select @change="tipoCambiado" aria-describedby="cargo-live-feedback" :state="getValidationState(validationContext)" class="mb-1" v-model="Tipo" :options="tipos"></b-form-select>
                     <b-form-invalid-feedback id="cargo-live-feedback">{{
@@ -451,7 +451,7 @@ export default {
                         if (response != null) {
                             if (response.status == 200) {
                                 this.$bvToast.toast(`Creación de solicitante exitosa.`, {
-                                    title: 'Exito',
+                                    title: 'Éxito',
                                     toaster: 'b-toaster-top-center',
                                     solid: true,
                                     variant: "success",

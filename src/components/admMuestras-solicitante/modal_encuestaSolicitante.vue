@@ -16,7 +16,7 @@
         </template>
         <b-row>
             <b-col class="col-12">
-                <b-alert fade  class="text-center" dismissible @dismissed="valoracion_faltante = false" :show="valoracion_faltante" variant="warning">La valoración debe ser entre 1 a 5 estrellas</b-alert>
+                <b-alert fade  class="text-center" dismissible @dismissed="valoracion_faltante = false" :show="valoracion_faltante" variant="warning">La valoración debe ser entre 1 a 5 estrellas.</b-alert>
                 <label for="rating-lg" class="mt-3" style="font-weight: bold;">¿Qué te pareció el servicio?</label>
                 <ValidationProvider name="valoración" rules="required|min:1" v-slot="validationContext">
                     <b-form-rating :state="getValidationState(validationContext)" variant="warning" id="rating-lg" v-model="Valoracion" size="lg"></b-form-rating>
@@ -105,8 +105,8 @@ this.Cargando = true;
                     MuestraService.responderEncuesta(data).then((response) => {
                         if(response.status == 200){
                             console.log("encuesta registrada");
-                            this.$bvToast.toast(`Encuesta respondida exitosamente`, {
-                                title: 'Exito',
+                            this.$bvToast.toast(`Encuesta respondida exitosamente.`, {
+                                title: 'Éxito',
                                 toaster: 'b-toaster-top-center',
                                 solid: true,
                                 variant: "success",
@@ -119,7 +119,7 @@ this.Cargando = true;
                             this.reiniciarDatos();
                         }else{
                             this.Cargando = false;
-                            this.$bvToast.toast(`Error al enviar encuesta`, {
+                            this.$bvToast.toast(`Error al enviar encuesta.`, {
                                 title: 'Error',
                                 toaster: 'b-toaster-top-center',
                                 solid: true,

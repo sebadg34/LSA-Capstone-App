@@ -181,7 +181,7 @@ export default {
                         console.log("respuesta axios", response)
                         if (response.request.status == 200) {
                             this.$bvToast.toast(`Cambio de fechas exitoso.`, {
-                                title: 'Exito',
+                                title: 'Éxito',
                                 toaster: 'b-toaster-top-center',
                                 solid: true,
                                 variant: "success",
