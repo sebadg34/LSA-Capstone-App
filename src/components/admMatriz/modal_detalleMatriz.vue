@@ -44,8 +44,11 @@
                                 <b-list-group-item class="d-flex justify-content-between align-items-center" style="padding:10px" v-for="metodologia in parametro.metodologias" :key="metodologia.id_metodologia + '-' + parametro.id_parametro">
                                     <span class="pl-2"> {{ metodologia.nombre_metodologia }}</span>
 
-                                    <b-popover placement="topleft" :target="'button-' +metodologia.id_metodologia+'-'+parametro.id_parametro" title="Descripción metodología" triggers="focus">
-                                        {{ metodologia.detalle_metodologia }}
+                                    <b-popover placement="lefttop" :target="'button-' +metodologia.id_metodologia+'-'+parametro.id_parametro" title="Descripción metodología" triggers="focus">
+                                        <template v-if=" metodologia.detalle_metodologia != null">{{ metodologia.detalle_metodologia }}</template>
+                                    <template v-else>
+                                        <div>La metodología no cuenta con una descripción actualmente.</div>
+                                    </template>
                                     </b-popover>
                                     <b-button class="boton-ojo-metodo" :id="'button-'+metodologia.id_metodologia+'-'+parametro.id_parametro">
                                         <b-icon scale="0.9" icon="eye-fill" style="color:gray"></b-icon>
@@ -94,7 +97,6 @@ export default {
             };
             ElementosService.obtenerDetallesMatriz(data).then((response) => {
                 if (response.status === 200 & response.data != null) {
-                    console.log("obteniendo detalles de la matriz:", response.data);
                     for (var i = 0; i < response.data.length; i++) {
                         var parametroExistente = this.parametros.find(param => param.id_parametro == response.data[i].id_parametro);
                         if (parametroExistente == null) {
@@ -115,7 +117,6 @@ export default {
                             })
                         }
                     }
-                    console.log("parametros a desplegar: ", this.parametros)
                     this.loading = false;
                 }
             });
@@ -127,7 +128,6 @@ export default {
         detallesData: {
             handler() {
                 this.parametros = [];
-                console.log("detallesData actualizada", this.detallesData);
                 this.Nombre = this.detallesData.nombre_matriz;
                 this.id = this.detallesData.id_matriz;
                 this.obtenerDetallesMatriz();

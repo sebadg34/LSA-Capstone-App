@@ -20,20 +20,23 @@
     <b-list-group style="padding:0px">
       <b-list-group-item style="padding:0px; height: 50px;">
         <b-list-group horizontal>
-          <b-list-group-item class="p-3 text-center " style="width:20%;font-weight: bold;">
+          <b-list-group-item class="p-3 text-center " style="width:15%;font-weight: bold;">
             RUT
           </b-list-group-item>
           <b-list-group-item class="p-3 text-center " style="width:20%;font-weight: bold;">
             Nombre
           </b-list-group-item>
-          <b-list-group-item class="p-3 text-center " style="width:20%;font-weight: bold;">
+          <b-list-group-item class="p-3 text-center " style="width:15%;font-weight: bold;">
             Orden de análisis
           </b-list-group-item>
           <b-list-group-item class="p-3 text-center " style="width:20%;font-weight: bold;">
             Parámetro
           </b-list-group-item>          
-          <b-list-group-item class="p-3 text-center " style="width:20%;font-weight: bold;">
+          <b-list-group-item class="p-3 text-center " style="width:15%;font-weight: bold;">
             Fecha  de entrega
+          </b-list-group-item>
+          <b-list-group-item class="p-3 text-center " style="width:15%;font-weight: bold;">
+            Estado
           </b-list-group-item>
         </b-list-group>
       </b-list-group-item>
@@ -50,13 +53,13 @@
               </b-list-group>
       <b-list-group-item v-for="analista in analistas" :key="analista.rut_empleado" style="padding:0px">
         <b-list-group horizontal>
-          <b-list-group-item class="text-center" style="width:20%">
+          <b-list-group-item class="text-center" style="width:15%">
             {{ analista.rut_empleado }}
           </b-list-group-item>
           <b-list-group-item class="text-center" style="width:20%">
             {{ analista.nombre + " " + analista.apellido }}
           </b-list-group-item>
-          <b-list-group-item class="text-center" style="width:20%">
+          <b-list-group-item class="text-center" style="width:15%">
             {{ analista.orden_analisis }}
           </b-list-group-item>
           <b-list-group-item class="text-center" style="width:20%">
@@ -84,9 +87,12 @@
 
           
           </b-list-group-item>
-          <b-list-group-item class="text-center" style="width:20%">
+          <b-list-group-item class="text-center" style="width:15%">
             {{ analista.fecha_entrega_formateada }}
-          </b-list-group-item>          
+          </b-list-group-item>     
+          <b-list-group-item class="text-center" style="width:15%">
+            {{ analista.estado }}
+          </b-list-group-item>      
         </b-list-group>
       </b-list-group-item>
       

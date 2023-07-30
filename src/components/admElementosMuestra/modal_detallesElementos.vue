@@ -12,10 +12,17 @@
 
 
     <b-list-group>
+      
       <b-list-group-item style="border-radius: 20px;">
         <strong>Matriz: </strong> {{ " " + nombre_matriz }}
       </b-list-group-item>
       <br />
+      <b-list-group-item v-if="cargandoParametros" class="d-flex align-items-center justify-content-center lsa-orange-text" style="height:250px">
+                    <div>
+                        <b-spinner class="align-middle"></b-spinner>
+                        <strong> Cargando...</strong>
+                    </div>
+                </b-list-group-item>
       <b-list-group-item class="p-0" v-for="parametro in parametros" :key="parametro.id_parametro">
         <b-list-group>
           <b-list-group-item>
@@ -36,6 +43,7 @@
             <b-list-group-item class="p-0">
 
               <b-list-group>
+              
                 <b-list-group-item v-for="metodo in parametro.metodologias"
                   :key="metodo.id_metodologia + parametro.id_parametro" class="p-0 d-flex justify-content-between">
                   <b-list-group horizontal style="width:100%">
@@ -123,7 +131,8 @@ export default {
         nombre_matriz: ""
       },
       id: '',
-      parametros: []
+      parametros: [],
+      cargandoParametros: false,
 
 
     }
@@ -139,12 +148,14 @@ export default {
       }
     },
     obtenerDetallesElementos() {
+      this.parametros = [];
+      this.cargandoParametros = true;
       const data = {
         id_matriz: this.id
       };
 
       ElementosService.obtenerDetallesElementos(data).then((response) => {
-
+        
         if (response.status === 200) {
 
           const detalles = response.data;
@@ -176,38 +187,7 @@ export default {
 
 
 
-
-          /** 
-          
-                              console.log("Obteniendo detalles de los elementos:" , response.data);
-          
-                              this.nombreMatriz = response.data.nombre_matriz;        
-                              this.listaParametros = response.data.parametros.map((parametro) => parametro.nombre_parametro);
-          
-                              const listaMetodologias = [];
-                              response.data.parametros.forEach((parametro) => {
-                                  parametro.metodologias.forEach((metodologia) => {
-                                      listaMetodologias.push(metodologia.nombre_metodologia);
-                                  });
-                              });
-                              this.listaMetodologias = listaMetodologias;
-                 
-                              const listaEmpleados = [];
-                              response.data.parametros.forEach((parametro) => {
-                                  parametro.metodologias.forEach((metodologia) => {
-                                      metodologia.empleados.forEach((empleado) => {
-                                          listaEmpleados.push({
-                                              nombre: empleado.nombre,
-                                              apellido: empleado.apellido,
-                                              metodologia: metodologia.nombre_metodologia
-                                          });
-                                      });
-                                  });
-                              });
-                              this.listaEmpleados = listaEmpleados;
-          
-          */
-
+          this.cargandoParametros = false;
         }
       });
     }
@@ -216,8 +196,6 @@ export default {
   watch: {
     detallesData: {
       handler() {
-        console.log("detallesData actualizada", this.detallesData);
-
         this.nombre_matriz = this.detallesData.nombre_matriz;
         this.id = this.detallesData.id_matriz;
         console.log("id es: ", this.id)

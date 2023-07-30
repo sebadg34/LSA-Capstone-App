@@ -100,12 +100,12 @@
           </b-list-group-item>
           <b-list-group v-for="parametro in this.parametros" :key="parametro.id_parametro" horizontal>
             <b-list-group-item class="d-flex align-items-center justify-content-center"
-              style="width:30%">{{ parametro.nombre_parametro }}</b-list-group-item>
+              style="width:30%; padding:3px">{{ parametro.nombre_parametro }}</b-list-group-item>
 
             <b-list-group-item style="padding:0px;width:70%">
 
               <b-list-group flush>
-                <b-list-group-item class="d-flex justify-content-between align-items-center" style="padding:10px"
+                <b-list-group-item class="d-flex justify-content-between align-items-center" style="padding:3px"
                   v-for="metodologia in parametro.metodologias"
                   :key="metodologia.id_metodologia + '-' + parametro.id_parametro">
                   <span class="pl-2"> {{ metodologia.nombre_metodologia }}</span>
@@ -258,7 +258,7 @@ this.hora_ingreso = detalles.hora_ingreso_formateada;
 
             const parametrosData = response.data.parametros_metodologias;
             for(var i = 0; i < parametrosData.length; i++){
-              const parametroExistente = this.parametros.find(param => param.id_parametro = parametrosData.id_parametro);
+              const parametroExistente = this.parametros.find(param => param.id_parametro == parametrosData[i].id_parametro);
               if(parametroExistente == null){
                 this.parametros.push({
                   nombre_parametro: parametrosData[i].nombre_parametro,

@@ -53,10 +53,10 @@
               {{ observacion.nombre + " " + observacion.apellido }}
             </div>
             <div class="d-flex align-items-center justify-content-center"  style="width:30%;">
-              {{ observacion.fecha_observacion }}
+              {{ observacion.fecha_observacion_formateada }}
             </div>
             <div class="d-flex align-items-center justify-content-center" style="width:30%;">
-              {{ observacion.hora_observacion }}
+              {{ observacion.hora_observacion_formateada }}
             </div>
            </b-row>
            <b-row style=" min-height: 50px;" class="d-flex justify-content-center">
