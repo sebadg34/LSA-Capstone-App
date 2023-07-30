@@ -6,10 +6,14 @@
           
             <modal_agregarMetodologia/>
             <modal_agregarParametro/>
-        <div>
-  
+        <div> 
             <b-card no-body>
                 <div style="height:20px"></div>
+
+                <div class="rum-container">
+                    <strong class="rum-label">RUM: </strong>
+                    <span class="rum-number">{{ RUM }}</span>
+                </div>
                 <b-row class="d-flex justify-content-center">
                     <b-col class="col-8">
                         <b-tabs active-nav-item-class="lsa-orange" no-fade v-model="tabIndex" pills card vertical
@@ -2446,10 +2450,9 @@ export default {
             console.log("sub:", this.sub);
 
                 //TAB RECEPCIONISTA
-            this.rut = response.rut_solicitante;
+            this.rut = response.rut_solicitante; // por cambios no se utiliza en la tab
             this.solicitante = response.rut_empresa;
             this.direccion = response.id_ciudad;
-
             this.rut_empresa = response.rut_empresa;
             this.datosCargados = true;
 
@@ -2609,7 +2612,15 @@ export default {
                                 appendToast: true
                             })                                
                         } 
-                    } else {
+
+                        setTimeout(() => {
+                            const baseUrl = window.location.origin; // Obtiene la parte de la URL antes del path
+                            const extension = '/supervisor/admmuestra'; // Extensión Path a redirigir
+                            
+                            window.location.href = baseUrl + extension;
+                        }, 2000);
+                    } 
+                    else {
                         this.$bvToast.toast(`Error al ingresar la muestra.`, {
                             title: 'Error',
                             toaster: 'b-toaster-top-center',

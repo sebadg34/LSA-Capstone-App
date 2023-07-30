@@ -1,13 +1,11 @@
 <template>
     <div>
-
         <!-- <validation-observer ref="form"> -->
         <modal_ingresarSubmuestra :n-muestras="nMuestras" :objetosSeleccionados="objetosSeleccionados"
             @datosIngresados="capturarDatos" :identificaciones="identificacion" />
             <modal_agregarMetodologia/>
             <modal_agregarParametro/>
         <div>
-
             <b-card no-body>
                 <div style="height:20px"></div>
                 <b-row class="d-flex justify-content-center">
@@ -64,13 +62,11 @@
                                                                     <b-form-select id="input-live" v-model="solicitante"                                                                        
                                                                         :state="getValidationState(validationContext)"
                                                                         :options="opcionesEmpresa"                                                                        
-                                                                        text-field="nombre_empresa" value-field="rut_empresa"                                                                      
-                                                                        >
-                                                                    </b-form-select>
-
+                                                                        text-field="nombre_empresa" value-field="rut_empresa">
+                                                                    </b-form-select>  
+                                                                                                                                        
                                                                     <b-input-group-append>
-                                                                        <b-button class=" lsa-orange reactive-button"
-                                                                            
+                                                                        <b-button class=" lsa-orange reactive-button"                                                                            
                                                                             @click="actualizarSelectedEmpresa()">
                                                                             <b-icon icon="search"></b-icon>
                                                                         </b-button>
@@ -109,7 +105,6 @@
                                         <template #title>
                                             <b-col class="col-12">
                                                 <b-row class="d-flex justify-content-between">
-
                                                     <b-icon v-if="!muestra_incompleto" icon="check-square"></b-icon>
                                                     <b-icon v-else-if="revisado" icon="exclamation-square"></b-icon>
                                                     <b-icon v-else icon="arrow-right-short"></b-icon>
@@ -118,7 +113,6 @@
                                             </b-col>
                                         </template>
                                         <validation-observer ref="valmuestra">
-
                                             <b-card>
                                                 <b-row class="pb-2">
                                                     <b-col class="col-6">
@@ -127,18 +121,14 @@
                                                             <label for="input-live">N° de muestras:</label>
                                                             <div class="d-flex align-items-center">
                                                                 <b-input-group size="sm">
-
                                                                     <b-form-input id="nMuestras-input" v-model="nMuestras"
                                                                         :state="getValidationState(validationContext)"
-                                                                        aria-describedby="nMuestras-live-feedback"></b-form-input>
-                                                                    
+                                                                        aria-describedby="nMuestras-live-feedback"></b-form-input>                                                                    
                                                                 </b-input-group>
-
                                                             </div>
                                                             <b-form-invalid-feedback id="nMuestras-live-feedback">{{
                                                                 validationContext.errors[0] }}</b-form-invalid-feedback>
                                                         </ValidationProvider>
-
                                                         
                                                             <label for="input-live">Fecha de muestreo:</label>
                                                             <b-form-datepicker
@@ -146,32 +136,31 @@
                                                                 id="input-live" v-model="fecha"                                                                
                                                                 aria-describedby="input-live-help fechaI-live-feedback"                                                                
                                                                 placeholder="Seleccione fecha">
-                                                            </b-form-datepicker>
-                                                            
-
-                                                       
-                                                            
+                                                            </b-form-datepicker>                                           
+                                                                                                                 
                                                             <label for="input-time">Hora de muestreo:</label>
-                                                            <b-form-timepicker id="input-time" v-model="hora"
-                                                                
+                                                            <b-form-timepicker id="input-time" v-model="hora"                                                                
                                                                 aria-describedby="input-live-help horaI-live-feedback"
-                                                                placeholder="Ingrese hora"></b-form-timepicker>
-                                                           
+                                                                placeholder="Ingrese hora">
+                                                            </b-form-timepicker>
+                                                            
+                                                            <ValidationProvider name="fecha de entrega" rules="required" v-slot="validationContext">
+                                                                <label for="input-live">Fecha de entrega:</label>
+                                                                <b-form-datepicker
+                                                                    :date-format-options="{ year: 'numeric', month: '2-digit', day: '2-digit' }"                                                                
+                                                                    id="input-live" v-model="fechaEntrega"
+                                                                    aria-describedby="input-live-help fecha de entrega-live-feedback"
+                                                                    placeholder="Seleccione fecha"
+                                                                    :min="currentDate"
+                                                                    :state="getValidationState(validationContext)">
+                                                                </b-form-datepicker>
+                                                                <b-form-invalid-feedback id="fecha de entrega-live-feedback">{{validationContext.errors[0]}}</b-form-invalid-feedback>
+                                                            </ValidationProvider>                                                         
 
-
-                                                            <label for="input-live">Fecha de entrega:</label>
-                                                            <b-form-datepicker
-                                                                :date-format-options="{ year: 'numeric', month: '2-digit', day: '2-digit' }"
-                                                                
-                                                                id="input-live" v-model="fechaEntrega"
-                                                                placeholder="Seleccione fecha"
-                                                                :min="currentDate"></b-form-datepicker>
-                                                          
-
-                                                        <ValidationProvider name="Cotizacion" rules="required" v-slot="validationContext">
+                                                        <ValidationProvider name="cotizacion" rules="required" v-slot="validationContext">
                                                             <label for="input-live">Cotización:</label>
-                                                            <b-form-select id="input-live" v-model="cotizacion" :options="opcionesCotizacion" text-field="idconNombre" value-field="id_cotizacion" aria-describedby="input-live-help Cotizacion-live-feedback" :state="getValidationState(validationContext)"></b-form-select> 
-                                                            <b-form-invalid-feedback id="Cotizacion-live-feedback">{{validationContext.errors[0]}}</b-form-invalid-feedback>
+                                                            <b-form-select id="input-live" v-model="cotizacion" :options="opcionesCotizacion" text-field="idconNombre" value-field="id_cotizacion" aria-describedby="input-live-help cotizacion-live-feedback" :state="getValidationState(validationContext)"></b-form-select> 
+                                                            <b-form-invalid-feedback id="cotizacion-live-feedback">{{validationContext.errors[0]}}</b-form-invalid-feedback>
                                                         </ValidationProvider> 
                                                     </b-col>
 
@@ -200,16 +189,16 @@
                                                             </b-form-invalid-feedback>
                                                         </ValidationProvider>
 
-                                                        <ValidationProvider name="TipoMatriz" rules="required"
+                                                        <ValidationProvider name="matriz" rules="required"
                                                             v-slot="validationContext">
-                                                            <label for="input-live">Tipo de matriz:</label>
+                                                            <label for="input-live">Matriz:</label>
                                                             <b-form-select id="input-live" v-model="TipoMatriz"
                                                                 :options="opcionesMatriz"
-                                                                aria-describedby="input-live-help TipoMatriz-live-feedback"
+                                                                aria-describedby="input-live-help matriz-live-feedback"
                                                                 :state="getValidationState(validationContext)"
                                                                 text-field="nombre_matriz"
                                                                 value-field="id_matriz"></b-form-select>
-                                                            <b-form-invalid-feedback id="TipoMatriz-live-feedback">{{
+                                                            <b-form-invalid-feedback id="matriz-live-feedback">{{
                                                                 validationContext.errors[0] }}</b-form-invalid-feedback>
                                                         </ValidationProvider>
 
@@ -292,19 +281,20 @@
                                                                 <b-icon class="mt-1" icon="plus-circle-fill"></b-icon>
                                                             </b-button>
                                                         </div>
-
                                                     </b-col>
 
                                                     <b-col class="col-6">
                                                         <label for="input-live">Nombre y apellido:</label>
                                                         <b-form-input class="mb-1" id="input-live" v-model="transportista"
                                                             aria-describedby="input-live-help transportista-live-feedback"
-                                                            placeholder="" trim></b-form-input>
+                                                            placeholder="" trim>
+                                                        </b-form-input>
 
                                                         <label for="input-live">Patente:</label>
                                                         <b-form-input class="mb-1" id="input-live" v-model="patente"
                                                             aria-describedby="input-live-help patente-live-feedback"
-                                                            placeholder="" trim></b-form-input>
+                                                            placeholder="" trim>
+                                                        </b-form-input>
                                                     </b-col>
                                                 </b-row>
                                             </b-card>
@@ -331,43 +321,40 @@
                                             <b-card>
                                                 <b-row>
                                                     <b-col class="col-6">                                                       
-                                                            <b-form-group label="Seleccione una norma:">
-                                                                <b-input-group>
-                                                                    <b-form-select v-model="norma" 
-                                                                    :options="opcionesNorma"
-                                                                    placeholder="Seleccione una norma:"                                                                 
-                                                                    text-field="nombre" value-field="id"   
-                                                                    @change="obtenerTablasNormas"></b-form-select>
-                                                                                                                            
-                                                                    <b-input-group-append>
-                                                                        <b-button size="sm" class="lsa-orange reactive-button"
-                                                                            style="aspect-ratio:1; border: none"
-                                                                            @click="PushParametrosMetodologias()">
-                                                                            <b-icon style="color:white"
-                                                                                icon="box-arrow-in-down-left">
-                                                                            </b-icon>
-                                                                        </b-button>
-                                                                    </b-input-group-append>
-                                                            
-                                                                </b-input-group>
-                                                                
-                                                            </b-form-group>
-
+                                                        <b-form-group label="Seleccione una norma:">
+                                                            <b-input-group>
+                                                                <b-form-select v-model="norma" 
+                                                                :options="opcionesNorma"
+                                                                placeholder="Seleccione una norma:"                                                                 
+                                                                text-field="nombre" value-field="id"   
+                                                                @change="obtenerTablasNormas"></b-form-select>
+                                                                                                                        
+                                                                <b-input-group-append>
+                                                                    <b-button size="sm" class="lsa-orange reactive-button"
+                                                                        style="aspect-ratio:1; border: none"
+                                                                        @click="PushParametrosMetodologias()">
+                                                                        <b-icon style="color:white"
+                                                                            icon="box-arrow-in-down-left">
+                                                                        </b-icon>
+                                                                    </b-button>
+                                                                </b-input-group-append>
                                                         
+                                                            </b-input-group>                                                                
+                                                        </b-form-group>                                                        
                                                     </b-col>
 
                                                     <b-col class="col-6">
                                                         <b-form-group label="Seleccione una tabla:">
                                                             <b-form-select :disabled="!norma" v-model="tabla"
                                                                 :options="opcionesTabla" value-field="id"
-                                                                @change="actualizarParametrosTabla"></b-form-select>
+                                                                @change="actualizarParametrosTabla">
+                                                            </b-form-select>
                                                         </b-form-group>
                                                     </b-col>
                                                 </b-row>
 
                                                 <b-row>
                                                     <b-col>
-
                                                         <label for="input-live">Seleccione un parámetro:</label>
                                                         <b-input-group>
 
@@ -375,14 +362,16 @@
                                                                 :options="opcionesParametro"
                                                                 placeholder="Seleccione un Parámetro"
                                                                 :disabled="parametroDeshabilitado"
-                                                                @change="agregarObjetosSeleccionados"></b-form-select>
+                                                                @change="agregarObjetosSeleccionados">
+                                                            </b-form-select>
 
                                                             <b-input-group-append>
                                                                 <b-button size="sm" class="lsa-orange reactive-button"
                                                                     style="aspect-ratio:1; border: none"
                                                                     v-b-modal.modal-Agregar-Opciones>
                                                                     <b-icon style="color:white"
-                                                                        icon="plus-circle-fill"></b-icon>
+                                                                        icon="plus-circle-fill">
+                                                                    </b-icon>
                                                                 </b-button>
                                                             </b-input-group-append>
 
@@ -396,34 +385,48 @@
                                                                 :options="opcionesMetodologia"
                                                                 placeholder="Seleccione una metodología"
                                                                 :disabled="metodologiaDeshabilitada"
-                                                                @change="agregarObjetosSeleccionados"></b-form-select>
+                                                                @change="agregarObjetosSeleccionados">
+                                                            </b-form-select>
                                                         </b-form-group>
                                                     </b-col>
                                                 </b-row>
 
-                                                <b-row v-if="objetosSeleccionados.length > 0" class="mt-3">
-                                                    <b-col>
-                                                        <b-form-group label="Parámetros seleccionados:">
-                                                            <div v-for="(objetos, index) in objetosSeleccionados"
-                                                                :key="index"
-                                                                class="d-flex align-items-center objetos-item mb-3">
-                                                                <b-input readonly :value="objetos.parametro"
-                                                                    class="mr-2"></b-input>
-                                                                <b-input readonly :value="objetos.metodologia"
-                                                                    class="mr-2"></b-input>
-                                                                <b-button variant="danger"
-                                                                    @click="eliminarObjetosSeleccionados(index)"
-                                                                    class="ml-2">
-                                                                    <b-icon-trash-fill></b-icon-trash-fill>
-                                                                </b-button>
-                                                            </div>
-                                                        </b-form-group>
-                                                    </b-col>
-                                                </b-row>
+                                                
+                                                <ValidationProvider name="Parametros y metodologias" rules="required" v-slot="validationContext">
+                                                    <b-row v-if="objetosSeleccionados.length > 0" class="mt-3">
+                                                        <b-col>
+                                                            <b-form-group label="Parámetros seleccionados:">
+                                                                <div v-for="(objetos, index) in objetosSeleccionados"
+                                                                    :key="index"
+                                                                    class="d-flex align-items-center objetos-item mb-3">
+                                                                    <b-input readonly 
+                                                                        :value="objetos.parametro"
+                                                                        :state="getValidationState(validationContext)"
+                                                                        class="mr-2">
+                                                                    </b-input>
+                                                                    <b-input 
+                                                                        readonly
+                                                                        :value="objetos.metodologia"
+                                                                        :state="getValidationState(validationContext)"
+                                                                        class="mr-2">
+                                                                    </b-input>
+                                                                    <b-button variant="danger"
+                                                                        @click="eliminarObjetosSeleccionados(index)"
+                                                                        class="ml-2">
+                                                                        <b-icon-trash-fill></b-icon-trash-fill>
+                                                                    </b-button>
+                                                                </div>
+                                                            </b-form-group>
+                                                        </b-col>
+                                                    </b-row>
+                                                    <b-form-invalid-feedback id="Parametros y metodologias-live-feedback">
+                                                        {{ validationContext.errors[0] }}
+                                                    </b-form-invalid-feedback>
+                                                </ValidationProvider>
 
                                                 <b-alert variant="danger" :show="alertaDuplicado" dismissible
                                                     @dismissed="alertaDuplicado = false">
-                                                    El parámetro ya fue agregado.
+                                                    El parámetro y su metodologia ya se encuentra agregado.
                                                 </b-alert>
                                             </b-card>
                                         </validation-observer>
@@ -435,8 +438,7 @@
                                         <template #title>
                                             <b-col class="col-12">
                                                 <b-row class="d-flex justify-content-end">
-                                                    <b-icon icon="arrow-right-short"></b-icon> 
-
+                                                    <b-icon icon="arrow-right-short"></b-icon>
                                                     <strong style="padding-left:30px">Parámetros de muestras</strong>
                                                 </b-row>
                                             </b-col>
@@ -462,9 +464,9 @@
                                         </b-col>
                                         <b-col class="col-6">
                                             <b-button block class="lsa-blue reactive-button" pill
-                                                @click="tabIndex++">Siguiente</b-button>
+                                                @click="tabIndex++">Siguiente
+                                            </b-button>
                                         </b-col>
-
                                     </b-row>
 
                                     <b-button @click="enviarFormulario()" variant="primary" size="xl"
@@ -474,12 +476,9 @@
                                     </b-button>
                                 </div>
                             </b-row>
-
                         </b-tabs>
                     </b-col>
-
                 </b-row>
-
             </b-card>
             <!--
                 <b-row class="d-flex justify-content-center mt-2">
@@ -506,8 +505,7 @@
                 <b-row>
                     <b-col>
                         <label>Seleccione un parámetro:</label>
-                        <b-input-group>
-                            
+                        <b-input-group>                            
                             <b-form-select v-model="parametroSeleccionado" :options="TodasopcionesParametro"
                                 placeholder="Seleccione un parámetro" @change="agregarObjetosSeleccionados"></b-form-select>
                             <b-input-group-append>
@@ -522,15 +520,14 @@
 
                     <b-col>
                         <label>Seleccione una metodología:</label>
-                        <b-input-group>
-                           
+                        <b-input-group>                           
                             <b-form-select v-model="metodologiaSeleccionada" :options="opcionesMetodologia"
                                 placeholder="Seleccione una metodología" :disabled="metodologiaDeshabilitada"
                                 @change="agregarObjetosSeleccionados"></b-form-select>
                             <b-input-group-append>
                                 <b-button size="sm" class="lsa-orange reactive-button" style="border: none"
                                     v-b-modal.modal-Agregar-Metodologia>
-                                    Nuevo
+                                        Nuevo
                                     <b-icon style="color:white" icon="pencil-square"></b-icon>
                                 </b-button>
                             </b-input-group-append>
@@ -689,7 +686,6 @@ export default {
             opcionesCotizacion: [],
             cotizacion: '',
             opcionesEmpresa: []
-
         };
     },
 
@@ -711,18 +707,15 @@ export default {
 
         this.obtenerEmpresas(),
 
-            this.obtenerNormas(),
+        this.obtenerNormas(),
 
-            PersonalService.obtenerTodosPersonal().then((response) => {
-                console.log(response.data);
-                if (response != null && response.status === 200) {
-                    this.recepcionistas = response.data
-                    console.log("Los recepcionistas son: ", this.recepcionistas);
-                }
-            });
-
-            
-       
+        PersonalService.obtenerTodosPersonal().then((response) => {
+            console.log(response.data);
+            if (response != null && response.status === 200) {
+                this.recepcionistas = response.data
+                console.log("Los recepcionistas son: ", this.recepcionistas);
+            }
+        });      
     },
 
     watch: {
@@ -888,10 +881,7 @@ export default {
                 const empresas = response.data;
                 this.opcionesEmpresa = empresas;
             })
-
         },
-
-
 
         actualizarSelectedEmpresa() {
 
@@ -1042,6 +1032,7 @@ export default {
 
         eliminarObjetosSeleccionados(index) {
             this.objetosSeleccionados.splice(index, 1);
+            this.parametros_agregar.splice(index , 1);
         },
 
         actualizarMetodologias() {
@@ -1145,7 +1136,6 @@ export default {
         },
 
         obtenerTablasNormas() {
-
             const idNormaSeleccionada = this.norma;
             ElementosService.obtenerTablasNorma(idNormaSeleccionada).then((response) => {
                 if (response.data != null && response.status === 200) {
@@ -1172,7 +1162,6 @@ export default {
                                 id_parametro: [],
                                 id_metodologia: [],
                                 metodologias: []
-
                             };
                         }
                         // Agregar el id_tabla y el nombre_parametro a la tabla correspondiente en tablasAgrupadas
@@ -1181,8 +1170,6 @@ export default {
                         tablasAgrupadas[nombreTabla].id_parametro.push(idParametro);
                         tablasAgrupadas[nombreTabla].id_metodologia.push(idMetodologia);
                         tablasAgrupadas[nombreTabla].metodologias.push(nombreMetodologia)
-
-
                     });
                     // convertir  en un array
                     const tablasProcesadas = Object.values(tablasAgrupadas);
@@ -1193,15 +1180,12 @@ export default {
                     this.opcionesTabla = tablasProcesadas.map((tabla) => tabla.nombre_tabla);
 
                     // Asignar tablasProcesadas a this.tablasProcesadas
-                    this.tablasProcesadas = tablasProcesadas;
-
-                                    
+                    this.tablasProcesadas = tablasProcesadas;                                    
                 }
             });
         },
 
-        PushParametrosMetodologias() {
-            
+        PushParametrosMetodologias() {            
             function esDuplicado(parametrosYMetodologias, parametro, metodologia) {
                 return parametrosYMetodologias.some((item) => item.parametro === parametro && item.metodologia === metodologia);
             }
@@ -1239,8 +1223,7 @@ export default {
             const objetosNoDuplicados = parametrosYMetodologias.filter((item) => !esDuplicado(this.objetosSeleccionados, item.parametro, item.metodologia));
             this.objetosSeleccionados.push(...objetosNoDuplicados); 
             const IDNoDuplicados = parametrosYMetodologias.filter((item) => !esDuplicado(this.objetosSeleccionados, item.id_parametro, item.id_metodologia));
-            this.parametros_agregar.push(...IDNoDuplicados);        
-                   
+            this.parametros_agregar.push(...IDNoDuplicados);                   
         },
 
         actualizarParametrosTabla() {
@@ -1285,9 +1268,8 @@ export default {
                 return false;
             }
         },
+
         async enviarFormulario() {
-
-
             const datosValidos = await this.validarFormularios();
 
             if (!datosValidos) {
@@ -1336,7 +1318,7 @@ export default {
                                 toaster: 'b-toaster-top-center',
                                 solid: true,
                                 variant: "success",
-                                appendToast: true
+                                appendToast: true,
                             })
                         }
 
@@ -1358,6 +1340,11 @@ export default {
                         this.observaciones = '';
                         this.fecha = '';
                         this.hora = '';
+
+                        setTimeout(() => {
+                            window.location.reload();
+                        }, 1000);
+                        
                     } else {
                         this.$bvToast.toast(`Error al recepcionar muestra.`, {
                             title: 'Error',
@@ -1369,7 +1356,6 @@ export default {
                     }
                 })
             }
-
         },
     }
 }
