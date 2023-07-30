@@ -8,7 +8,7 @@
         <b-row align-h="start" style="padding-top:30px;">
             <b-col class="col-6">
                 <div style="font-size:2rem; font-weight: bold; color: var(--lsa-blue)">
-                    Administración de muestras
+                    Administración de Muestras
                 </div>
             </b-col>
         </b-row>
@@ -75,7 +75,7 @@
                     <template #empty>
                         <div class="text-center lsa-light-blue-text my-2 row">
                             <div class="col">
-                                <div style=" color:gray"> No hay muestras registradas para mostrar.</div>
+                                <div style=" color:gray"> No hay muestras registradas para mostrar</div>
                             </div>
 
                         </div>
@@ -181,7 +181,7 @@ export default {
 
             {
                 key: 'fecha_entrega',
-                label: 'Fecha de entrega'
+                label: 'Fecha entrega'
             },
             {
                 key: 'id_cotizacion',
@@ -199,7 +199,7 @@ export default {
             ],
             estadosOpciones: [{
                 value: null,
-                text: 'Seleccione un estado:',
+                text: 'Seleccione un estado',
                 disabled: true
             },
             {
@@ -221,7 +221,7 @@ export default {
             ],
             prioridadOpciones: [{
                 value: null,
-                text: 'Seleccione una prioridad:',
+                text: 'Seleccione una prioridad',
                 disabled: true
             },
             {
