@@ -98,7 +98,7 @@
                 <template #cell(periodo_vacaciones)="row">
                     <span v-if="!row.item.fecha_inicio_vacaciones || !row.item.fecha_termino_vacaciones">
                     -</span>
-                    <span v-else>{{ row.item.fecha_inicio_vacaciones + " " + row.item.fecha_termino_vacaciones }}</span>
+                    <span v-else>{{ row.item.fecha_inicio_vacaciones + " - " + row.item.fecha_termino_vacaciones }}</span>
                 </template>
 
                 <template #cell(estado)="row">
@@ -299,7 +299,7 @@ export default {
         },
         obtenerPersonal() {
             this.loading = true;
-            personalService.obtenerTodosPersonal().then((response) => {
+            personalService.obtenerTodosPersonalDisponibilidad().then((response) => {
                 if (response != null) {
                     console.log(response)
                     this.personal = response.data

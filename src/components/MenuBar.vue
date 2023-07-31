@@ -15,7 +15,7 @@
                     <b-icon icon="house-fill" aria-hidden="true"></b-icon><span class="px-md-2">Home</span>
                 </b-list-group-item>
 
-                <template v-if="rol == 1 || rol == 2 || rol == 6 || rol == 0">
+                <template v-if="rol == 1 || rol == 2 || rol == 6 || rol == 0 || rol == 7">
                     <b-list-group-item id="dropdown-header-label" class="lsa-light-gray cursorToHand menuHeader d-flex justify-content-between" v-b-toggle="'collapse-1'">
                         <div>
                             <b-icon class="lsa-orange-text" icon="people-fill"></b-icon>
@@ -25,11 +25,11 @@
                         <b-icon icon="chevron-down" variant="dark"></b-icon>
                     </b-list-group-item>
                     <b-collapse accordion="my-accordion" id="collapse-1">
-                        <b-list-group-item @click="navegarRuta('admPersonal')" class="cursorToHand menuButton">
+                        <b-list-group-item v-if="rol == 1 || rol == 2 || rol == 6 || rol == 0" @click="navegarRuta('admPersonal')" class="cursorToHand menuButton">
                             <b-icon class="lsa-orange-text" icon="person-plus-fill"></b-icon>
                             <span class="px-md-2"></span> Agregar personal
                         </b-list-group-item>
-                        <b-list-group-item v-if="rol == 1 || rol == 2 || rol == 7 || rol == 0" @click="navegarRuta('admDisponibilidad')" class="cursorToHand menuButton">
+                        <b-list-group-item v-if="rol == 1 || rol == 2 || rol == 7 || rol == 0 || rol == 6" @click="navegarRuta('admDisponibilidad')" class="cursorToHand menuButton">
                             <b-icon class="lsa-orange-text" icon="person-check-fill"></b-icon>
                             <span class="px-md-2"></span> Disponibilidad del personal
                         </b-list-group-item>
@@ -46,7 +46,7 @@
                 </b-list-group-item>
                 <b-collapse accordion="my-accordion" id="collapse-2">
 
-                    <b-list-group-item @click="navegarRuta('ingresoMuestra')" class="cursorToHand menuButton">
+                    <b-list-group-item v-if="rol != 1 && rol != 7 && rol != 5" @click="navegarRuta('ingresoMuestra')" class="cursorToHand menuButton">
 
 
 
@@ -74,7 +74,7 @@
 
                         <div style="height:10px"></div>
                     </b-list-group-item>
-                    <b-list-group-item v-if="rol == 7 || rol == 0 || rol == 6 || rol == 2" @click="navegarRuta('AdminMuestraSupervisor')" class="cursorToHand menuButton">
+                    <b-list-group-item v-if="rol == 0 || rol == 6 || rol == 2" @click="navegarRuta('AdminMuestraSupervisor')" class="cursorToHand menuButton">
 
                     <div class="roleTag">Supervisor</div>
                     <div style="height:10px"></div>
@@ -111,7 +111,7 @@
 
                 </b-collapse>
 
-                <template v-if="rol == 2 || rol == 6 || rol == 0">
+                <template v-if="rol == 2 || rol == 6 || rol == 0  || rol == 1">
                     <b-list-group-item id="dropdown-header-label" class="lsa-light-gray cursorToHand menuHeader d-flex justify-content-between" v-b-toggle="'collapse-3'">
                         <div>
                             <b-icon class="lsa-orange-text" icon="briefcase-fill"></b-icon>
@@ -122,12 +122,12 @@
                     </b-list-group-item>
                     <b-collapse accordion="my-accordion" id="collapse-3">
 
-                        <b-list-group-item v-if="rol == 2 || rol == 6 || rol == 0" @click="navegarRuta('admSolicitante')" class="cursorToHand menuButton">
+                        <b-list-group-item v-if="rol == 2 || rol == 6 || rol == 0 || rol == 1" @click="navegarRuta('admSolicitante')" class="cursorToHand menuButton">
                             <b-icon class="lsa-orange-text" icon="people-fill"></b-icon>
                             <span class="px-md-2"></span> Administrar solicitante
                         </b-list-group-item>
 
-                        <b-list-group-item v-if="rol == 2 || rol == 6 || rol == 0" @click="navegarRuta('admEmpresa')" class="cursorToHand menuButton">
+                        <b-list-group-item v-if="rol == 2 || rol == 6 || rol == 0  || rol == 1" @click="navegarRuta('admEmpresa')" class="cursorToHand menuButton">
                             <b-icon class="lsa-orange-text" icon="building"></b-icon>
                             <span class="px-md-2"></span> Administrar empresa
                         </b-list-group-item>

@@ -2,7 +2,7 @@
   <b-modal id="modal-observaciones-muestra-finanzas" :title="`Observaciones de la muestra ${RUM}`" size="xl"
     @hidden="onHidden">
 
-    <modalAgregarObservacion @refrescar="obtenerObservaciones(RUM)" :muestra-data="muestraData"/>
+    
 
     <template #modal-header="{ close }">
       <!-- Emulate built in modal header close button action -->
@@ -24,10 +24,6 @@
             <b-col class="col-6">{{ RUM }}</b-col>
           </b-row>
         </b-col>
-        <b-button @click="abrirAgregarObservacion" pill style="border: none" class="lsa-orange reactive-button">
-                                Agregar
-                                <b-icon icon="pencil-square"></b-icon>
-                            </b-button>
                           </b-row>
         <br />
         <b-row class="pb-2 pl-3">
@@ -53,10 +49,10 @@
               {{ observacion.nombre + " " + observacion.apellido }}
             </div>
             <div class="d-flex align-items-center justify-content-center"  style="width:30%;">
-              {{ observacion.fecha_observacion }}
+              {{ observacion.fecha_observacion_formateada }}
             </div>
             <div class="d-flex align-items-center justify-content-center" style="width:30%;">
-              {{ observacion.hora_observacion }}
+              {{ observacion.hora_observacion_formateada }}
             </div>
            </b-row>
            <b-row style=" min-height: 50px;" class="d-flex justify-content-center">
@@ -95,11 +91,7 @@
 
 <script>
 import MuestraFinanzasService from '@/helpers/api-services/Muestra-finanzas.service';
-import modalAgregarObservacion from '@/components/admMuestras-finanzas/modal_agregarObservacion-finanzas.vue';
 export default {
-  components: {
-    modalAgregarObservacion
-  },
   props: {
     detallesData: Object
   },
@@ -115,12 +107,6 @@ export default {
     }
   },
   methods: {
-    abrirAgregarObservacion(){
-      this.muestraData = {
-        RUM: this.RUM
-      }
-      this.$bvModal.show('modal-agregar-observacion-finanzas');
-    },
     obtenerObservaciones(rum) {
       this.observaciones = [];
       this.cargandoObservaciones = true;

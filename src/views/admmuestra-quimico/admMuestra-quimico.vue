@@ -212,6 +212,11 @@ export default {
         sortable: true
       },
       {
+        key: 'dias_faltantes',
+        label: 'Dias faltantes',
+        sortable: true
+      },
+      {
         key: 'prioridad',
         label: 'Prioridad',
         sortable: true

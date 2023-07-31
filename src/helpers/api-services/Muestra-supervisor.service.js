@@ -22,7 +22,22 @@ import {
     }
 };
 
-
+const obtenerSubmuestras = async (RUM) => {
+    try {
+     const instanciaApi = await crearApi();
+     const response = await instanciaApi.get("/muestras-supervisor/submuestras/" + RUM);
+             console.log(response);
+         if(response.status == 200){
+             return response;
+         }else{
+             return;
+         }
+         
+     } catch (error) {
+         console.log(error);
+         return;
+     }
+ };
 
  const obtenerResultadosAnalisis = async (RUM) => {
     try {
@@ -124,7 +139,19 @@ import {
      }
  };
 
-
+ const ingresarResultadosAnalisis = async (data) => {
+    try { 
+        const instanciaApi = await crearApi(); 
+        
+        const response = await instanciaApi.post("/muestras-supervisor/ingresarResultadosAnalisis",data
+            );
+        console.log(response);
+        return response;
+    } catch (error) {
+        console.log(error);
+        return;
+    }
+};
  const descargarInforme = async (data) => {
     try { 
         const instanciaApi = await crearApi(); 
@@ -243,11 +270,13 @@ const marcarTareaComoCompletada = async (RUM) => {
  
 export default {
     obtenerMuestras,
+    obtenerSubmuestras,
     obtenerEmpleados,
     obtenerObservaciones,
     obtenerDetallesMuestra,
     obtenerParametros,
     obtenerResultadosAnalisis,
+    ingresarResultadosAnalisis,
     obtenerAnalistasDesignados,
     descargarInforme,
     ingresarMuestra,

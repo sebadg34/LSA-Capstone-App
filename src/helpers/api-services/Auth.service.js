@@ -27,7 +27,7 @@ export async function clearAuthToken() {
 export async function setAuthToken(token) {
     await crearApi();
     apiInstance.defaults.headers.common['Authorization'] = `Bearer ${token}`
-    jscookie.set('authToken', token, { sameSite: 'none', secure: true });
+    jscookie.set('authToken', token, { secure: false });
 }
 
 
@@ -46,7 +46,7 @@ export function getUserInfo() {
 }
   export function saveUserInfo(data) {
   
-    jscookie.set('userInfo',JSON.stringify(data), { sameSite: 'none', secure: true });
+    jscookie.set('userInfo',JSON.stringify(data), { secure: false });
   }
 
   const obtenerUsuarios = async () => {

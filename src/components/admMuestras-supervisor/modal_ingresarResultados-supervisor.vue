@@ -1,7 +1,7 @@
 <template>
     <validation-observer ref="form">
         <b-modal centered id="modal-ingresar-resultados-supervisor" :title="`Observaciones de la muestra ${RUM}`" size="xl"
-            @hidden="onHidden">
+            >
 
             <template #modal-header="{ close }">
                 <!-- Emulate built in modal header close button action -->
@@ -24,7 +24,7 @@
             <div class="ml-4">
                 <b-row style="font-weight: bold;" class="">
                     <b-col>
-                        Muestra
+                        Identificador
                     </b-col>
                     <b-col>
                         Parámetros
@@ -52,9 +52,10 @@
                         <b-col class="p-2">
                             <ValidationProvider :name="'analista ' + (k + 1)" rules="required" v-slot="validationContext">
 
-                                <b-form-input :state="getValidationState(validationContext)"
-                                    :placeholder="'muestra ' + (k + 1)" style="height:30px" type="text" class="form-control"
-                                    v-model="input.cod_muestra" />
+                                <b-form-select :state="getValidationState(validationContext)"
+                                    :placeholder="'Parametro ' + (parseInt(k) + 1)" aria-describedby="cargo-live-feedback"
+                                    class="mb-1"  v-model="input.identificador" size="md"
+                                    :options="identificadores"></b-form-select>
 
                                 <b-form-invalid-feedback id="analista-live-feedback">{{
                                     validationContext.errors[0] }}
@@ -65,10 +66,10 @@
                         <b-col class="p-2">
                             <ValidationProvider :name="'parametro ' + (k + 1)" rules="required" v-slot="validationContext">
 
-                                <b-form-select :state="getValidationState(validationContext)"
+                                <b-form-select :state="getValidationState(validationContext)" size="md"
                                     :placeholder="'Parametro ' + (parseInt(k) + 1)" aria-describedby="cargo-live-feedback"
-                                    class="mb-1" text-field="nombre_parametro" v-model="input.parametro"
-                                    :options="parametrosOpciones"></b-form-select>
+                                    class="mb-1" text-field="nombre_parametro" value-field="id_parametro" v-model="input.parametro"
+                                    :options="input.identificador.parametros"></b-form-select>
 
                                 <b-form-invalid-feedback id="parametro-live-feedback">{{
                                     validationContext.errors[0] }}
@@ -78,9 +79,9 @@
                         <b-col class="p-2">
                             <ValidationProvider :name="'resultado ' + (k + 1)" rules="required" v-slot="validationContext">
 
-                                <b-form-input :state="getValidationState(validationContext)"
-                                    :placeholder="'resultado ' + (k + 1)" style="height:30px" type="text"
-                                    class="form-control" v-model="input.resultado" />
+                                <b-form-input :state="getValidationState(validationContext)" size="sm"
+                                    :placeholder="'resultado ' + (k + 1)"  
+                                    v-model="input.resultado" />
 
                                 <b-form-invalid-feedback id="analista-live-feedback">{{
                                     validationContext.errors[0] }}
@@ -90,8 +91,8 @@
                         <b-col class="p-2">
                             <ValidationProvider :name="'unidad ' + (k + 1)" rules="required" v-slot="validationContext">
 
-                                <b-form-input :state="getValidationState(validationContext)"
-                                    :placeholder="'unidad ' + (k + 1)" style="height:30px" type="text" class="form-control"
+                                <b-form-input :state="getValidationState(validationContext)" size="sm"
+                                    :placeholder="'unidad ' + (k + 1)"   
                                     v-model="input.unidad" />
 
                                 <b-form-invalid-feedback id="analista-live-feedback">{{
@@ -103,15 +104,15 @@
 
                             <ValidationProvider :name="'fecha inicio ' + (k + 1)" rules="required"
                                 v-slot="validationContext">
-                                <b-form-datepicker size="sm" style="padding-left:2px;padding-right:2px" :min="minDate" :max="maxDate" @context="onContext"
-                                    :date-format-options="{ year: 'numeric', month: '2-digit', day: '2-digit' }"
-                                    placeholder="fecha" :state="getValidationState(validationContext)"
+                                <b-form-datepicker size="sm" style="padding-left:2px;padding-right:2px" 
+                                    placeholder="fecha" :state="getValidationState(validationContext)" 
                                     v-model="input.fecha_inicio" id="datepicker-inicio" locale="es"></b-form-datepicker>
                             </ValidationProvider>
                             <ValidationProvider :name="'hora inicio ' + (k + 1)" rules="required"
                                 v-slot="validationContext">
-                                <b-form-timepicker size="md" placeholder="hora" :state="getValidationState(validationContext)"
-                                    v-model="input.hora_inicio" locale="es"></b-form-timepicker>
+                                <b-form-timepicker size="sm" placeholder="hora"
+                                    :state="getValidationState(validationContext)" v-model="input.hora_inicio"
+                                    locale="es"></b-form-timepicker>
 
                             </ValidationProvider>
 
@@ -125,8 +126,10 @@
 
                             <ValidationProvider :name="'fecha termino ' + (k + 1)" rules="required"
                                 v-slot="validationContext">
-                                <b-form-datepicker class="justify-content-center" size="sm" style="padding-left:2px;padding-right:2px" :min="minDate" :max="maxDate" @context="onContext"
-                                    :date-format-options="{ year: 'numeric', month: '2-digit', day: '2-digit' }"
+                                <b-form-datepicker class="justify-content-center" size="sm"
+                                    style="padding-left:2px;padding-right:2px" 
+                                   
+                                   
                                     placeholder="fecha" :state="getValidationState(validationContext)"
                                     v-model="input.fecha_termino" id="datepicker-termino" locale="es"></b-form-datepicker>
 
@@ -134,8 +137,9 @@
 
                             <ValidationProvider :name="'hora termino ' + (k + 1)" rules="required"
                                 v-slot="validationContext">
-                                <b-form-timepicker size="md" placeholder="hora" :state="getValidationState(validationContext)"
-                                    v-model="input.hora_termino" locale="es"></b-form-timepicker>
+                                <b-form-timepicker size="sm" placeholder="hora"
+                                    :state="getValidationState(validationContext)" v-model="input.hora_termino"
+                                    locale="es"></b-form-timepicker>
 
                             </ValidationProvider>
 
@@ -196,7 +200,8 @@ export default {
             parametrosOpciones: [],
             resultados_antiguos: [],
             resultados_agregar: [],
-            resultados_eliminar: []
+            resultados_eliminar: [],
+            identificadores: [],
         }
     },
     methods: {
@@ -206,17 +211,40 @@ export default {
                 if (!success) {
                     return;
                 } else {
-                    this.resultados.forEach(analista => {
-                        if (analista.id_aux == null) {
+                    this.resultados.forEach(resultado => {
                             this.resultados_agregar.push({
-                                rut_empleado: analista.analista.rut_empleado,
-                                orden_de_analisis: analista.orden_analista,
-                                id_parametro: analista.parametro.id_parametro,
-                                fecha_entrega: analista.fecha_entrega
+                                rut_empleado: resultado.rut_empleado,
+                                identificador: resultado.cod_muestra,
+                                id_parametro: resultado.parametro.id_parametro,
+                                valor_resultado: resultado.resultado,
+                                unidad : resultado.unidad,
+                                fecha_inicio_analisis: resultado.fecha_inicio,
+                                hora_inicio_analisis: resultado.hora_inicio,
+                                fecha_termino_analisis: resultado.fecha_termino,
+                                hora_termino_analisis: resultado.hora_termino
                             })
+                        
+                    })
+                    console.log("data a enviar", data)
+
+console.log("resultados a agregar", this.resultados_agregar);
+                    var data = {
+                        RUM: this.RUM,
+                        resultados_agregar: this.resultados_agregar
+                    }
+                    MuestraSupervisorService.ingresarResultadosAnalisis(data).then((response) => {
+                        if(response.status == 200){
+                            this.$bvToast.toast(`Los resultados han sido ingresados.`, {
+                                title: 'Éxito',
+                                toaster: 'b-toaster-top-center',
+                                solid: true,
+                                variant: "success",
+                                appendToast: true
+                            })
+                            this.$bvModal.hide('modal-ingresar-resultados-supervisor')
                         }
                     })
-                    console.log("resultados a agregar", this.resultados_agregar);
+                   
 
                 }
             })
@@ -224,7 +252,7 @@ export default {
         },
         add() {
             this.resultados.push({
-                cod_muestra: '',
+                identificador: '',
                 parametro: '',
                 unidad: '',
                 resultado: '',
@@ -266,20 +294,26 @@ export default {
                 }
             })
         },
-        cargarresultados() {
-            this.resultados = [];
-            this.loading = true;
+        cargarSubmuestras() {
+           
 
-            MuestraSupervisorService.obtenerEmpleados().then((response) => {
+            MuestraSupervisorService.obtenerSubmuestras(this.RUM).then((response) => {
                 if (response.data != null && response.status == 200) {
-                    console.log("data analista", response.data);
-                    for (var i = 0; i < response.data.length; i++) {
-                        this.resultadosOpciones.push({
-                            nombre_analista: response.data[i].nombre + " " + response.data[i].apellido,
-                            value: response.data[i]
-                        })
-                    }
-                    this.cargarParametros(this.RUM);
+                    console.log("submuestras", response.data);
+                        const subMuestras = response.data;
+                        for(var i = 0; i < subMuestras.length; i++){
+                            const idenData = {
+                            text: subMuestras[i].identificador,
+                            value: {
+                                id_submuestra: subMuestras[i].id_submuestra,
+                                identificador: subMuestras[i].identificador,
+                                orden: subMuestras[i].orden,
+                                parametros: subMuestras[i].parametros
+                            }
+                        }
+                        this.identificadores.push(idenData)
+                        }
+                        this.preCargarResultados();
                 }
             })
 
@@ -291,54 +325,48 @@ export default {
                     console.log("data parametros", response.data);
 
                     for (var i = 0; i < response.data.length; i++) {
+                        
+                        
                         this.parametrosOpciones.push({
                             nombre_parametro: response.data[i].nombre_parametro,
                             value: response.data[i]
                         })
                     }
-                    this.cargarresultadosRegistrados();
+             
                 }
             })
         },
-        cargarresultadosRegistrados() {
-
-            console.log("data de resultados ya en sistema", this.resultadosData)
-            var id_aux = 1;
-            this.resultadosData.resultados.forEach(analista => {
-
-                var analistaValue = this.resultadosOpciones.find(test => test.value.rut_empleado === analista.rut_empleado);
-                var parametroValue = this.parametrosOpciones.find(dbParametro => dbParametro.value.id_parametro == analista.id_parametro);
-
-                this.resultados.push({
-                    id_aux: id_aux,
-                    fecha_entrega: new Date(analista.fecha_entrega),
-                    analista: analistaValue.value,
-                    parametro: parametroValue.value,
-                    orden_analista: analista.orden_de_analisis
-                })
-                this.resultados_antiguos.push({
-                    id_aux: id_aux,
-                    fecha_entrega: new Date(analista.fecha_entrega),
-                    analista: analistaValue.value,
-                    parametro: parametroValue.value,
-                    orden_analista: analista.orden_de_analisis
-                })
-                id_aux++;
-            });
+        preCargarResultados(){
+            for(var i = 0; i < this.identificadores.length; i++){
+                for(var j = 0; j < this.identificadores[i].value.parametros.length; j++){
+                    
+                    const resultado = {
+                    identificador: this.identificadores[i].value,
+                    parametro: this.identificadores[i].value.parametros[j].id_parametro,
+                    unidad: '',
+                    resultado: '',
+                    fecha_inicio: '',
+                    hora_inicio: '',
+                    fecha_termino: '',
+                    hora_termino: '',
+            };
+                    this.resultados.push(resultado)
+                }
+            }
+            console.log(this.resultados)
             this.loading = false;
-            console.log("resultados ya cargados de la DB", this.resultados)
-        },
-        onHidden() {
-            this.$emit('modal-cerrado');
         }
     },
     watch: {
         resultadosData: {
             handler() {
                 this.RUM = this.resultadosData.RUM;
-                this.add();
-                //this.cargarresultados();
-                this.cargarParametros(this.RUM);
+                //this.add();
+                this.loading = true;
+                this.cargarSubmuestras();
+                
+                //this.cargarParametros(this.RUM);
+            
             }
         }
     }

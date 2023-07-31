@@ -109,7 +109,7 @@ const routes = [
     component: USU005_admDisponibilidad,
     meta: {
       title: "LSA - Administración Disponibilidad",
-      authorize: [7, 1, 2, 0]
+      authorize: [7, 1, 2, 0, 6]
     }
 
   },
@@ -119,7 +119,7 @@ const routes = [
     component: USU002_admEmpresa,
     meta: {
       title: "LSA - Administración Empresa",
-      authorize: [2, 6, 0]
+      authorize: [2, 6, 0, 1]
     }
 
   },
@@ -129,7 +129,7 @@ const routes = [
     component: USU003_admSolicitante,
     meta: {
       title: "LSA - Administración Solicitante",
-      authorize: [2, 6, 0]
+      authorize: [2, 6, 0, 1]
 
     }
 
@@ -183,7 +183,8 @@ const routes = [
     name: 'AdminMuestraSupervisor',
     component: admMuestraSupervisor,
     meta: {
-      title: "LSA - Administración Muestra"
+      title: "LSA - Administración Muestra",
+      authorize: [2,7,6,0]
     }
   },
   
@@ -192,7 +193,8 @@ const routes = [
     name: 'AdminMuestraFinanzas',
     component: admMuestraFinanzas,
     meta: {
-      title: "LSA - Administración Muestra"
+      title: "LSA - Administración Muestra",
+      authorize: [7,0]
     }
   }, 
   {

@@ -105,6 +105,39 @@ const obtenerTodosPersonal = async () => {
         return;
     }
 };
+
+const obtenerTodosPersonalDisponibilidad = async () => {
+    try {
+        const instanciaApi = await crearApi();
+        const response = await instanciaApi.get("/personal");
+            console.log(response);
+        if(response.status == 200){
+            return response;
+        }else{
+            return;
+        }
+        
+    } catch (error) {
+        console.log(error);
+        return;
+    }
+};
+const obtenerDetallesPersonalDisponibilidad = async (data) => {
+    try {
+        const instanciaApi = await crearApi();
+        const response = await instanciaApi.get("/personal/" + data);
+            console.log(response);
+        if(response.status == 200){
+            return response;
+        }else{
+            return;
+        }
+        
+    } catch (error) {
+        console.log(error);
+        return;
+    }
+};
 const obtenerPersonal = async (id) => {
     try {
         const instanciaApi = await crearApi();
@@ -178,6 +211,8 @@ export default {
     cambiarEstadoPersonal,
     editarPersonal,
     obtenerDetallesPersonal,
+    obtenerTodosPersonalDisponibilidad,
+    obtenerDetallesPersonalDisponibilidad,
     eliminarDocumento,
     descargarDocumento,
     obtenerPersonal,

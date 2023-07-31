@@ -15,12 +15,27 @@
     <div class="p-3">
       <b-col class="col-12">
 
-        <b-col class="col-3">
-        <b-row style="border: 1px solid var(--lsa-light-gray); padding:4px; border-radius:5px">
-              <b-col class="col-6" style="font-weight:bold; "> RUM: </b-col>
-              <b-col class="col-6">{{ RUM }}</b-col>
+        <b-row class="justify-content-between mb-4">
+            <b-col class="col-2">
+                <b-row style="border: 1px solid var(--lsa-light-gray); padding:4px; border-radius:5px">
+                    <b-col class="col-6" style="font-weight:bold; "> RUM: </b-col>
+                    <b-col class="col-6">{{ RUM }}</b-col>
+                </b-row>
+            </b-col>
+            <b-col class="col-4">
+            <b-row style="border-bottom: 1px solid var(--lsa-light-gray);">
+                <b-col class="col-7" style="font-weight:bold;"> Fecha de entrega: </b-col>
+                <b-col class="col-5">
+                    <b-row>
+                        <div class="mr-2"> {{ fecha_entrega }}</div>
+                    </b-row>
+
+                </b-col>
             </b-row>
-          </b-col>
+
+        </b-col>
+      </b-row>
+
 <br/>
         <b-row class="pb-2">
           
@@ -153,20 +168,6 @@
         </b-col>
 <br/>
 <b-col class="col-6">
-        <b-row style="border-bottom: 1px solid var(--lsa-light-gray);">
-              <b-col class="col-7" style="font-weight:bold;"> Fecha de entrega: </b-col>
-              <b-col class="col-5">
-                <b-row>
-                 <div class="mr-2"> {{ fecha_entrega }}</div>
-                  <b-button v-b-modal.modal-cambiar-fecha style="padding:2px; background-color: transparent; border:none; aspect-ratio: 1;" class="reactive-button">
-                    <b-icon scale="0.8" icon="pencil-square" style="color:rgb(0, 0, 0)"></b-icon>
-                  </b-button>
-                </b-row>
-                
-              
-              </b-col>
-            </b-row>
-
             <b-row style="border-bottom: 1px solid var(--lsa-light-gray);">
               <b-col class="col-7" style="font-weight:bold;"> Tipo de pago: </b-col>
               <b-col class="col-5">{{ tipo_pago }}</b-col>
@@ -179,35 +180,7 @@
       </b-col>
     </div>
 
-    <b-modal centered id="modal-cambiar-fecha" size="sm">
-
-      <template #modal-header="{ close }">
-      <!-- Emulate built in modal header close button action -->
-      <b-row class="d-flex justify-content-around">
-        <div class="pl-3">Cambiar fecha de entrega</div>
-      </b-row>
-
-      <button type="button" class="close" aria-label="Close" @click="close()">
-        <span aria-hidden="true" style="color:white">&times;</span>
-      </button>
-    </template>
-    <validation-observer ref="formfecha">
-
-    <ValidationProvider name="fecha inicio" rules="required" v-slot="validationContext">
-                    <b-form-datepicker  :date-format-options="{ year: 'numeric', month: '2-digit', day: '2-digit' }" placeholder="seleccione fecha" :state="getValidationState(validationContext)" v-model="fecha_entrega_nueva" id="datepicker-dateformat2" locale="es"></b-form-datepicker>
-                    <b-form-invalid-feedback id="fecha-live-feedback">{{
-                       validationContext.errors[0] }}
-                    </b-form-invalid-feedback>
-                </ValidationProvider>
-</validation-observer>
-
-
-<template  #modal-footer>
-      <b-button block @click="cambiarFechaEntrega" variant="primary" size="xl" class="float-right reactive-button" style="font-weight:bold">
-        Cambiar fecha
-      </b-button>
-    </template>
-  </b-modal>
+  
 
 
 

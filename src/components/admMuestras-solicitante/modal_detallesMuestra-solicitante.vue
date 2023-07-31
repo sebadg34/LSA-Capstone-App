@@ -98,7 +98,10 @@
                   <b-popover placement="topleft"
                     :target="'button-' + metodologia.id_metodologia + '-' + parametro.id_parametro"
                     title="Descripción metodología" triggers="focus">
-                    {{ metodologia.detalle_metodologia }}
+                    <template v-if=" metodologia.detalle_metodologia != null">{{ metodologia.detalle_metodologia }}</template>
+                                    <template v-else>
+                                        <div>La metodología no cuenta con una descripción actualmente.</div>
+                                    </template>
                   </b-popover>
                   <b-button class="boton-ojo-metodo"
                     :id="'button-' + metodologia.id_metodologia + '-' + parametro.id_parametro">
