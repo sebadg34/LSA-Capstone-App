@@ -224,7 +224,7 @@ export default {
       },
       {
         key: 'parametros',
-        label: 'parametros',
+        label: 'Parámetros',
         sortable: true
       },
       {
