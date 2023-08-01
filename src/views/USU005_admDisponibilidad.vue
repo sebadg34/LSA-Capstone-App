@@ -3,7 +3,7 @@
 
     <modal_editarFechas :user-data="this.modalFechasData" @refrescar="obtenerPersonal" />
     <modal_detallesPersonal :user-data="this.modalDetallesData" />
-    <modal_editarDiasDisponibles :user-data="this.modalDiasDisponiblesData" />
+    <modal_editarDiasDisponibles :user-data="this.modalDiasDisponiblesData" @refrescar="obtenerPersonal" />
 
     <b-row align-h="start" style="padding-top:30px;">
         <b-col class="col-6">
@@ -118,10 +118,10 @@
                             <b-icon icon="file-earmark-medical" aria-hidden="true" class="mr-2"></b-icon>Ver detalles
 
                         </b-dropdown-item>
-                        <b-dropdown-item @click="abrirEditarFechas(row.item)">
+                        <b-dropdown-item v-if="rol != 6" @click="abrirEditarFechas(row.item)">
                             <b-icon icon="pencil" aria-hidden="true" class="mr-2"></b-icon>Modificar fechas
                         </b-dropdown-item>
-                        <b-dropdown-item @click="abrirEditarDiasDisponibles(row.item)">
+                        <b-dropdown-item v-if="rol != 6" @click="abrirEditarDiasDisponibles(row.item)">
                             <b-icon icon="person-check" aria-hidden="true" class="mr-2"></b-icon>Modificar días disponibles
                         </b-dropdown-item>
                     </b-dropdown>
@@ -151,9 +151,11 @@
 import modal_editarFechas from '@/components/admDisponibilidad/modal_editarFechas.vue'
 import modal_editarDiasDisponibles from '@/components/admDisponibilidad/modal_editarDiasDisponibles.vue'
 
-import modal_detallesPersonal from '@/components/admPersonal/modal_detallesPersonal.vue'
+import modal_detallesPersonal from '@/components/admDisponibilidad/modal_detallesPersonal.vue'
 import personalService from "@/helpers/api-services/Personal.service"
-
+import {
+    getUserInfo
+} from "@/helpers/api-services/Auth.service";
 export default {
     name: 'admPersonal',
     components: {
@@ -163,6 +165,7 @@ export default {
     },
     mounted() {
         this.obtenerPersonal();
+        this.rol = getUserInfo().role;
     },
     computed: {
         rows() {
@@ -172,6 +175,7 @@ export default {
     data() {
         return {
             filter: null,
+            rol: "",
             filterOn: [],
             nombreFiltro: "",
             rutFiltro: "",
@@ -320,7 +324,7 @@ export default {
         abrirDetallesPersonal(data) {
             console.log(data)
             this.modalDetallesData = data;
-            this.$bvModal.show('modal-detalles-personal')
+            this.$bvModal.show('modal-detalles-personal-disponibilidad')
         },
         abrirEditarDiasDisponibles(data) {
             console.log(data)

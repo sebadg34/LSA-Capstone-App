@@ -88,6 +88,32 @@
             </div>
           </template>
 
+
+          <template #cell(parametros)="row">
+
+            <b-list-group v-if="row.item.parametros_metodologias.length > 0">
+              <b-list-group-item v-if="row.item.parametros_metodologias.length > 1" v-b-toggle="row.item.RUM.toString()"
+                style="padding:2px; border: none; border-bottom: solid 1px #dbdbdb; ">{{
+                  row.item.parametros_metodologias[0].nombre_parametro + " - " + row.item.parametros_metodologias[0].nombre_metodologia }}
+                <b-icon style="position:absolute; right:0px; top:25%; color: #949494" icon="caret-down-fill"></b-icon>
+              </b-list-group-item>
+              <b-list-group-item v-else style="padding:2px; border: none; border-bottom: solid 1px #dbdbdb; ">{{
+                row.item.parametros_metodologias[0].nombre_parametro + " - " + row.item.parametros_metodologias[0].nombre_metodologia}}
+
+              </b-list-group-item>
+
+              <div v-if="row.item.parametros_metodologias.length > 1">
+                <b-collapse :id="row.item.RUM.toString()">
+                  <b-list-group-item style="padding:2px;  border: none; border-bottom: solid 1px #dbdbdb;"
+                    v-for="index in row.item.parametros_metodologias.length - 1" :key="index">{{
+                      row.item.parametros_metodologias[index].nombre_parametro + " - " + row.item.parametros_metodologias[index].nombre_metodologia}}</b-list-group-item>
+                </b-collapse>
+              </div>
+
+            </b-list-group>
+            <div v-else>Particular</div>
+          </template>
+
           <template #cell(solicitante)="row">
 
             <span>{{ row.item.solicitante[0].nombre + " " + row.item.solicitante[0].primer_apellido }}</span>
@@ -122,8 +148,9 @@
               <b-dropdown-item @click="MostrarObservaciones(row.item)">
                 <b-icon icon="check2-square" aria-hidden="true" class="mr-2"></b-icon>Observaciones
               </b-dropdown-item>
-              <b-dropdown-item v-if="row.item.estado != 'Finalizado' " @click="abrirCompletarTarea(row.item)">
-                <b-icon icon="file-earmark-arrow-down" aria-hidden="true" class="mr-2"></b-icon>Marcar tarea como completado
+              <b-dropdown-item v-if="row.item.estado != 'Finalizado'" @click="abrirCompletarTarea(row.item)">
+                <b-icon icon="file-earmark-arrow-down" aria-hidden="true" class="mr-2"></b-icon>Marcar tarea como
+                completado
               </b-dropdown-item>
 
             </b-dropdown>
@@ -190,7 +217,16 @@ export default {
         key: 'RUM',
         label: 'RUM'
       },
-      
+      {
+        key: 'matriz',
+        label: 'Matriz',
+        sortable: true
+      },
+      {
+        key: 'parametros',
+        label: 'parametros',
+        sortable: true
+      },
       {
         key: 'fecha_ingreso_formateada',
         label: 'Fecha ingreso',
@@ -201,11 +237,7 @@ export default {
         label: 'Fecha entrega',
         sortable: true
       },
-      {
-        key: 'matriz',
-        label: 'Matriz',
-        sortable: true
-      },
+
       {
         key: 'estado',
         label: 'Estado',
@@ -326,7 +358,7 @@ export default {
         if (response.data != null && response.status === 200) {
           this.muestras = response.data
           this.muestrasFiltradas = this.muestras;
-          console.log("muestras!!",this.muestrasFiltradas)
+          console.log("muestras!!", this.muestrasFiltradas)
           this.loading = false;
         }
       })
@@ -409,7 +441,7 @@ export default {
       this.$bvModal.show('modal-completar-tarea-quimico');
     },
 
-  
+
     Descargar() {
       // Aquí pones la lógica para mostrar los detalles de la muestra seleccionada
       window.location.href = "https://www.youtube.com";

@@ -54,6 +54,10 @@
                         <b-col class="col-5" style="font-weight:bold;"> Número de muestras: </b-col>
                         <b-col class="col-7">{{ numero_muestras }}</b-col>
                     </b-row>
+                    <b-row style="border-bottom: 1px solid var(--lsa-light-gray); padding:3px">
+                        <b-col class="col-5" style="font-weight:bold;"> Muestreado por: </b-col>
+                        <b-col class="col-7">{{ muestreador }}</b-col>
+                    </b-row>
                 </b-col>
 
                 <b-col class="col-6">
@@ -66,11 +70,15 @@
                         <b-col class="col-5" style="font-weight:bold;"> Norma: </b-col>
                         <b-col class="col-7">{{ norma.nombre_norma }}</b-col>
                     </b-row>
+                   
                     <b-row style="border-bottom: 1px solid var(--lsa-light-gray); padding:3px">
-                        <b-col class="col-5" style="font-weight:bold;"> Muestreado por: </b-col>
-                        <b-col class="col-7">{{ muestreador }}</b-col>
-                    </b-row>
-
+              <b-col class="col-5" style="font-weight:bold;"> Fecha de ingreso: </b-col>
+              <b-col class="col-7">{{ fecha_ingreso }}</b-col>
+            </b-row>
+            <b-row style="border-bottom: 1px solid var(--lsa-light-gray); padding:3px">
+              <b-col class="col-5" style="font-weight:bold;"> Hora de ingreso: </b-col>
+              <b-col class="col-7">{{  hora_ingreso }}</b-col>
+            </b-row>
                 </b-col>
             </b-row>
             <br />
@@ -211,7 +219,9 @@ export default {
             cargandoAnalistas: false,
             showObservaciones: false,
             parametros: [],
-            empleados: []
+            empleados: [],
+            fecha_ingreso: "",
+            hora_ingreso: ""
 
         }
     },
@@ -270,6 +280,8 @@ export default {
                         this.fecha_entrega = detalles.fecha_entrega_formateada;
                         this.norma = detalles.norma;
                         this.matriz = detalles.matriz;
+                        this.fecha_ingreso = detalles.fecha_ingreso_formateada;
+                        this.hora_ingreso = detalles.hora_ingreso_formateada;
                         this.fecha_entrega_nueva = new Date(detalles.fecha_entrega);
                         this.valor_neto = detalles.valor_neto;
                         this.tipo_pago = detalles.tipo_pago;

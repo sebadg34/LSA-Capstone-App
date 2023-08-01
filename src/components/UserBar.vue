@@ -16,9 +16,13 @@
                 <b-list-group-item style="padding: 5px 0px 5px 0px" @click="abrirCambiarPassword()" class="cursorToHand  perfilButton">
                     <b-icon icon="key-fill" aria-hidden="true"></b-icon><span class="px-md-2">Cambiar contraseña</span>
                 </b-list-group-item>
+                <b-overlay style="
+    border-radius: 0px 0px 10px 10px;" :show="CargandoLogout"  opacity="0.6" spinner-small spinner-variant="primary"
+                    >
                 <b-list-group-item @click="logoutUser()" class="cursorToHand  logoutButton">
                     <b-icon icon="power" aria-hidden="true"></b-icon><span class="px-md-2">Cerrar sesión</span>
                 </b-list-group-item>
+                </b-overlay>
             </b-list-group>
        
         </div>
@@ -68,6 +72,7 @@ console.log('data user',this.userData)
         return {
             menu_active: false,
             userData: [],
+            CargandoLogout: false,
         };
     },
     methods: {
@@ -87,7 +92,7 @@ console.log('data user',this.userData)
 
         },
          async logoutUser() {
-
+            this.CargandoLogout = true;
            await authService.logout();
            
            this.$root.$bvToast.toast('Sesión cerrada exitosamente.', {
@@ -99,7 +104,7 @@ console.log('data user',this.userData)
                                 })
 
         this.$router.push("/");
-          
+        this.CargandoLogout = false;
         },
     }
 }

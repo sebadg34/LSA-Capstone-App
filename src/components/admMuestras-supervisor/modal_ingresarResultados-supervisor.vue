@@ -213,7 +213,6 @@ export default {
                 } else {
                     this.resultados.forEach(resultado => {
                             this.resultados_agregar.push({
-                                rut_empleado: resultado.rut_empleado,
                                 identificador: resultado.cod_muestra,
                                 id_parametro: resultado.parametro.id_parametro,
                                 valor_resultado: resultado.resultado,

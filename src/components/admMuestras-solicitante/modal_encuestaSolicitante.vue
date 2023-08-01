@@ -16,10 +16,9 @@
         </template>
         <b-row>
             <b-col class="col-12">
-                <b-alert fade  class="text-center" dismissible @dismissed="valoracion_faltante = false" :show="valoracion_faltante" variant="warning">La valoración debe ser entre 1 a 5 estrellas.</b-alert>
-                <label for="rating-lg" class="mt-3" style="font-weight: bold;">¿Qué te pareció el servicio?</label>
-                <ValidationProvider name="valoración" rules="required|min:1" v-slot="validationContext">
-                    <b-form-rating :state="getValidationState(validationContext)" variant="warning" id="rating-lg" v-model="Valoracion" size="lg"></b-form-rating>
+                <label for="rating-lg" class="mt-3" style="font-weight: bold;">¿Qué tan receptivos hemos sido ante sus preguntas o inquietudes acerca de nuestros servicios de análisis?	</label>
+                <ValidationProvider name="valoración 1" rules="required|min:1" v-slot="validationContext">
+                    <b-form-rating :state="getValidationState(validationContext)" variant="warning" id="rating-lg" v-model="Valoracion_1" size="lg"></b-form-rating>
 
                     <b-row class="d-flex justify-content-between" style="padding-left:70px; padding-right:70px">
 
@@ -30,7 +29,51 @@
                         <div>Excelente</div>
                     </b-row>
                 </ValidationProvider>
-                
+                <b-alert fade  class="text-center" dismissible @dismissed="valoracion_faltante_1 = false" :show="valoracion_faltante_1" variant="warning">La valoración debe ser entre 1 a 5 estrellas.</b-alert>
+              
+            </b-col>
+
+        </b-row>
+        <br/>
+        <b-row>
+            <b-col class="col-12">
+                <label for="rating-lg" class="mt-3" style="font-weight: bold;">	¿Cómo calificaría la calidad de nuestros resultados?</label>
+                <ValidationProvider name="valoración 2" rules="required|min:1" v-slot="validationContext">
+                    <b-form-rating :state="getValidationState(validationContext)" variant="warning" id="rating-lg" v-model="Valoracion_2" size="lg"></b-form-rating>
+
+                    <b-row class="d-flex justify-content-between" style="padding-left:70px; padding-right:70px">
+
+                        <div>Muy malo</div>
+                        <div>Malo</div>
+                        <div>Regular</div>
+                        <div>Bueno</div>
+                        <div>Excelente</div>
+                    </b-row>
+                </ValidationProvider>
+                <b-alert fade  class="text-center" dismissible @dismissed="valoracion_faltante_2 = false" :show="valoracion_faltante_2" variant="warning">La valoración debe ser entre 1 a 5 estrellas.</b-alert>
+            </b-col>
+
+            
+        </b-row>
+        <br/>
+        <b-row>
+            <b-col class="col-12">
+                 <label for="rating-lg" class="mt-3" style="font-weight: bold;">En general, ¿qué tan satisfecho/a o insatisfecho/a está con UCN-LSA?</label>
+                <ValidationProvider name="valoración 3" rules="required|min:1" v-slot="validationContext">
+                    <b-form-rating :state="getValidationState(validationContext)" variant="warning" id="rating-lg" v-model="Valoracion_3" size="lg"></b-form-rating>
+
+                    <b-row class="d-flex justify-content-between" style="padding-left:25px; padding-right:50px">
+
+                        
+                        <div>Muy insatisfecho</div>
+                        <div>insatisfecho</div>
+                        <div>Regular</div>
+                        <div>satisfecho</div>
+                        <div>Muy satisfecho</div>
+                    </b-row>
+                </ValidationProvider>
+                <b-alert fade  class="text-center" dismissible @dismissed="valoracion_faltante_3 = false" :show="valoracion_faltante_3" variant="warning">La valoración debe ser entre 1 a 5 estrellas.</b-alert>
+               
             </b-col>
 
             <b-col class="col-12">
@@ -46,7 +89,6 @@
                 </ValidationProvider>
             </b-col>
         </b-row>
-
         <template #modal-footer>
             <b-overlay :show="Cargando"  opacity="0.6" spinner-small spinner-variant="primary" >
             <b-button @click="enviarFormulario" variant="primary" size="xl" class="float-right reactive-button" style="font-weight:bold">
@@ -70,7 +112,9 @@ export default {
                 console.log("PROP CHANGED, UPDATE MODAL", this.encuestaData)
             this.Observacion = ""
             this.Valoracion = ""
-            this.valoracion_faltante = false;
+            this.valoracion_faltante_1 = false;
+            this.valoracion_faltante_2 = false;
+            this.valoracion_faltante_3 = false;
             this.Cargando = false;
             this.RUM = this.encuestaData.RUM;
             }
@@ -92,15 +136,24 @@ this.Cargando = true;
             this.$refs.form.validate().then(success => {
                 if (!success) {
                     this.Cargando = false;
-                    if(this.Valoracion != null){
-                        this.valoracion_faltante = true;
+                    if(this.Valoracion_1 == ""){
+                        this.valoracion_faltante_1 = true;
+                    }
+                    if(this.Valoracion_2 == ""){
+                        this.valoracion_faltante_2 = true;
+                    }
+                    if(this.Valoracion_3 == ""){
+                        this.valoracion_faltante_3 = true;
                     }
                     return;
                 } else {
                     var data = {
-                        puntaje: this.Valoracion,
+                        RUM: this.RUM,
+                        puntaje_pregunta_1: this.Valoracion_1,
+                        puntaje_pregunta_2: this.Valoracion_2,
+                        puntaje_pregunta_3: this.Valoracion_3,
                         observaciones: this.Observacion,
-                        RUM: this.RUM
+                
                     }
                     MuestraService.responderEncuesta(data).then((response) => {
                         if(response.status == 200){
@@ -139,8 +192,12 @@ this.Cargando = true;
     data() {
         return {
             Observacion: "",
-            Valoracion: "",
-            valoracion_faltante: false,
+            Valoracion_1: "",
+            Valoracion_2: "",
+            Valoracion_3: "",
+           valoracion_faltante_1: false,
+           valoracion_faltante_2: false,
+           valoracion_faltante_3: false,
             Cargando: false,
             RUM: ""
         }
