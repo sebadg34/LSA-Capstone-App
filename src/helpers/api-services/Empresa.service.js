@@ -27,6 +27,8 @@ const existeCorreoEmpresa = async (data) => {
         return error.response;
     }
 };
+
+
 const ingresarEmpresa = async (data) => {
     try {  
         const instanciaApi = await crearApi();
@@ -38,7 +40,6 @@ const ingresarEmpresa = async (data) => {
         return;
     }
 };
-
 const actualizarEmpresa = async (data) => {
     try {  
         const instanciaApi = await crearApi();
@@ -50,6 +51,8 @@ const actualizarEmpresa = async (data) => {
         return;
     }
 };
+
+
 
 const obtenerDetallesEmpresa = async (data) => {
     try {

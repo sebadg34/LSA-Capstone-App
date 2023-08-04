@@ -11,7 +11,6 @@
              
             </template>
             <b-card-text>
-                Vista título
             </b-card-text>
 
         </b-card>

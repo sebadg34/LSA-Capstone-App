@@ -227,7 +227,7 @@ export default {
             CargandoCiudad: false,
             CiudadSeleccionada: "",
             EmpresaSeleccionada: "",
-            Empresas: [{}],
+            Empresas: [],
             Ciudades: [{
 
             }],

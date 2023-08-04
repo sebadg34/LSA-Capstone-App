@@ -186,6 +186,10 @@ export default {
                         // elimina primer valor vacio
                         this.direcciones.shift();
                         console.log('direcciones a editar',this.direcciones);
+
+                        if(this.direcciones.length == 0){
+                            this.add();
+                        }
                     }
 
                 } else {

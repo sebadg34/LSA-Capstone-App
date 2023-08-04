@@ -1,5 +1,6 @@
 <template>
     <b-modal id="modal-detalles-personal" centered ref="modal" title="Agregar Personal" size="lg">
+        
         <template #modal-header="{ close }">
             <!-- Emulate built in modal header close button action -->
 
