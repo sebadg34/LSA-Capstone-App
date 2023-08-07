@@ -316,7 +316,7 @@
                                                             <b-input-group-prepend is-text>
                                                                 +56 9
                                                             </b-input-group-prepend>
-                                                            <b-form-input v-model="telefono.telefono_transportista"
+                                                            <b-form-input readonly v-model="telefono.telefono_transportista"
                                                                 aria-describedby="input-live-help fono-live-feedback"
                                                                 placeholder="">
                                                             </b-form-input>  
