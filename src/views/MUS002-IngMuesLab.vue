@@ -444,6 +444,8 @@
 
                                               <b-row v-if="objetosSeleccionados.length > 0" class="mt-3">
                                                   <b-col>
+
+
                                                       <b-form-group label="Parámetros Seleccionados:">
                                                           <div v-for="(objetos, index) in objetosSeleccionados"
                                                               :key="index"
@@ -459,6 +461,8 @@
                                                               </b-button>
                                                           </div>
                                                       </b-form-group>
+
+
                                                   </b-col>
                                               </b-row>
 

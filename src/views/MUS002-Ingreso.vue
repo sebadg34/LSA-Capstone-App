@@ -443,21 +443,29 @@
   
                                                 <b-row v-if="objetosSeleccionados.length > 0" class="mt-3">
                                                     <b-col>
-                                                        <b-form-group label="Parámetros Seleccionados:">
-                                                            <div v-for="(objetos, index) in objetosSeleccionados"
-                                                                :key="index"
-                                                                class="d-flex align-items-center objetos-item mb-3">
-                                                                <b-input readonly :value="objetos.parametro"
-                                                                    class="mr-2"></b-input>
-                                                                <b-input readonly :value="objetos.metodologia"
-                                                                    class="mr-2"></b-input>
-                                                                <b-button variant="danger"
-                                                                    @click="eliminarObjetosSeleccionados(index)"
-                                                                    class="ml-2">
-                                                                    <b-icon-trash-fill></b-icon-trash-fill>
-                                                                </b-button>
-                                                            </div>
-                                                        </b-form-group>
+                                                        <label style="font-weight: bold;">Parámetros seleccionados:</label>
+                                                            <b-form-group label-size="sm"
+                                                                style="overflow-y: scroll; height: 250px; border:1px solid lightgray;"
+                                                                >
+                                                                <b-list-group horizontal
+                                                                    v-for="(objetos, index) in objetosSeleccionados"
+                                                                    :key="index" >
+                                                                    <b-list-group-item class="d-flex align-items-center justify-content-center"  style="width:45%; padding:2px; height:40px">
+                                                                        {{ objetos.parametro }}
+                                                                    </b-list-group-item>
+                                                                    <b-list-group-item class="d-flex align-items-center justify-content-center" style="width:45%; padding:2px; height:40px">
+                                                                        {{ objetos.metodologia }}
+                                                                    </b-list-group-item>
+                                                                    <b-list-group-item class="d-flex align-items-center justify-content-center" style="width:10%; padding:2px; height:40px">
+                                                                        <b-button  class="reactive-button d-flex align-items-center justify-content-center" variant="danger" style="height:30px; width:30px;"
+                                                                            @click="eliminarObjetosSeleccionados(index)"
+                                                                            >
+                                                                           <b-icon scale="0.8" icon="trash-fill"></b-icon>
+                                                                        </b-button>
+                                                                    </b-list-group-item>
+
+                                                                </b-list-group>
+                                                            </b-form-group>
                                                     </b-col>
                                                 </b-row>
   
