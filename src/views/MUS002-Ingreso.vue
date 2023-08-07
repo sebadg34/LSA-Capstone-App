@@ -128,12 +128,10 @@
                                                             v-slot="validationContext">
                                                             <label for="input-live">N° de muestras:</label>
                                                             <div class="d-flex align-items-center">
-                                                                <b-input-group size="sm">
-  
+                                                                <b-input-group size="sm">  
                                                                     <b-form-input id="nMuestras-input" v-model="nMuestras"
                                                                         :state="getValidationState(validationContext)"
-                                                                        aria-describedby="nMuestras-live-feedback"></b-form-input>
-                                                                    
+                                                                        aria-describedby="nMuestras-live-feedback"></b-form-input>                                                                    
                                                                 </b-input-group>
   
                                                             </div>
@@ -179,8 +177,7 @@
                                                             <b-form-invalid-feedback id="horaI-live-feedback">{{
                                                                 validationContext.errors[0] }}
                                                             </b-form-invalid-feedback>
-                                                        </ValidationProvider>
-  
+                                                        </ValidationProvider>  
   
                                                         <ValidationProvider name="entrega" rules="required"
                                                             v-slot="validationContext"><label class="mt-1"
@@ -321,20 +318,8 @@
                                                             </b-input-group-prepend>
                                                             <b-form-input v-model="telefono.telefono_transportista"
                                                                 aria-describedby="input-live-help fono-live-feedback"
-                                                                placeholder=""></b-form-input>
-  
-                                                            <b-input-group-append>
-                                                                <b-button size="sm" class="lsa-green reactive-button"
-                                                                    style="aspect-ratio:1; border: none" @click="addInput"
-                                                                    v-if="index === telefonos_agregar.length - 1">
-                                                                    <b-icon class="mt-1" icon="plus-circle-fill"></b-icon>
-                                                                </b-button>
-                                                                <b-button @click="removeInput(index)" variant="danger"
-                                                                    size="sm" class=" reactive-button"
-                                                                    style="aspect-ratio: 1; border: none;">
-                                                                    <b-icon-trash-fill></b-icon-trash-fill>
-                                                                </b-button>
-                                                            </b-input-group-append>
+                                                                placeholder="">
+                                                            </b-form-input>  
   
                                                         </b-input-group>
                                                         <div v-if="telefonos_agregar.length === 0">

@@ -405,9 +405,6 @@
                                                     </b-col>
                                                 </b-row>
 
-
-                                                <ValidationProvider name="Parametros y metodologias" rules="required"
-                                                    v-slot="validationContext">
                                                     <b-row v-if="objetosSeleccionados.length > 0" class="mt-3">
                                                         <b-col>
 
@@ -457,11 +454,7 @@
                                                                 </b-list-group>
                                                             </b-form-group>
                                                         </b-col>
-                                                    </b-row>
-                                                    <b-form-invalid-feedback id="Parametros y metodologias-live-feedback">
-                                                        {{ validationContext.errors[0] }}
-                                                    </b-form-invalid-feedback>
-                                                </ValidationProvider>
+                                                    </b-row>                                                    
 
                                                 <b-alert variant="danger" :show="alertaDuplicado" dismissible
                                                     @dismissed="alertaDuplicado = false">
