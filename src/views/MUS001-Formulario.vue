@@ -131,6 +131,20 @@
                                                                 validationContext.errors[0] }}</b-form-invalid-feedback>
                                                         </ValidationProvider>
 
+                                                        <label for="input-live">Fecha de recepción:</label>
+                                                        <b-form-datepicker
+                                                            :date-format-options="{ year: 'numeric', month: '2-digit', day: '2-digit' }"
+                                                            id="input-live" v-model="fecha_recepcion"
+                                                            aria-describedby="input-live-help fechaI-live-feedback"
+                                                            placeholder="Seleccione fecha">
+                                                        </b-form-datepicker>
+
+                                                        <label for="input-time">Hora de recepción:</label>
+                                                        <b-form-timepicker id="input-time" v-model="hora_recepcion"
+                                                            aria-describedby="input-live-help horaI-live-feedback"
+                                                            placeholder="Ingrese hora">
+                                                        </b-form-timepicker>
+
                                                         <label for="input-live">Fecha de muestreo:</label>
                                                         <b-form-datepicker
                                                             :date-format-options="{ year: 'numeric', month: '2-digit', day: '2-digit' }"
@@ -209,21 +223,15 @@
                                                             <b-form-invalid-feedback id="matriz-live-feedback">{{
                                                                 validationContext.errors[0] }}</b-form-invalid-feedback>
                                                         </ValidationProvider>
-
-                                                        <ValidationProvider name="Temperatura" rules="required"
-                                                            v-slot="validationContext">
-                                                            <label for="input-live">Temperatura (°C):</label>
-                                                            <div class="d-flex align-items-center">
-                                                                <b-input-group size="sm">
-                                                                    <b-form-input id="Temperatura-input"
-                                                                        v-model="Temperatura"
-                                                                        :state="getValidationState(validationContext)"
-                                                                        aria-describedby="Temperatura-live-feedback"></b-form-input>
-                                                                </b-input-group>
-                                                            </div>
-                                                            <b-form-invalid-feedback id="Temperatura-live-feedback">{{
-                                                                validationContext.errors[0] }}</b-form-invalid-feedback>
-                                                        </ValidationProvider>
+                                                        
+                                                        <label for="input-live">Temperatura (°C):</label>
+                                                        <div class="d-flex align-items-center">
+                                                            <b-input-group size="sm">
+                                                                <b-form-input id="Temperatura-input"
+                                                                    v-model="Temperatura"                                                                        
+                                                                    aria-describedby="Temperatura-live-feedback"></b-form-input>
+                                                            </b-input-group>
+                                                        </div>                                                            
 
                                                         <label for="input-live">Observaciones:</label>
                                                         <b-form-textarea id="input-live" v-model="observaciones" rows="1"
@@ -259,7 +267,6 @@
                                                             aria-describedby="transportistaRut-live-feedback"></b-form-input>
 
                                                         <label for="input-live">Teléfono móvil:</label>
-
                                                         <b-input-group v-for="(telefono, index) in telefonos_agregar"
                                                             :key="index" class="mb-1">
                                                             <b-input-group-prepend is-text>
@@ -429,10 +436,8 @@
                                                                 </div>
                                                             </b-form-group>
 -->
-    <label style="font-weight: bold;">Parámetros seleccionados:</label>
-                                                            <b-form-group label-size="sm"
-                                                                style="overflow-y: scroll; height: 250px; border:1px solid lightgray;"
-                                                                >
+                                                            <label style="font-weight: bold;">Parámetros seleccionados:</label>
+                                                            <b-form-group label-size="sm" style="overflow-y: scroll; height: 250px; border:1px solid lightgray;">
                                                                 <b-list-group horizontal
                                                                     v-for="(objetos, index) in objetosSeleccionados"
                                                                     :key="index" >
@@ -444,8 +449,7 @@
                                                                     </b-list-group-item>
                                                                     <b-list-group-item class="d-flex align-items-center justify-content-center" style="width:10%; padding:2px; height:40px">
                                                                         <b-button  class="reactive-button d-flex align-items-center justify-content-center" variant="danger" style="height:30px; width:30px;"
-                                                                            @click="eliminarObjetosSeleccionados(index)"
-                                                                            >
+                                                                            @click="eliminarObjetosSeleccionados(index)">
                                                                            <b-icon scale="0.8" icon="trash-fill"></b-icon>
                                                                         </b-button>
                                                                     </b-list-group-item>
@@ -483,7 +487,7 @@
                                             <div class="mt-5">
                                                 <b-button class="lsa-orange reactive-button" @click="agregar()"
                                                     style="border: none" pill size="md">
-                                                    Asignar códigos de parámetros
+                                                    Asignar identificadores a la muestra
                                                     <b-icon icon="plus-circle-fill"></b-icon>
                                                 </b-button>
                                             </div>
@@ -492,16 +496,13 @@
 
                                 </b-col>
                                 <div style="position:absolute; right:20px; bottom:15px; width:45%">
-                                    <b-row class=" d-flex justify-content-between">
-                                        <b-col class="col-6">
-                                            <b-button block class="lsa-blue reactive-button" pill
-                                                @click="tabIndex--">Atrás</b-button>
-                                        </b-col>
-                                        <b-col class="col-6">
-                                            <b-button block class="lsa-blue reactive-button" pill
-                                                @click="tabIndex++">Siguiente
-                                            </b-button>
-                                        </b-col>
+                                    <b-row class="d-flex justify-content-between">
+                                      <b-col class="col-6">
+                                        <b-button v-if="tabIndex > 0" block class="lsa-blue reactive-button" pill @click="goToPreviousTab">Atrás</b-button>
+                                      </b-col>
+                                      <b-col class="col-6">
+                                        <b-button v-if="shouldShowNextButton()" block class="lsa-blue reactive-button" pill @click="goToNextTab">Siguiente</b-button>
+                                      </b-col>
                                     </b-row>
 
                                     <b-button @click="enviarFormulario()" variant="primary" size="xl"
@@ -644,11 +645,7 @@ export default {
             opcionesPrioridad: [{
                 value: 'Normal',
                 text: 'Normal'
-            },
-            {
-                value: 'Alta',
-                text: 'Alta'
-            },
+            },            
             {
                 value: 'Urgente',
                 text: 'Urgente'
@@ -720,7 +717,13 @@ export default {
             revisado: false,
             opcionesCotizacion: [],
             cotizacion: '',
-            opcionesEmpresa: []
+            
+            opcionesEmpresa: [],
+            totalTabs: 5,
+            fecha_recepcion: '',
+            hora_recepcion: ''
+
+
         };
     },
 
@@ -819,6 +822,22 @@ export default {
 
         removeInput(index) {
             this.telefonos_agregar.splice(index, 1); // Eliminar el input del array "telefonos"
+        },
+
+        goToPreviousTab() {
+            if (this.tabIndex > 0) {
+                this.tabIndex--;
+            }
+        },
+
+        goToNextTab() {
+            if (this.tabIndex < this.totalTabs - 1) {
+                this.tabIndex++;
+            }
+        },
+
+        shouldShowNextButton() {
+            return this.tabIndex < this.totalTabs - 1;
         },
 
         onModalShown() {
@@ -1309,7 +1328,17 @@ export default {
 
             if (!datosValidos) {
                 return;
-            } else {
+            }   else if (this.submuestra_agregar.some(submuestra => submuestra.identificador.trim() === '')) {
+                this.$bvToast.toast("La muestra contiene identificadores en blanco. Por favor, complete todos los identificadores.", {
+                title: 'Error',
+                toaster: 'b-toaster-top-center',
+                solid: true,
+                variant: "danger",
+                appendToast: true
+            });
+                return;
+            } 
+            else {
                 const matricesFiltradas = this.parametros_agregar.slice(1);
                 //const parametrosFiltrados = this.submuestra_agregar.slice(1);
                 var data = {
@@ -1324,12 +1353,14 @@ export default {
                     cantidad_muestras: this.nMuestras,
                     prioridad: this.prioridad,
                     temperatura_transporte: this.Temperatura,
+                    fecha_ingreso: this.fecha_recepcion,
+                    hora_ingreso: this.hora_recepcion,
                     fecha_entrega: this.fechaEntrega,
                     fecha_muestreo: this.fecha,
                     hora_muestreo: this.hora,
                     rut_transportista: this.transportistaRut,
                     nombre_transportista: this.transportista,
-                    patente_vehiculo: this.patente,
+                    patente_vehiculo: this.patente,                    
                     telefonos_agregar: this.telefonos_agregar,
                     estado: 'Recepcionado',
                     observaciones: this.observaciones,

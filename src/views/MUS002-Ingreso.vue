@@ -140,6 +140,20 @@
                                                             <b-form-invalid-feedback id="nMuestras-live-feedback">{{
                                                                 validationContext.errors[0] }}</b-form-invalid-feedback>
                                                         </ValidationProvider>
+
+                                                        <label for="input-live">Fecha de recepción:</label>
+                                                        <b-form-datepicker
+                                                            :date-format-options="{ year: 'numeric', month: '2-digit', day: '2-digit' }"
+                                                            id="input-live" v-model="fecha_recepcion"
+                                                            aria-describedby="input-live-help fechaI-live-feedback"
+                                                            placeholder="Seleccione fecha">
+                                                        </b-form-datepicker>
+
+                                                        <label for="input-time">Hora de recepción:</label>
+                                                        <b-form-timepicker id="input-time" v-model="hora_recepcion"
+                                                            aria-describedby="input-live-help horaI-live-feedback"
+                                                            placeholder="Ingrese hora">
+                                                        </b-form-timepicker>
   
                                                         <ValidationProvider name="fechaI" rules="required"
                                                             v-slot="validationContext">
@@ -246,21 +260,15 @@
                                                                 value-field="id_matriz"></b-form-select>
                                                             <b-form-invalid-feedback id="TipoMatriz-live-feedback">{{
                                                                 validationContext.errors[0] }}</b-form-invalid-feedback>
-                                                        </ValidationProvider>
-  
-                                                        <ValidationProvider name="Temperatura" rules="required"
-                                                            v-slot="validationContext">
-                                                            <label for="input-live">Temperatura (°C):</label>
-                                                            <div class="d-flex align-items-center">
-                                                                <b-input-group size="sm">
-                                                                    <b-form-input id="Temperatura-input" v-model="Temperatura"
-                                                                        :state="getValidationState(validationContext)"
-                                                                        aria-describedby="Temperatura-live-feedback"></b-form-input>                                                                  
-                                                                </b-input-group>
-                                                            </div>
-                                                            <b-form-invalid-feedback id="Temperatura-live-feedback">{{
-                                                                validationContext.errors[0] }}</b-form-invalid-feedback>
-                                                        </ValidationProvider>
+                                                        </ValidationProvider>  
+                                                       
+                                                        <label for="input-live">Temperatura (°C):</label>
+                                                        <div class="d-flex align-items-center">
+                                                            <b-input-group size="sm">
+                                                                <b-form-input id="Temperatura-input" v-model="Temperatura"                                                                       
+                                                                    aria-describedby="Temperatura-live-feedback"></b-form-input>                                                                  
+                                                            </b-input-group>
+                                                        </div>                                                          
   
                                                         <ValidationProvider name="Cotizacion" rules="required" v-slot="validationContext">
                                                             <label class="mt-1" for="input-live">Cotización:</label>
@@ -798,8 +806,7 @@ export default {
             direccion: '',
             direccion_empresa: '',
             muestreado: '',
-            cotizacion: '',
-            analistasOptions: ['Analista 1', 'Analista 2', 'Analista 3', 'Analista 4'],
+            cotizacion: '',            
             opcionesAnalista: [],
             opcionesCotizacion: [],
             opcionesDireccion: [],
@@ -816,11 +823,7 @@ export default {
             opcionesPrioridad: [{
                     value: 'Normal',
                     text: 'Normal'
-                },
-                {
-                    value: 'Alta',
-                    text: 'Alta'
-                },
+                },                
                 {
                     value: 'Urgente',
                     text: 'Urgente'
@@ -946,7 +949,9 @@ export default {
             sub : [],
             empleadosAgrupados: [],
             empleadosDesagrupados: [],
-            parametro_submuestra_eliminar: []
+            parametro_submuestra_eliminar: [],
+            hora_recepcion: '',
+            fecha_recepcion: ''
         };
     },
 
@@ -995,8 +1000,6 @@ export default {
             console.log("param en sistema: ", this.objetosSeleccionados)
             this.obtenerTablasNormas();
             //this.actualizarParametrosTabla();
-
-
 
         }).catch(error => {
             console.error(error);
@@ -2565,6 +2568,8 @@ export default {
                     cantidad_muestras: this.nMuestras,
                     prioridad: this.prioridad,
                     temperatura_transporte: this.Temperatura,
+                    fecha_ingreso: this.fecha_recepcion,
+                    hora_ingreso: this.hora_recepcion,
                     fecha_entrega: this.fechaEntrega,
                     fecha_muestreo: this.fecha,
                     hora_muestreo: this.hora,
