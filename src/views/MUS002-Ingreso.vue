@@ -453,7 +453,7 @@
                                         </validation-observer>
                                     </b-tab>
   
-                                    <b-tab title="Asignar parámetros a muestras">
+                                    <b-tab title="Asignar identificadores a la muestra">
                                                                             
   
                                         <template #title>
@@ -462,7 +462,7 @@
                                                     <b-icon icon="arrow-right-short"></b-icon>
                                                     
   
-                                                    <strong style="padding-left:30px"> Asignar parámetros a muestras</strong>
+                                                    <strong style="padding-left:30px"> Asignar identificadores a la muestra</strong>
                                                 </b-row>
                                             </b-col>
                                         </template>
@@ -471,7 +471,7 @@
                                             <div class="mt-5">
                                                 <b-button class="lsa-orange reactive-button" @click="agregar()"
                                                     style="border: none" pill size="md">
-                                                    Asignar códigos de parámetros
+                                                    Asignar identificadores a la muestra
                                                     <b-icon icon="plus-circle-fill"></b-icon>
                                                 </b-button>
                                             </div>
@@ -2126,8 +2126,9 @@ export default {
                 id_submuestra: objeto.id_submuestra,
                 identificador: objeto.identificador,
                 orden: objeto.orden,
-                id_parametro: objeto.id_parametro,
-                id_metodologia: objeto.id_metodologia
+                parametros_agregar: [{
+                    id_parametro: objeto.id_parametro,
+                    id_metodologia: objeto.id_metodologia }]                
               });
             });
             
@@ -2276,15 +2277,15 @@ export default {
 
             this.parametros_metodologias = []; // Reiniciar la matriz
 
-// Recorrer los objetos no duplicados y construir la estructura necesaria
-parametrosYMetodologias.forEach((item) => {
-    const parametroMetodologia = {
-        id_parametro: item.id_parametro,
-        nombre_parametro: item.parametro
-    };
-    this.parametros_metodologias.push(parametroMetodologia);
-});    
-console.log("las matrices se actualizan: ", this.parametros_metodologias)         
+            // Recorrer los objetos no duplicados y construir la estructura necesaria
+            parametrosYMetodologias.forEach((item) => {
+                const parametroMetodologia = {
+                    id_parametro: item.id_parametro,
+                    nombre_parametro: item.parametro
+                };
+                this.parametros_metodologias.push(parametroMetodologia);
+            });    
+            console.log("las matrices se actualizan: ", this.parametros_metodologias)         
 
         },
 
@@ -2313,7 +2314,7 @@ console.log("las matrices se actualizan: ", this.parametros_metodologias)
             const parametroSeleccionado = this.parametrosOptions.find(parametro => parametro.nombre_parametro === this.parametroTablaSeleccionado);
             console.log("parametro Seleccionado: ", parametroSeleccionado)
             if (parametroSeleccionado) {
-                console.log("parametro Seleccionado: ", parametroSeleccionado)                  
+                console.log("parametro Seleccionado: ", parametroSeleccionado)                
                 
                 const metodologiasdelparametroseleccionado = this.metodologiasData.find(p => p.nombre_parametro === parametroSeleccionado.nombre_parametro);              
 
