@@ -194,17 +194,13 @@
                                                             </b-form-invalid-feedback>
                                                         </ValidationProvider>
   
-                                                        <ValidationProvider name="Forma de Pago" rules="required"
-                                                            v-slot="validationContext">
+                                                        
                                                             <label for="input-live">Forma de pago:</label>
                                                             <b-form-select id="input-live" v-model="tipo_pago"
                                                                 :options="opcionesPago"
                                                                 aria-describedby="input-live-help Forma de Pago-live-feedback"
-                                                                :state="getValidationState(validationContext)"></b-form-select>
-                                                            <b-form-invalid-feedback id="Forma de Pago-live-feedback">{{
-                                                                validationContext.errors[0] }}
-                                                            </b-form-invalid-feedback>
-                                                        </ValidationProvider>
+                                                                ></b-form-select>
+                                                            
   
                                                         <ValidationProvider name="Valor Neto" rules="required"
                                                             v-slot="validationContext">
@@ -555,16 +551,13 @@
   
                                 </b-col>
                                 <div style="position:absolute; right:20px; bottom:15px; width:45%">
-                                    <b-row class=" d-flex justify-content-between">
-                                        <b-col class="col-6">
-                                            <b-button block class="lsa-blue reactive-button" pill
-                                                @click="tabIndex--">Atrás</b-button>
-                                        </b-col>
-                                        <b-col class="col-6">
-                                            <b-button block class="lsa-blue reactive-button" pill
-                                                @click="tabIndex++">Siguiente</b-button>
-                                        </b-col>
-  
+                                    <b-row class="d-flex justify-content-between">
+                                      <b-col class="col-6">
+                                        <b-button v-if="tabIndex > 0" block class="lsa-blue reactive-button" pill @click="goToPreviousTab">Atrás</b-button>
+                                      </b-col>
+                                      <b-col class="col-6">
+                                        <b-button v-if="shouldShowNextButton()" block class="lsa-blue reactive-button" pill @click="goToNextTab">Siguiente</b-button>
+                                      </b-col>
                                     </b-row>
   
                                     <b-button @click="enviarFormulario()" variant="primary" size="xl"
@@ -934,7 +927,8 @@ export default {
             empleadosDesagrupados: [],
             parametro_submuestra_eliminar: [],
             hora_recepcion: '',
-            fecha_recepcion: ''
+            fecha_recepcion: '',
+            totalTabs: 6,
         };
     },
 
@@ -1139,6 +1133,22 @@ export default {
                 this.opcionesEmpresa = empresas;
             })
 
+        },
+
+        goToPreviousTab() {
+            if (this.tabIndex > 0) {
+                this.tabIndex--;
+            }
+        },
+
+        goToNextTab() {
+            if (this.tabIndex < this.totalTabs - 1) {
+                this.tabIndex++;
+            }
+        },
+
+        shouldShowNextButton() {
+            return this.tabIndex < this.totalTabs - 1;
         },
 
         onModalShown() {
@@ -1804,7 +1814,12 @@ export default {
                     this.parametros_agregar.push({
                         id_parametro: parametroData.id_parametro,
                         id_metodologia: metodologiaCompleta.id_metodologia,
-                    });   
+                    });
+                    
+                    this.parametros_metodologias.push({
+                        id_parametro: parametroData.id_parametro,
+                        nombre_parametro: this.parametroTablaSeleccionado,
+                    });  
 
                       // En caso de agregar un parametro que no está registrado en la BD
                     const parametroAntiguo = this.parametros_ya_en_sistema.find(param => param.nombre_metodologia == this.metodologiaSeleccionada.nombre_metodologia &&
