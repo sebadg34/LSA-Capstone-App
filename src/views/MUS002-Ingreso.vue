@@ -153,31 +153,20 @@
                                                             placeholder="Ingrese hora">
                                                         </b-form-timepicker>
   
-                                                        <ValidationProvider name="fechaI" rules="required"
-                                                            v-slot="validationContext">
+                                                        
                                                             <label class="mt-1" for="input-live">Fecha de muestreo:</label>
                                                             <b-form-datepicker
                                                                 :date-format-options="{ year: 'numeric', month: 'numeric', day: 'numeric' }"
-                                                                id="input-live" v-model="fecha"
-                                                                aria-describedby="input-live-help fechaI-live-feedback"
-                                                                :state="getValidationState(validationContext)"
+                                                                id="input-live" v-model="fecha"                                                                
                                                                 placeholder="Seleccione fecha"></b-form-datepicker>
-                                                            <b-form-invalid-feedback id="fechaI-live-feedback">{{
-                                                                validationContext.errors[0] }}
-                                                            </b-form-invalid-feedback>
-                                                        </ValidationProvider>
+                                                           
   
-                                                        <ValidationProvider name="hora" rules="required"
-                                                            v-slot="validationContext">
+                                                        
                                                             <label class="mt-1" for="input-time">Hora de muestreo:</label>
-                                                            <b-form-timepicker id="input-time" v-model="hora"
-                                                                :state="getValidationState(validationContext)"
-                                                                aria-describedby="input-live-help horaI-live-feedback"
-                                                                placeholder="Ingrese hora"></b-form-timepicker>
-                                                            <b-form-invalid-feedback id="horaI-live-feedback">{{
-                                                                validationContext.errors[0] }}
-                                                            </b-form-invalid-feedback>
-                                                        </ValidationProvider>  
+                                                            <b-form-timepicker id="input-time" v-model="hora"                                                                
+                                                                placeholder="Ingrese hora">
+                                                            </b-form-timepicker>
+                                                            
   
                                                         <ValidationProvider name="entrega" rules="required"
                                                             v-slot="validationContext"><label class="mt-1"
@@ -1814,12 +1803,7 @@ export default {
                     this.parametros_agregar.push({
                         id_parametro: parametroData.id_parametro,
                         id_metodologia: metodologiaCompleta.id_metodologia,
-                    });
-                    
-                    this.parametros_metodologias.push({
-                        id_parametro: parametroData.id_parametro,
-                        nombre_parametro: this.parametroTablaSeleccionado,
-                    });  
+                    });                     
 
                       // En caso de agregar un parametro que no está registrado en la BD
                     const parametroAntiguo = this.parametros_ya_en_sistema.find(param => param.nombre_metodologia == this.metodologiaSeleccionada.nombre_metodologia &&
@@ -2286,7 +2270,22 @@ export default {
             const objetosNoDuplicados = parametrosYMetodologias.filter((item) => !esDuplicado(this.objetosSeleccionados, item.parametro, item.metodologia));
             this.objetosSeleccionados.push(...objetosNoDuplicados); 
             const IDNoDuplicados = parametrosYMetodologias.filter((item) => !esDuplicado(this.objetosSeleccionados, item.id_parametro, item.id_metodologia));
-            this.parametros_agregar.push(...IDNoDuplicados);                  
+            this.parametros_agregar.push(...IDNoDuplicados);
+            this.parametros_metodologias = [];
+            console.log("las matrices se vacian: ", this.parametros_metodologias)
+
+            this.parametros_metodologias = []; // Reiniciar la matriz
+
+// Recorrer los objetos no duplicados y construir la estructura necesaria
+parametrosYMetodologias.forEach((item) => {
+    const parametroMetodologia = {
+        id_parametro: item.id_parametro,
+        nombre_parametro: item.parametro
+    };
+    this.parametros_metodologias.push(parametroMetodologia);
+});    
+console.log("las matrices se actualizan: ", this.parametros_metodologias)         
+
         },
 
         actualizarParametrosTabla() {
