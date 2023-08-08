@@ -130,6 +130,7 @@
                                                             <b-form-invalid-feedback id="nMuestras-live-feedback">{{
                                                                 validationContext.errors[0] }}</b-form-invalid-feedback>
                                                         </ValidationProvider>
+
                                                         <ValidationProvider name="fecha de recepcion" rules="required"
                                                             v-slot="validationContext">
                                                         <label for="input-live">Fecha de recepción:</label>
@@ -157,14 +158,14 @@
                                                         <label for="input-live">Fecha de muestreo:</label>
                                                         <b-form-datepicker
                                                             :date-format-options="{ year: 'numeric', month: '2-digit', day: '2-digit' }"
-                                                            id="input-live" v-model="fecha"
-                                                            aria-describedby="input-live-help fechaI-live-feedback"
+                                                            id="input-live" v-model="fecha"                                                            
                                                             placeholder="Seleccione fecha">
                                                         </b-form-datepicker>
 
                                                         <label for="input-time">Hora de muestreo:</label>
-                                                        <b-form-timepicker id="input-time" v-model="hora"
-                                                            aria-describedby="input-live-help horaI-live-feedback"
+                                                        <b-form-timepicker 
+                                                            id="input-time" 
+                                                            v-model="hora"                                                            
                                                             placeholder="Ingrese hora">
                                                         </b-form-timepicker>
 
