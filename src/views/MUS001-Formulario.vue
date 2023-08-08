@@ -130,20 +130,29 @@
                                                             <b-form-invalid-feedback id="nMuestras-live-feedback">{{
                                                                 validationContext.errors[0] }}</b-form-invalid-feedback>
                                                         </ValidationProvider>
-
+                                                        <ValidationProvider name="fecha de recepcion" rules="required"
+                                                            v-slot="validationContext">
                                                         <label for="input-live">Fecha de recepción:</label>
                                                         <b-form-datepicker
                                                             :date-format-options="{ year: 'numeric', month: '2-digit', day: '2-digit' }"
                                                             id="input-live" v-model="fecha_recepcion"
-                                                            aria-describedby="input-live-help fechaI-live-feedback"
+                                                            aria-describedby="input-live-help fecha de recpecion-live-feedback"
                                                             placeholder="Seleccione fecha">
                                                         </b-form-datepicker>
+                                                        <b-form-invalid-feedback
+                                                                id="fecha de recepcion-live-feedback">{{ validationContext.errors[0] }}</b-form-invalid-feedback>
+                                                        </ValidationProvider>
 
+                                                        <ValidationProvider name="hora de recepcion" rules="required"
+                                                            v-slot="validationContext">
                                                         <label for="input-time">Hora de recepción:</label>
                                                         <b-form-timepicker id="input-time" v-model="hora_recepcion"
-                                                            aria-describedby="input-live-help horaI-live-feedback"
+                                                            aria-describedby="input-live-help hora de recepcion-live-feedback"
                                                             placeholder="Ingrese hora">
                                                         </b-form-timepicker>
+                                                        <b-form-invalid-feedback
+                                                                id="hora de recepcion-live-feedback">{{ validationContext.errors[0] }}</b-form-invalid-feedback>
+                                                        </ValidationProvider>
 
                                                         <label for="input-live">Fecha de muestreo:</label>
                                                         <b-form-datepicker
@@ -172,18 +181,14 @@
                                                             <b-form-invalid-feedback
                                                                 id="fecha de entrega-live-feedback">{{ validationContext.errors[0] }}</b-form-invalid-feedback>
                                                         </ValidationProvider>
-
-                                                        <ValidationProvider name="cotizacion" rules="required"
-                                                            v-slot="validationContext">
-                                                            <label for="input-live">Cotización:</label>
-                                                            <b-form-select id="input-live" v-model="cotizacion"
-                                                                :options="opcionesCotizacion" text-field="idconNombre"
-                                                                value-field="id_cotizacion"
-                                                                aria-describedby="input-live-help cotizacion-live-feedback"
-                                                                :state="getValidationState(validationContext)"></b-form-select>
-                                                            <b-form-invalid-feedback
-                                                                id="cotizacion-live-feedback">{{ validationContext.errors[0] }}</b-form-invalid-feedback>
-                                                        </ValidationProvider>
+                                                        
+                                                        <label for="input-live">Cotización:</label>
+                                                        <b-form-select id="input-live" v-model="cotizacion"
+                                                            :options="opcionesCotizacion" text-field="idconNombre"
+                                                            value-field="id_cotizacion"
+                                                            aria-describedby="input-live-help cotizacion-live-feedback"
+                                                        ></b-form-select>
+                                                            
                                                     </b-col>
 
                                                     <b-col class="col-6">
@@ -465,13 +470,13 @@
                                     </b-tab>
 
                                     <b-tab title="Asignar parámetros a muestras">
-                                        <strong> Asignar parámetros a muestras</strong>
+                                        <strong> Asignar identificadores a la muestra</strong>
 
                                         <template #title>
                                             <b-col class="col-12">
                                                 <b-row class="d-flex justify-content-end">
                                                     <b-icon icon="arrow-right-short"></b-icon>
-                                                    <strong style="padding-left:30px">Parámetros de muestras</strong>
+                                                    <strong style="padding-left:30px">Asignar identificadores a la muestra</strong>
                                                 </b-row>
                                             </b-col>
                                         </template>

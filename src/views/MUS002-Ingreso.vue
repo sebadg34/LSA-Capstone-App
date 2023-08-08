@@ -265,15 +265,13 @@
                                                                 <b-form-input id="Temperatura-input" v-model="Temperatura"                                                                       
                                                                     aria-describedby="Temperatura-live-feedback"></b-form-input>                                                                  
                                                             </b-input-group>
-                                                        </div>                                                          
+                                                        </div>                             
   
-                                                        <ValidationProvider name="Cotizacion" rules="required" v-slot="validationContext">
-                                                            <label class="mt-1" for="input-live">Cotización:</label>
-                                                            <b-form-select id="input-live" v-model="cotizacion" text-field="idconNombre" value-field="id_cotizacion" aria-describedby="input-live-help Cotizacion-live-feedback" :state="getValidationState(validationContext)">
-                                                                <option v-for="opcion in opcionesCotizacion" :key="opcion.id_cotizacion" :value="opcion.id_cotizacion">
-                                                              {{ opcion.idconNombre }}</option></b-form-select> 
-                                                            <b-form-invalid-feedback id="Cotizacion-live-feedback">{{validationContext.errors[0]}}</b-form-invalid-feedback>
-                                                        </ValidationProvider>  
+                                                        <label class="mt-1" for="input-live">Cotización:</label>
+                                                        <b-form-select id="input-live" v-model="cotizacion" text-field="idconNombre" value-field="id_cotizacion" aria-describedby="input-live-help Cotizacion-live-feedback">
+                                                            <option v-for="opcion in opcionesCotizacion" :key="opcion.id_cotizacion" :value="opcion.id_cotizacion">
+                                                          {{ opcion.idconNombre }}</option>
+                                                        </b-form-select>                                                             
   
                                                         <label class="mt-1" for="input-live">Observaciones:</label>
                                                         <b-form-textarea id="input-live" v-model="observaciones" rows="1"
@@ -2382,6 +2380,8 @@ export default {
             this.idParamOG = response.submuestras.map((idP) => idP.id_parametro);
             this.idMetOG = response.submuestras.map((idM) => idM.id_metodologia);
             this.normaOG = response.id_norma;
+            this.fecha_recepcion = response.fecha_ingreso;
+            this.hora_recepcion = response.hora_ingreso;
             //this.tablaOG = response.id_tabla; 
             this.submuestrasOG = response.submuestras.map(sub => ({
                 id_submuestra: sub.id_submuestra,
