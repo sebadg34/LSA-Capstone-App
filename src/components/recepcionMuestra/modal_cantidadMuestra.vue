@@ -11,10 +11,7 @@
  </button>
 </template>
 <div>
- <b-table :items="tablaItems" :fields="tablaFields">
-   <template #cell(orden)="row">
-     <b-form-input v-model="row.item.orden" type="number" min="1"></b-form-input>
-   </template>
+ <b-table :items="tablaItems" :fields="tablaFields">   
    <template #cell(identificacion)="row">
      <b-form-input v-model="row.item.identificacion" placeholder="Ingrese la identificación de la muestra."></b-form-input>
    </template>        
@@ -271,6 +268,12 @@ methods: {
 eliminarElementoPYM(filaSeleccionada, index) {
   // Obtenemos el elemento eliminado antes de hacer el slice
   const elementoEliminado = filaSeleccionada.PYM[index];
+
+  if (filaSeleccionada.PYM.length === 1) {
+        // Puedes mostrar un mensaje o realizar alguna acción para prevenir la eliminación
+        console.log("No se puede eliminar el último elemento PYM");
+        return;
+    }
 
   // Guardamos los valores específicos que deseas mostrar en variables
   const id_metodologia = elementoEliminado.id_metodologia;

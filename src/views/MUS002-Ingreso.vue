@@ -153,31 +153,20 @@
                                                             placeholder="Ingrese hora">
                                                         </b-form-timepicker>
   
-                                                        <ValidationProvider name="fechaI" rules="required"
-                                                            v-slot="validationContext">
+                                                        
                                                             <label class="mt-1" for="input-live">Fecha de muestreo:</label>
                                                             <b-form-datepicker
                                                                 :date-format-options="{ year: 'numeric', month: 'numeric', day: 'numeric' }"
-                                                                id="input-live" v-model="fecha"
-                                                                aria-describedby="input-live-help fechaI-live-feedback"
-                                                                :state="getValidationState(validationContext)"
+                                                                id="input-live" v-model="fecha"                                                                
                                                                 placeholder="Seleccione fecha"></b-form-datepicker>
-                                                            <b-form-invalid-feedback id="fechaI-live-feedback">{{
-                                                                validationContext.errors[0] }}
-                                                            </b-form-invalid-feedback>
-                                                        </ValidationProvider>
+                                                           
   
-                                                        <ValidationProvider name="hora" rules="required"
-                                                            v-slot="validationContext">
+                                                        
                                                             <label class="mt-1" for="input-time">Hora de muestreo:</label>
-                                                            <b-form-timepicker id="input-time" v-model="hora"
-                                                                :state="getValidationState(validationContext)"
-                                                                aria-describedby="input-live-help horaI-live-feedback"
-                                                                placeholder="Ingrese hora"></b-form-timepicker>
-                                                            <b-form-invalid-feedback id="horaI-live-feedback">{{
-                                                                validationContext.errors[0] }}
-                                                            </b-form-invalid-feedback>
-                                                        </ValidationProvider>  
+                                                            <b-form-timepicker id="input-time" v-model="hora"                                                                
+                                                                placeholder="Ingrese hora">
+                                                            </b-form-timepicker>
+                                                            
   
                                                         <ValidationProvider name="entrega" rules="required"
                                                             v-slot="validationContext"><label class="mt-1"
@@ -464,7 +453,7 @@
                                         </validation-observer>
                                     </b-tab>
   
-                                    <b-tab title="Asignar parámetros a muestras">
+                                    <b-tab title="Asignar identificadores a la muestra">
                                                                             
   
                                         <template #title>
@@ -473,7 +462,7 @@
                                                     <b-icon icon="arrow-right-short"></b-icon>
                                                     
   
-                                                    <strong style="padding-left:30px"> Asignar parámetros a muestras</strong>
+                                                    <strong style="padding-left:30px"> Asignar identificadores a la muestra</strong>
                                                 </b-row>
                                             </b-col>
                                         </template>
@@ -482,7 +471,7 @@
                                             <div class="mt-5">
                                                 <b-button class="lsa-orange reactive-button" @click="agregar()"
                                                     style="border: none" pill size="md">
-                                                    Asignar códigos de parámetros
+                                                    Asignar identificadores a la muestra
                                                     <b-icon icon="plus-circle-fill"></b-icon>
                                                 </b-button>
                                             </div>
@@ -1861,12 +1850,7 @@ export default {
                     this.parametros_agregar.push({
                         id_parametro: parametroData.id_parametro,
                         id_metodologia: metodologiaCompleta.id_metodologia,
-                    });
-                    
-                    this.parametros_metodologias.push({
-                        id_parametro: parametroData.id_parametro,
-                        nombre_parametro: this.parametroTablaSeleccionado,
-                    });  
+                    });                     
 
                       // En caso de agregar un parametro que no está registrado en la BD
                     const parametroAntiguo = this.parametros_ya_en_sistema.find(param => param.nombre_metodologia == this.metodologiaSeleccionada.nombre_metodologia &&
@@ -2189,8 +2173,9 @@ export default {
                 id_submuestra: objeto.id_submuestra,
                 identificador: objeto.identificador,
                 orden: objeto.orden,
-                id_parametro: objeto.id_parametro,
-                id_metodologia: objeto.id_metodologia
+                parametros_agregar: [{
+                    id_parametro: objeto.id_parametro,
+                    id_metodologia: objeto.id_metodologia }]                
               });
             });
             
@@ -2333,7 +2318,22 @@ export default {
             const objetosNoDuplicados = parametrosYMetodologias.filter((item) => !esDuplicado(this.objetosSeleccionados, item.parametro, item.metodologia));
             this.objetosSeleccionados.push(...objetosNoDuplicados); 
             const IDNoDuplicados = parametrosYMetodologias.filter((item) => !esDuplicado(this.objetosSeleccionados, item.id_parametro, item.id_metodologia));
-            this.parametros_agregar.push(...IDNoDuplicados);                  
+            this.parametros_agregar.push(...IDNoDuplicados);
+            this.parametros_metodologias = [];
+            console.log("las matrices se vacian: ", this.parametros_metodologias)
+
+            this.parametros_metodologias = []; // Reiniciar la matriz
+
+            // Recorrer los objetos no duplicados y construir la estructura necesaria
+            parametrosYMetodologias.forEach((item) => {
+                const parametroMetodologia = {
+                    id_parametro: item.id_parametro,
+                    nombre_parametro: item.parametro
+                };
+                this.parametros_metodologias.push(parametroMetodologia);
+            });    
+            console.log("las matrices se actualizan: ", this.parametros_metodologias)         
+
         },
 
         actualizarParametrosTabla() {
@@ -2361,7 +2361,7 @@ export default {
             const parametroSeleccionado = this.parametrosOptions.find(parametro => parametro.nombre_parametro === this.parametroTablaSeleccionado);
             console.log("parametro Seleccionado: ", parametroSeleccionado)
             if (parametroSeleccionado) {
-                console.log("parametro Seleccionado: ", parametroSeleccionado)                  
+                console.log("parametro Seleccionado: ", parametroSeleccionado)                
                 
                 const metodologiasdelparametroseleccionado = this.metodologiasData.find(p => p.nombre_parametro === parametroSeleccionado.nombre_parametro);              
 
@@ -2673,12 +2673,12 @@ export default {
                             })                                
                         } 
 
-                        setTimeout(() => {
+                        /*setTimeout(() => {
                             const baseUrl = window.location.origin; // Obtiene la parte de la URL antes del path
                             const extension = '/supervisor/admmuestra'; // Extensión Path a redirigir
                             
                             window.location.href = baseUrl + extension;
-                        }, 2000);
+                        }, 2000); */
                     } 
                     else {
                         this.$bvToast.toast(`Error al ingresar la muestra.`, {
