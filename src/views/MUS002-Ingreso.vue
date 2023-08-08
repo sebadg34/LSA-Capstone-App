@@ -2625,12 +2625,12 @@ console.log("las matrices se actualizan: ", this.parametros_metodologias)
                             })                                
                         } 
 
-                        setTimeout(() => {
+                        /*setTimeout(() => {
                             const baseUrl = window.location.origin; // Obtiene la parte de la URL antes del path
                             const extension = '/supervisor/admmuestra'; // Extensión Path a redirigir
                             
                             window.location.href = baseUrl + extension;
-                        }, 2000);
+                        }, 2000); */
                     } 
                     else {
                         this.$bvToast.toast(`Error al ingresar la muestra.`, {
