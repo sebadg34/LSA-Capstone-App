@@ -549,26 +549,73 @@
                                       </b-card>
                                   </b-tab>
   
+
+
+
+
+
+
+
+
+
+                                  
                                 </b-col>
-                                <div style="position:absolute; right:20px; bottom:15px; width:45%">
-                                    <b-row class="d-flex justify-content-between">
-                                      <b-col class="col-6">
-                                        <b-button v-if="tabIndex > 0" block class="lsa-blue reactive-button" pill @click="goToPreviousTab">Atrás</b-button>
-                                      </b-col>
-                                      <b-col class="col-6">
-                                        <b-button v-if="shouldShowNextButton()" block class="lsa-blue reactive-button" pill @click="goToNextTab">Siguiente</b-button>
-                                      </b-col>
-                                    </b-row>
-  
-                                    <b-button @click="enviarFormulario()" variant="primary" size="xl"
-                                        class="reactive-button lsa-light-blue"
-                                        style="font-weight:bold; margin-top:30px; position:absolute; width:100%; right:0px">
-                                        Ingresar muestra
-                                    </b-button>
-                                </div>
+                             
                             </b-row>
   
                         </b-tabs>
+
+
+
+
+                        <b-row class="d-flex justify-content-center mb-2" style="margin-top:80px">
+                            <b-col class="col-11">
+                                <b-row class="d-flex justify-content-between" style="width:100%">
+
+                                    <div style="width:30%">
+                                        <b-row class="d-flex justify-content-around">
+                                            <b-col class="col-6">
+                                                <b-button v-if="tabIndex > 0" style="font-weight: bold;"
+                                                    class="lsa-blue reactive-button  d-flex justify-content-between" block
+                                                    pill @click="goToPreviousTab">
+                                                    <b-icon icon="arrow-left-circle-fill"></b-icon>
+                                                    Atrás
+                                                </b-button>
+                                            </b-col>
+                                            <b-col class="col-6">
+                                                <b-button v-if="shouldShowNextButton()" style="font-weight: bold;" block
+                                                    class="lsa-blue reactive-button d-flex justify-content-between" pill
+                                                    @click="goToNextTab">
+
+                                                    Siguiente
+                                                    <b-icon icon="arrow-right-circle-fill"></b-icon>
+                                                </b-button>
+                                            </b-col>
+                                        </b-row>
+                                    </div>
+                                    <div style="width:70%">
+                                        <b-row class="d-flex justify-content-end">
+                                            <b-button @click="abrirResumenMuestra()" pill
+                                                class="lsa-blue reactive-button mr-2"
+                                                style="border:none; font-weight: bold;">
+                                                Resumen
+                                                <b-icon icon="file-earmark-text" aria-hidden="true"></b-icon>
+                                            </b-button>
+                                            <b-button @click="enviarFormulario()" variant="primary" size="xl"
+                                                class="reactive-button lsa-light-blue ml-2" pill
+                                                style="font-weight:bold; min-width: 50%;">
+                                                Recepcionar muestra
+                                                <b-icon icon=" clipboard-check" aria-hidden="true"></b-icon>
+                                            </b-button>
+                                        </b-row>
+                                    </div>
+
+                                </b-row>
+                            </b-col>
+                        </b-row>
+
+
+                        
                     </b-col>
   
                 </b-row>

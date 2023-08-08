@@ -546,25 +546,7 @@
                                 </b-tab>
 
                               </b-col>
-                              <div style="position:absolute; right:20px; bottom:15px; width:45%">
-                                  <b-row class=" d-flex justify-content-between">
-                                      <b-col class="col-6">
-                                          <b-button block class="lsa-blue reactive-button" pill
-                                              @click="tabIndex--">Atrás</b-button>
-                                      </b-col>
-                                      <b-col class="col-6">
-                                          <b-button block class="lsa-blue reactive-button" pill
-                                              @click="tabIndex++">Siguiente</b-button>
-                                      </b-col>
-
-                                  </b-row>
-
-                                  <b-button @click="enviarFormulario()" variant="primary" size="xl"
-                                      class="reactive-button lsa-light-blue"
-                                      style="font-weight:bold; margin-top:30px; position:absolute; width:100%; right:0px">
-                                      Ingresar muestra
-                                  </b-button>
-                              </div>
+                            
                           </b-row>
 
                       </b-tabs>

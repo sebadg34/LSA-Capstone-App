@@ -74,7 +74,7 @@
 
           
           <b-row class="d-flex justify-content-between">
-            <b-button  size="xl" class="reactive-button lsa-orange" style="font-weight: bold; border:none" @click="downloadPDF">Descargar PDF</b-button>
+            <b-button  size="xl" class="reactive-button lsa-orange" style="font-weight: bold; border:none" @click="exportToPDF">Descargar PDF</b-button>
           
             <b-button @click="close()" variant="primary" class="float-right reactive-button"
                 style="font-weight:bold">
@@ -89,6 +89,7 @@
 </template>
 
 <script>
+import html2pdf from "html2pdf.js";
 export default {
 
     watch: {
@@ -102,39 +103,12 @@ export default {
       resumenData: Object
     },
     methods: {
-       async downloadPDF() {
-          // Get the HTML content to be converted to PDF
-          const htmlContent = document.getElementById("pdf-content").outerHTML;
-
-          // Create a hidden iFrame to load the HTML content and print it
-          const iFrame = document.createElement("iframe");
-          iFrame.style.display = "none";
-          document.body.appendChild(iFrame);
-
-          // Load the HTML content into the iFrame and print it
-          const pdfBlob = await new Promise((resolve) => {
-            iFrame.onload = () => {
-              const iFrameWindow = iFrame.contentWindow;
-              iFrameWindow.print();
-              iFrameWindow.addEventListener("afterprint", () => {
-                // When the print dialog is closed, get the resulting PDF Blob and resolve the Promise
-                const pdfBlob = iFrameWindow.Blob;
-                resolve(pdfBlob);
-                document.body.removeChild(iFrame);
-              }, { once: true });
-            };
-            iFrame.srcdoc = htmlContent;
-          });
-
-          // Create a download link for the resulting PDF Blob and trigger the download
-          const downloadLink = document.createElement("a");
-          downloadLink.href = URL.createObjectURL(pdfBlob);
-          downloadLink.download = "resumen.pdf";
-          downloadLink.onclick = () => downloadLink.remove();
-          document.body.appendChild(downloadLink);
-          downloadLink.click();
-        },
-        
+      exportToPDF(){
+        html2pdf(document.getElementById("pdf-content"), {
+margin: 1,
+filename:"i-was-html.pdf",
+			});
+      }
     },
     data() {
         return {
