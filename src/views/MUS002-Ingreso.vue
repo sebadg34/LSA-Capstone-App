@@ -2,7 +2,7 @@
     <div>
   
         <!-- <validation-observer ref="form"> -->
-          <modal_cantidadMuestra :n-muestras="nMuestras" :objetosSeleccionados="objetosSeleccionados" :sub="sub" @datosIngresados="capturarDatos" @eliminados="SubEliminadas" @identificacionEliminada="identificadores" :identificaciones="identificacion" :id_submuestra="id_submuestra" :parametros="prevP" :metodologias="prevM" />
+          <modal_cantidadMuestra :n-muestras="nMuestras" :objetosSeleccionados="objetosSeleccionados" :sub="sub" @datosIngresados="capturarDatos" @eliminados="SubEliminadas" @eliminar-fila="eliminarSubmuestra" @identificacionEliminada="identificadores" :identificaciones="identificacion" :id_submuestra="id_submuestra" :parametros="prevP" :metodologias="prevM" />
           
             <modal_agregarMetodologia/>
             <modal_agregarParametro/>
@@ -453,16 +453,14 @@
                                         </validation-observer>
                                     </b-tab>
   
-                                    <b-tab title="Asignar identificadores a la muestra">
-                                                                            
-  
+                                    <b-tab title="Asignar identificadores a la muestra">        
                                         <template #title>
                                             <b-col class="col-12">
                                                 <b-row class="d-flex justify-content-end">
-                                                    <b-icon icon="arrow-right-short"></b-icon>
-                                                    
-  
-                                                    <strong style="padding-left:30px"> Asignar identificadores a la muestra</strong>
+                                                    <b-icon icon="arrow-right-short"></b-icon>                                                  
+                                                    <strong style="padding-left:30px">
+                                                        Asignar identificadores a la muestra
+                                                    </strong>
                                                 </b-row>
                                             </b-col>
                                         </template>
@@ -532,79 +530,32 @@
                                           </template>
                                       </b-table>
                                       <b-button size="sm" class="lsa-orange reactive-button"
-                                                                    style="aspect-ratio:1;" @click="agregarFila"><b-icon style="color:white"
-                                                                        icon="plus-circle-fill"></b-icon></b-button>
-                                      
+                                        style="aspect-ratio:1;" @click="agregarFila"><b-icon style="color:white"
+                                            icon="plus-circle-fill"></b-icon>
+                                      </b-button>                                      
                                       </b-card>
                                   </b-tab>
   
-
-
-
-
-
-
-
-
-
-                                  
                                 </b-col>
-                             
+                                <div style="position:absolute; right:20px; bottom:15px; width:45%">
+                                    <b-row class="d-flex justify-content-between">
+                                      <b-col class="col-6">
+                                        <b-button v-if="tabIndex > 0" block class="lsa-blue reactive-button" pill @click="goToPreviousTab">Atrás</b-button>
+                                      </b-col>
+                                      <b-col class="col-6">
+                                        <b-button v-if="shouldShowNextButton()" block class="lsa-blue reactive-button" pill @click="goToNextTab">Siguiente</b-button>
+                                      </b-col>
+                                    </b-row>
+  
+                                    <b-button @click="enviarFormulario()" variant="primary" size="xl"
+                                        class="reactive-button lsa-light-blue"
+                                        style="font-weight:bold; margin-top:30px; position:absolute; width:100%; right:0px">
+                                        Ingresar muestra
+                                    </b-button>
+                                </div>
                             </b-row>
   
                         </b-tabs>
-
-
-
-
-                        <b-row class="d-flex justify-content-center mb-2" style="margin-top:80px">
-                            <b-col class="col-11">
-                                <b-row class="d-flex justify-content-between" style="width:100%">
-
-                                    <div style="width:30%">
-                                        <b-row class="d-flex justify-content-around">
-                                            <b-col class="col-6">
-                                                <b-button v-if="tabIndex > 0" style="font-weight: bold;"
-                                                    class="lsa-blue reactive-button  d-flex justify-content-between" block
-                                                    pill @click="goToPreviousTab">
-                                                    <b-icon icon="arrow-left-circle-fill"></b-icon>
-                                                    Atrás
-                                                </b-button>
-                                            </b-col>
-                                            <b-col class="col-6">
-                                                <b-button v-if="shouldShowNextButton()" style="font-weight: bold;" block
-                                                    class="lsa-blue reactive-button d-flex justify-content-between" pill
-                                                    @click="goToNextTab">
-
-                                                    Siguiente
-                                                    <b-icon icon="arrow-right-circle-fill"></b-icon>
-                                                </b-button>
-                                            </b-col>
-                                        </b-row>
-                                    </div>
-                                    <div style="width:70%">
-                                        <b-row class="d-flex justify-content-end">
-                                            <b-button @click="abrirResumenMuestra()" pill
-                                                class="lsa-blue reactive-button mr-2"
-                                                style="border:none; font-weight: bold;">
-                                                Resumen
-                                                <b-icon icon="file-earmark-text" aria-hidden="true"></b-icon>
-                                            </b-button>
-                                            <b-button @click="enviarFormulario()" variant="primary" size="xl"
-                                                class="reactive-button lsa-light-blue ml-2" pill
-                                                style="font-weight:bold; min-width: 50%;">
-                                                Recepcionar muestra
-                                                <b-icon icon=" clipboard-check" aria-hidden="true"></b-icon>
-                                            </b-button>
-                                        </b-row>
-                                    </div>
-
-                                </b-row>
-                            </b-col>
-                        </b-row>
-
-
-                        
                     </b-col>
   
                 </b-row>
@@ -746,7 +697,7 @@ import modal_cantidadMuestra from '@/components/recepcionMuestra/modal_cantidadM
 import ElementosService from '@/helpers/api-services/Elementos.service';
 import PersonalService from '@/helpers/api-services/Personal.service';
 //import EmpresaService from '@/helpers/api-services/Empresa.service';
-import SolicitanteService from '@/helpers/api-services/Solicitante.service';
+//import SolicitanteService from '@/helpers/api-services/Solicitante.service';
 
 import modal_agregarParametro from '@/components/recepcionMuestra/modal_agregarParametro.vue';
 import modal_agregarMetodologia from '@/components/recepcionMuestra/modal_agregarMetodologia.vue';
@@ -920,9 +871,7 @@ export default {
             parametros_ya_en_sistema: [],
             parametros_eliminar: [],
             telefonos_eliminar: [],
-            submuestra_eliminar: [{
-                identificador: ''
-            }],
+            submuestra_eliminar: [],
             currentDate: new Date().toISOString().split('T')[0],
             subEliminar:[],
             analista: [],
@@ -985,9 +934,7 @@ export default {
         MuestraService.obtenerDatosMuestra(this.RUM).then((response)=>{
             console.log("Obteniedo detalles",response.data)
             this.datos = response.data;
-            this.RellenarForm(response.data);
-                        
-            
+            this.RellenarForm(response.data);        
             
             const parametros = response.data.parametros_metodologias;
             console.log("parametros(data): ", parametros)
@@ -1050,8 +997,7 @@ export default {
                 }));        
             }
             console.log("opciones analista: ", this.opcionesAnalista);
-        })
-        
+        })        
     },
 
     watch: {
@@ -1168,7 +1114,6 @@ export default {
                 const empresas = response.data;
                 this.opcionesEmpresa = empresas;
             })
-
         },
 
         goToPreviousTab() {
@@ -1253,6 +1198,18 @@ export default {
           }
       
           return true;
+        },
+
+        eliminarSubmuestra(filaSeleccionada, index) {
+            const submuestraEliminadaId = filaSeleccionada.id_submuestra;
+            console.log("Submuestra eliminada ID:", submuestraEliminadaId);
+            
+            this.submuestra_eliminar.push(submuestraEliminadaId)
+            this.sub.splice(index, 1);
+            
+            console.log("submuestra_eliminar: ", this.submuestra_eliminar);
+            this.nMuestras --;
+            this.nMuestras = this.nMuestras.toString();
         },
         
         eliminarParametro(filaSeleccionada, index) {
@@ -1339,9 +1296,7 @@ export default {
                     "fecha_entrega": empleado.fecha_entrega,
                     "estado": empleado.estado                  
                     
-                  };        
-
-
+                  };
                   console.log("Objeto " + (j + 1) + ":", objeto);
                   
                   console.log("empleados objeto: ", this.empleados_objeto)
@@ -1390,18 +1345,11 @@ export default {
 
             this.empleados_objeto = objetosNoCoinciden
 
-            console.log("Objetos empleaods que no coinciden:", this.empleados_objeto);
-
+            console.log("Objetos empleados que no coinciden:", this.empleados_objeto);
             //this.empleados_agregar.push(...this.empleados_objeto)
-
-            console.log("Objetos empleados agregar:", this.empleados_agregar);          
-
+            console.log("Objetos empleados agregar:", this.empleados_agregar);
             console.log("empleadosDesagrupados nuevos:", this.empleadosDesagrupados);
-
             console.log("empleados:", this.empleados);
-
-
-
 
             const empleados_original = this.empleados.map((empleado, index) => ({
               ...empleado,
@@ -1410,15 +1358,12 @@ export default {
 
             console.log("empleados en BD: ",empleados_original);
 
-
-
             this.empleadosNuevos = this.empleadosDesagrupados.map(empleados => ({
                 rut_empleado: empleados.rut_empleado,
                 orden_de_analisis: empleados.orden_de_analisis,
                 id_parametro: empleados.id_parametro,
                 nombre_parametro: empleados.nombre_parametro,
                 fecha_entrega: empleados.fecha_entrega
-
             }));        
 
             const nuevoArray = this.empleadosNuevos.map(empleado => {
@@ -1471,8 +1416,6 @@ export default {
           
               // Comparar las propiedades restantes para asegurarse de que son iguales
               return !compararEmpleadosPorPropiedades(empleado, empleadoCorrespondiente);
-
-
             });
 
             console.log("Empleados diferentes:", empleadosDiferentes);
@@ -1482,10 +1425,10 @@ export default {
             console.log("Nuevos Empleados agregar:", this.empleados_agregar);
             // Mostrar el objeto correspondiente en empleados_original para cada empleado en empleadosDiferentes
             empleadosDiferentes.forEach(empleado => {
-              const empleadoCorrespondiente = empleados_original.find(e => compararEmpleadosPorIdAux(empleado, e));
-              console.log("Objeto en empleados_original:", empleadoCorrespondiente);
-              this.empleados_eliminar.push(empleadoCorrespondiente)
-              console.log("empleados eliminar: ",this.empleados_eliminar)            
+                const empleadoCorrespondiente = empleados_original.find(e => compararEmpleadosPorIdAux(empleado, e));
+                console.log("Objeto en empleados_original:", empleadoCorrespondiente);
+                this.empleados_eliminar.push(empleadoCorrespondiente)
+                console.log("empleados eliminar: ",this.empleados_eliminar)            
             });
         },
 
@@ -1587,8 +1530,7 @@ export default {
         },*/
 
         obs(){
-            console.log(this.observacionesOG);           
-
+            console.log(this.observacionesOG);
             if (this.observacionesOG.length === 0) {
                 this.nuevaobs = [{
                   fecha_observacion: '',
@@ -1679,7 +1621,7 @@ export default {
             })
         },*/
 
-        detallesCotizaciones(){
+        /* detallesCotizaciones(){
             const data = {
                 rut_solicitante: this.rut
             };
@@ -1689,13 +1631,12 @@ export default {
                     this.opcionesCotizacion = response.data.map(cotizacion => ({
                         id_cotizacion: cotizacion.id_cotizacion,
                         nombre_original_documento: cotizacion.nombre_original_documento,
-                        idconNombre: `${cotizacion.id_cotizacion} - ${cotizacion.nombre_original_documento}`
-                        
+                        idconNombre: `${cotizacion.id_cotizacion} - ${cotizacion.nombre_original_documento}`                        
                     }))
                     console.log("Opc. cotizaciones: ", this.opcionesCotizacion)
                 }  
             })
-        },
+        }, */
 
         abrirParam(row) {        
             this.filaSeleccionada = row;
@@ -1765,7 +1706,6 @@ export default {
         },*/
 
         actualizarSelectedEmpresa() {
-
             console.log("empresa:", this.solicitante)
             const nombreEmpresa = this.opcionesEmpresa.find(objeto => objeto.rut_empresa === this.solicitante);
             console.log("empresa:", nombreEmpresa)
@@ -1777,13 +1717,11 @@ export default {
 
             console.log("Nombre de la empresa encontrada:", nombreEmpresaEncontrada);
 
-
             MuestraService.obtenerEmpresas().then((response) => {
                 console.log("obteniendo empresas",response.data)
                 const empresas = response.data;
                 const direccion = empresas.flatMap(direccion => direccion.ciudades_direcciones);
-                console.log("direccion : ", direccion)
-            
+                console.log("direccion : ", direccion)            
 
                 const direccionCiudad = direccion.map(c => c.direccion);
                 const nombre_ciudad = direccion.map(c => c.nombre_ciudad);
@@ -1791,8 +1729,7 @@ export default {
                     id_ciudad: opc.id_ciudad,
                     nombre_ciudad: opc.nombre_ciudad,
                     direccion: opc.direccion,
-                    direccionConCiudad: `${nombre_ciudad} / ${direccionCiudad}`               
-                
+                    direccionConCiudad: `${nombre_ciudad} / ${direccionCiudad}`           
                 }))
                 console.log("opciones direccion : ", direccionCiudad);
                 this.direccion_empresa = direccionCiudad.toString();
@@ -1808,7 +1745,6 @@ export default {
                         id_cotizacion: cotizacion.id_cotizacion,
                         nombre_original_documento: cotizacion.nombre_original_documento,
                         idconNombre: `${cotizacion.id_cotizacion} - ${cotizacion.nombre_original_documento}`
-
                     }))
                     console.log("Opc. cotizaciones: ", this.opcionesCotizacion)
                     this.id_cotizacion = response.data.flatMap(id => id.id_cotizacion)
@@ -1829,7 +1765,6 @@ export default {
                 const ParamExistente = this.objetosSeleccionados.find(objeto => objeto.parametro === this.parametroSeleccionado);
                 const MetExistente = this.objetosSeleccionados.find(objeto => objeto.metodologia === this.metodologiaSeleccionada);
                 
-
                 if (ParamExistente && MetExistente) {
                     this.alertaDuplicado = true;
                     this.parametroSeleccionado = '';
@@ -1868,7 +1803,6 @@ export default {
                             typeof param.id_metodologia !== 'undefined' &&
                             typeof param.id_parametro !== 'undefined');
                         }
-
                     console.log("las matrices han guardado lo siguiente: ", this.parametros_metodologias)
                     this.parametroSeleccionado = '';
                     this.metodologiaSeleccionada = '';
@@ -1882,8 +1816,7 @@ export default {
             console.log("param seleccionada: ", this.parametroTablaSeleccionado)
             if  (this.parametroTablaSeleccionado && this.metodologiaSeleccionada) {
                 const ParamExistente = this.objetosSeleccionados.find(objeto => objeto.parametro === this.parametroTablaSeleccionado);
-                const MetExistente = this.objetosSeleccionados.find(objeto => objeto.metodologia === this.metodologiaSeleccionada);
-                
+                const MetExistente = this.objetosSeleccionados.find(objeto => objeto.metodologia === this.metodologiaSeleccionada);                
 
                 if (ParamExistente && MetExistente) {
                     this.alertaDuplicado = true;
@@ -1929,7 +1862,6 @@ export default {
                             typeof param.id_metodologia !== 'undefined' &&
                             typeof param.id_parametro !== 'undefined');
                         }
-
                     console.log("las matrices han guardado lo siguiente: ", this.parametros_agregar)
                     this.parametroTablaSeleccionado = '';
                     this.metodologiaSeleccionada = '';
@@ -2047,8 +1979,7 @@ export default {
             console.log("Metodologías den array:", this.metodologias);
 
             this.opcionesMetodologia = this.metodologias.map(item => item.nombre_metodologia);
-            console.log("opciones Metodologia:", this.opcionesMetodologia);
-            
+            console.log("opciones Metodologia:", this.opcionesMetodologia);           
 
             /*if (parametroData.metodologias.length > 0) {
               // Obtener las metodologías asociadas al parámetro seleccionado
@@ -2061,8 +1992,7 @@ export default {
             } else {
               this.opcionesMetodologia = []; // No se encontraron metodologías para el parámetro seleccionado
             }*/
-        },
-       
+        },       
 
         identificadores(datos) {
             console.log("identificador de submuestras capturados:", datos);
@@ -2073,11 +2003,11 @@ export default {
             const subEliminarAntes = this.submuestra_eliminar.length - 1;
 
             identificacionEliminada.forEach(id_submuestra => {
-              // Verificar si la submuestra ya existe en submuestra_eliminar
-              const existe = this.submuestra_eliminar.some(submuestra => submuestra.id_submuestra === id_submuestra);
-              if (!existe) {
-                this.submuestra_eliminar.push({ id_submuestra: id_submuestra });
-              }
+                // Verificar si la submuestra ya existe en submuestra_eliminar
+                const existe = this.submuestra_eliminar.some(submuestra => submuestra.id_submuestra === id_submuestra);
+                if (!existe) {
+                  this.submuestra_eliminar.push({ id_submuestra: id_submuestra });
+                }
             });
             console.log("submuestra_eliminar:", this.submuestra_eliminar);
         
@@ -2117,8 +2047,7 @@ export default {
                 ordenArray.push(objeto.orden);               
                 idmetodologias.push(objeto.id_metodologia);
                 idparametros.push(objeto.id_parametro);
-                parametrosAgregar.push(objeto.parametros_agregar);
-                               
+                parametrosAgregar.push(objeto.parametros_agregar);                               
             });            
 
             datos.forEach((objeto) => {
@@ -2146,7 +2075,7 @@ export default {
 
             console.log("submuestraArrayTransformado:", submuestraArrayTransformado);
 
-                        for (let i = 0; i < this.submuestrasOG.length; i++) {
+            for (let i = 0; i < this.submuestrasOG.length; i++) {
               const elementoRepetido = submuestraArrayTransformado.find(objeto => (
                 objeto.identificador === this.submuestrasOG[i].identificador &&
                 objeto.orden === this.submuestrasOG[i].orden &&
@@ -2166,28 +2095,29 @@ export default {
               ))
             ));
 
-            console.log("elementos no repetidos:", elementosNoRepetidos);           
+            console.log("elementos no repetidos:", elementosNoRepetidos); 
+            
+            this.submuestra_agregar = []; //Se limpia para que cada vez que apreten guardar en el modal, no duplique informacion, asi evitamos enormes problemas.
 
             elementosNoRepetidos.forEach(objeto => {
-              this.submuestra_agregar.push({
-                id_submuestra: objeto.id_submuestra,
-                identificador: objeto.identificador,
-                orden: objeto.orden,
-                parametros_agregar: [{
-                    id_parametro: objeto.id_parametro,
-                    id_metodologia: objeto.id_metodologia }]                
-              });
-            });
+                this.submuestra_agregar.push({
+                   id_submuestra: objeto.id_submuestra,
+                     identificador: objeto.identificador,
+                     orden: objeto.orden,
+                     parametros_agregar: [{
+                         id_parametro: objeto.id_parametro,
+                         id_metodologia: objeto.id_metodologia 
+                    }]                
+                });
+            });            
             
-            console.log("submuestras_agregar: ", this.submuestra_agregar)
-            
+            console.log("submuestras_agregar: ", this.submuestra_agregar)           
         },
 
         SubEliminadas(datos){
             console.log("datos capturados a eliminar:", datos);
 
             this.parametro_submuestra_eliminar = datos;
-
             console.log("parametros de submuestras a eliminar:", this.parametro_submuestra_eliminar);            
         },
 
@@ -2279,8 +2209,7 @@ export default {
             });
         },
 
-        PushParametrosMetodologias() {
-            
+        PushParametrosMetodologias() {            
             function esDuplicado(parametrosYMetodologias, parametro, metodologia) {
                 return parametrosYMetodologias.some((item) => item.parametro === parametro && item.metodologia === metodologia);
             }
@@ -2332,8 +2261,7 @@ export default {
                 };
                 this.parametros_metodologias.push(parametroMetodologia);
             });    
-            console.log("las matrices se actualizan: ", this.parametros_metodologias)         
-
+            console.log("las matrices se actualizan: ", this.parametros_metodologias)
         },
 
         actualizarParametrosTabla() {
@@ -2375,16 +2303,13 @@ export default {
                         console.log("metodologias totales del parametro encontrado:", metodologiaEncontrada)
 
                         console.log("met:", this.met.map(n => n.nombre_metodologia))
+                        const opcionesM = metodologiaEncontrada.find(m => m.nombre_metodologia)                   
 
-                        const opcionesM = metodologiaEncontrada.find(m => m.nombre_metodologia)                    
-
-                        console.log("opcion encontrada: ", opcionesM)                    
+                        console.log("opcion encontrada: ", opcionesM)                   
 
                         this.opcionesMetodologiaTabla = [];
-
                         this.opcionesMetodologiaTabla.push({
-                            nombre_metodologia: opcionesM.nombre_metodologia
-                        
+                            nombre_metodologia: opcionesM.nombre_metodologia                        
                         });
 
                         console.log("opcion metodologia en tabla: ", this.opcionesMetodologiaTabla);
@@ -2416,7 +2341,6 @@ export default {
                 return false;
             }
         },
-
 
         RellenarForm(response) {            
             //info anterior
@@ -2539,7 +2463,6 @@ export default {
             this.norma = response.id_norma;
             //this.tabla = response.id_tabla;
 
-
                 //TAB ASIGNACIÓN
             this.identificacion = response.submuestras.map((id) => id.identificador);    
             this.id_submuestra = response.submuestras.map((id) => id.id_submuestra);
@@ -2552,8 +2475,6 @@ export default {
                 fecha_entrega: empleados.fecha_entrega
 
             }));
-
-            // Supongamos que tienes un array de empleados llamado "response.empleados" que contiene todos los datos
 
             const empleadosAgrupados = response.empleados.reduce((grupo, empleado) => {
                 const { rut_empleado } = empleado;
@@ -2595,13 +2516,11 @@ export default {
                 this.repetido();
                 this.empleadosCoinciden();
                 //this.telefonosCoinciden();
-                this.obs();
-                
+                this.obs();               
                                
                 const matricesFiltradas = this.parametros_agregar.slice(1);
                 //const submuestraFiltrada = this.submuestra_agregar.slice(1);
-                //const submuestra_eliminar = this.submuestra_eliminar.slice(1);
-                
+                //const submuestra_eliminar = this.submuestra_eliminar.slice(1);                
                 
                 var data = {
                     RUM: this.RUM,
@@ -2638,7 +2557,7 @@ export default {
                     id_norma: this.norma,
                     id_tabla: this.id_tabla,
                     submuestras_agregar: this.submuestra_agregar,
-                    //submuestras_eliminar: this.submuestra_eliminar,
+                    submuestras_eliminar: this.submuestra_eliminar,
                     parametro_submuestra_eliminar: this.parametro_submuestra_eliminar,
                     telefonos_eliminar: this.telefonos_eliminar,
                     parametros_eliminar: this.parametros_eliminar,
