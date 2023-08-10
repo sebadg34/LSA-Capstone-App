@@ -6,6 +6,7 @@
         <ModalCompletarAnalisis :muestra-data="this.muestraData" @refrescar="obtenerMuestras" />
         <ModalAnalistasDesignados :analista-data="this.analistaData" />
         <ModalIngresarResultados :resultados-data="this.resultadosData" />
+        <ModalRehacerAnalisis :muestra-data="this.muestraData" @refrescar="obtenerMuestras" />
         <!-- Inicio tabla -->
 
         <b-row align-h="start" style="padding-top:30px;">
@@ -124,7 +125,7 @@
 
                             </b-dropdown-item>
                             <b-dropdown-item @click="MostrarObservaciones(row.item)">
-                                <b-icon icon="check2-square" aria-hidden="true" class="mr-2"></b-icon>Observaciones
+                                <b-icon icon="card-checklist" aria-hidden="true" class="mr-2"></b-icon>Observaciones
                             </b-dropdown-item>
                             <b-dropdown-item v-if="row.item.estado == 'En Análisis'"
                                 @click="abrirCompletarAnalisis(row.item)">
@@ -132,11 +133,11 @@
                                 Marcar análisis como completado
                             </b-dropdown-item>
                             <b-dropdown-item v-if="row.item.estado != 'Recepcionado'" @click="abrirAnalistasDesignados(row.item)">
-                                <b-icon icon="file-earmark-arrow-down" aria-hidden="true" class="mr-2"></b-icon>
+                                <b-icon icon="person-lines-fill" aria-hidden="true" class="mr-2"></b-icon>
                                 Analistas designados
                             </b-dropdown-item>
                             <b-dropdown-item v-if="row.item.estado == 'En Análisis'" @click="abrirIngresarResultados(row.item)">
-                                <b-icon icon="file-earmark-arrow-down" aria-hidden="true" class="mr-2"></b-icon>
+                                <b-icon icon="clipboard-check" aria-hidden="true" class="mr-2"></b-icon>
                                 Ingresar los resultados del análisis
                             </b-dropdown-item>
                             <b-dropdown-item v-if="row.item.estado == 'Recepcionado'" @click="ingresarMuestraLaboratorio(row.item)">
@@ -147,8 +148,8 @@
                                 <b-icon icon="file-earmark-arrow-down" aria-hidden="true" class="mr-2"></b-icon>
                                 Descargar informe
                             </b-dropdown-item>
-                            <b-dropdown-item v-if="row.item.estado == 'Finalizado'">
-                                <b-icon icon="file-earmark-arrow-down" aria-hidden="true" class="mr-2"></b-icon>
+                            <b-dropdown-item v-if="row.item.estado == 'Finalizado'" @click="abrirRehacerAnalisis(row.item)">
+                                <b-icon icon="arrow-counterclockwise" aria-hidden="true" class="mr-2"></b-icon>
                                 Rehacer análisis
                             </b-dropdown-item>
                         </b-dropdown>
@@ -184,14 +185,15 @@ import ModalCompletarAnalisis from '@/components/admMuestras-supervisor/modal_co
 import ModalAnalistasDesignados from '@/components/admMuestras-supervisor/modal_analistasDesignados-supervisor.vue';
 import ModalIngresarResultados from '@/components/admMuestras-supervisor/modal_ingresarResultados-supervisor.vue';
 import ModalDetalleMuestra from '@/components/admMuestras-supervisor/modal_detallesMuestra-supervisor.vue';
-
+import ModalRehacerAnalisis from '@/components/admMuestras-supervisor/modal_rehacerAnalisis-supervisor.vue';
 export default {
     components: {
         ModalObservaciones,
         ModalDetalleMuestra,
         ModalCompletarAnalisis,
         ModalAnalistasDesignados,
-        ModalIngresarResultados
+        ModalIngresarResultados,
+        ModalRehacerAnalisis
     },
     data() {
         return {
@@ -429,6 +431,11 @@ export default {
             console.log(data)
             this.analistaData = data;
             this.$bvModal.show('modal-analistas-designados-supervisor');
+        },
+        abrirRehacerAnalisis(data) {
+            console.log(data)
+            this.muestraData = data;
+            this.$bvModal.show('modal-rehacer-analisis-supervisor');
         },
         abrirDetallesMuestra(data) {
             console.log(data)
