@@ -198,8 +198,8 @@
                                                         <b-form-select id="input-live" v-model="cotizacion"
                                                             :options="opcionesCotizacion" text-field="idconNombre"
                                                             value-field="id_cotizacion"
-                                                            aria-describedby="input-live-help cotizacion-live-feedback"></b-form-select>
-
+                                                            aria-describedby="input-live-help cotizacion-live-feedback">
+                                                        </b-form-select>
                                                     </b-col>
 
                                                     <b-col class="col-6">
