@@ -1246,16 +1246,16 @@ export default {
         },
 
         eliminarSubmuestra(filaSeleccionada, index) {
-            const submuestraEliminadaId = filaSeleccionada.id_submuestra;
-            console.log("Submuestra eliminada ID:", submuestraEliminadaId);
-            
-            this.submuestra_eliminar.push(submuestraEliminadaId)
-            this.sub.splice(index, 1);
-            
-            console.log("submuestra_eliminar: ", this.submuestra_eliminar);
-            this.nMuestras --;
-            this.nMuestras = this.nMuestras.toString();
-        },
+  const submuestraEliminadaId = filaSeleccionada.id_submuestra;
+  console.log("Submuestra eliminada ID:", submuestraEliminadaId);
+
+  this.submuestra_eliminar.push({ id_submuestra: submuestraEliminadaId }); // Agregamos el objeto con id_submuestra
+  this.sub.splice(index, 1);
+
+  console.log("submuestra_eliminar: ", this.submuestra_eliminar);
+  this.nMuestras--;
+  this.nMuestras = this.nMuestras.toString();
+},
         
         eliminarParametro(filaSeleccionada, index) {
           const parametroEliminado = {
