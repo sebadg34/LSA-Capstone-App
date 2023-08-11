@@ -139,7 +139,7 @@
                                                         </ValidationProvider>
 
 
-                                                        <ValidationProvider name="fecha de recepción" rules="required|numeric"
+                                                        <ValidationProvider name="fecha de recepción" rules="required"
                                                             v-slot="validationContext">
                                                         <label for="input-live">Fecha de recepción:</label>
                                                         <b-form-datepicker
@@ -153,7 +153,7 @@
                                                                 validationContext.errors[0] }}</b-form-invalid-feedback>
                                                         </ValidationProvider>
 
-                                                        <ValidationProvider name="hora de recepción" rules="required|numeric"
+                                                        <ValidationProvider name="hora de recepción" rules="required"
                                                             v-slot="validationContext">
                                                         <label for="input-time">Hora de recepción:</label>
                                                         <b-form-timepicker id="input-time" v-model="hora_recepcion"
@@ -165,7 +165,7 @@
                                                                 validationContext.errors[0] }}</b-form-invalid-feedback>
                                                         </ValidationProvider>
   
-                                                        <ValidationProvider name="fecha de muestreo" rules="required|numeric"
+                                                        <ValidationProvider name="fecha de muestreo" rules="required"
                                                             v-slot="validationContext">
                                                             <label class="mt-1" for="input-live">Fecha de muestreo:</label>
                                                             <b-form-datepicker
@@ -178,7 +178,7 @@
                                                         </ValidationProvider>
                                                            
   
-                                                        <ValidationProvider name="Hora de muestreo" rules="required|numeric"
+                                                        <ValidationProvider name="Hora de muestreo" rules="required"
                                                             v-slot="validationContext">
                                                             <label class="mt-1" for="input-time">Hora de muestreo:</label>
                                                             <b-form-timepicker id="input-time" v-model="hora"                                                                
