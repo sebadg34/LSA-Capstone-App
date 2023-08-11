@@ -1,7 +1,7 @@
 <template>
     <validation-observer ref="form">
-        <b-modal centered id="modal-editar-analistas-supervisor" :title="`Observaciones de la muestra ${RUM}`" size="xl"
-            @hidden="onHidden">
+        <b-modal centered id="modal-editar-analistas-supervisor" :title="`Observaciones de la muestra ${RUM}`" size="xl">
+
 
             <template #modal-header="{ close }">
                 <!-- Emulate built in modal header close button action -->
@@ -13,7 +13,18 @@
                     <span aria-hidden="true" style="color:white">&times;</span>
                 </button>
             </template>
-            
+
+
+            <b-row class="justify-content-between mb-4 ml-2 mr-2">
+                <b-col class="col-2">
+                    <b-row style="border: 1px solid var(--lsa-light-gray); padding:4px; border-radius:5px">
+                        <b-col class="col-6" style="font-weight:bold; "> RUM: </b-col>
+                        <b-col class="col-6">{{ RUM }}</b-col>
+                    </b-row>
+                </b-col>
+            </b-row>
+
+
             <div style="min-height: 300px;">
                 <b-list-group-item v-if="loading" class="d-flex align-items-center justify-content-center lsa-orange-text"
                     style="height:100px">
@@ -23,7 +34,7 @@
                     </div>
                 </b-list-group-item>
                 <div class="ml-4">
-                    
+
 
                     <b-list-group v-if="!loading" style="padding:0px">
                         <b-list-group-item style="padding:0px; height: 50px;">
@@ -39,7 +50,7 @@
                                 </b-list-group-item>
                                 <b-list-group-item class="p-3 text-center " style="width:20%;font-weight: bold;">
                                     Fecha de entrega
-                                </b-list-group-item>                                
+                                </b-list-group-item>
                                 <b-list-group-item class="p-3 text-center " style="width:15%;font-weight: bold;">
                                     Acción
                                 </b-list-group-item>
@@ -47,16 +58,17 @@
                         </b-list-group-item>
 
                         <b-list-group v-if="analistas.length == 0">
-      <b-list-group-item >
-                    <div class="text-center lsa-light-blue-text row">
-                        <div class="col">
-                            <b-icon icon="file-earmark-break" animation="fade" variant="secondary"></b-icon>
-                        <div style="font-weight:bold; color:gray">No hay analistas asignados para la muestra.</div>
-                        </div>
-                    
-                    </div>
-                </b-list-group-item>
-              </b-list-group>
+                            <b-list-group-item>
+                                <div class="text-center lsa-light-blue-text row">
+                                    <div class="col">
+                                        <b-icon icon="file-earmark-break" animation="fade" variant="secondary"></b-icon>
+                                        <div style="font-weight:bold; color:gray">No hay analistas asignados para la
+                                            muestra.</div>
+                                    </div>
+
+                                </div>
+                            </b-list-group-item>
+                        </b-list-group>
                         <b-list-group-item v-for="(analista, k) in analistas" :key="k" style="padding:0px">
                             <b-list-group horizontal>
                                 <b-list-group-item class="text-center" style="width:30%">
@@ -79,7 +91,7 @@
                                         </b-form-invalid-feedback>
                                     </ValidationProvider>
                                 </b-list-group-item>
-                                <b-list-group-item class="text-center" style="width:20%">
+                                <b-list-group-item rules="required" v-model="analista.parametros" class="text-center" style="width:20%">
 
                                     <b-list-group>
 
@@ -88,7 +100,8 @@
                                                 v-b-toggle="analista.rut_empleado"
                                                 style="padding:2px; border: none; border-bottom: solid 1px #dbdbdb; ">
                                                 {{ analista.parametros[0].nombre_parametro }}
-                                                <b-icon style="position:absolute; right:0px; top:25%; color: #949494"
+                                                <b-icon v-if="analista.parametros.length > 1"
+                                                    style="position:absolute; right:0px; top:25%; color: #949494"
                                                     icon="caret-down-fill"></b-icon>
                                             </b-list-group-item>
                                             <b-list-group-item v-else
@@ -106,6 +119,9 @@
                                                 </b-collapse>
                                             </div>
                                         </template>
+                                        <template v-else>
+                                            <div style="font-weight: bold; color:red">sin parámetros por asignar.</div>
+                                        </template>
                                     </b-list-group>
 
 
@@ -116,6 +132,7 @@
                                     <ValidationProvider :name="'Fecha de entrega ' + (k + 1)" rules="required"
                                         v-slot="validationContext">
                                         <b-form-datepicker placeholder="Seleccione una fecha."
+                                            :date-format-options="{ year: 'numeric', month: '2-digit', day: '2-digit' }"
                                             :state="getValidationState(validationContext)" v-model="analista.fecha_object"
                                             :id="'datepicker-' + (k + 1)"></b-form-datepicker>
                                         <b-form-invalid-feedback id="fecha-live-feedback">{{
@@ -199,15 +216,26 @@
                 </template>
             </b-modal>
             <template #modal-footer>
-                <b-button @click="enviarFormulario()" variant="primary" size="xl" class="float-right reactive-button"
-                    style="font-weight:bold">
-                    Guardar cambios
-                </b-button>
+
+                <b-overlay :show="Cargando" rounded opacity="0.6" spinner-small spinner-variant="primary"
+                    class="d-inline-block">
+                    <b-button @click="enviarFormulario()" variant="primary" size="xl"
+                        class="float-right reactive-button lsa-light-blue" style="font-weight:bold">
+                        Editar analistas
+                    </b-button>
+                </b-overlay>
+
             </template>
+
         </b-modal>
+
+
+
+
+
+
     </validation-observer>
 </template>
-
 <script>
 import MuestraSupervisorService from '@/helpers/api-services/Muestra-supervisor.service';
 import ElementosService from '@/helpers/api-services/Elementos.service';
@@ -215,23 +243,21 @@ import ElementosService from '@/helpers/api-services/Elementos.service';
 export default {
     components: {},
     props: {
-        analistasData: Object
+        muestraData: Object
     },
     data() {
         return {
-
+            Cargando: false,
             RUM: '',
             loading: false,
-            cargandoObservaciones: false,
             analistas: [],
             analistasOpciones: [],
             parametrosOpciones: [],
             analistas_antiguos: [],
             analistas_agregar: [],
+            analistas_eliminar: [],
             alertaDuplicado: false,
             alertaExito: false,
-            analistas_eliminar_data: [],
-            analistas_eliminar: [],
             analistaSeleccionado: "",
             parametroSeleccionadoIngreso: "",
         }
@@ -244,86 +270,75 @@ export default {
                 if (!success) {
                     return;
                 } else {
-                    this.analistas.forEach(analista => {
-                        analista.parametros.forEach((param) => {
-                            this.analistas_agregar.push({
-                                rut_empleado: analista.rut_empleado,
-                                orden_de_analisis: analista.orden_analisis,
-                                id_parametro: param.id_parametro,
-                                fecha_entrega: analista.fecha_object
-                            })
-                        })
-                    })
-                    this.analistas_antiguos.forEach(analista => {
-                        analista.parametros.forEach((param) => {
-                            this.analistas_eliminar.push({
-                                rut_empleado: analista.rut_empleado,
-                                orden_de_analisis: analista.orden_analisis,
-                                id_parametro: param.id_parametro,
-                                fecha_entrega: analista.fecha_entrega,
-                                estado: analista.estado
-                            })
-
-                        });
-                    })
-                    console.log(this.analistas_eliminar)
-                    var data = {
-                        RUM: this.RUM,
-                        empleados_agregar: this.analistas_agregar,
-                        empleados_eliminar: this.analistas_eliminar
-
-                    }
-                    MuestraSupervisorService.modificarAnalistas(data).then((response) => {
-                        if (response.status == 200) {
 
 
-                            this.$bvToast.toast(`Los analistas han sido actualizados.`, {
-                                title: 'Éxito',
-                                toaster: 'b-toaster-top-center',
-                                solid: true,
-                                variant: "success",
-                                appendToast: true
-                            })
-                            this.$bvModal.hide('modal-editar-analistas-supervisor')
+            
+                    this.Cargando = true;
+            this.analistas.forEach(analista => {
+                analista.parametros.forEach(param => {
+                    this.analistas_agregar.push(
+                        {
+                            rut_empleado: analista.rut_empleado,
+                            orden_de_analisis: analista.orden_analisis,
+                            id_parametro: param.id_parametro,
+                            fecha_entrega: analista.fecha_object.toISOString().split('T')[0]
                         }
+                    )
+                })
+
+
+            })
+            var data = {
+                RUM: this.RUM,
+                empleados_agregar: this.analistas_agregar,
+                empleados_eliminar: this.analistas_eliminar
+            }
+            MuestraSupervisorService.modificarAnalistas(data).then((response) => {
+
+                this.Cargando = false;
+                if (response.request.status == 200) {
+                    this.$bvToast.toast(`Los analsitas han sido modificados exitosamente.`, {
+                        title: 'Éxito',
+                        toaster: 'b-toaster-top-center',
+                        solid: true,
+                        variant: "success",
+                        appendToast: true
                     })
+                    this.$bvModal.hide('modal-editar-analistas-supervisor')
+                    this.$emit('refrescar');
 
-                    console.log("analistas a agregar", this.analistas_agregar);
-
+                } else {
+                    this.$bvToast.toast(`Error al modificar analistas.`, {
+                        title: 'Error',
+                        toaster: 'b-toaster-top-center',
+                        solid: true,
+                        variant: "warning",
+                        appendToast: true
+                    })
                 }
             })
+                }});
+
 
         },
-        agregarParametroSeleccionado(analista, id_param) {
-            var parametro = this.parametrosOpciones.find(para => para.id_parametro == id_param);
-            console.log('parametro a a gregar', parametro)
-            const parametroExistente = analista.parametros.find(param => param.id_parametro == parametro.id_parametro);
-            if (parametroExistente == null) {
-                analista.parametros.push({
-                    id_parametro: parametro.id_parametro,
-                    nombre_parametro: parametro.nombre_parametro
-                })
-                this.alertaExito = true;
-            } else {
-                this.alertaDuplicado = true;
-            }
-            console.log(analista)
-
-        },
-        eliminarParametroSeleccionado(analista, index) {
-            analista.parametros.splice(index, 1);
-        },
-
         abrirAgregarParametrosAnalista(analista) {
 
             console.log(analista);
             this.analistaSeleccionado = analista;
             this.$bvModal.show('modal-Agregar-Parametros')
         },
+        getValidationState({
+            dirty,
+            validated,
+            valid = null
+        }) {
+            return dirty || validated ? valid : null;
+        },
         add() {
             this.analistas.push({
                 id_aux: null,
                 fecha_entrega: null,
+                fecha_object: new Date(),
                 analista: '',
                 parametros: [],
                 orden_analista: ''
@@ -345,28 +360,63 @@ export default {
             }
             this.analistas.splice(index, 1)
         },
-        getValidationState({
-            dirty,
-            validated,
-            valid = null
-        }) {
-            return dirty || validated ? valid : null;
-        },
-        agregarAnalista() {
-            this.$refs.form.validate().then(success => {
-                if (!success) {
-                    return;
-                } else {
-                    console.log("paso!")
+        obtenerAnalistasDesignados(rum) {
+            this.analistas_agregar = [];
+            this.analistas_eliminar = [];
+            MuestraSupervisorService.obtenerAnalistasDesignados(rum).then((response) => {
+                if (response != null) {
+                    if (response.status == 200 && response.data != null) {
+                        const analistas = response.data;
+                        for (var i = 0; i < analistas.length; i++) {
+                            const analistaExistente = this.analistas.find(analista => analista.rut_empleado == analistas[i].rut_empleado);
+                            if (analistaExistente == null) {
+                                this.analistas.push({
+                                    RUM: analistas[i].RUM,
+                                    rut_empleado: analistas[i].rut_empleado,
+                                    nombre: analistas[i].nombre,
+                                    apellido: analistas[i].apellido,
+                                    orden_analisis: analistas[i].orden_de_analisis,
+                                    parametros: [{
+                                        id_parametro: analistas[i].id_parametro,
+                                        nombre_parametro: analistas[i].nombre_parametro
+                                    }],
+                                    fecha_entrega: analistas[i].fecha_entrega,
+                                    fecha_object: new Date(analistas[i].fecha_entrega),
+                                    fecha_entrega_formateada: analistas[i].fecha_entrega_formateada,
+                                    estado: analistas[i].estado
+                                })
+                            } else {
+                                analistaExistente.parametros.push({
+                                    id_parametro: analistas[i].id_parametro,
+                                    nombre_parametro: analistas[i].nombre_parametro
+                                })
+                            }
+                        }
+
+
+
+                        // Agregar todos los analistas "antiguos" a analistas eliminar
+                        // TODO: no necesariamente borrar siempre todos.
+                        this.analistas.forEach(analista => {
+                            analista.parametros.forEach(param => {
+                                this.analistas_eliminar.push({
+                                    rut_empleado: analista.rut_empleado,
+                                    orden_de_analisis: analista.orden_analisis,
+                                    id_parametro: param.id_parametro,
+                                    fecha_entrega: analista.fecha_entrega,
+                                    estado: analista.estado
+                                })
+                            })
+                        })
+
+                        this.obtenerAnalistas();
+
+                    }
                 }
             })
         },
-        cargarAnalistas() {
-            this.analistas = [];
-            this.analistas_agregar = [];
-            this.analistas_eliminar = [];
-            this.analistas_antiguos = [];
-            this.loading = true;
+        obtenerAnalistas() {
+            this.analistasOpciones = [];
 
             MuestraSupervisorService.obtenerEmpleados().then((response) => {
                 if (response.data != null && response.status == 200) {
@@ -394,46 +444,37 @@ export default {
                             id_parametro: response.data[i].id_parametro
                         })
                     }
-                    this.cargarAnalistasRegistrados();
                 }
             })
         },
-        cargarAnalistasRegistrados() {
-
-            console.log("data de analistas ya en sistema", this.analistasData)
-            var id_aux = 1;
-            this.loading = false;
-            this.analistas = this.analistasData.analistas;
-            this.analistas.forEach((analista) => {
-                analista.fecha_object = new Date(analista.fecha_entrega)
-                analista.id_aux = id_aux;
-                id_aux++;
-
-                this.analistas_antiguos.push({
-                    RUM: analista.RUM,
-                    apellido: analista.apellido,
-                    fecha_entrega: analista.fecha_entrega,
-                    fecha_entrega_formateada: analista.fecha_entrega_formateada,
-                    fecha_object: analista.fecha_object,
-                    id_aux: analista.id_aux,
-                    nombre: analista.nombre,
-                    orden_analisis: analista.orden_analisis,
-                    parametros: analista.parametros.slice(),
-                    rut_empleado: analista.rut_empleado
+        agregarParametroSeleccionado(analista, id_param) {
+            var parametro = this.parametrosOpciones.find(para => para.id_parametro == id_param);
+            console.log('parametro a a gregar', parametro)
+            const parametroExistente = analista.parametros.find(param => param.id_parametro == parametro.id_parametro);
+            if (parametroExistente == null) {
+                analista.parametros.push({
+                    id_parametro: parametro.id_parametro,
+                    nombre_parametro: parametro.nombre_parametro
                 })
+                this.alertaExito = true;
+            } else {
+                this.alertaDuplicado = true;
+            }
+            console.log(analista)
 
-            })
-            console.log("analistas ya cargados de la DB", this.analistas)
         },
-        onHidden() {
-            this.$emit('modal-cerrado');
-        }
+        eliminarParametroSeleccionado(analista, index) {
+            analista.parametros.splice(index, 1);
+        },
     },
     watch: {
-        analistasData: {
+        muestraData: {
             handler() {
-                this.RUM = this.analistasData.RUM;
-                this.cargarAnalistas();
+                this.RUM = this.muestraData.RUM;
+                console.log(this.muestraData);
+                this.fecha_entrega_object = new Date(this.muestraData.fecha_entrega);
+                this.fecha_entrega = this.muestraData.fecha_entrega;
+                this.obtenerAnalistasDesignados(this.RUM);
             }
         }
     }

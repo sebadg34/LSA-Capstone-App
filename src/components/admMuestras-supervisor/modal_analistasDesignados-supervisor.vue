@@ -1,7 +1,7 @@
 <template>
   <b-modal centered id="modal-analistas-designados-supervisor" size="xl" @hidden="onHidden">
 
-    <ModalEditarAnalistas @refrescar="obtenerAnalistasDesignados(RUM)" :analistas-data="analistasData" />
+    <ModalEditarAnalistas @refrescar="obtenerAnalistasDesignados(RUM)" :muestra-data="muestraData" />
 
     <template #modal-header="{ close }">
       <!-- Emulate built in modal header close button action -->
@@ -139,13 +139,13 @@ export default {
       RUM: '',
       loading: false,
       analistas: [],
-      analistasData: {}
+      muestraData: {}
 
     }
   },
   methods: {
     abrirEditarAnalistas() {
-      this.analistasData = {
+      this.muestraData = {
         RUM: this.RUM,
         analistas: this.analistas
       }

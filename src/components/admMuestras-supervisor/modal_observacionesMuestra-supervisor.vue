@@ -1,6 +1,6 @@
 <template>
   <b-modal id="modal-observaciones-muestra-supervisor" :title="`Observaciones de la muestra ${RUM}`" size="xl"
-    @hidden="onHidden">
+    >
 
     <modalAgregarObservacion @refrescar="obtenerObservaciones(RUM)" :muestra-data="muestraData"/>
 
@@ -148,9 +148,6 @@ export default {
         }
       })
     },
-    onHidden() {
-      this.$emit('modal-cerrado');
-    }
   },
   watch: {
     detallesData: {

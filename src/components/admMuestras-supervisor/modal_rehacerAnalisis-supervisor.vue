@@ -15,19 +15,20 @@
             </template>
 
 
-            <b-row class="justify-content-between mb-4">
+            <b-row class="justify-content-between mb-4 ml-2 mr-2">
                 <b-col class="col-2">
                     <b-row style="border: 1px solid var(--lsa-light-gray); padding:4px; border-radius:5px">
                         <b-col class="col-6" style="font-weight:bold; "> RUM: </b-col>
                         <b-col class="col-6">{{ RUM }}</b-col>
                     </b-row>
                 </b-col>
-                <b-col class="col-4">
+                <b-col class="col-6">
                     <b-row style="border-bottom: 1px solid var(--lsa-light-gray);">
-                        <b-col class="col-7" style="font-weight:bold;"> Nueva echa de entrega: </b-col>
-                        <b-col class="col-5">
+                        <b-col class="col-5" style="font-weight:bold;"> Nueva fecha de entrega: </b-col>
+                        <b-col class="col-7">
                             <b-row>
-                                <b-form-datepicker placeholder="Seleccione una fecha." v-model="fecha_entrega_object"
+                                <b-form-datepicker :date-format-options="{ year: 'numeric', month: '2-digit', day: '2-digit' }"
+                                 placeholder="Seleccione una fecha." v-model="fecha_entrega_object"
                                     id="datepicker-nueva"></b-form-datepicker>
 
 
@@ -147,6 +148,7 @@
                                     <ValidationProvider :name="'Fecha de entrega ' + (k + 1)" rules="required"
                                         v-slot="validationContext">
                                         <b-form-datepicker placeholder="Seleccione una fecha."
+                                        :date-format-options="{ year: 'numeric', month: '2-digit', day: '2-digit' }"
                                             :state="getValidationState(validationContext)" v-model="analista.fecha_object"
                                             :id="'datepicker-' + (k + 1)"></b-form-datepicker>
                                         <b-form-invalid-feedback id="fecha-live-feedback">{{
@@ -180,12 +182,64 @@
 
                 </div>
             </div>
+            <b-modal id="modal-Agregar-Parametros" ref="modal" :title="`Agregar parámetro(s) a analista`" size="lg">
+                <template #modal-header="{ close }">
+                    <b-row class="d-flex justify-content-around">
+                        <div class="pl-3">Asignar parámetro(s) a analista</div>
+                    </b-row>
+                    <button type="button" class="close" aria-label="Close" @click="close()">
+                        <span aria-hidden="true" style="color:white">&times;</span>
+                    </button>
+                </template>
+                <b-row>
+                    <b-col>
+                        <b-form-group label="Seleccione un parámetro:">
+                            <b-form-select v-model="parametroSeleccionadoIngreso" :options="parametrosOpciones"
+                                text-field="nombre_parametro" value-field="id_parametro"
+                                @change="agregarParametroSeleccionado(analistaSeleccionado, parametroSeleccionadoIngreso)"></b-form-select>
+                        </b-form-group>
+                    </b-col>
+                </b-row>
 
+                <b-row v-if="analistaSeleccionado && analistaSeleccionado.parametros.length > 0" class="mt-3">
+                    <b-col>
+                        <b-form-group label="Parámetros seleccionados:">
+                            <div v-for="(parametro, index) in analistaSeleccionado.parametros" :key="index"
+                                class="d-flex align-items-center objetos-item mb-3">
+                                <b-input readonly :value="parametro.nombre_parametro" class="mr-2"></b-input>
+                                <b-button variant="danger"
+                                    @click="eliminarParametroSeleccionado(analistaSeleccionado, index)" class="ml-2">
+                                    <b-icon-trash-fill></b-icon-trash-fill>
+                                </b-button>
+                            </div>
+                        </b-form-group>
+                    </b-col>
+                </b-row>
+
+                <b-alert variant="danger" :show="alertaDuplicado" dismissible @dismissed="alertaDuplicado = false">
+                    El parámetro ya se encuentra agregado.
+                </b-alert>
+
+                <b-alert variant="success" :show="alertaExito" dismissible @dismissed="alertaExito = false">
+                    Parámetro agregado exitosamente.
+                </b-alert>
+                <!-- //////////////////////////////////////////MODAL-FOOTER////////////////////////////////////////////////////////////////////////////////// -->
+                <template #modal-footer="{ close }">
+                    <b-button @click="close()" variant="primary" size="xl" class="float-right reactive-button"
+                        style="font-weight:bold">
+                        Cerrar
+                    </b-button>
+                </template>
+            </b-modal>
             <template #modal-footer>
-                <b-button @click="enviarFormulario()" variant="primary" size="xl" class="float-right reactive-button"
+
+                <b-overlay :show="Cargando" rounded opacity="0.6" spinner-small spinner-variant="primary" class="d-inline-block">
+                <b-button @click="enviarFormulario()" variant="primary" size="xl" class="float-right reactive-button lsa-light-blue" 
                     style="font-weight:bold">
-                    Guardar cambios
+                    Rehacer análisis
                 </b-button>
+</b-overlay>
+
             </template>
 
         </b-modal>
@@ -208,7 +262,7 @@ export default {
     },
     data() {
         return {
-
+            Cargando: false,
             RUM: '',
             loading: false,
             analistas: [],
@@ -228,6 +282,7 @@ export default {
     methods: {
 
         enviarFormulario() {
+            this.Cargando = true;
             this.analistas.forEach(analista => {
                 analista.parametros.forEach(param => {
                     this.analistas_agregar.push(
@@ -235,18 +290,21 @@ export default {
                         rut_empleado: analista.rut_empleado,
                         orden_de_analisis: analista.orden_analisis,
                         id_parametro: param.id_parametro,
-                        fecha_entrega: analista.fecha_entrega
+                        fecha_entrega: analista.fecha_object.toISOString().split('T')[0]
                     }
                 )
                 })
-              var data = {
+
+                var data = {
                 RUM: this.RUM,
                 nueva_fecha_entrega: this.fecha_entrega_object.toISOString().split('T')[0],
                 empleados_agregar: this.analistas_agregar,
                 empleados_eliminar: this.analistas_eliminar
               }
               MuestraSupervisorService.rehacerAnalisis(data).then((response) => {
-                if(response.status == 200){
+
+                this.Cargando = false;
+                if(response.request.status == 200){
                     this.$bvToast.toast(`El análisis ha sido reingresado.`, {
                                 title: 'Éxito',
                                 toaster: 'b-toaster-top-center',
@@ -255,8 +313,19 @@ export default {
                                 appendToast: true
                             })
                             this.$bvModal.hide('modal-rehacer-analisis-supervisor')
+                            this.$emit('refrescar');
+
+                }else{
+                    this.$bvToast.toast(`Error al rehacer análisis.`, {
+                                title: 'Error',
+                                toaster: 'b-toaster-top-center',
+                                solid: true,
+                                variant: "warning",
+                                appendToast: true
+                            })
                 }
               })
+            
             })
         },
         abrirAgregarParametrosAnalista(analista) {
@@ -276,6 +345,7 @@ export default {
             this.analistas.push({
                 id_aux: null,
                 fecha_entrega: null,
+                fecha_object: new Date(),
                 analista: '',
                 parametros: [],
                 orden_analista: ''
@@ -298,6 +368,8 @@ export default {
             this.analistas.splice(index, 1)
         },
         obtenerAnalistasDesignados(rum) {
+            this.analistas_agregar = [];
+            this.analistas_eliminar = [];
             MuestraSupervisorService.obtenerAnalistasDesignados(rum).then((response) => {
                 if (response != null) {
                     if (response.status == 200 && response.data != null) {
