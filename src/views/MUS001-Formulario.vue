@@ -139,6 +139,7 @@
                                                                 :date-format-options="{ year: 'numeric', month: '2-digit', day: '2-digit' }"
                                                                 id="input-live" v-model="fecha_recepcion"
                                                                 aria-describedby="input-live-help fecha de recpecion-live-feedback"
+                                                                :state="getValidationState(validationContext)"
                                                                 placeholder="Seleccione fecha">
                                                             </b-form-datepicker>
                                                             <b-form-invalid-feedback
@@ -151,22 +152,33 @@
                                                             <label for="input-time">Hora de recepción:</label>
                                                             <b-form-timepicker id="input-time" v-model="hora_recepcion"
                                                                 aria-describedby="input-live-help hora de recepcion-live-feedback"
+                                                                :state="getValidationState(validationContext)"
                                                                 placeholder="Ingrese hora">
                                                             </b-form-timepicker>
                                                             <b-form-invalid-feedback id="hora de recepcion-live-feedback">{{
                                                                 validationContext.errors[0] }}</b-form-invalid-feedback>
                                                         </ValidationProvider>
 
+                                                        <ValidationProvider name="fecha de muestreo" rules="required"
+                                                            v-slot="validationContext">
                                                         <label for="input-live">Fecha de muestreo:</label>
                                                         <b-form-datepicker
                                                             :date-format-options="{ year: 'numeric', month: '2-digit', day: '2-digit' }"
-                                                            id="input-live" v-model="fecha" placeholder="Seleccione fecha">
+                                                            id="input-live" v-model="fecha" :state="getValidationState(validationContext)" placeholder="Seleccione fecha">
                                                         </b-form-datepicker>
+                                                        <b-form-invalid-feedback id="fecha de muestreo-live-feedback">{{
+                                                                validationContext.errors[0] }}</b-form-invalid-feedback>
+                                                        </ValidationProvider>
 
+                                                        <ValidationProvider name="hora de mustreo" rules="required"
+                                                            v-slot="validationContext">
                                                         <label for="input-time">Hora de muestreo:</label>
                                                         <b-form-timepicker id="input-time" v-model="hora"
-                                                            placeholder="Ingrese hora">
+                                                            placeholder="Ingrese hora" :state="getValidationState(validationContext)">
                                                         </b-form-timepicker>
+                                                        <b-form-invalid-feedback id="hora de muestreo-live-feedback">{{
+                                                                validationContext.errors[0] }}</b-form-invalid-feedback>
+                                                        </ValidationProvider>
 
                                                         <ValidationProvider name="fecha de entrega" rules="required"
                                                             v-slot="validationContext">
