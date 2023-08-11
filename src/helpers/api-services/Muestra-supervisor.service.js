@@ -214,7 +214,22 @@ const marcarTareaComoCompletada = async (RUM) => {
          return;
      }
  };
-
+ const rehacerAnalisis = async (data) => {
+    try {
+     const instanciaApi = await crearApi();
+     const response = await instanciaApi.put("/muestras-supervisor/rehacerAnalisis", data);
+             console.log(response);
+         if(response.status == 200){
+             return response;
+         }else{
+             return;
+         }
+         
+     } catch (error) {
+         console.log(error);
+         return;
+     }
+ };
  const modificarFechaEntrega = async (data) => {
     try {
      const instanciaApi = await crearApi();
@@ -269,6 +284,7 @@ const marcarTareaComoCompletada = async (RUM) => {
 
  
 export default {
+    rehacerAnalisis,
     obtenerMuestras,
     obtenerSubmuestras,
     obtenerEmpleados,

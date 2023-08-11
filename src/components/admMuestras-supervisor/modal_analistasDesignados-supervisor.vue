@@ -70,7 +70,7 @@
        
                         <b-list-group-item v-if="analista.parametros.length > 0" v-b-toggle="analista.rut_empleado" style="padding:2px; border: none; border-bottom: solid 1px #dbdbdb; ">
                           {{ analista.parametros[0].nombre_parametro }}
-                            <b-icon style="position:absolute; right:0px; top:25%; color: #949494" icon="caret-down-fill"></b-icon>
+                            <b-icon v-if="analista.parametros.length > 1" style="position:absolute; right:0px; top:25%; color: #949494" icon="caret-down-fill"></b-icon>
                         </b-list-group-item>
                         <b-list-group-item v-else style="padding:2px; border: none; border-bottom: solid 1px #dbdbdb; ">{{ analista.parametros[0].nombre_parametro }}
 
@@ -138,15 +138,12 @@ export default {
 
       RUM: '',
       loading: false,
-      cargandoObservaciones: false,
       analistas: [],
       analistasData: {}
 
     }
   },
   methods: {
-
-
     abrirEditarAnalistas() {
       this.analistasData = {
         RUM: this.RUM,
@@ -154,9 +151,9 @@ export default {
       }
       this.$bvModal.show('modal-editar-analistas-supervisor');
     },
+
+
     obtenerAnalistasDesignados(rum) {
-      this.observaciones = [];
-      this.cargandoObservaciones = true;
       MuestraSupervisorService.obtenerAnalistasDesignados(rum).then((response) => {
         if (response != null) {
           if (response.status == 200 && response.data != null) {
@@ -187,16 +184,7 @@ export default {
             }
 
 
-          } else {
-            this.$bvToast.toast(`Error al obtener observaciones de muestra`, {
-              title: 'Error',
-              toaster: 'b-toaster-top-center',
-              solid: true,
-              variant: "warning",
-              appendToast: true
-            })
-            this.cargandoObservaciones = false;
-          }
+          } 
         }
       })
     },
@@ -207,9 +195,8 @@ export default {
   watch: {
     analistaData: {
       handler() {
-
-
         this.RUM = this.analistaData.RUM;
+        this.analistas = [];
         this.obtenerAnalistasDesignados(this.RUM);
       }
     }
