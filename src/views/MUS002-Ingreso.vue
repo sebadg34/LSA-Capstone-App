@@ -1,8 +1,7 @@
 <template>
-    <div>
-  
+    <div>  
         <!-- <validation-observer ref="form"> -->
-          <modal_cantidadMuestra :n-muestras="nMuestras" :objetosSeleccionados="objetosSeleccionados" :sub="sub" @datosIngresados="capturarDatos" @eliminados="SubEliminadas" @eliminar-fila="eliminarSubmuestra" @identificacionEliminada="identificadores" :identificaciones="identificacion" :id_submuestra="id_submuestra" :parametros="prevP" :metodologias="prevM" />
+          <modal_cantidadMuestra :n-muestras="nMuestras" :objetosSeleccionados="objetosSeleccionados" :sub="sub" @datosIngresados="capturarDatos" @eliminados="SubEliminadas" @agregar-sub-param="agregarParametroSubmuestra" @eliminar-fila="eliminarSubmuestra" @agregar-submuestra="agregarSubmuestra" @identificacionEliminada="identificadores" :identificaciones="identificacion" :id_submuestra="id_submuestra" :parametros="prevP" :metodologias="prevM" />
           
             <modal_agregarMetodologia/>
             <modal_agregarParametro/>
@@ -129,7 +128,7 @@
                                                             <label for="input-live">N° de muestras:</label>
                                                             <div class="d-flex align-items-center">
                                                                 <b-input-group size="sm">  
-                                                                    <b-form-input id="nMuestras-input" v-model="nMuestras"
+                                                                    <b-form-input readonly id="nMuestras-input" v-model="nMuestras"
                                                                         :state="getValidationState(validationContext)"
                                                                         aria-describedby="nMuestras-live-feedback"></b-form-input>                                                                    
                                                                 </b-input-group>
@@ -139,33 +138,56 @@
                                                                 validationContext.errors[0] }}</b-form-invalid-feedback>
                                                         </ValidationProvider>
 
+
+                                                        <ValidationProvider name="fecha de recepción" rules="required"
+                                                            v-slot="validationContext">
                                                         <label for="input-live">Fecha de recepción:</label>
                                                         <b-form-datepicker
                                                             :date-format-options="{ year: 'numeric', month: '2-digit', day: '2-digit' }"
                                                             id="input-live" v-model="fecha_recepcion"
-                                                            aria-describedby="input-live-help fechaI-live-feedback"
+                                                            :state="getValidationState(validationContext)"
+                                                            aria-describedby="input-live-help fecha de recepción-live-feedback"
                                                             placeholder="Seleccione fecha">
                                                         </b-form-datepicker>
+                                                        <b-form-invalid-feedback id="fecha de recepción-live-feedback">{{
+                                                                validationContext.errors[0] }}</b-form-invalid-feedback>
+                                                        </ValidationProvider>
 
+                                                        <ValidationProvider name="hora de recepción" rules="required"
+                                                            v-slot="validationContext">
                                                         <label for="input-time">Hora de recepción:</label>
                                                         <b-form-timepicker id="input-time" v-model="hora_recepcion"
-                                                            aria-describedby="input-live-help horaI-live-feedback"
-                                                            placeholder="Ingrese hora">
+                                                            aria-describedby="input-live-help hora de recepción-live-feedback"
+                                                            :state="getValidationState(validationContext)"
+                                                            placeholder="Ingrese hora">                                                            
                                                         </b-form-timepicker>
+                                                        <b-form-invalid-feedback id="hora de recepción-live-feedback">{{
+                                                                validationContext.errors[0] }}</b-form-invalid-feedback>
+                                                        </ValidationProvider>
   
-                                                        
+                                                        <ValidationProvider name="fecha de muestreo" rules="required"
+                                                            v-slot="validationContext">
                                                             <label class="mt-1" for="input-live">Fecha de muestreo:</label>
                                                             <b-form-datepicker
                                                                 :date-format-options="{ year: 'numeric', month: 'numeric', day: 'numeric' }"
-                                                                id="input-live" v-model="fecha"                                                                
+                                                                id="input-live" v-model="fecha"
+                                                                :state="getValidationState(validationContext)"                                                              
                                                                 placeholder="Seleccione fecha"></b-form-datepicker>
+                                                                <b-form-invalid-feedback id="fecha de muestreo-live-feedback">{{
+                                                                validationContext.errors[0] }}</b-form-invalid-feedback>
+                                                        </ValidationProvider>
                                                            
   
-                                                        
+                                                        <ValidationProvider name="Hora de muestreo" rules="required"
+                                                            v-slot="validationContext">
                                                             <label class="mt-1" for="input-time">Hora de muestreo:</label>
                                                             <b-form-timepicker id="input-time" v-model="hora"                                                                
-                                                                placeholder="Ingrese hora">
+                                                                placeholder="Ingrese hora"
+                                                                :state="getValidationState(validationContext)" >
                                                             </b-form-timepicker>
+                                                            <b-form-invalid-feedback id="fecha de muestreo-live-feedback">{{
+                                                                validationContext.errors[0] }}</b-form-invalid-feedback>
+                                                        </ValidationProvider>
                                                             
   
                                                         <ValidationProvider name="entrega" rules="required"
@@ -252,11 +274,16 @@
                                                             </b-input-group>
                                                         </div>                             
   
+                                                        <ValidationProvider name="Cotización" rules="required"
+                                                            v-slot="validationContext">
                                                         <label class="mt-1" for="input-live">Cotización:</label>
-                                                        <b-form-select id="input-live" v-model="cotizacion" text-field="idconNombre" value-field="id_cotizacion" aria-describedby="input-live-help Cotizacion-live-feedback">
+                                                        <b-form-select id="input-live" v-model="cotizacion" :state="getValidationState(validationContext)" text-field="idconNombre" value-field="id_cotizacion" aria-describedby="input-live-help Cotizacion-live-feedback">
                                                             <option v-for="opcion in opcionesCotizacion" :key="opcion.id_cotizacion" :value="opcion.id_cotizacion">
                                                           {{ opcion.idconNombre }}</option>
-                                                        </b-form-select>                                                             
+                                                        </b-form-select>
+                                                        <b-form-invalid-feedback id="Cotización-live-feedback">{{
+                                                                validationContext.errors[0] }}</b-form-invalid-feedback>
+                                                        </ValidationProvider>                                                              
   
                                                         <label class="mt-1" for="input-live">Observaciones:</label>
                                                         <b-form-textarea id="input-live" v-model="observaciones" rows="1"
@@ -914,6 +941,8 @@ export default {
             hora_recepcion: '',
             fecha_recepcion: '',
             totalTabs: 6,
+            submuestra_editar: [],
+            parametro_submuestra_agregar: []
         };
     },
 
@@ -1184,62 +1213,86 @@ export default {
 
         // Función para verificar si dos objetos son iguales
         sonObjetosIguales(objeto1, objeto2) {
-          const keys1 = Object.keys(objeto1);
-          const keys2 = Object.keys(objeto2);
-        
-          if (keys1.length !== keys2.length) {
-            return false;
-          }
-      
-          for (const key of keys1) {
-            if (objeto1[key] !== objeto2[key]) {
+            const keys1 = Object.keys(objeto1);
+            const keys2 = Object.keys(objeto2);
+            
+            if (keys1.length !== keys2.length) {
               return false;
             }
-          }
-      
-          return true;
+          
+            for (const key of keys1) {
+              if (objeto1[key] !== objeto2[key]) {
+                return false;
+              }
+            }
+          
+            return true;
         },
 
-        eliminarSubmuestra(filaSeleccionada, index) {
-            const submuestraEliminadaId = filaSeleccionada.id_submuestra;
-            console.log("Submuestra eliminada ID:", submuestraEliminadaId);
-            
-            this.submuestra_eliminar.push(submuestraEliminadaId)
-            this.sub.splice(index, 1);
-            
-            console.log("submuestra_eliminar: ", this.submuestra_eliminar);
-            this.nMuestras --;
-            this.nMuestras = this.nMuestras.toString();
+        agregarSubmuestra () {
+            console.log('agregando..')
+            console.log(this.sub)
+            const PYMArray = this.sub[0].PYM;
+            console.log(PYMArray)
+            const nuevaFila = {
+                id_submuestra: '',       
+                orden: '',
+                identificador: '',
+                PYM: [...PYMArray]
+            };
+
+            this.sub.push(nuevaFila);
+            this.nMuestras++;
+            this.nMuestras = this.nMuestras.toString();        
+        },
+
+        eliminarSubmuestra(filaSeleccionada, index) {  
+
+          const nuevoSub = [...this.sub];
+          console.log("Nuevosub antes de eliminar:", nuevoSub); // Agrega este console.log
+                
+          const submuestraEliminadaId = filaSeleccionada.id_submuestra;
+          console.log("Submuestra eliminada ID:", submuestraEliminadaId);
+                
+          this.submuestra_eliminar.push({ id_submuestra: submuestraEliminadaId });
+                
+          nuevoSub.splice(index, 1);
+          this.sub = nuevoSub;
+                
+          console.log("this.sub después de eliminar:", this.sub); // Agrega este console.log
+          console.log("submuestra_eliminar: ", this.submuestra_eliminar);
+          this.nMuestras--;
+          this.nMuestras = this.nMuestras.toString();
         },
         
         eliminarParametro(filaSeleccionada, index) {
-          const parametroEliminado = {
-            RUM: filaSeleccionada.RUM,
-            estado: filaSeleccionada.estado,
-            fecha_entrega: filaSeleccionada.fecha_entrega,
-            id_parametro: filaSeleccionada.id_parametro[index],
-            nombre_parametro: filaSeleccionada.nombre_parametro[index],
-            orden_de_analisis: filaSeleccionada.orden_de_analisis,
-            rut_empleado: filaSeleccionada.rut_empleado,
-          };
+            const parametroEliminado = {
+                RUM: filaSeleccionada.RUM,
+                estado: filaSeleccionada.estado,
+                fecha_entrega: filaSeleccionada.fecha_entrega,
+                id_parametro: filaSeleccionada.id_parametro[index],
+                nombre_parametro: filaSeleccionada.nombre_parametro[index],
+                orden_de_analisis: filaSeleccionada.orden_de_analisis,
+                rut_empleado: filaSeleccionada.rut_empleado,
+            };
       
           // Verificar si el objeto parametroEliminado existe en this.empleados
-          const parametroEncontrado = this.empleados.find((empleado) => {
-            return this.sonObjetosIguales(empleado, parametroEliminado);
-          });
+            const parametroEncontrado = this.empleados.find((empleado) => {
+                return this.sonObjetosIguales(empleado, parametroEliminado);
+            });
       
-          if (parametroEncontrado) {
-            filaSeleccionada.id_parametro.splice(index, 1); 
-            filaSeleccionada.nombre_parametro.splice(index, 1); 
-        
-            console.log("parametro eliminado: ", parametroEliminado);
-            this.empleados_eliminar.push(parametroEliminado);
-            console.log("empleados_eliminar: ", this.empleados_eliminar);
-          } else {
-            console.log("La eliminación del parámetro será solo visual ya que no existe en la BD.");
-            filaSeleccionada.id_parametro.splice(index, 1); 
-            filaSeleccionada.nombre_parametro.splice(index, 1);
-          }
+            if (parametroEncontrado) {
+                filaSeleccionada.id_parametro.splice(index, 1); 
+                filaSeleccionada.nombre_parametro.splice(index, 1); 
+                
+                console.log("parametro eliminado: ", parametroEliminado);
+                this.empleados_eliminar.push(parametroEliminado);
+                console.log("empleados_eliminar: ", this.empleados_eliminar);
+            } else {
+                console.log("La eliminación del parámetro será solo visual ya que no existe en la BD.");
+                filaSeleccionada.id_parametro.splice(index, 1); 
+                filaSeleccionada.nombre_parametro.splice(index, 1);
+            }
         },
 
         countDownChanged(dismissCountDown) {
@@ -2063,62 +2116,97 @@ export default {
             console.log("submuestras: ", submuestraArray) 
             
             const submuestraArrayTransformado = submuestraArray.map(submuestra => {
-              const parametros = submuestra.parametros_agregar.map(parametro => ({
-                id_submuestra: submuestra.id_submuestra,
-                identificador: submuestra.identificador,
-                orden: submuestra.orden,
-                id_parametro: parametro.id_parametro,
-                id_metodologia: parametro.id_metodologia,                
-              }));
-              return parametros;
+                const parametros = submuestra.parametros_agregar.map(parametro => ({
+                    id_submuestra: submuestra.id_submuestra,
+                    identificador: submuestra.identificador,
+                    orden: submuestra.orden,
+                    id_parametro: parametro.id_parametro,
+                    id_metodologia: parametro.id_metodologia,                
+                }));
+                return parametros;
             }).flat();
 
-            console.log("submuestraArrayTransformado:", submuestraArrayTransformado);
+            console.log("submuestraArrayTransformado: ", submuestraArrayTransformado);
 
             for (let i = 0; i < this.submuestrasOG.length; i++) {
-              const elementoRepetido = submuestraArrayTransformado.find(objeto => (
-                objeto.identificador === this.submuestrasOG[i].identificador &&
-                objeto.orden === this.submuestrasOG[i].orden &&
-                JSON.stringify(objeto.id_parametro) === JSON.stringify(this.submuestrasOG[i].id_parametro)
-              ));
-                        
-              if (elementoRepetido) {
-                console.log("Elemento repetido:", elementoRepetido);
-              }
+                const elementoRepetido = submuestraArrayTransformado.find(objeto => (
+                    objeto.identificador === this.submuestrasOG[i].identificador &&
+                    objeto.orden === this.submuestrasOG[i].orden &&
+                    JSON.stringify(objeto.id_parametro) === JSON.stringify(this.submuestrasOG[i].id_parametro)
+                ));
+
+                if (elementoRepetido) {
+                    console.log("Elemento repetido: ", elementoRepetido);
+                }
             }
 
-            const elementosNoRepetidos = submuestraArrayTransformado.filter(objeto => (
-              !this.submuestrasOG.some(elemento => (
-                elemento.identificador === objeto.identificador &&
-                elemento.orden === objeto.orden &&
-                JSON.stringify(objeto.id_parametro) === JSON.stringify(elemento.id_parametro)
-              ))
-            ));
+            const elementosNoRepetidos = [];
+            const elementosNoComparados = [];
 
-            console.log("elementos no repetidos:", elementosNoRepetidos); 
+            submuestraArrayTransformado.forEach(objeto => {
+                const mismoIdSubmuestra = this.submuestrasOG.find(elemento => elemento.id_submuestra === objeto.id_submuestra);
             
-            this.submuestra_agregar = []; //Se limpia para que cada vez que apreten guardar en el modal, no duplique informacion, asi evitamos enormes problemas.
+                if (mismoIdSubmuestra) {
+                    // Realizar comparación solo si el id_submuestra existe en ambos arrays y si estos coinciden
+                    const comparacionDetallada = (
+                        mismoIdSubmuestra.identificador === objeto.identificador &&
+                        mismoIdSubmuestra.orden === objeto.orden                        
+                    );
+                
+                    if (
+                        objeto.identificador !== mismoIdSubmuestra.identificador &&
+                        objeto.id_parametro === mismoIdSubmuestra.id_parametro
+                    ) {
+                        // Si cambia el identificador pero el id_parametro es el mismo, se setea vacío
+                        objeto.parametros_agregar = [];
+                    }
+                
+                    if (!comparacionDetallada) {
+                        elementosNoRepetidos.push(objeto);
+                    }
+                } else {
+
+                    this.submuestra_agregar = []
+                    // No incluir elementos nuevos sin correspondencia en this.submuestrasOG
+                    elementosNoComparados.push({
+                        identificador: objeto.identificador,
+                        orden: objeto.orden,
+                        parametros_agregar: [{ 
+                            id_parametro: objeto.id_parametro,
+                            id_metodologia: objeto.id_metodologia                            
+                        }]
+                    });
+
+                    this.submuestra_agregar = elementosNoComparados;
+                }
+            });
+
+            console.log("elementos no repetidos: ", elementosNoRepetidos);
+            //console.log("submuestras_agregar: ", this.submuestra_agregar);
+            console.log("elementos no comparados: ", elementosNoComparados);
+            
+            this.submuestra_editar = []; //Se limpia para que cada vez que apreten guardar en el modal, no duplique informacion, asi evitamos enormes problemas.
 
             elementosNoRepetidos.forEach(objeto => {
-                this.submuestra_agregar.push({
-                   id_submuestra: objeto.id_submuestra,
-                     identificador: objeto.identificador,
-                     orden: objeto.orden,
-                     parametros_agregar: [{
-                         id_parametro: objeto.id_parametro,
-                         id_metodologia: objeto.id_metodologia 
-                    }]                
+                this.submuestra_editar.push({
+                    id_submuestra: objeto.id_submuestra,
+                    identificador: objeto.identificador,
+                    orden: objeto.orden                                   
                 });
-            });            
-            
-            console.log("submuestras_agregar: ", this.submuestra_agregar)           
+            });           
+            console.log("submuestras_editar: ", this.submuestra_editar)           
         },
 
         SubEliminadas(datos){
-            console.log("datos capturados a eliminar:", datos);
-
+            console.log("datos capturados a eliminar: ", datos);
             this.parametro_submuestra_eliminar = datos;
-            console.log("parametros de submuestras a eliminar:", this.parametro_submuestra_eliminar);            
+            console.log("parametros de submuestras a eliminar: ", this.parametro_submuestra_eliminar);            
+        },
+
+        agregarParametroSubmuestra(datos){
+            console.log("datos capturados a agregar: ", datos);
+            this.parametro_submuestra_agregar = datos;
+            console.log("parametros de submuestras a agregar: ", this.parametro_submuestra_agregar);
         },
 
         obtenerMatriz() {
@@ -2558,12 +2646,15 @@ export default {
                     id_tabla: this.id_tabla,
                     submuestras_agregar: this.submuestra_agregar,
                     submuestras_eliminar: this.submuestra_eliminar,
+                    submuestras_editar: this.submuestra_editar,
+                    parametro_submuestra_agregar: this.parametro_submuestra_agregar,
                     parametro_submuestra_eliminar: this.parametro_submuestra_eliminar,
                     telefonos_eliminar: this.telefonos_eliminar,
                     parametros_eliminar: this.parametros_eliminar,
                     id_cotizacion: this.cotizacion,
                     tipo_pago: this.tipo_pago,
                     valor_neto: this.valor_neto,
+
                     empleados_agregar: this.empleados_agregar.map(objeto => ({
                         rut_empleado: objeto.rut_empleado,
                         orden_de_analisis: objeto.orden_de_analisis,
@@ -2597,7 +2688,7 @@ export default {
                             const extension = '/supervisor/admmuestra'; // Extensión Path a redirigir
                             
                             window.location.href = baseUrl + extension;
-                        }, 2000); */
+                        }, 1000); */
                     } 
                     else {
                         this.$bvToast.toast(`Error al ingresar la muestra.`, {

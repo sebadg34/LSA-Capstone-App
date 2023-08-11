@@ -48,7 +48,7 @@
          <b-dropdown-item v-if="row" @click="abrirParam(row.item)">
               <b-icon icon="clipboard" aria-hidden="true" class="mr-2"></b-icon>Administrar parámetros
          </b-dropdown-item>
-         <b-dropdown-item v-if="row" @click="eliminarSubmuestra(row.item)">
+         <b-dropdown-item v-if="row" @click="eliminarSubmuestra(row.item, row.index)">
               <b-icon icon="trash-fill" aria-hidden="true" class="mr-2"></b-icon>Eliminar submuestra
          </b-dropdown-item>                                                                                                                     
      </b-dropdown>
@@ -59,6 +59,12 @@
 <b-alert variant="success" :show="guardadoExitoso" dismissible @dismissed="guardadoExitoso = false">
   Se han guardado los datos con éxito.
 </b-alert>
+
+<template>
+  <b-button @click="AgregarSubmuestra()" variant="primary" size="xl" class="float-left reactive-button" style="font-weight:bold">Agregar</b-button> 
+</template>
+
+
 <template #modal-footer="{ close }" >
   <b-button @click="guardarFormulario()" variant="primary" size="xl" class="float-right reactive-button" style="font-weight:bold">Guardar</b-button>
   
@@ -149,7 +155,8 @@ return {
   index: null,
   eliminar: [],
   guardadoExitoso: false,
-  submuestra: ''
+  submuestra: '',
+  elementosAgregados: []
 };
 },
 
@@ -256,6 +263,7 @@ methods: {
 
   this.$emit('datosIngresados', datosIngresados);
   this.$emit('eliminados', this.eliminar);
+  this.$emit('agregar-sub-param', this.elementosAgregados);
   this.$bvToast.toast(`Identificadores guardados con éxito.`, {
     title: 'Identificadores Guardados',
     toaster: 'b-toaster-top-center',
@@ -273,18 +281,18 @@ eliminarElementoPYM(filaSeleccionada, index) {
         console.log("No se puede eliminar el último elemento PYM");
         return;
     }
-
+  
   // Guardar valores específicos para mostrar en variables
   const id_metodologia = elementoEliminado.id_metodologia;
   const id_parametro = elementoEliminado.id_parametro;
   const id_submuestra = filaSeleccionada.id_submuestra;  
-
+  
   // Hacemos un slice del array PYM para eliminar el elemento en el índice dado
   filaSeleccionada.PYM = [...filaSeleccionada.PYM.slice(0, index), ...filaSeleccionada.PYM.slice(index + 1)];
-
+  
   // Agregamos solo los datos específicos a la lista de eliminados
-  this.eliminar.push({ id_submuestra, id_parametro, id_metodologia  });
-
+  this.eliminar.push({ id_submuestra, id_parametro, id_metodologia });
+  
   console.log("id_submuestra: ", id_submuestra);
   console.log("id_parametro: ", id_parametro);
   console.log("id_metodologia: ", id_metodologia);    
@@ -294,11 +302,13 @@ eliminarElementoPYM(filaSeleccionada, index) {
 
 eliminarSubmuestra(filaSeleccionada, index) {
   const submuestraEliminada = filaSeleccionada.id_submuestra
-
   console.log("submuestraEliminada: ", submuestraEliminada)
-
+  console.log("Index:", index)
   this.$emit('eliminar-fila', filaSeleccionada, index);
+},
 
+AgregarSubmuestra(){
+  this.$emit('agregar-submuestra');
 },
 
 abrirParam(row) {
@@ -371,7 +381,7 @@ agregarObjetosSeleccionados() {
   }
 },
 
-agregar(filaSeleccionada) {
+agregar(filaSeleccionada) {  
 
   if( this.parametroSeleccionadoIngreso && this.metodologiaSeleccionadoIngreso){
     console.log("objetos seleccionados: ", this.parametroSeleccionadoIngreso , this.metodologiaSeleccionadoIngreso)
@@ -381,7 +391,7 @@ agregar(filaSeleccionada) {
    if (ParamExistente && MetExistente) {
       this.alertaDuplicado = true;
       this.parametroSeleccionadoIngreso = '';
-      this.metodologiaSeleccionadaIngreso = '';
+      this.metodologiaSeleccionadoIngreso = '';
       this.alertaExito = false;
       console.log("duplicados", ParamExistente , MetExistente)
     }
@@ -391,11 +401,18 @@ agregar(filaSeleccionada) {
       console.log("parametroData:", parametroData)
       console.log("metodologiaCompleta:", metodologiaCompleta)
       const nuevoElemento = {
-      id_parametro: this.parametroSeleccionadoIngreso,
-      id_metodologia: metodologiaCompleta.id_metodologia,
-      parametro: parametroData.nombre_parametro,
-      metodologia: metodologiaCompleta.nombre_metodologia,
-};
+        id_parametro: this.parametroSeleccionadoIngreso,
+        id_metodologia: metodologiaCompleta.id_metodologia,
+        parametro: parametroData.nombre_parametro,
+        metodologia: metodologiaCompleta.nombre_metodologia,      
+        };
+        this.elementosAgregados.push({
+          id_submuestra: filaSeleccionada.id_submuestra,
+          id_parametro: nuevoElemento.id_parametro,
+          id_metodologia: nuevoElemento.id_metodologia     
+        });
+
+    console.log("elementos agregados: ", this.elementosAgregados)      
 
 // Llamamos al método para agregar el nuevo elemento a la fila seleccionada
       this.agregarElementoPYM(filaSeleccionada, nuevoElemento);
@@ -403,7 +420,7 @@ agregar(filaSeleccionada) {
       this.alertaExito = true;
       this.alertaDuplicado = false;
       this.parametroSeleccionadoIngreso = '';
-      this.metodologiaSeleccionadaIngreso = '';
+      this.metodologiaSeleccionadoIngreso = '';      
     }
   }     
 },
@@ -413,7 +430,7 @@ agregarElementoPYM(filaSeleccionada, nuevoElemento) {
   const nuevoPYM = [...filaSeleccionada.PYM];
 
   // Agregar
-  nuevoPYM.push(nuevoElemento);
+  nuevoPYM.push(nuevoElemento);  
 
   // Asignar
   filaSeleccionada.PYM = nuevoPYM;
