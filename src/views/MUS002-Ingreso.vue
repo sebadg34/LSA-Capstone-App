@@ -1213,20 +1213,20 @@ export default {
 
         // Función para verificar si dos objetos son iguales
         sonObjetosIguales(objeto1, objeto2) {
-          const keys1 = Object.keys(objeto1);
-          const keys2 = Object.keys(objeto2);
-        
-          if (keys1.length !== keys2.length) {
-            return false;
-          }
-      
-          for (const key of keys1) {
-            if (objeto1[key] !== objeto2[key]) {
+            const keys1 = Object.keys(objeto1);
+            const keys2 = Object.keys(objeto2);
+            
+            if (keys1.length !== keys2.length) {
               return false;
             }
-          }
-      
-          return true;
+          
+            for (const key of keys1) {
+              if (objeto1[key] !== objeto2[key]) {
+                return false;
+              }
+            }
+          
+            return true;
         },
 
         agregarSubmuestra () {
@@ -1234,57 +1234,65 @@ export default {
             console.log(this.sub)
             const PYMArray = this.sub[0].PYM;
             console.log(PYMArray)
-        const nuevaFila = {
-          id_submuestra: '',       
-          orden: '',
-          identificador: '',
-          PYM: [...PYMArray]
-        };
+            const nuevaFila = {
+                id_submuestra: '',       
+                orden: '',
+                identificador: '',
+                PYM: [...PYMArray]
+            };
 
-        this.sub.push(nuevaFila);
-        
+            this.sub.push(nuevaFila);
+            this.nMuestras++;
+            this.nMuestras = this.nMuestras.toString();        
         },
 
-        eliminarSubmuestra(filaSeleccionada, index) {
-  const submuestraEliminadaId = filaSeleccionada.id_submuestra;
-  console.log("Submuestra eliminada ID:", submuestraEliminadaId);
+        eliminarSubmuestra(filaSeleccionada, index) {  
 
-  this.submuestra_eliminar.push({ id_submuestra: submuestraEliminadaId }); // Agregamos el objeto con id_submuestra
-  this.sub.splice(index, 1);
-
-  console.log("submuestra_eliminar: ", this.submuestra_eliminar);
-  this.nMuestras--;
-  this.nMuestras = this.nMuestras.toString();
-},
+          const nuevoSub = [...this.sub];
+          console.log("Nuevosub antes de eliminar:", nuevoSub); // Agrega este console.log
+                
+          const submuestraEliminadaId = filaSeleccionada.id_submuestra;
+          console.log("Submuestra eliminada ID:", submuestraEliminadaId);
+                
+          this.submuestra_eliminar.push({ id_submuestra: submuestraEliminadaId });
+                
+          nuevoSub.splice(index, 1);
+          this.sub = nuevoSub;
+                
+          console.log("this.sub después de eliminar:", this.sub); // Agrega este console.log
+          console.log("submuestra_eliminar: ", this.submuestra_eliminar);
+          this.nMuestras--;
+          this.nMuestras = this.nMuestras.toString();
+        },
         
         eliminarParametro(filaSeleccionada, index) {
-          const parametroEliminado = {
-            RUM: filaSeleccionada.RUM,
-            estado: filaSeleccionada.estado,
-            fecha_entrega: filaSeleccionada.fecha_entrega,
-            id_parametro: filaSeleccionada.id_parametro[index],
-            nombre_parametro: filaSeleccionada.nombre_parametro[index],
-            orden_de_analisis: filaSeleccionada.orden_de_analisis,
-            rut_empleado: filaSeleccionada.rut_empleado,
-          };
+            const parametroEliminado = {
+                RUM: filaSeleccionada.RUM,
+                estado: filaSeleccionada.estado,
+                fecha_entrega: filaSeleccionada.fecha_entrega,
+                id_parametro: filaSeleccionada.id_parametro[index],
+                nombre_parametro: filaSeleccionada.nombre_parametro[index],
+                orden_de_analisis: filaSeleccionada.orden_de_analisis,
+                rut_empleado: filaSeleccionada.rut_empleado,
+            };
       
           // Verificar si el objeto parametroEliminado existe en this.empleados
-          const parametroEncontrado = this.empleados.find((empleado) => {
-            return this.sonObjetosIguales(empleado, parametroEliminado);
-          });
+            const parametroEncontrado = this.empleados.find((empleado) => {
+                return this.sonObjetosIguales(empleado, parametroEliminado);
+            });
       
-          if (parametroEncontrado) {
-            filaSeleccionada.id_parametro.splice(index, 1); 
-            filaSeleccionada.nombre_parametro.splice(index, 1); 
-        
-            console.log("parametro eliminado: ", parametroEliminado);
-            this.empleados_eliminar.push(parametroEliminado);
-            console.log("empleados_eliminar: ", this.empleados_eliminar);
-          } else {
-            console.log("La eliminación del parámetro será solo visual ya que no existe en la BD.");
-            filaSeleccionada.id_parametro.splice(index, 1); 
-            filaSeleccionada.nombre_parametro.splice(index, 1);
-          }
+            if (parametroEncontrado) {
+                filaSeleccionada.id_parametro.splice(index, 1); 
+                filaSeleccionada.nombre_parametro.splice(index, 1); 
+                
+                console.log("parametro eliminado: ", parametroEliminado);
+                this.empleados_eliminar.push(parametroEliminado);
+                console.log("empleados_eliminar: ", this.empleados_eliminar);
+            } else {
+                console.log("La eliminación del parámetro será solo visual ya que no existe en la BD.");
+                filaSeleccionada.id_parametro.splice(index, 1); 
+                filaSeleccionada.nombre_parametro.splice(index, 1);
+            }
         },
 
         countDownChanged(dismissCountDown) {

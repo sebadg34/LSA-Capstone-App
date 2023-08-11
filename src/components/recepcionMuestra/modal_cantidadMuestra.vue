@@ -48,7 +48,7 @@
          <b-dropdown-item v-if="row" @click="abrirParam(row.item)">
               <b-icon icon="clipboard" aria-hidden="true" class="mr-2"></b-icon>Administrar parámetros
          </b-dropdown-item>
-         <b-dropdown-item v-if="row" @click="eliminarSubmuestra(row.item)">
+         <b-dropdown-item v-if="row" @click="eliminarSubmuestra(row.item, row.index)">
               <b-icon icon="trash-fill" aria-hidden="true" class="mr-2"></b-icon>Eliminar submuestra
          </b-dropdown-item>                                                                                                                     
      </b-dropdown>
@@ -303,6 +303,7 @@ eliminarElementoPYM(filaSeleccionada, index) {
 eliminarSubmuestra(filaSeleccionada, index) {
   const submuestraEliminada = filaSeleccionada.id_submuestra
   console.log("submuestraEliminada: ", submuestraEliminada)
+  console.log("Index:", index)
   this.$emit('eliminar-fila', filaSeleccionada, index);
 },
 
