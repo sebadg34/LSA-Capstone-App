@@ -128,7 +128,7 @@
                                                             <label for="input-live">N° de muestras:</label>
                                                             <div class="d-flex align-items-center">
                                                                 <b-input-group size="sm">  
-                                                                    <b-form-input id="nMuestras-input" v-model="nMuestras"
+                                                                    <b-form-input readonly id="nMuestras-input" v-model="nMuestras"
                                                                         :state="getValidationState(validationContext)"
                                                                         aria-describedby="nMuestras-live-feedback"></b-form-input>                                                                    
                                                                 </b-input-group>
@@ -2183,8 +2183,7 @@ export default {
                 this.submuestra_editar.push({
                     id_submuestra: objeto.id_submuestra,
                     identificador: objeto.identificador,
-                    orden: objeto.orden,
-                    parametros_agregar: []                
+                    orden: objeto.orden                                   
                 });
             });           
             console.log("submuestras_editar: ", this.submuestra_editar)           
