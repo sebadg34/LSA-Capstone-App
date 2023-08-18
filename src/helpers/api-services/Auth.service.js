@@ -173,10 +173,29 @@ const register = async (data) => {
     }
 }
 
+// funcion para detalles basicos del usuario en vista 'perfil usuario'
+ const obtenerDetallesUsuario = async() => {
+    try {
+        await crearApi();
+        const response = await apiInstance.get("/usuario/detallesUsuario");
+        if (response.status) {
+            return response;
+        }
+        else {
+            return;
+        }
+    } catch (error) {
+        console.log(error);
+        return;
+    }
+
+ }
+
 const sincronizarUsuarios = async () => {
     try {
         crearApi();
-        const response = await apiInstance.post('http://127.0.0.1:8000/api/syncUsuarios');
+
+        const response = await apiInstance.get("/syncUsuarios");
         console.log(response);
         if (response.status == 200) {
             return response;
@@ -218,7 +237,8 @@ export default {
     cambiarPassword,
     cambiarPasswordAdmin,
     cambiarEstadoAdmin,
-    sincronizarUsuarios
+    sincronizarUsuarios,
+    obtenerDetallesUsuario
     
 
 };
