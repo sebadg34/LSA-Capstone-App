@@ -5,7 +5,7 @@
             @datosIngresados="capturarDatos" :identificaciones="identificacion" />
         <modal_agregarMetodologia />
         <modal_agregarParametro />
-        <modal_resumenMuestra />
+        <modal_resumenMuestra :resumen-data="this.resumenData" />
         <div>
             <b-card no-body>
                 <div style="height:20px"></div>
@@ -785,7 +785,9 @@ export default {
             opcionesEmpresa: [],
             totalTabs: 5,
             fecha_recepcion: '',
-            hora_recepcion: ''
+            hora_recepcion: '',
+
+            resumenData: {}
 
 
         };
@@ -870,6 +872,28 @@ export default {
     },
 
     methods: {
+
+        abrirResumenMuestra() {
+            var parametros_data = [];
+            this.objetosSeleccionados.forEach(p => {
+                parametros_data.push(p.parametro)
+            })
+
+            var data = {
+                numero_muestras: this.nMuestras,
+                fecha_entrega: this.fechaEntrega,
+                fecha_ingreso: this.fecha_recepcion,
+                cliente: this.nombre_empresa,
+                prioridad: this.prioridad,
+                valor: "-",
+                numero_cotizacion: this.opcionesCotizacion.find(c => c.id_cotizacion == this.cotizacion).numero_cotizacion,
+                matriz: this.opcionesMatriz.find(m => m.id_matriz == this.TipoMatriz).nombre_matriz,
+                parametros: parametros_data
+            }
+            this.resumenData = data;
+            this.$bvModal.show('modal-resumen-recepcion');
+        },
+
         getValidationState({
             dirty,
             validated,
@@ -1043,6 +1067,7 @@ export default {
                     console.log("cotizaciones: ", response.data)
                     this.opcionesCotizacion = response.data.map(cotizacion => ({
                         id_cotizacion: cotizacion.id_cotizacion,
+                        numero_cotizacion: cotizacion.numero_cotizacion,
                         nombre_original_documento: cotizacion.nombre_original_documento,
                         idconNombre: `${cotizacion.id_cotizacion} - ${cotizacion.nombre_original_documento}`
 
@@ -1067,9 +1092,7 @@ export default {
             console.log(value)
         },
 
-        abrirResumenMuestra() {
-            this.$bvModal.show('modal-resumen-recepcion');
-        },
+       
         agregar() {
             console.log("abirnedo modal");
             this.alertaExito = false;

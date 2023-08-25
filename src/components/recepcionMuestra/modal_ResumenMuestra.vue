@@ -1,124 +1,190 @@
 <template>
-    <b-modal id="modal-resumen-recepcion" centered ref="modal" title="Resumen" size="xl">
-        <template #modal-header="{ close }">
-            <!-- Emulate built in modal header close button action -->
+  <b-modal id="modal-resumen-recepcion" centered ref="modal" title="Resumen" size="xl">
+    <template #modal-header="{ close }">
+      <!-- Emulate built in modal header close button action -->
 
-            <b-row class="d-flex justify-content-around">
-                <div class="pl-3">Resumen</div>
+      <b-row class="d-flex justify-content-around">
+        <div class="pl-3">Resumen</div>
 
-            </b-row>
+      </b-row>
 
-            <button type="button" class="close" aria-label="Close" @click="close()">
-                <span aria-hidden="true" style="color:white">&times;</span>
-            </button>
-        </template>
+      <button type="button" class="close" aria-label="Close" @click="close()">
+        <span aria-hidden="true" style="color:white">&times;</span>
+      </button>
+    </template>
 
-      <div>
-        <div id="pdf-content">
-
-          <div  class="pb-2 row">
-            <div class="col-6">
-                <div>
-                  <strong>Nombre del cliente:</strong>   <span>test</span>
-                </div>
-                <div>
-                    <strong> Nombre abreviado:</strong>   <span>test</span>
-                </div>
-                <div>
-                    <strong>  Correo electrónico:</strong>   <span>test</span>
-                </div>
-            </div >
-            <hr/>
-            <div  class="col-6">
-                <div>
-                    <strong>RUT:</strong>  <span>test</span>
-                </div>
-                <div>
-                    <strong>Razón social:</strong>   <span>test</span>
-                </div>
-                <div>
-                    <strong> Giro:</strong>  <span>test</span>
-                </div>
-            </div >
-        </div >
-
-<b-list-group>
-  <b-list-group-item>
-    test
-  </b-list-group-item>
-  <b-list-group-item>
-    test
-  </b-list-group-item>
-  <b-list-group-item>
-    test
-  </b-list-group-item>
-  <b-list-group-item>
-    test
-  </b-list-group-item>
-  <b-list-group-item>
-    test
-  </b-list-group-item>
-</b-list-group>
+    <div>
 
 
 
 
+
+
+      <div id="pdf-content">
+      
+ <b-row>    
+  
+
+        <b-col class="col-8">
+
+<b-row style="border-bottom: 1px solid var(--lsa-light-gray); padding:3px">
+    <b-col class="col-5" style="font-weight:bold;"> Cliente: </b-col>
+    <b-col class="col-7">{{ resumenData.cliente }}</b-col>
+</b-row>
+<b-row style="border-bottom: 1px solid var(--lsa-light-gray); padding:3px">
+    <b-col class="col-5" style="font-weight:bold;"> Fecha de ingreso: </b-col>
+    <b-col class="col-7">{{ resumenData.fecha_ingreso }}</b-col>
+</b-row>
+<b-row style="border-bottom: 1px solid var(--lsa-light-gray); padding:3px">
+    <b-col class="col-5" style="font-weight:bold;"> Fecha de entrega: </b-col>
+    <b-col class="col-7">{{ resumenData.fecha_entrega }}</b-col>
+</b-row>
+<b-row style="border-bottom: 1px solid var(--lsa-light-gray); padding:3px">
+    <b-col class="col-5" style="font-weight:bold;"> N° de muestras: </b-col>
+    <b-col class="col-7">{{ resumenData.numero_muestras }}</b-col>
+</b-row>
+<b-row style="border-bottom: 1px solid var(--lsa-light-gray); padding:3px">
+    <b-col class="col-5" style="font-weight:bold;"> Prioridad: </b-col>
+    <b-col class="col-7">{{ resumenData.prioridad }}</b-col>
+</b-row>
+</b-col>
+
+<b-col class="col-8">
+
+<b-row style="border-bottom: 1px solid var(--lsa-light-gray); padding:3px">
+    <b-col class="col-5" style="font-weight:bold;"> Cotización n°: </b-col>
+    <b-col class="col-7">{{ resumenData.numero_cotizacion }}</b-col>
+</b-row>
+<b-row style="border-bottom: 1px solid var(--lsa-light-gray); padding:3px">
+    <b-col class="col-5" style="font-weight:bold;"> Matriz: </b-col>
+    <b-col class="col-7">{{ resumenData.matriz }}</b-col>
+</b-row>
+<b-row style="border-bottom: 1px solid var(--lsa-light-gray); padding:3px">
+    <b-col class="col-5" style="font-weight:bold;"> Acreditación: </b-col>
+    <b-col class="col-7">{{ resumenData.acreditacion }}</b-col>
+</b-row>
+<b-row style="border-bottom: 1px solid var(--lsa-light-gray); padding:3px">
+    <b-col class="col-5" style="font-weight:bold;"> OC/HES: </b-col>
+    <b-col class="col-7">{{ resumenData.numero_muestras }}</b-col>
+</b-row>
+<b-row style="border-bottom: 1px solid var(--lsa-light-gray); padding:3px">
+    <b-col class="col-5" style="font-weight:bold;"> Prioridad: </b-col>
+    <b-col class="col-7">{{ resumenData.prioridad }}</b-col>
+</b-row>
+</b-col>
+
+</b-row>
+<b-col>
+  <br/>
+  <b-col class="col-5" style="font-weight:bold;"> Parámetros: </b-col>
+  <b-col>
+    <div v-for="(parametro,index) in resumenData.parametros" :key="index">
+    {{ parametro }}</div>
+  </b-col>
+</b-col> 
+      </div>
 
     </div>
-  
-  </div>
-     
 
-        <template #modal-footer="{ close }">
-          <b-col>
 
+    <template #modal-footer="{ close }">
+      <b-col>
+
+
+        <b-row class="d-flex justify-content-between">
+<b-row >
+          <xlsx-workbook>
+          <xlsx-sheet :collection="sheet.data" v-for="sheet in resumen" :key="sheet.name" :sheet-name="sheet.name" />
+          <xlsx-download>
+            <b-button class="lsa-orange reactive-button ml-2" size="xl" style="font-weight: bold; border: none; min-height: 40px;">Descargar
+              excel<b-icon icon="file-earmark-spreadsheet" class="ml-2"></b-icon></b-button>
+          </xlsx-download>
           
-          <b-row class="d-flex justify-content-between">
-            <b-button  size="xl" class="reactive-button lsa-orange" style="font-weight: bold; border:none" @click="exportToPDF">Descargar PDF</b-button>
-          
-            <b-button @click="close()" variant="primary" class="float-right reactive-button"
-                style="font-weight:bold">
-                Cerrar
-            </b-button>
-          </b-row>
-        </b-col>
+       
 
-        </template>
+        </xlsx-workbook>
 
-    </b-modal>
+          <b-button size="xl" class="reactive-button lsa-orange ml-2" style="font-weight: bold; border:none;  min-height: 40px;"
+            @click="exportToPDF">Descargar PDF
+            <b-icon size="0.9" icon="file-earmark-pdf" class="ml-2" />
+          </b-button>
+
+        </b-row>
+
+          <b-button @click="close()" variant="primary" class="float-right reactive-button" style="font-weight:bold">
+            Cerrar
+          </b-button>
+        </b-row>
+      </b-col>
+
+    </template>
+
+  </b-modal>
 </template>
 
 <script>
 import html2pdf from "html2pdf.js";
+
+
+import {XlsxWorkbook, XlsxSheet, XlsxDownload } from "vue-xlsx";
+
 export default {
+  components: {
+    XlsxWorkbook,
+    XlsxSheet,
+    XlsxDownload
+  },
+  watch: {
+    resumenData: {
+      handler() {
+        console.log("leyendo resumen de datos", this.resumenData);
+        var parametros_string = "";
+        this.resumenData.parametros.forEach(p => {
+          parametros_string += p + ","
+        });
 
-    watch: {
-      resumenData: {
-        handler(){
-          console.log("leyendo resumen de datos",this.resumenData);
-        }
-       }
-    },
-    props: {
-      resumenData: Object
-    },
-    methods: {
-      exportToPDF(){
-        html2pdf(document.getElementById("pdf-content"), {
-margin: 1,
-filename:"i-was-html.pdf",
-			});
+        this.resumen = [{ name: "Resumen", data: [{
+            "N° Informe" : "-",
+            "Cliente" : this.resumenData.cliente,
+            "Parámetros" : parametros_string,
+            "Fecha de Ingreso" : this.resumenData.fecha_ingreso,
+            "Fecha de Entrega" : this.resumenData.fecha_entrega,
+            "N° Muestras Total" : this.resumenData.numero_muestras,
+            "Fecha de Emisión Informe" : "-",
+            "Prioridad" : this.resumenData.prioridad,
+            "Cotización N°" : this.resumenData.numero_cotizacion,
+            "Matriz" : this.resumenData.matriz,
+            "Acreditación" : "-",
+            "OC/HES" : "-",
+            "Factura N°" : "-",
+            "EDP" : "-",
+            "Código Recuperación" : "-",
+            "Valor NETO UF" : this.resumenData.valor,
+            
+          }] }] 
       }
+    }
+  },
+  props: {
+    resumenData: Object
+  },
+  methods: {
+    exportToPDF() {
+      html2pdf(document.getElementById("pdf-content"), {
+        margin: 1,
+        filename: "resumen_muestra.pdf",
+      });
     },
-    data() {
-        return {
-           rut_empleado: '',
-           nombre_empleado: '',
-           nombre_empresa: '',
-           direccion_empresa: '',
 
-        }
-    },
+  },
+  data() {
+    return {
+      rut_empleado: '',
+      nombre_empleado: '',
+      nombre_empresa: '',
+      direccion_empresa: '',
+    }
+  },
 }
 </script>
 
