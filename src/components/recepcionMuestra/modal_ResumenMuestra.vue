@@ -22,10 +22,19 @@
 
       <div id="pdf-content">
       
+        <div style="width: 100%; margin-bottom: 50px" class="d-flex justify-content-between">
+
+          <b-navbar-brand>
+                <b-img :src="require('@/assets/isologo-LSA.png')" style="height: 75px; padding: 5px" alt="Image 1"></b-img>
+            </b-navbar-brand>
+            <b-navbar-brand>
+                <div style="font-weight: bold; font-size:2rem; margin-right: 50px;">Resumen</div>
+            </b-navbar-brand>
+</div>
  <b-row>    
   
 
-        <b-col class="col-8">
+        <b-col class="col-6">
 
 <b-row style="border-bottom: 1px solid var(--lsa-light-gray); padding:3px">
     <b-col class="col-5" style="font-weight:bold;"> Cliente: </b-col>
@@ -49,15 +58,11 @@
 </b-row>
 </b-col>
 
-<b-col class="col-8">
+<b-col class="col-6">
 
 <b-row style="border-bottom: 1px solid var(--lsa-light-gray); padding:3px">
     <b-col class="col-5" style="font-weight:bold;"> Cotización n°: </b-col>
     <b-col class="col-7">{{ resumenData.numero_cotizacion }}</b-col>
-</b-row>
-<b-row style="border-bottom: 1px solid var(--lsa-light-gray); padding:3px">
-    <b-col class="col-5" style="font-weight:bold;"> Matriz: </b-col>
-    <b-col class="col-7">{{ resumenData.matriz }}</b-col>
 </b-row>
 <b-row style="border-bottom: 1px solid var(--lsa-light-gray); padding:3px">
     <b-col class="col-5" style="font-weight:bold;"> Acreditación: </b-col>
@@ -70,6 +75,11 @@
 <b-row style="border-bottom: 1px solid var(--lsa-light-gray); padding:3px">
     <b-col class="col-5" style="font-weight:bold;"> Prioridad: </b-col>
     <b-col class="col-7">{{ resumenData.prioridad }}</b-col>
+</b-row>
+
+<b-row style="border-bottom: 1px solid var(--lsa-light-gray); padding:3px">
+    <b-col class="col-5" style="font-weight:bold;"> Matriz: </b-col>
+    <b-col class="col-7">{{ resumenData.matriz }}</b-col>
 </b-row>
 </b-col>
 
