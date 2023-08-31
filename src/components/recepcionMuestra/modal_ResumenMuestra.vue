@@ -1,5 +1,5 @@
 <template>
-  <b-modal id="modal-resumen-recepcion" centered ref="modal" title="Resumen" size="xl">
+  <b-modal id="modal-resumen-recepcion" centered ref="modal" title="Resumen" size="xl" :no-close-on-esc="true" :no-close-on-backdrop="true" :hide-header="true">
     <template #modal-header="{ close }">
       <!-- Emulate built in modal header close button action -->
 
@@ -20,79 +20,109 @@
 
 
 
-      <div id="pdf-content">
-      
+      <div id="pdf-content" style="margin:30px; font-size:0.8rem">
+
         <div style="width: 100%; margin-bottom: 50px" class="d-flex justify-content-between">
 
+          <b-navbar-brand class="d-flex align-items-center">
+            <b-img :src="require('@/assets/isologo-UCN.png')" style="height: 60px; padding: 5px" alt="Image 1"></b-img>
+          </b-navbar-brand>
           <b-navbar-brand>
-                <b-img :src="require('@/assets/isologo-LSA.png')" style="height: 75px; padding: 5px" alt="Image 1"></b-img>
-            </b-navbar-brand>
-            <b-navbar-brand>
-                <div style="font-weight: bold; font-size:2rem; margin-right: 50px;">Resumen</div>
-            </b-navbar-brand>
-</div>
- <b-row>    
-  
+            <b-img :src="require('@/assets/isologo-LSA.png')" style="height: 75px; padding: 10px;" alt="Image 1"></b-img>
+          </b-navbar-brand>
+          <div style="font-weight: bold; font-size:1.1rem"> {{ "INFORME N°: "+ this.resumenData.RUM }}</div>
+        </div>
+       
+         
+        
+           
+          
 
-        <b-col class="col-6">
+        <b-row>
 
-<b-row style="border-bottom: 1px solid var(--lsa-light-gray); padding:3px">
-    <b-col class="col-5" style="font-weight:bold;"> Cliente: </b-col>
-    <b-col class="col-7">{{ resumenData.cliente }}</b-col>
-</b-row>
-<b-row style="border-bottom: 1px solid var(--lsa-light-gray); padding:3px">
-    <b-col class="col-5" style="font-weight:bold;"> Fecha de ingreso: </b-col>
-    <b-col class="col-7">{{ resumenData.fecha_ingreso }}</b-col>
-</b-row>
-<b-row style="border-bottom: 1px solid var(--lsa-light-gray); padding:3px">
-    <b-col class="col-5" style="font-weight:bold;"> Fecha de entrega: </b-col>
-    <b-col class="col-7">{{ resumenData.fecha_entrega }}</b-col>
-</b-row>
-<b-row style="border-bottom: 1px solid var(--lsa-light-gray); padding:3px">
-    <b-col class="col-5" style="font-weight:bold;"> N° de muestras: </b-col>
-    <b-col class="col-7">{{ resumenData.numero_muestras }}</b-col>
-</b-row>
-<b-row style="border-bottom: 1px solid var(--lsa-light-gray); padding:3px">
-    <b-col class="col-5" style="font-weight:bold;"> Prioridad: </b-col>
-    <b-col class="col-7">{{ resumenData.prioridad }}</b-col>
-</b-row>
-</b-col>
 
-<b-col class="col-6">
+          <b-col class="col-6">
 
-<b-row style="border-bottom: 1px solid var(--lsa-light-gray); padding:3px">
-    <b-col class="col-5" style="font-weight:bold;"> Cotización n°: </b-col>
-    <b-col class="col-7">{{ resumenData.numero_cotizacion }}</b-col>
-</b-row>
-<b-row style="border-bottom: 1px solid var(--lsa-light-gray); padding:3px">
-    <b-col class="col-5" style="font-weight:bold;"> Acreditación: </b-col>
-    <b-col class="col-7">{{ resumenData.acreditacion }}</b-col>
-</b-row>
-<b-row style="border-bottom: 1px solid var(--lsa-light-gray); padding:3px">
-    <b-col class="col-5" style="font-weight:bold;"> OC/HES: </b-col>
-    <b-col class="col-7">{{ resumenData.numero_muestras }}</b-col>
-</b-row>
-<b-row style="border-bottom: 1px solid var(--lsa-light-gray); padding:3px">
-    <b-col class="col-5" style="font-weight:bold;"> Prioridad: </b-col>
-    <b-col class="col-7">{{ resumenData.prioridad }}</b-col>
-</b-row>
+            <b-row style="border-bottom: 1px solid var(--lsa-light-gray); padding:3px">
+              <b-col class="col-5" style="font-weight:bold;"> Cliente: </b-col>
+              <b-col class="col-7">{{ resumenData.cliente }}</b-col>
+            </b-row>
+            <b-row style="border-bottom: 1px solid var(--lsa-light-gray); padding:3px">
+              <b-col class="col-5" style="font-weight:bold;"> Fecha de ingreso: </b-col>
+              <b-col class="col-7">{{ fecha_ingreso_formateada }}</b-col>
+            </b-row>
+            <b-row style="border-bottom: 1px solid var(--lsa-light-gray); padding:3px">
+              <b-col class="col-5" style="font-weight:bold;"> Fecha de entrega: </b-col>
+              <b-col class="col-7">{{ fecha_entrega_formateada }}</b-col>
+            </b-row>
+            <b-row style="border-bottom: 1px solid var(--lsa-light-gray); padding:3px">
+              <b-col class="col-5" style="font-weight:bold;"> Prioridad: </b-col>
+              <b-col class="col-7">{{ resumenData.prioridad }}</b-col>
+            </b-row>
+          </b-col>
 
-<b-row style="border-bottom: 1px solid var(--lsa-light-gray); padding:3px">
-    <b-col class="col-5" style="font-weight:bold;"> Matriz: </b-col>
-    <b-col class="col-7">{{ resumenData.matriz }}</b-col>
-</b-row>
-</b-col>
+          <b-col class="col-6">
 
-</b-row>
-<b-col>
-  <br/>
-  <b-col class="col-5" style="font-weight:bold;"> Parámetros: </b-col>
-  <b-col>
-    <div v-for="(parametro,index) in resumenData.parametros" :key="index">
-    {{ parametro }}</div>
-  </b-col>
-</b-col> 
+            <b-row style="border-bottom: 1px solid var(--lsa-light-gray); padding:3px">
+              <b-col class="col-5" style="font-weight:bold;"> Cotización n°: </b-col>
+              <b-col class="col-7">{{ resumenData.numero_cotizacion }}</b-col>
+            </b-row>
+
+            <b-row style="border-bottom: 1px solid var(--lsa-light-gray); padding:3px">
+              <b-col class="col-5" style="font-weight:bold;"> N° de muestras: </b-col>
+              <b-col class="col-7">{{ resumenData.numero_muestras }}</b-col>
+            </b-row>
+            <b-row style="border-bottom: 1px solid var(--lsa-light-gray); padding:3px">
+              <b-col class="col-5" style="font-weight:bold;"> Prioridad: </b-col>
+              <b-col class="col-7">{{ resumenData.prioridad }}</b-col>
+            </b-row>
+
+            <b-row style="border-bottom: 1px solid var(--lsa-light-gray); padding:3px">
+              <b-col class="col-5" style="font-weight:bold;"> Matriz: </b-col>
+              <b-col class="col-7">{{ resumenData.matriz }}</b-col>
+            </b-row>
+          </b-col>
+
+        </b-row>
+        <b-col>
+          <br />
+          <b-col class="col-5" style="font-weight:bold;"> Parámetros: </b-col>
+          <b-col>
+            <div v-for="(parametro, index) in resumenData.parametros" :key="index">
+              {{ parametro }}</div>
+          </b-col>
+        </b-col>
+
+
+
+
+
+
+
+
+
+
+
+
+       <div style="margin-top:50px"  class="ml-4">
+       
+      
+           <div style="font-weight: bold;">  Recepcionado por: </div><div  >{{ resumenData.recepcionista }}</div >
+        
+
+
+          <div>
+       
+          <div style="width: 200px; border-bottom:1px solid var(--lsa-gray); margin-top:100px"></div>
+          
+         
+          </div>
+       </div> 
       </div>
+
+
+
+
 
     </div>
 
@@ -102,24 +132,25 @@
 
 
         <b-row class="d-flex justify-content-between">
-<b-row >
-          <xlsx-workbook>
-          <xlsx-sheet :collection="sheet.data" v-for="sheet in resumen" :key="sheet.name" :sheet-name="sheet.name" />
-          <xlsx-download>
-            <b-button class="lsa-orange reactive-button ml-2" size="xl" style="font-weight: bold; border: none; min-height: 40px;">Descargar
-              excel<b-icon icon="file-earmark-spreadsheet" class="ml-2"></b-icon></b-button>
-          </xlsx-download>
-          
-       
+          <b-row>
+            <xlsx-workbook>
+              <xlsx-sheet :collection="sheet.data" v-for="sheet in resumen" :key="sheet.name" :sheet-name="sheet.name" />
+              <xlsx-download>
+                <b-button class="lsa-orange reactive-button ml-2" size="xl"
+                  style="font-weight: bold; border: none; min-height: 40px;">Descargar
+                  excel<b-icon icon="file-earmark-spreadsheet" class="ml-2"></b-icon></b-button>
+              </xlsx-download>
 
-        </xlsx-workbook>
 
-          <b-button size="xl" class="reactive-button lsa-orange ml-2" style="font-weight: bold; border:none;  min-height: 40px;"
-            @click="exportToPDF">Descargar PDF
-            <b-icon size="0.9" icon="file-earmark-pdf" class="ml-2" />
-          </b-button>
 
-        </b-row>
+            </xlsx-workbook>
+
+            <b-button size="xl" class="reactive-button lsa-orange ml-2"
+              style="font-weight: bold; border:none;  min-height: 40px;" @click="exportToPDF">Descargar PDF
+              <b-icon size="0.9" icon="file-earmark-pdf" class="ml-2" />
+            </b-button>
+
+          </b-row>
 
           <b-button @click="close()" variant="primary" class="float-right reactive-button" style="font-weight:bold">
             Cerrar
@@ -136,7 +167,8 @@
 import html2pdf from "html2pdf.js";
 
 
-import {XlsxWorkbook, XlsxSheet, XlsxDownload } from "vue-xlsx";
+import { XlsxWorkbook, XlsxSheet, XlsxDownload } from "vue-xlsx";
+import moment from 'moment';
 
 export default {
   components: {
@@ -152,26 +184,29 @@ export default {
         this.resumenData.parametros.forEach(p => {
           parametros_string += p + ","
         });
+        this.fecha_ingreso_formateada = moment(this.resumenData.fecha_ingreso).format('DD/MM/YYYY');
+        this.fecha_entrega_formateada = moment( this.resumenData.fecha_entrega).format('DD/MM/YYYY');
+        this.resumen = [{
+          name: "Resumen", data: [{
+            "N° Informe": "-",
+            "Cliente": this.resumenData.cliente,
+            "Parámetros": parametros_string,
+            "Fecha de Ingreso": moment(this.resumenData.fecha_ingreso).format('DD/MM/YYYY'),
+            "Fecha de Entrega": moment( this.resumenData.fecha_entrega).format('DD/MM/YYYY') ,
+            "N° Muestras Total": this.resumenData.numero_muestras,
+            "Fecha de Emisión Informe": "-",
+            "Prioridad": this.resumenData.prioridad,
+            "Cotización N°": this.resumenData.numero_cotizacion,
+            "Matriz": this.resumenData.matriz,
+            "Acreditación": "-",
+            "OC/HES": "-",
+            "Factura N°": "-",
+            "EDP": "-",
+            "Código Recuperación": "-",
+            "Valor NETO UF": this.resumenData.valor,
 
-        this.resumen = [{ name: "Resumen", data: [{
-            "N° Informe" : "-",
-            "Cliente" : this.resumenData.cliente,
-            "Parámetros" : parametros_string,
-            "Fecha de Ingreso" : this.resumenData.fecha_ingreso,
-            "Fecha de Entrega" : this.resumenData.fecha_entrega,
-            "N° Muestras Total" : this.resumenData.numero_muestras,
-            "Fecha de Emisión Informe" : "-",
-            "Prioridad" : this.resumenData.prioridad,
-            "Cotización N°" : this.resumenData.numero_cotizacion,
-            "Matriz" : this.resumenData.matriz,
-            "Acreditación" : "-",
-            "OC/HES" : "-",
-            "Factura N°" : "-",
-            "EDP" : "-",
-            "Código Recuperación" : "-",
-            "Valor NETO UF" : this.resumenData.valor,
-            
-          }] }] 
+          }]
+        }]
       }
     }
   },
@@ -182,7 +217,7 @@ export default {
     exportToPDF() {
       html2pdf(document.getElementById("pdf-content"), {
         margin: 1,
-        filename: "resumen_muestra.pdf",
+        filename: "comprobante_RUM_" +this.resumenData.RUM +  ".pdf",
       });
     },
 
@@ -193,6 +228,9 @@ export default {
       nombre_empleado: '',
       nombre_empresa: '',
       direccion_empresa: '',
+      fecha_ingreso_formateada: '',
+      fecha_entrega_formateada: '',
+      RUM: '0'
     }
   },
 }

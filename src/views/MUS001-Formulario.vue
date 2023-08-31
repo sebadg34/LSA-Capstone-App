@@ -548,12 +548,6 @@
                                     </div>
                                     <div style="width:70%">
                                         <b-row class="d-flex justify-content-end">
-                                            <b-button @click="abrirResumenMuestra()" pill
-                                                class="lsa-blue reactive-button mr-2"
-                                                style="border:none; font-weight: bold;">
-                                                Resumen
-                                                <b-icon icon="file-earmark-text" aria-hidden="true"></b-icon>
-                                            </b-button>
                                             <b-button @click="enviarFormulario()" variant="primary" size="xl"
                                                 class="reactive-button lsa-light-blue ml-2" pill
                                                 style="font-weight:bold; min-width: 50%;">
@@ -873,17 +867,19 @@ export default {
 
     methods: {
 
-        abrirResumenMuestra() {
+        abrirResumenMuestra(rum) {
             var parametros_data = [];
             this.objetosSeleccionados.forEach(p => {
                 parametros_data.push(p.parametro)
             })
 
             var data = {
+                RUM: rum,
                 numero_muestras: this.nMuestras,
                 fecha_entrega: this.fechaEntrega,
                 fecha_ingreso: this.fecha_recepcion,
                 cliente: this.nombre_empresa,
+                recepcionista: this.recepcionista,
                 prioridad: this.prioridad,
                 valor: "-",
                 numero_cotizacion: this.opcionesCotizacion.find(c => c.id_cotizacion == this.cotizacion).numero_cotizacion,
@@ -1466,9 +1462,11 @@ export default {
 
                 console.log("data a enviar", data)
                 MuestraService.ingresarMuestra(data).then((response) => {
-                    console.log(response)
+                    console.log("respuesta recepcion",response)
                     if (response != null) {
                         if (response.status == 200) {
+
+                          
                             this.$bvToast.toast(`Recepción de la muestra exitosa.`, {
                                 title: 'Éxito',
                                 toaster: 'b-toaster-top-center',
@@ -1478,28 +1476,29 @@ export default {
                             })
                         }
 
-                        this.recepcionista = '';
-                        this.recepcionistaRUT = '';
-                        this.solicitante = '';
-                        this.rut = '';
-                        this.direccion = '';
-                        this.muestreado = '';
-                        this.prioridad = null;
-                        this.TipoMatriz = null;
-                        this.nMuestras = null;
-                        this.Temperatura = '';
-                        this.fechaEntrega = '';
-                        this.transportista = '';
-                        this.patente = '';
-                        this.transportistaRut = '';
-                        this.fono = '';
-                        this.observaciones = '';
-                        this.fecha = '';
-                        this.hora = '';
+                        this.abrirResumenMuestra(response.data.RUM);
+                       // this.recepcionista = '';
+                       // this.recepcionistaRUT = '';
+                       // this.solicitante = '';
+                       // this.rut = '';
+                       // this.direccion = '';
+                       // this.muestreado = '';
+                       // this.prioridad = null;
+                       // this.TipoMatriz = null;
+                       // this.nMuestras = null;
+                       // this.Temperatura = '';
+                       // this.fechaEntrega = '';
+                       // this.transportista = '';
+                       // this.patente = '';
+                       // this.transportistaRut = '';
+                       // this.fono = '';
+                       // this.observaciones = '';
+                       // this.fecha = '';
+                       // this.hora = '';
 
-                        setTimeout(() => {
-                            window.location.reload();
-                        }, 1000);
+                      //  setTimeout(() => {
+                      //      window.location.reload();
+                      //  }, 1000);
 
                     } else {
                         this.$bvToast.toast(`Error al recepcionar muestra.`, {
