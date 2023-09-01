@@ -143,11 +143,7 @@
                         <b-list-group-item v-for="empleado in empleados" :key="empleado.rut_empleado">
                             {{ empleado.nombre + " " + empleado.apellido }}
                         </b-list-group-item>
-                        <!--
-              <b-list-group-item  class=" d-flex align-items-center justify-content-center">analista test</b-list-group-item>
-              <b-list-group-item class="d-flex align-items-center justify-content-center">analista test</b-list-group-item>
-              <b-list-group-item class="d-flex align-items-center justify-content-center">analista test</b-list-group-item>
--->
+                     
 
                     </b-list-group>
                 </b-list-group-item>

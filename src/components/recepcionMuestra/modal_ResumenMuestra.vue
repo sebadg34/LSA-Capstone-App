@@ -158,7 +158,7 @@
           <div>
 
             <div style="width: 200px; border-bottom:1px solid var(--lsa-gray); margin-top:100px"></div>
-            <div style="font-style: italic;">forma del solicitante</div>
+            <div style="font-style: italic;">Firma Aceptación</div>
 
           </div>
         </div>
