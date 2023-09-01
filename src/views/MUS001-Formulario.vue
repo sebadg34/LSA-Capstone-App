@@ -448,7 +448,11 @@
                                                                 </div>
                                                             </b-form-group>
 -->
+<div class="d-flex justify-content-between align-items-center">
                                                         <label style="font-weight: bold;">Parámetros seleccionados:</label>
+                                                        <b-button class="lsa-orange reactive-button mb-2" style="border:none; aspect-ratio: 1;" @click="objetosSeleccionados = []">
+                                                            <b-icon icon="arrow-counterclockwise" ></b-icon></b-button>
+                                                    </div>
                                                         <b-form-group label-size="sm"
                                                             style="overflow-y: scroll; height: 250px; border:1px solid lightgray;">
                                                             <b-list-group horizontal
@@ -875,12 +879,18 @@ export default {
 
             var data = {
                 RUM: rum,
+                muestreado: this.muestreado,
                 numero_muestras: this.nMuestras,
                 fecha_entrega: this.fechaEntrega,
                 fecha_ingreso: this.fecha_recepcion,
+                hora_ingreso: this.hora_recepcion,
+                fecha_muestreo: this.fecha,
+                hora_muestreo: this.hora,
                 cliente: this.nombre_empresa,
                 recepcionista: this.recepcionista,
+                temperatura: this.Temperatura,
                 prioridad: this.prioridad,
+                empresa: this.opcionesEmpresa.find(e => e.rut_empresa == this.solicitante).nombre_empresa,
                 valor: "-",
                 numero_cotizacion: this.opcionesCotizacion.find(c => c.id_cotizacion == this.cotizacion).numero_cotizacion,
                 matriz: this.opcionesMatriz.find(m => m.id_matriz == this.TipoMatriz).nombre_matriz,
