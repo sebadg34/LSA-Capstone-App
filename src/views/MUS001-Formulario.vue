@@ -872,6 +872,7 @@ export default {
     methods: {
 
         abrirResumenMuestra(rum) {
+            console.log("testing!!!!")
             var parametros_data = [];
             this.objetosSeleccionados.forEach(p => {
                 parametros_data.push(p.parametro)
@@ -897,7 +898,10 @@ export default {
                 parametros: parametros_data
             }
             this.resumenData = data;
-            this.$bvModal.show('modal-resumen-recepcion');
+            this.$nextTick(function () {
+                this.$bvModal.show('modal-resumen-recepcion');
+})
+  
         },
 
         getValidationState({
@@ -1484,9 +1488,11 @@ export default {
                                 variant: "success",
                                 appendToast: true,
                             })
+                            this.abrirResumenMuestra(response.data.RUM);
+
                         }
 
-                        this.abrirResumenMuestra(response.data.RUM);
+                        
                        // this.recepcionista = '';
                        // this.recepcionistaRUT = '';
                        // this.solicitante = '';
